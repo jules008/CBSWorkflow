@@ -9,6 +9,10 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 '===============================================================
 ' Class ThisWorkbook
+'---------------------------------------------------------------
+' Created by Julian Turner
+' OneSheet Consulting
+' Julian.turner@OneSheet.co.uk
 '===============================================================
 ' v1.0.0 - Initial Version
 '---------------------------------------------------------------

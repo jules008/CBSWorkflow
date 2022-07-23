@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FrmStartBanner 
    Caption         =   "UserForm1"
-   ClientHeight    =   4350
+   ClientHeight    =   4380
    ClientLeft      =   120
    ClientTop       =   465
    ClientWidth     =   7065
@@ -19,7 +19,12 @@ Attribute VB_Exposed = False
 
 '===============================================================
 ' Module FrmStartBanner
-' v0.0.0 - Initial Version
+'---------------------------------------------------------------
+' Created by Julian Turner
+' OneSheet Consulting
+' Julian.turner@OneSheet.co.uk
+'===============================================================
+' v1.0.0 - Initial Version
 '---------------------------------------------------------------
 ' Date - 07 Jan 21
 '===============================================================

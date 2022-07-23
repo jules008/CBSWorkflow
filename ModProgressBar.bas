@@ -1,4 +1,17 @@
 Attribute VB_Name = "ModProgressBar"
+'===============================================================
+' Module ModProgressBar
+'---------------------------------------------------------------
+' Created by Julian Turner
+' OneSheet Consulting
+' Julian.turner@OneSheet.co.uk
+'===============================================================
+' v1.0.0 - Initial Version
+'---------------------------------------------------------------
+' Date - 23 Jul 22
+'===============================================================
+Private Const StrMODULE As String = "ModProgressBar"
+
 Option Explicit
 
 Option Private Module

@@ -1,6 +1,10 @@
 Attribute VB_Name = "ModReferenceLibs"
 '===============================================================
 ' Module ModReferenceLibs
+'---------------------------------------------------------------
+' Created by Julian Turner
+' OneSheet Consulting
+' Julian.turner@OneSheet.co.uk
 '===============================================================
 ' v1.0.0 - Initial Version
 '---------------------------------------------------------------
