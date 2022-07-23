@@ -78,8 +78,9 @@ Global G_DATE As String
 Global G_FORM As Boolean
 
 ' ===============================================================
-' Global UI Class Declarations
+' Global Class Declarations
 ' ---------------------------------------------------------------
+Public ActiveWorkFlow As ClsWorkflow
 
 ' ===============================================================
 ' Global UI Class Declarations
@@ -119,9 +120,49 @@ Enum EnumTriState
     xError
 End Enum
 
-Enum EnumObjType
-    ObjImage = 1
-    ObjChart = 2
+Enum EnumBtnNo
+    enBtnForAction = 1
+    enBtnActive
+    enBtnComplete
+    enBtnExit
+    enBtnSupport
+    enBtnNewWorkflow
 End Enum
 
+Enum enStatus           'Status
+    enNotStarted = 1    'Not Started
+    enActionReqd        'Action Req'd
+    enWaiting           'Waiting
+    enComplete          'Complete
+End Enum                '
+
+Enum enFormValidation
+    enFormOK = 2
+    enValidationError = 1
+    enFunctionalError = 0
+End Enum
+
+Enum enRAG              'RAG
+    en3Green            'Green
+    en2Amber            'Amber
+    en1Red              'Red
+End Enum                '
+
+Enum enStepType         'Step Type
+    enYesNo             'Yes/No Decision
+    enStep              'Normal Step
+    enDataInput         'Data Input
+    enAltBranch         'Alt. Branch
+End Enum                '
+
+Enum EnUserLvl          'User Level
+    enBasic             'Basic
+    enAdmin             'Admin
+End Enum                '
+ 
+Enum EnumFormValidation
+    FormOK = 2
+    ValidationError = 1
+    FunctionalError = 0
+End Enum
 
