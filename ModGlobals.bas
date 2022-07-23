@@ -13,9 +13,9 @@ Option Explicit
 ' ===============================================================
 ' Global Constants
 ' ---------------------------------------------------------------
-Public Const PROJECT_FILE_NAME As String = "FIRES"
-Public Const APP_NAME As String = "FIRES"
-Public Const DB_NAME As String = "TrainingDB"
+Public Const PROJECT_FILE_NAME As String = "CBS Workflow"
+Public Const APP_NAME As String = "CBSWorkflow"
+Public Const DB_FILE_NAME As String = "CBSWorkflowDB"
 Public Const INI_FILE_PATH As String = "\System Files\"
 Public Const ERROR_PATH As String = "\System Files\"
 Public Const TMP_FILES As String = "\System Files\Tmp\"
@@ -30,10 +30,10 @@ Public Const SEND_ERR_MSG As Boolean = False
 Public Const TEST_PREFIX As String = "TEST - "
 Public Const BACKUP_INT As Integer = 5
 Public Const FILE_ERROR_LOG As String = "Error.log"
-Public Const OLD_DB_VER = "V1.19.2"
-Public Const DB_VER = "V1.19.3"
-Public Const VERSION = "V1.24.2"
-Public Const VER_DATE = "07 Jul 22"
+Public Const OLD_DB_VER = "V0.0.0"
+Public Const DB_VER = "V0.0.1"
+Public Const VERSION = "V0.0.1"
+Public Const VER_DATE = "23 Jul 22"
 ' ===============================================================
 ' Error Constants
 ' ---------------------------------------------------------------
@@ -66,7 +66,6 @@ Global SYSTEM_CLOSING As Boolean
 Global SEND_EMAILS As Boolean
 Global ENABLE_PRINT As Boolean
 Global DB_PATH As String
-Global DB_FILE_NAME As String
 Global DEV_MODE As Boolean
 Global SYS_PATH As String
 Global CURRENT_USER As String

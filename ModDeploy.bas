@@ -30,7 +30,7 @@ Public Function UpdateDBScript() As Boolean
     If Not UpdateDBScriptUndo Then Err.Raise HANDLED_ERROR
     
     If DB Is Nothing Then
-        Set DB = OpenDatabase(ThisWorkbook.Path & INI_FILE_PATH & DB_NAME & ".accdb")
+        Set DB = OpenDatabase(ThisWorkbook.Path & INI_FILE_PATH & DB_FILE_NAME & ".accdb")
     End If
     
     Set RstTable = DB.OpenRecordset("TblDBVersion", dbOpenDynaset)
@@ -117,7 +117,7 @@ Public Function UpdateDBScriptUndo() As Boolean
     On Error GoTo ErrorHandler
     
     If DB Is Nothing Then
-        Set DB = OpenDatabase(ThisWorkbook.Path & INI_FILE_PATH & DB_NAME & ".accdb")
+        Set DB = OpenDatabase(ThisWorkbook.Path & INI_FILE_PATH & DB_FILE_NAME & ".accdb")
     End If
     
     Set RstTable = DB.OpenRecordset("TblDBVersion", dbOpenDynaset)

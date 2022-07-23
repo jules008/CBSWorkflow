@@ -35,7 +35,7 @@ Public Function Initialise() As Boolean
     
     FrmStartBanner.Progress "Reading INI File.....", 1 / 7 * 100
     
-'    If Not ReadINIFile Then Err.Raise HANDLED_ERROR
+    If Not ReadINIFile Then Err.Raise HANDLED_ERROR
     
     FrmStartBanner.Progress "Connecting to DB.....", 2 / 7 * 100
     
@@ -176,13 +176,17 @@ End Function
 ' Gets start up variables from ini file
 ' ---------------------------------------------------------------
 Public Function ReadINIFile() As Boolean
-    Dim DebugMode As String
-    Dim EnablePrint As String
-    Dim DBPath As String
-    Dim SendEmails As String
-    Dim DevMode As String
+    Dim DebugMode() As String
+    Dim EnablePrint() As String
+    Dim DBPath() As String
+    Dim SendEmails() As String
+    Dim DevMode() As String
     Dim INIFile As Integer
-    Dim DBFileName As String
+    Dim Line1 As String
+    Dim Line2 As String
+    Dim Line3 As String
+    Dim Line4 As String
+    Dim Line5 As String
     
     Const StrPROCEDURE As String = "ReadINIFile()"
 
@@ -196,21 +200,30 @@ Public Function ReadINIFile() As Boolean
     
     Open SYS_PATH & INI_FILE_NAME For Input As #INIFile
     
-    Line Input #INIFile, DebugMode
-    Line Input #INIFile, SendEmails
-    Line Input #INIFile, EnablePrint
-    Line Input #INIFile, DBPath
-    Line Input #INIFile, DBFileName
-    Line Input #INIFile, DevMode
+    Line Input #INIFile, Line1
+    Line Input #INIFile, Line2
+    Line Input #INIFile, Line3
+    Line Input #INIFile, Line4
+    Line Input #INIFile, Line5
     
     Close #INIFile
+    DebugMode = Split(Line1, ":")
+    SendEmails = Split(Line2, ":")
+    EnablePrint = Split(Line3, ":")
+    DBPath = Split(Line4, ":")
+    DevMode = Split(Line5, ":")
     
-    DEBUG_MODE = CBool(DebugMode)
-    SEND_EMAILS = CBool(SendEmails)
-    ENABLE_PRINT = CBool(EnablePrint)
-    DB_PATH = DBPath
-    DB_FILE_NAME = DBFileName
-    DEV_MODE = CBool(DevMode)
+    Line1 = Trim(DebugMode(1))
+    Line2 = Trim(SendEmails(1))
+    Line3 = Trim(EnablePrint(1))
+    Line4 = Trim(DBPath(1))
+    Line5 = Trim(DevMode(1))
+    
+    DEBUG_MODE = CBool(Line1)
+    SEND_EMAILS = CBool(Line2)
+    ENABLE_PRINT = CBool(Line3)
+    DB_PATH = Line4
+    DEV_MODE = CBool(Line5)
     
     If STOP_FLAG = True Then Stop
     

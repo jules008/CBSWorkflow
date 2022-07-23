@@ -85,7 +85,7 @@ Private Sub Workbook_Open()
 
     On Error GoTo ErrorHandler
 
-    If Not ModStartUp.Initialise Then Err.Raise HANDLED_ERROR
+    FrmStartBanner.Show
 Exit Sub
 
 ErrorExit:
