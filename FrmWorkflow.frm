@@ -99,9 +99,13 @@ Private Function PopulateForm() As Boolean
     Progress ProgPC
     
     With ActiveWorkFlow
+        TxtWorkflowNo = .WorkflowNo
+        TxtWFName = .Name
     End With
     
     With ActiveWorkFlow.ActiveStep
+        TxtStepName = .StepNo & " - " & .StepName
+        TxtAction = .StepAction
     End With
 
     Select Case ActiveWorkFlow.ActiveStep.StepType
@@ -388,82 +392,12 @@ Sub Progress(pctCompl As Single)
 End Sub
 
 ' ===============================================================
-' TxtCertNo_DblClick
-' ---------------------------------------------------------------
-Private Sub TxtCertNo_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
-    CopyTextToClipboard TxtCertNo
-End Sub
-
-' ===============================================================
-' TxtCertName_DblClick
-' ---------------------------------------------------------------
-Private Sub TxtCertName_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
-    CopyTextToClipboard TxtCertName
-End Sub
-
-' ===============================================================
 ' TxtDataInput_Change
 ' ---------------------------------------------------------------
 Private Sub TxtDataInput_Change()
     If TxtDataInput <> "" Then
         ActiveWorkFlow.ActiveStep.DataItem = TxtDataInput
     End If
-End Sub
-
-' ===============================================================
-' TxtUserName_DblClick
-' ---------------------------------------------------------------
-Private Sub TxtUserName_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
-    CopyTextToClipboard TxtUserName
-End Sub
-
-' ===============================================================
-' TxtStudentID_DblClick
-' ---------------------------------------------------------------
-Private Sub TxtStudentID_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
-    CopyTextToClipboard TxtStudentID
-End Sub
-
-' ===============================================================
-' TxtContract_DblClick
-' ---------------------------------------------------------------
-Private Sub TxtContract_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
-    CopyTextToClipboard TxtContract
-End Sub
-
-' ===============================================================
-' TxtPosition_DblClick
-' ---------------------------------------------------------------
-Private Sub TxtPosition_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
-    CopyTextToClipboard TxtPosition
-End Sub
-
-' ===============================================================
-' TxtSSN_DblClick
-' ---------------------------------------------------------------
-Private Sub TxtSSN_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
-    CopyTextToClipboard TxtSSN
-End Sub
-
-' ===============================================================
-' TxtWatch_DblClick
-' ---------------------------------------------------------------
-Private Sub TxtWatch_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
-    CopyTextToClipboard TxtWatch
-End Sub
-
-' ===============================================================
-' TxtFIN_DblClick
-' ---------------------------------------------------------------
-Private Sub TxtFIN_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
-    CopyTextToClipboard TxtFIN
-End Sub
-
-' ===============================================================
-' TxtGrade_DblClick
-' ---------------------------------------------------------------
-Private Sub TxtGrade_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
-    CopyTextToClipboard TxtGrade
 End Sub
 
 ' ===============================================================

@@ -27,6 +27,8 @@ Public Function Initialise() As Boolean
 
     On Error GoTo ErrorHandler
     
+    TimeStart = MicroTimer
+
     ModLibrary.PerfSettingsOn
     
     ShtMain.Unprotect PROTECT_KEY
@@ -80,19 +82,18 @@ Public Function Initialise() As Boolean
     'build styles
     FrmStartBanner.Progress "Building Styles.....", 5 / 7 * 100
     
-'    If Not ModUIMenu.BuildStylesMenu Then Err.Raise HANDLED_ERROR
-'    If Not ModUIStyles.BuildScreenStyles Then Err.Raise HANDLED_ERROR
+    If Not ModUIStyles.BuildScreenStyles Then Err.Raise HANDLED_ERROR
     
     Windows(ThisWorkbook.Name).Visible = True
     
     FrmStartBanner.Progress "Buidling UI.....", 6 / 7 * 100
         
     'Build menu and backdrop
-'    If Not ModUIMenu.BuildMenu Then Err.Raise HANDLED_ERROR
+    If Not ModUIMenu.BuildMenu Then Err.Raise HANDLED_ERROR
             
     If Not HideTabs Then Err.Raise HANDLED_ERROR
     
-'    If Not ModUIMenu.ProcessBtnPress() Then Err.Raise HANDLED_ERROR
+    If Not ModUIMenu.ProcessBtnPress() Then Err.Raise HANDLED_ERROR
     
     ShtMain.Unprotect PROTECT_KEY
 

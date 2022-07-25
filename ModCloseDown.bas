@@ -20,30 +20,30 @@ Private Const StrMODULE As String = "ModCloseDown"
 ' Closedown processing
 ' ---------------------------------------------------------------
 Public Function Terminate() As Boolean
-'    Dim Frame As ClsUIFrame
+    Dim Frame As ClsUIFrame
 '    Dim DashObj As ClsUIDashObj
-'    Dim MenuItem As ClsUIMenuItem
-'    Dim Lineitem As ClsUILineitem
-'
+    Dim MenuItem As ClsUIMenuItem
+    Dim Lineitem As ClsUILineitem
+
     Const StrPROCEDURE As String = "Terminate()"
-'
-'    On Error Resume Next
-'
-'    ShtMain.Unprotect PROTECT_KEY
-'
-''    CurrentUser.LogUserOff
-'    SYSTEM_CLOSING = True
-'
-'    If Not EndGlobalClasses Then Err.Raise HANDLED_ERROR
-'
-'    Application.DisplayFullScreen = False
-'
-'    Set MainScreen = Nothing
-'
+
+    On Error Resume Next
+
+    ShtMain.Unprotect PROTECT_KEY
+
+'    CurrentUser.LogUserOff
+    SYSTEM_CLOSING = True
+
+    If Not EndGlobalClasses Then Err.Raise HANDLED_ERROR
+
+    Application.DisplayFullScreen = False
+
+    Set MainScreen = Nothing
+
 '    If Not CurrentUser Is Nothing Then Set CurrentUser = Nothing
-'
-'    ModDatabase.DBTerminate
-'    DeleteAllShapes
+
+    ModDatabase.DBTerminate
+    DeleteAllShapes
 
     Terminate = True
 

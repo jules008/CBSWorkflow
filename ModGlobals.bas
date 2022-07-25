@@ -85,6 +85,11 @@ Public ActiveWorkFlow As ClsWorkflow
 ' ===============================================================
 ' Global UI Class Declarations
 ' ---------------------------------------------------------------
+Public MainScreen As ClsUIScreen
+Public MenuBar As ClsUIFrame
+Public MenuItem As ClsUIMenuItem
+Public MainFrame As ClsUIFrame
+Public BtnNewWorkflow As ClsUIMenuItem
 
 ' ===============================================================
 ' Colours
@@ -110,6 +115,21 @@ Public Const COLOUR_17 As Long = &H0&
 ' ===============================================================
 ' Type Declarations
 ' ---------------------------------------------------------------
+Type TypeStyle
+    ForeColour As Long
+    BorderColour As Long
+    BorderWidth As Single
+    FontStyle As String
+    FontBold As Boolean
+    FontSize As Integer
+    FontColour As Long
+    FontXJust As XlHAlign
+    FontYJust As XlVAlign
+    Fill1 As Long
+    Fill2 As Long
+    Shadow As MsoShadowType
+    TextDir As MsoTextOrientation
+End Type
 
 ' ===============================================================
 ' Enum Declarations
