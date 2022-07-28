@@ -308,7 +308,7 @@ Public Sub ProcessBtnPress(ButtonNo As Integer)
 
 Restart:
 
-'    If MainScreen Is Nothing Then Err.Raise SYSTEM_RESTART
+    If MainScreen Is Nothing Then Err.Raise SYSTEM_RESTART
 
         Application.StatusBar = ""
                 
@@ -325,8 +325,8 @@ Restart:
                 .DBSave
                 
                 FrmWorkflow.ShowForm
-'                If Not ModUIActive.RefreshList Then Err.Raise HANDLED_ERROR
-'                .DBSave
+                If Not ModUIActive.RefreshList Then Err.Raise HANDLED_ERROR
+                .DBSave
             End With
                         
     End Select

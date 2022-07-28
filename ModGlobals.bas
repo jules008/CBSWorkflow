@@ -90,27 +90,27 @@ Public MenuBar As ClsUIFrame
 Public MenuItem As ClsUIMenuItem
 Public MainFrame As ClsUIFrame
 Public BtnNewWorkflow As ClsUIMenuItem
+Public Logo As ClsUIDashObj
 
 ' ===============================================================
 ' Colours
 ' ---------------------------------------------------------------
-Public Const COLOUR_1 As Long = &HBBA994
-Public Const COLOUR_2 As Long = &H9B6C47
-Public Const COLOUR_3 As Long = &H8B991B
-Public Const COLOUR_4 As Long = &H151DFF
-Public Const COLOUR_5 As Long = &H47453D
-Public Const COLOUR_6 As Long = &HD0E528
-Public Const COLOUR_7 As Long = &HFFFFFF
-Public Const COLOUR_8 As Long = &HEBF7F6
-Public Const COLOUR_9 As Long = &HBDBE06
-Public Const COLOUR_10 As Long = &HC33E&
-Public Const COLOUR_11 As Long = &H31FCFF
-Public Const COLOUR_12 As Long = &HEE4A&
-Public Const COLOUR_13 As Long = &HB4FF&
-Public Const COLOUR_14 As Long = &H696DFF
-Public Const COLOUR_15 As Long = &HB4FF&
-Public Const COLOUR_16 As Long = &HD9FC&
-Public Const COLOUR_17 As Long = &H0&
+Public Const COLOUR_1 As Long = 9613098     'Aqua
+Public Const COLOUR_2 As Long = 7025624     'Pink
+Public Const COLOUR_3 As Long = 6901523    'Blue
+Public Const COLOUR_4 As Long = 4408131    'Dark Grey
+Public Const COLOUR_5 As Long = &HFFFFFF    'White
+Public Const COLOUR_6 As Long = &H0         'Black
+Public Const COLOUR_7 As Long = &HFFF9FB    'off White
+Public Const COLOUR_8 As Long = 1033457     'Amber
+Public Const COLOUR_9 As Long = 2752442    'Green
+Public Const COLOUR_10 As Long = 4007639    'Red
+Public Const COLOUR_11 As Long = &HFFFFFF    'White
+Public Const COLOUR_12 As Long = &HFFFFFF    'White
+Public Const COLOUR_13 As Long = &HFFFFFF    'White
+Public Const COLOUR_14 As Long = &HFFFFFF    'White
+Public Const COLOUR_15 As Long = &HFFFFFF    'White
+Public Const COLOUR_16 As Long = &HFFFFFF    'White
 
 ' ===============================================================
 ' Type Declarations
@@ -138,6 +138,11 @@ Enum EnumTriState
     xTrue
     xFalse
     xError
+End Enum
+
+Enum EnumObjType
+    ObjImage = 1
+    ObjChart = 2
 End Enum
 
 Enum EnumBtnNo

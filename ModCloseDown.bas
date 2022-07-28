@@ -21,7 +21,7 @@ Private Const StrMODULE As String = "ModCloseDown"
 ' ---------------------------------------------------------------
 Public Function Terminate() As Boolean
     Dim Frame As ClsUIFrame
-'    Dim DashObj As ClsUIDashObj
+    Dim DashObj As ClsUIDashObj
     Dim MenuItem As ClsUIMenuItem
     Dim Lineitem As ClsUILineitem
 

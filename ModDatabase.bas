@@ -33,14 +33,11 @@ Public Function SQLQuery(SQL As String) As Recordset
 Restart:
     Application.StatusBar = ""
 
-    If DB Is Nothing Then
-        Err.Raise NO_DATABASE_FOUND, Description:="Unable to connect to database"
-    Else
+    If DB Is Nothing Then DBConnect
         If FaultCount1008 > 0 Then FaultCount1008 = 0
     
         Set RstResults = DB.OpenRecordset(SQL, dbOpenDynaset)
         Set SQLQuery = RstResults
-    End If
     
     Set RstResults = Nothing
     
@@ -83,6 +80,7 @@ Public Function DBConnect() As Boolean
 
     On Error GoTo ErrorHandler
         
+    If Not ReadINIFile Then Error.Raise HANDLED_ERROR
     Debug.Print Now & " - Connect to DB: " & DB_PATH & DB_FILE_NAME
     
     Set DB = OpenDatabase(GetDocLocalPath(ThisWorkbook.Path) & "/" & DB_PATH & DB_FILE_NAME)

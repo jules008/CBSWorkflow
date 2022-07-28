@@ -44,7 +44,7 @@ Private Function BuildMainFrame() As Boolean
             .Width = .Parent.Width
             .Height = HEADER_HEIGHT
             .Name = "Main Frame Header"
-            .Text = "Active CDC Workflows"
+            .Text = "Active Workflows"
             .Style = HEADER_STYLE
 '            .Icon = ShtMain.Shapes("TEMPLATE - Active").Duplicate
 '            .Icon.Top = .Parent.Top + HEADER_ICON_TOP
@@ -137,26 +137,22 @@ End Function
 ' Refreshes the list of active workflows
 ' ---------------------------------------------------------------
 Public Function RefreshList(Optional SortBy As String) As Boolean
-    Static StrSortBy As String
-    Dim DoDCert As String
-    Dim WorkflowStage As String
-    Dim MemberName As String
-    Dim MemberWatch As String
     Dim StepNo As String
     Dim CurrentStep As String
     Dim ActionOn As String
-    Dim SSN As String
-    Dim StudentID As String
     Dim StepStatus As enStatus
     Dim Workflows As ClsWorkflows
     Dim Lineitem As ClsUILineitem
     Dim StrOnAction As String
     Dim CustomStyle As TypeStyle
+    Dim StrSortBy As String
     Dim RstWorkflowList As Recordset
     Dim ScreenSel As String
     Dim i As Integer
     Dim x As Integer
     Dim RowTitles() As String
+    Dim WorkflowNo As String
+    Dim MemberName As String
 
     Const StrPROCEDURE As String = "RefreshList()"
 
@@ -212,6 +208,8 @@ Public Function RefreshList(Optional SortBy As String) As Boolean
             StrOnAction = "'ModUIActive.OpenWorkflow(" & !WorkflowNo & ")'"
             
             If Not IsNull(!CurrentStep) Then StepNo = !CurrentStep Else StepNo = ""
+            If Not IsNull(!WorkflowNo) Then WorkflowNo = !WorkflowNo Else WorkflowNo = ""
+            If Not IsNull(!Member) Then MemberName = !Member Else MemberName = ""
             If Not IsNull(!StepName) Then CurrentStep = !StepName Else CurrentStep = ""
             ActionOn = ""
             If Not IsNull(!Status) Then StepStatus = enStatusVal(!Status)
@@ -228,14 +226,11 @@ Public Function RefreshList(Optional SortBy As String) As Boolean
             End If
             
             With MainFrame.Lineitems
-                .Text x, 0, MemberName, GENERIC_LINEITEM, StrOnAction
-                .Text x, 1, SSN, GENERIC_LINEITEM, StrOnAction
-                .Text x, 2, StudentID, GENERIC_LINEITEM, StrOnAction
-                .Text x, 3, MemberWatch, GENERIC_LINEITEM, StrOnAction
-                .Text x, 4, DoDCert, GENERIC_LINEITEM, StrOnAction
-                .Text x, 5, StepNo, GENERIC_LINEITEM, StrOnAction
-                .Text x, 6, CurrentStep, GENERIC_LINEITEM, StrOnAction
-                .Text x, 7, enStatusDisp(StepStatus), CustomStyle, StrOnAction
+                .Text x, 0, WorkflowNo, GENERIC_LINEITEM, StrOnAction
+                .Text x, 1, MemberName, GENERIC_LINEITEM, StrOnAction
+                .Text x, 2, StepNo, GENERIC_LINEITEM, StrOnAction
+                .Text x, 3, CurrentStep, GENERIC_LINEITEM, StrOnAction
+                .Text x, 4, enStatusDisp(StepStatus), CustomStyle, StrOnAction
             End With
             
             If x > ACTIVE_MAX_LINES Then Exit For
@@ -346,8 +341,10 @@ Public Function GetActiveList(StrSortBy As String) As Recordset
 
     SQL = ("SELECT " _
                 & "TblWorkflow.Name, " _
+                & "TblWorkflow.WorkflowNo, " _
                 & "TblWorkflow.CurrentStep, " _
                 & "TblWorkflow.Status, " _
+                & "TblWorkflow.Member, " _
                 & "TblStep.StepName, " _
                 & "TblWorkflow.RAG, " _
                 & "TblWorkflow.WorkflowNo " _

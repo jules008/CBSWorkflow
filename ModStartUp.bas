@@ -69,13 +69,13 @@ Public Function Initialise() As Boolean
     
     If Not SetGlobalClasses Then Err.Raise HANDLED_ERROR
     
-    FrmStartBanner.Progress "Logging User On.....", 4 / 7 * 100
+'    FrmStartBanner.Progress "Logging User On.....", 4 / 7 * 100
 
     UserName = GetUserName
     
     If UserName = "Error" Then Err.Raise HANDLED_ERROR
     
-    If Not ModSecurity.LogUserOn(UserName) Then Err.Raise HANDLED_ERROR
+'    If Not ModSecurity.LogUserOn(UserName) Then Err.Raise HANDLED_ERROR
     
 '    If Not MessageCheck Then Err.Raise HANDLED_ERROR
     
@@ -103,6 +103,8 @@ Public Function Initialise() As Boolean
     
     FrmStartBanner.Progress "", 7 / 7 * 100
    
+    Application.Wait (Now + TimeValue("00:00:01"))
+    
    ModLibrary.PerfSettingsOff
    
     Initialise = True

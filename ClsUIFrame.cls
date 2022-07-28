@@ -27,7 +27,7 @@ Private pWidth As Integer
 Private pName As String
 Private pStyle As TypeStyle
 'Private pGraphs As ClsUiGraphs
-'Private pDashObjs As ClsUIDashObjs
+Private pDashObjs As ClsUIDashObjs
 Private pMenu As ClsUIMenu
 Private pEnableHeader As Boolean
 Private pHeader As ClsUIHeader
@@ -90,6 +90,15 @@ Public Property Let Name(ByVal vNewValue As String)
 End Property
 
 '---------------------------------------------------------------
+Public Property Get DashObs() As ClsUIDashObjs
+    Set DashObs = pDashObjs
+End Property
+
+Public Property Let DashObs(ByVal vNewValue As ClsUIDashObjs)
+    Set pDashObjs = vNewValue
+End Property
+
+'---------------------------------------------------------------
 Public Property Get Menu() As ClsUIMenu
     Set Menu = pMenu
 End Property
@@ -141,15 +150,15 @@ Public Property Get Visible() As Boolean
 End Property
 
 Public Property Let Visible(ByVal vNewValue As Boolean)
-'    Dim DashObj As ClsUIDashObj
+    Dim DashObj As ClsUIDashObj
     
     pVisible = vNewValue
     
     pShpFrame.Visible = pVisible
     
-'    For Each DashObj In pDashObjs
-'        DashObj.Visible = pVisible
-'    Next
+    For Each DashObj In pDashObjs
+        DashObj.Visible = pVisible
+    Next
     
     If pEnableHeader Then pHeader.Visible = pVisible
     
@@ -221,15 +230,15 @@ End Property
 ' re-orders the shapes so that the frames sit on top of the screen
 '---------------------------------------------------------------
 Public Sub ReOrder()
-'    Dim DashObj As ClsUIDashObj
+    Dim DashObj As ClsUIDashObj
     Dim UILineitem As ClsUILineitem
     
     pShpFrame.ZOrder msoBringToFront
     pHeader.ReOrder
     
-'    For Each DashObj In pDashObjs
-'        DashObj.ShpDashObj.ZOrder msoBringToFront
-'    Next
+    For Each DashObj In pDashObjs
+        DashObj.ShpDashObj.ZOrder msoBringToFront
+    Next
     
     For Each UILineitem In pLineitems
         With UILineitem
@@ -264,27 +273,27 @@ End Function
 Private Sub Class_Initialize()
     Set pMenu = New ClsUIMenu
     Set pHeader = New ClsUIHeader
-'    Set pDashObjs = New ClsUIDashObjs
+    Set pDashObjs = New ClsUIDashObjs
     Set pLineitems = New ClsUILineitems
     Set pLineitemHeaders = New ClsUILineitems
     Set pShpFrame = ShtMain.Shapes.AddShape(msoShapeRectangle, 0, 0, 10, 10)
     
     pMenu.SetParent ObjPtr(Me)
     pHeader.SetParent ObjPtr(Me)
-'    pDashObjs.SetParent ObjPtr(Me)
+    pDashObjs.SetParent ObjPtr(Me)
     pLineitems.SetParent ObjPtr(Me)
     pLineitemHeaders.SetParent ObjPtr(Me)
 End Sub
 
 '---------------------------------------------------------------
 Private Sub Class_Terminate()
-'    pDashObjs.SetParent 0
+    pDashObjs.SetParent 0
     pMenu.SetParent 0
     pHeader.SetParent 0
     pLineitems.SetParent 0
     pLineitemHeaders.SetParent 0
     
-'    Set pDashObjs = Nothing
+    Set pDashObjs = Nothing
     Set pMenu = Nothing
     Set pHeader = Nothing
     Set pLineitems = Nothing

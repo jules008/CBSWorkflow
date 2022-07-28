@@ -41,15 +41,6 @@ Public Const GENERIC_LINEITEM_TOP As Integer = 21
 Public Const GENERIC_LINEITEM_ROWOFFSET As Integer = 21
 
 ' ---------------------------------------------------------------
-' Vert LineItem Settings
-' ---------------------------------------------------------------
-'Public Const VERT_LINEITEM_HEIGHT As Integer = 100
-'Public Const VERT_LINEITEM_WIDTH As Integer = 550
-'Public Const VERT_LINEITEM_LEFT As Integer = 0
-'Public Const VERT_LINEITEM_TOP As Integer = 21
-'Public Const VERT_LINEITEM_ROWOFFSET As Integer = 21
-
-' ---------------------------------------------------------------
 ' Menu Bar
 ' ---------------------------------------------------------------
 Public Const MENUITEM_HEIGHT As Integer = 31
@@ -60,18 +51,18 @@ Public Const MENUBAR_LEFT As Integer = 0
 Public Const MENU_TOP As Integer = 150
 Public Const MENU_LEFT As Integer = 10
 Public Const MENUITEM_WIDTH As Integer = 150
-Public Const MENUITEM_COUNT As Integer = 7
-Public Const MENUITEM_TEXT = "For Action:Active:Complete:Dashboard:Reports:Admin:Exit"
+Public Const MENUITEM_COUNT As Integer = 4
+Public Const MENUITEM_TEXT = "For Action:Active:Complete:Exit"
 'Public Const MENUITEM_ICONS = "TEMPLATE - For Action:TEMPLATE - Active:TEMPLATE - Complete:TEMPLATE - Dashboard:TEMPLATE - Reports:TEMPLATE - Admin:TEMPLATE - Exit"
 'Public Const MENUITEM_BADGES = "TEMPLATE - No Action Items::::::"
 'Public Const MENUITEM_ICON_TOP As Integer = 6
 'Public Const MENUITEM_ICON_LEFT As Integer = 5
 'Public Const MENUITEM_BADGE_TOP As Integer = -6
 'Public Const MENUITEM_BADGE_LEFT As Integer = 125
-'Public Const LOGO_TOP As Integer = 40
-'Public Const LOGO_LEFT As Integer = 10
-'Public Const LOGO_WIDTH As Integer = 100
-'Public Const LOGO_HEIGHT As Integer = 50
+Public Const LOGO_TOP As Integer = 13
+Public Const LOGO_LEFT As Integer = 10
+Public Const LOGO_WIDTH As Integer = 139
+Public Const LOGO_HEIGHT As Integer = 90
 '
 Public Const HEADER_HEIGHT As Integer = 25
 Public Const HEADER_ICON_TOP As Integer = 2
@@ -110,26 +101,26 @@ Public Const BTN_MAIN_1_HEIGHT As Integer = 40
 ' ---------------------------------------------------------------
 ' For Action Screen
 ' ---------------------------------------------------------------
-'Public Const FOR_ACTION_LINEITEM_NOCOLS As Integer = 8
-'Public Const FOR_ACTION_LINEITEM_COL_WIDTHS As String = "120:80:80:60:150:60:240:100"
-'Public Const FOR_ACTION_LINEITEM_TITLES As String = "Name:SSN:Student ID:Watch:DoD Certification:Step No:Step Name:Status"
-'Public Const FOR_ACTION_MAX_LINES As Integer = 40
-'
+Public Const FOR_ACTION_LINEITEM_NOCOLS As Integer = 5
+Public Const FOR_ACTION_LINEITEM_COL_WIDTHS As String = "100:200:200:290:100"
+Public Const FOR_ACTION_LINEITEM_TITLES As String = "Workflow No:Name:Step No:Step Name:Status"
+Public Const FOR_ACTION_MAX_LINES As Integer = 40
+
 ' ---------------------------------------------------------------
 ' Active Screen
 ' ---------------------------------------------------------------
-Public Const ACTIVE_LINEITEM_NOCOLS As Integer = 8
-Public Const ACTIVE_LINEITEM_COL_WIDTHS As String = "120:80:80:60:150:60:240:100"
-Public Const ACTIVE_LINEITEM_TITLES As String = "Name:SSN:Student ID:Watch:DoD Certification:Step No:Step Name:Status"
+Public Const ACTIVE_LINEITEM_NOCOLS As Integer = 5
+Public Const ACTIVE_LINEITEM_COL_WIDTHS As String = "100:200:200:290:100"
+Public Const ACTIVE_LINEITEM_TITLES As String = "Workflow No:Name:Step No:Step Name:Status"
 Public Const ACTIVE_MAX_LINES As Integer = 150
-'
+
 ' ---------------------------------------------------------------
 ' Complete Screen
 ' ---------------------------------------------------------------
-'Public Const COMPLETE_LINEITEM_NOCOLS As Integer = 7
-'Public Const COMPLETE_LINEITEM_COL_WIDTHS As String = "120:120:200:60:80:190:120"
-'Public Const COMPLETE_LINEITEM_TITLES As String = "Workflow:DoD Cert:Student:Watch:Step:Step Name:Status"
-'Public Const COMPLETE_MAX_LINES As Integer = 100
+Public Const COMPLETE_LINEITEM_NOCOLS As Integer = 5
+Public Const COMPLETE_LINEITEM_COL_WIDTHS As String = "100:200:200:290:100"
+Public Const COMPLETE_LINEITEM_TITLES As String = "Workflow No:Name:Step No:Step Name:Status"
+Public Const COMPLETE_MAX_LINES As Integer = 100
 
 ' ---------------------------------------------------------------
 ' Admin Screen
@@ -264,8 +255,8 @@ Public GENERIC_LINEITEM_HEADER As TypeStyle
 ' Buttons
 ' ---------------------------------------------------------------
 Public Const GENERIC_BUTTON_BORDER_WIDTH As Single = 0
-Public Const GENERIC_BUTTON_FILL_1 As Long = COLOUR_9
-Public Const GENERIC_BUTTON_FILL_2 As Long = COLOUR_6
+Public Const GENERIC_BUTTON_FILL_1 As Long = COLOUR_3
+Public Const GENERIC_BUTTON_FILL_2 As Long = COLOUR_3
 Public Const GENERIC_BUTTON_SHADOW As Long = msoShadow21
 Public Const GENERIC_BUTTON_FONT_STYLE As String = "Eras Medium ITC"
 Public Const GENERIC_BUTTON_FONT_SIZE As Integer = 12
@@ -278,12 +269,12 @@ Public Const GENERIC_BUTTON_FONT_Y_JUST As Integer = xlVAlignCenter
 ' LineItems
 ' ---------------------------------------------------------------
 Public Const GENERIC_LINEITEM_BORDER_WIDTH As Single = 0
-Public Const GENERIC_LINEITEM_FILL_1 As Long = COLOUR_8
-Public Const GENERIC_LINEITEM_FILL_2 As Long = COLOUR_7
+Public Const GENERIC_LINEITEM_FILL_1 As Long = COLOUR_5
+Public Const GENERIC_LINEITEM_FILL_2 As Long = COLOUR_5
 Public Const GENERIC_LINEITEM_SHADOW As Long = 0
 Public Const GENERIC_LINEITEM_FONT_STYLE As String = "Eras Medium ITC"
 Public Const GENERIC_LINEITEM_FONT_SIZE As Integer = 10
-Public Const GENERIC_LINEITEM_FONT_COLOUR As Long = COLOUR_2
+Public Const GENERIC_LINEITEM_FONT_COLOUR As Long = COLOUR_4
 Public Const GENERIC_LINEITEM_FONT_BOLD As Boolean = False
 Public Const GENERIC_LINEITEM_FONT_X_JUST As Integer = xlHAlignCenter
 Public Const GENERIC_LINEITEM_FONT_Y_JUST As Integer = xlVAlignBottom
@@ -292,8 +283,8 @@ Public Const GENERIC_LINEITEM_FONT_Y_JUST As Integer = xlVAlignBottom
 ' LineItem Headers
 ' ---------------------------------------------------------------
 Public Const GENERIC_LINEITEM_HEADER_BORDER_WIDTH As Single = 0
-Public Const GENERIC_LINEITEM_HEADER_FILL_1 As Long = COLOUR_6
-Public Const GENERIC_LINEITEM_HEADER_FILL_2 As Long = COLOUR_6
+Public Const GENERIC_LINEITEM_HEADER_FILL_1 As Long = COLOUR_3
+Public Const GENERIC_LINEITEM_HEADER_FILL_2 As Long = COLOUR_3
 Public Const GENERIC_LINEITEM_HEADER_SHADOW As Long = 0
 Public Const GENERIC_LINEITEM_HEADER_FONT_STYLE As String = "Calibri"
 Public Const GENERIC_LINEITEM_HEADER_FONT_SIZE As Integer = 10
@@ -322,12 +313,12 @@ Public Const TRANSPARENT_TEXT_BOX_FONT_Y_JUST As Integer = xlVAlignCenter
 ' LineItem Green
 ' ---------------------------------------------------------------
 Public Const GREEN_LINEITEM_BORDER_WIDTH As Single = 0
-Public Const GREEN_LINEITEM_FILL_1 As Long = COLOUR_10
-Public Const GREEN_LINEITEM_FILL_2 As Long = COLOUR_12
+Public Const GREEN_LINEITEM_FILL_1 As Long = COLOUR_9
+Public Const GREEN_LINEITEM_FILL_2 As Long = COLOUR_9
 Public Const GREEN_LINEITEM_SHADOW As Long = 0
 Public Const GREEN_LINEITEM_FONT_STYLE As String = "Eras Medium ITC"
 Public Const GREEN_LINEITEM_FONT_SIZE As Integer = 11
-Public Const GREEN_LINEITEM_FONT_COLOUR As Long = COLOUR_7
+Public Const GREEN_LINEITEM_FONT_COLOUR As Long = COLOUR_4
 Public Const GREEN_LINEITEM_FONT_BOLD As Boolean = False
 Public Const GREEN_LINEITEM_FONT_X_JUST As Integer = xlHAlignCenter
 Public Const GREEN_LINEITEM_FONT_Y_JUST As Integer = xlVAlignCenter
@@ -336,12 +327,12 @@ Public Const GREEN_LINEITEM_FONT_Y_JUST As Integer = xlVAlignCenter
 ' LineItem Amber
 ' ---------------------------------------------------------------
 Public Const AMBER_LINEITEM_BORDER_WIDTH As Single = 0
-Public Const AMBER_LINEITEM_FILL_1 As Long = COLOUR_15
-Public Const AMBER_LINEITEM_FILL_2 As Long = COLOUR_16
+Public Const AMBER_LINEITEM_FILL_1 As Long = COLOUR_8
+Public Const AMBER_LINEITEM_FILL_2 As Long = COLOUR_8
 Public Const AMBER_LINEITEM_SHADOW As Long = 0
 Public Const AMBER_LINEITEM_FONT_STYLE As String = "Eras Medium ITC"
 Public Const AMBER_LINEITEM_FONT_SIZE As Integer = 11
-Public Const AMBER_LINEITEM_FONT_COLOUR As Long = COLOUR_7
+Public Const AMBER_LINEITEM_FONT_COLOUR As Long = COLOUR_4
 Public Const AMBER_LINEITEM_FONT_BOLD As Boolean = False
 Public Const AMBER_LINEITEM_FONT_X_JUST As Integer = xlHAlignCenter
 Public Const AMBER_LINEITEM_FONT_Y_JUST As Integer = xlVAlignCenter
@@ -350,12 +341,12 @@ Public Const AMBER_LINEITEM_FONT_Y_JUST As Integer = xlVAlignCenter
 ' LineItem Red
 ' ---------------------------------------------------------------
 Public Const RED_LINEITEM_BORDER_WIDTH As Single = 0
-Public Const RED_LINEITEM_FILL_1 As Long = COLOUR_4
-Public Const RED_LINEITEM_FILL_2 As Long = COLOUR_14
+Public Const RED_LINEITEM_FILL_1 As Long = COLOUR_10
+Public Const RED_LINEITEM_FILL_2 As Long = COLOUR_10
 Public Const RED_LINEITEM_SHADOW As Long = 0
 Public Const RED_LINEITEM_FONT_STYLE As String = "Eras Medium ITC"
 Public Const RED_LINEITEM_FONT_SIZE As Integer = 11
-Public Const RED_LINEITEM_FONT_COLOUR As Long = COLOUR_7
+Public Const RED_LINEITEM_FONT_COLOUR As Long = COLOUR_5
 Public Const RED_LINEITEM_FONT_BOLD As Boolean = False
 Public Const RED_LINEITEM_FONT_X_JUST As Integer = xlHAlignCenter
 Public Const RED_LINEITEM_FONT_Y_JUST As Integer = xlVAlignCenter
@@ -393,17 +384,17 @@ Public Const BTN_SUPPORT_FONT_Y_JUST As Integer = xlVAlignCenter
 ' Main Screen
 ' ===============================================================
 Public Const SCREEN_BORDER_WIDTH As Single = 0
-Public Const SCREEN_FILL_1 As Long = COLOUR_3
-Public Const SCREEN_FILL_2 As Long = COLOUR_3
+Public Const SCREEN_FILL_1 As Long = COLOUR_7
+Public Const SCREEN_FILL_2 As Long = COLOUR_7
 Public Const SCREEN_SHADOW As Long = 0
 
-Public Const MENUBAR_BORDER_WIDTH As Single = 0
+Public Const MENUBAR_BORDER_WIDTH As Single = 1
 Public Const MENUBAR_FILL_1 As Long = COLOUR_5
 Public Const MENUBAR_FILL_2 As Long = COLOUR_5
 Public Const MENUBAR_SHADOW As Long = msoShadow21
 
 Public Const MENUITEM_UNSET_BORDER_WIDTH As Single = 1
-Public Const MENUITEM_UNSET_BORDER_COLOUR As Long = COLOUR_2
+Public Const MENUITEM_UNSET_BORDER_COLOUR As Long = COLOUR_3
 Public Const MENUITEM_UNSET_FILL_1 As Long = COLOUR_5
 Public Const MENUITEM_UNSET_FILL_2 As Long = COLOUR_5
 Public Const MENUITEM_UNSET_SHADOW As Long = 0
@@ -415,8 +406,8 @@ Public Const MENUITEM_UNSET_FONT_Y_JUST As Integer = xlVAlignCenter
 
 Public Const MENUITEM_SET_BORDER_WIDTH As Single = 0
 Public Const MENUITEM_SET_BORDER_COLOUR As Long = COLOUR_3
-Public Const MENUITEM_SET_FILL_1 As Long = COLOUR_3
-Public Const MENUITEM_SET_FILL_2 As Long = COLOUR_6
+Public Const MENUITEM_SET_FILL_1 As Long = COLOUR_2
+Public Const MENUITEM_SET_FILL_2 As Long = COLOUR_2
 Public Const MENUITEM_SET_SHADOW As Long = 0
 Public Const MENUITEM_SET_FONT_STYLE As String = "Eras Medium ITC"
 Public Const MENUITEM_SET_FONT_SIZE As Integer = 12
@@ -430,8 +421,8 @@ Public Const MAIN_FRAME_FILL_2 As Long = COLOUR_8
 Public Const MAIN_FRAME_SHADOW As Long = msoShadow21
 
 Public Const HEADER_BORDER_WIDTH As Single = 0
-Public Const HEADER_FILL_1 As Long = COLOUR_9
-Public Const HEADER_FILL_2 As Long = COLOUR_9
+Public Const HEADER_FILL_1 As Long = COLOUR_2
+Public Const HEADER_FILL_2 As Long = COLOUR_2
 Public Const HEADER_SHADOW As Long = 0
 Public Const HEADER_FONT_STYLE As String = "Eras Medium ITC"
 Public Const HEADER_FONT_SIZE As Integer = 12

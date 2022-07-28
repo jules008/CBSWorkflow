@@ -23,6 +23,7 @@ Option Explicit
 Private pDeleted As Date
 Private pWorkflowNo As Integer
 Private pName As String
+Private pMember As String
 Private pRAG As enRAG
 Private pCurrentStep As String
 Private pNextStep As String
@@ -58,6 +59,15 @@ End Property
 
 Public Property Let Name(ByVal vNewValue As String)
     pName = vNewValue
+End Property
+
+'---------------------------------------------------------------
+Public Property Get Member() As String
+    Member = pMember
+End Property
+
+Public Property Let Member(ByVal vNewValue As String)
+    pMember = vNewValue
 End Property
 
 '---------------------------------------------------------------
@@ -167,7 +177,9 @@ Public Sub DBGet(WorkflowNo As String)
             If Not IsNull(!Name) Then pName = !Name
             If Not IsNull(!Status) Then pStatus = enStatusVal(!Status)
             If Not IsNull(!RAG) Then pRAG = enRAGVal(!RAG)
+            If Not IsNull(!Member) Then pMember = !Member
             
+            pSteps.DeleteCollection
             pSteps.GetCollection
         End If
     End With

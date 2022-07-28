@@ -16,73 +16,6 @@ Option Explicit
 Private Const StrMODULE As String = "ModUIMenu"
 
 ' ===============================================================
-' BuildStylesMenu
-' Builds the UI styles for use on the menu and back drop
-' ---------------------------------------------------------------
-'Public Function BuildStylesMenu() As Boolean
-'    Const StrPROCEDURE As String = "BuildStylesMenu()"
-'
-'    On Error GoTo ErrorHandler
-'
-'    With SCREEN_STYLE
-'        .BorderWidth = SCREEN_BORDER_WIDTH
-'        .Fill1 = SCREEN_FILL_1
-'        .Fill2 = SCREEN_FILL_2
-'        .Shadow = SCREEN_SHADOW
-'    End With
-'
-'    With MENUBAR_STYLE
-'        .BorderWidth = MENUBAR_BORDER_WIDTH
-'        .Fill1 = MENUBAR_FILL_1
-'        .Fill2 = MENUBAR_FILL_2
-'        .Shadow = MENUBAR_SHADOW
-'    End With
-'
-'    With MENUITEM_UNSET_STYLE
-'        .BorderWidth = MENUITEM_UNSET_BORDER_WIDTH
-'        .BorderColour = MENUITEM_UNSET_BORDER_COLOUR
-'        .Fill1 = MENUITEM_UNSET_FILL_1
-'        .Fill2 = MENUITEM_UNSET_FILL_2
-'        .Shadow = MENUITEM_UNSET_SHADOW
-'        .FontStyle = MENUITEM_UNSET_FONT_STYLE
-'        .FontSize = MENUITEM_UNSET_FONT_SIZE
-'        .FontColour = MENUITEM_UNSET_FONT_COLOUR
-'        .FontXJust = MENUITEM_UNSET_FONT_X_JUST
-'        .FontYJust = MENUITEM_UNSET_FONT_Y_JUST
-'    End With
-'
-'    With MENUITEM_SET_STYLE
-'        .BorderWidth = MENUITEM_SET_BORDER_WIDTH
-'        .BorderColour = MENUITEM_SET_BORDER_COLOUR
-'        .Fill1 = MENUITEM_SET_FILL_1
-'        .Fill2 = MENUITEM_SET_FILL_2
-'        .Shadow = MENUITEM_SET_SHADOW
-'        .FontStyle = MENUITEM_SET_FONT_STYLE
-'        .FontSize = MENUITEM_SET_FONT_SIZE
-'        .FontColour = MENUITEM_SET_FONT_COLOUR
-'        .FontXJust = MENUITEM_SET_FONT_X_JUST
-'        .FontYJust = MENUITEM_SET_FONT_Y_JUST
-'    End With
-'
-'    BuildStylesMenu = True
-'
-'Exit Function
-'
-'ErrorExit:
-'
-'    BuildStylesMenu = False
-'
-'Exit Function
-'
-'ErrorHandler:   If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
-'        Stop
-'        Resume
-'    Else
-'        Resume ErrorExit
-'    End If
-'End Function
-
-' ===============================================================
 ' BuildMenu
 ' Builds the menu using shapes
 ' ---------------------------------------------------------------
@@ -168,7 +101,7 @@ Private Function BuildMenuBar() As Boolean
 
     On Error GoTo ErrorHandler
     
-'    Set Logo = New ClsUIDashObj
+    Set Logo = New ClsUIDashObj
 '    Set BtnSupport = New ClsUIMenuItem
     
     MainScreen.Frames.AddItem MenuBar
@@ -186,18 +119,18 @@ Private Function BuildMenuBar() As Boolean
     End With
 
     'Logo
-'    MenuBar.DashObs.AddItem Logo
+    MenuBar.DashObs.AddItem Logo
     
-'    With Logo
-'        .EnumObjType = ObjImage
-'        .ShpDashObj = ShtMain.Shapes("TEMPLATE - Logo").Duplicate
-'        .Name = "Logo"
-'        .Visible = True
-'        .Top = LOGO_TOP
-'        .Left = LOGO_LEFT
-'        .Width = LOGO_WIDTH
-'        .Height = LOGO_HEIGHT
-'    End With
+    With Logo
+        .EnumObjType = ObjImage
+        .ShpDashObj = ShtMain.Shapes("TEMPLATE - Logo").Duplicate
+        .Name = "Logo"
+        .Visible = True
+        .Top = LOGO_TOP
+        .Left = LOGO_LEFT
+        .Width = LOGO_WIDTH
+        .Height = LOGO_HEIGHT
+    End With
 
     'menu
     With MenuBar.Menu
@@ -293,7 +226,7 @@ End Function
 ' ---------------------------------------------------------------
 Public Function ProcessBtnPress(Optional ButtonNo As EnumBtnNo) As Boolean
     Dim Response As Integer
-    
+    Dim RngMenu
     Const StrPROCEDURE As String = "ProcessBtnPress()"
 
     On Error GoTo ErrorHandler
@@ -303,176 +236,96 @@ Public Function ProcessBtnPress(Optional ButtonNo As EnumBtnNo) As Boolean
 Restart:
     Application.StatusBar = ""
             
+    If Not ResetScreen Then Err.Raise HANDLED_ERROR
     If Not ModUIActive.BuildScreen Then Err.Raise HANDLED_ERROR
     
-'    If ButtonNo = 0 Then
-'        ButtonNo = [menuitemno]
-'    Else
-'        If ButtonNo < 7 And ButtonNo = [menuitemno] Then Exit Function
-'    End If
+    If ButtonNo = 0 Then
+        If Not ShtMain.[MenuItem] Is Nothing Then
+            ButtonNo = ShtMain.[MenuItem]
+        Else
+            ButtonNo = enBtnActive
+        End If
+    Else
+        If ButtonNo < 4 And ButtonNo = ShtMain.[MenuItem] Then Exit Function
+    End If
     
-'    Select Case ButtonNo
-'
-'        Case enBtnForAction
+    Select Case ButtonNo
+
+        Case enBtnForAction
             
-'            ShtMain.Unprotect PROTECT_KEY
-'            [menuitemno] = 1
-'
-'            If Not ResetScreen Then Err.Raise HANDLED_ERROR
-'            If Not ModUIForAction.BuildScreen Then Err.Raise HANDLED_ERROR
-'
-'            ShtMain.Unprotect PROTECT_KEY
-'
-'            With MenuBar
-'                .Menu(1).Selected = True
-'                .Menu(2).Selected = False
-'                .Menu(3).Selected = False
-'                .Menu(4).Selected = False
-'                .Menu(5).Selected = False
-'                .Menu(6).Selected = False
-'                .Menu(7).Selected = False
-'            End With
-'
-'            If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
+            ShtMain.Unprotect PROTECT_KEY
+            ShtMain.[MenuItem] = 1
+
+            If Not ResetScreen Then Err.Raise HANDLED_ERROR
+            If Not ModUIForAction.BuildScreen Then Err.Raise HANDLED_ERROR
+
+            ShtMain.Unprotect PROTECT_KEY
+
+            With MenuBar
+                .Menu(1).Selected = True
+                .Menu(2).Selected = False
+                .Menu(3).Selected = False
+                .Menu(4).Selected = False
+            End With
+
+            If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
             
-'        Case enBtnActive
-'
-'            ShtMain.Unprotect PROTECT_KEY
-'            [menuitemno] = 2
-'
-'            If Not ResetScreen Then Err.Raise HANDLED_ERROR
-'            If Not ModUIActive.BuildScreen Then Err.Raise HANDLED_ERROR
-'
-'            ShtMain.Unprotect PROTECT_KEY
-'
-'            With MenuBar
-'                .Menu(1).Selected = False
-'                .Menu(2).Selected = True
-'                .Menu(3).Selected = False
-'                .Menu(4).Selected = False
-'                .Menu(5).Selected = False
-'                .Menu(6).Selected = False
-'                .Menu(7).Selected = False
-'            End With
-'
-'            If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
-'
-'        Case enBtnComplete
+        Case enBtnActive
 
-'            ShtMain.Unprotect PROTECT_KEY
-'            [menuitemno] = 3
-'
-'            If Not ResetScreen Then Err.Raise HANDLED_ERROR
-'            If Not ModUIComplete.BuildScreen Then Err.Raise HANDLED_ERROR
-'
-''                If CurrentUser.AccessLvl < ManagerLvl_4 Then Err.Raise ACCESS_DENIED
-'
-'            ShtMain.Unprotect PROTECT_KEY
-'
-'            With MenuBar
-'                .Menu(1).Selected = False
-'                .Menu(2).Selected = False
-'                .Menu(3).Selected = True
-'                .Menu(4).Selected = False
-'                .Menu(5).Selected = False
-'                .Menu(6).Selected = False
-'                .Menu(7).Selected = False
-'            End With
-'
-'            If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
+            ShtMain.Unprotect PROTECT_KEY
+            ShtMain.[MenuItem] = 2
 
-'        Case enBtnDashboard
+            If Not ResetScreen Then Err.Raise HANDLED_ERROR
+            If Not ModUIActive.BuildScreen Then Err.Raise HANDLED_ERROR
 
-'            ShtMain.Unprotect PROTECT_KEY
-'            [menuitemno] = 4
-'
-'            If Not ResetScreen Then Err.Raise HANDLED_ERROR
-'            If Not ModReports.ExpQryCertsMatrix(False) Then Err.Raise HANDLED_ERROR
-'            If Not ModUIDashboard.BuildScreen Then Err.Raise HANDLED_ERROR
-'
-'            ShtMain.Unprotect PROTECT_KEY
-'
-'            With MenuBar
-'                .Menu(1).Selected = False
-'                .Menu(2).Selected = False
-'                .Menu(3).Selected = False
-'                .Menu(4).Selected = True
-'                .Menu(5).Selected = False
-'                .Menu(6).Selected = False
-'                .Menu(7).Selected = False
-'            End With
-'
-'            If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
-'
-'            ModLibrary.PerfSettingsOff
-'
-'        Case enBtnRepPage
-        
-'            ShtMain.Unprotect PROTECT_KEY
-'            [menuitemno] = 5
-'
-'            If Not ResetScreen Then Err.Raise HANDLED_ERROR
-'            If Not ModUIReports.BuildScreen Then Err.Raise HANDLED_ERROR
-'
-'            ShtMain.Unprotect PROTECT_KEY
-'
-'            With MenuBar
-'                .Menu(1).Selected = False
-'                .Menu(2).Selected = False
-'                .Menu(3).Selected = False
-'                .Menu(4).Selected = False
-'                .Menu(5).Selected = True
-'                .Menu(6).Selected = False
-'                .Menu(7).Selected = False
-'           End With
-'
-'            If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
-'
-'        Case enBtnAdmin
+            ShtMain.Unprotect PROTECT_KEY
 
-'            If CurrentUser.UserLvl = enBasic Then Err.Raise ACCESS_DENIED
-'
-'            ShtMain.Unprotect PROTECT_KEY
-'            [menuitemno] = 6
-'
-'            If Not ResetScreen Then Err.Raise HANDLED_ERROR
-'            If Not ModUIAdmin.BuildScreen Then Err.Raise HANDLED_ERROR
-'
-'            ShtMain.Unprotect PROTECT_KEY
-'
-'            With MenuBar
-'                .Menu(1).Selected = False
-'                .Menu(2).Selected = False
-'                .Menu(3).Selected = False
-'                .Menu(4).Selected = False
-'                .Menu(5).Selected = False
-'                .Menu(6).Selected = True
-'                .Menu(7).Selected = False
-'            End With
-'
-'            If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
-'
-'        Case enBtnExit
+            With MenuBar
+                .Menu(1).Selected = False
+                .Menu(2).Selected = True
+                .Menu(3).Selected = False
+                .Menu(4).Selected = False
+            End With
 
-'            Response = MsgBox("Are you sure you want to exit?", vbExclamation + vbYesNo + vbDefaultButton2, APP_NAME)
-'
-'            If Response = 6 Then
-'
-'                If Workbooks.Count = 1 Then
-'                    With Application
-'                        .DisplayAlerts = False
-'                        .Quit
-'                        .DisplayAlerts = True
-'                    End With
-'                Else
-'                    ThisWorkbook.Close savechanges:=False
-'                End If
-'
-'            End If
+            If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
+
+        Case enBtnComplete
+
+            ShtMain.Unprotect PROTECT_KEY
+            ShtMain.[MenuItem] = 3
+
+            If Not ResetScreen Then Err.Raise HANDLED_ERROR
+            If Not ModUIComplete.BuildScreen Then Err.Raise HANDLED_ERROR
+
+            ShtMain.Unprotect PROTECT_KEY
+
+            With MenuBar
+                .Menu(1).Selected = False
+                .Menu(2).Selected = False
+                .Menu(3).Selected = True
+                .Menu(4).Selected = False
+            End With
+
+            If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
+
+        Case enBtnExit
+
+            Response = MsgBox("Are you sure you want to exit?", vbExclamation + vbYesNo + vbDefaultButton2, APP_NAME)
+
+            If Response = 6 Then
+
+                If Workbooks.Count = 1 Then
+                    With Application
+                        .DisplayAlerts = False
+                        .Quit
+                        .DisplayAlerts = True
+                    End With
+                Else
+                    ThisWorkbook.Close savechanges:=False
+                End If
+            End If
             
-'        Case enBtnSupport
-'            If Not FrmSupportForm.ShowForm Then Err.Raise HANDLED_ERROR
-'    End Select
+    End Select
         
         
 GracefulExit:
@@ -516,7 +369,7 @@ End Function
 Public Function ResetScreen() As Boolean
     Dim Frame As ClsUIFrame
     Dim UILineitem As ClsUILineitem
-'    Dim DashObj As ClsUIDashObj
+    Dim DashObj As ClsUIDashObj
     Dim MenuItem As ClsUIMenuItem
     
     Const StrPROCEDURE As String = "ResetScreen()"
@@ -533,11 +386,11 @@ Public Function ResetScreen() As Boolean
     
     For Each Frame In MainScreen.Frames
         If Frame.Name <> "MenuBar" Then
-'            For Each DashObj In Frame.DashObs
-'                Frame.DashObs.RemoveItem DashObj.Name
-'                DashObj.ShpDashObj.Delete
-'                Set DashObj = Nothing
-'            Next
+            For Each DashObj In Frame.DashObs
+                Frame.DashObs.RemoveItem DashObj.Name
+                DashObj.ShpDashObj.Delete
+                Set DashObj = Nothing
+            Next
             
             For Each UILineitem In Frame.Lineitems
                 Frame.Lineitems.RemoveItem UILineitem.Name

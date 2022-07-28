@@ -279,7 +279,7 @@ End Property
 
 Public Property Let DataItem(ByVal vNewValue As Variant)
     pDataItem = vNewValue
-'    ModWorkflow.ProcessDataInput
+    ModWorkflow.ProcessDataInput
 End Property
 
 '---------------------------------------------------------------

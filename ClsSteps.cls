@@ -202,7 +202,7 @@ End Sub
 Public Sub DeleteCollection()
     Dim Step As ClsStep
     For Each Step In pSteps
-        pSteps.Remove CStr(Step.StepIndex)
+        pSteps.Remove Parent.WorkflowNo & "-" & CStr(Step.StepNo)
     Next
 End Sub
 

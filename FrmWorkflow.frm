@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FrmWorkflow 
    Caption         =   "Workflow"
-   ClientHeight    =   8055
+   ClientHeight    =   5535
    ClientLeft      =   120
    ClientTop       =   465
    ClientWidth     =   15960
@@ -139,13 +139,13 @@ Private Function PopulateForm() As Boolean
                 .Caption = "Step Complete"
             End With
        
-'            With FrmCalPicker
-'                If ActiveWorkFlow.ActiveStep.DataFormat = "Date" And TxtDataInput = "" Then
-'                    Set TmpWorkflow = ActiveWorkFlow
-'                    TxtDataInput = Format(.ShowForm, "dd mmm yy")
-'                    Set ActiveWorkFlow = TmpWorkflow
-'                End If
-'            End With
+            With FrmCalPicker
+                If ActiveWorkFlow.ActiveStep.DataFormat = "Date" And TxtDataInput = "" Then
+                    Set TmpWorkflow = ActiveWorkFlow
+                    TxtDataInput = Format(.ShowForm, "dd mmm yy")
+                    Set ActiveWorkFlow = TmpWorkflow
+                End If
+            End With
             
 '            With FrmTimePicker
 '                If ActiveWorkFlow.ActiveStep.DataFormat = "Time" And TxtDataInput = "" Then
@@ -213,6 +213,11 @@ End Sub
 ' BtnComplete_Click
 ' ---------------------------------------------------------------
 Private Sub BtnComplete_Click()
+    
+    If TxtDataInput <> "" Then
+        ActiveWorkFlow.ActiveStep.DataItem = TxtDataInput
+        TxtDataInput = ""
+    End If
     
     With ActiveWorkFlow
         .MoveToNextStep
@@ -389,15 +394,6 @@ Sub Progress(pctCompl As Single)
     LblText.Caption = Format(pctCompl, "0") & "%"
     LblBar.Width = Frame7.Width / 100 * pctCompl
     
-End Sub
-
-' ===============================================================
-' TxtDataInput_Change
-' ---------------------------------------------------------------
-Private Sub TxtDataInput_Change()
-    If TxtDataInput <> "" Then
-        ActiveWorkFlow.ActiveStep.DataItem = TxtDataInput
-    End If
 End Sub
 
 ' ===============================================================
