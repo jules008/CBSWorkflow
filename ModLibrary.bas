@@ -13,17 +13,31 @@ Attribute VB_Name = "ModLibrary"
 
 Option Explicit
 
-Private Declare Function OpenClipboard Lib "user32.dll" (ByVal hwnd As Long) As Long
-Private Declare Function EmptyClipboard Lib "user32.dll" () As Long
-Private Declare Function CloseClipboard Lib "user32.dll" () As Long
-Private Declare Function IsClipboardFormatAvailable Lib "user32.dll" (ByVal wFormat As Long) As Long
-Private Declare Function GetClipboardData Lib "user32.dll" (ByVal wFormat As Long) As Long
-Private Declare Function SetClipboardData Lib "user32.dll" (ByVal wFormat As Long, ByVal hMem As Long) As Long
-Private Declare Function GlobalAlloc Lib "kernel32.dll" (ByVal wFlags As Long, ByVal dwBytes As Long) As Long
-Private Declare Function GlobalLock Lib "kernel32.dll" (ByVal hMem As Long) As Long
-Private Declare Function GlobalUnlock Lib "kernel32.dll" (ByVal hMem As Long) As Long
-Private Declare Function GlobalSize Lib "kernel32" (ByVal hMem As Long) As Long
-Private Declare Function lstrcpy Lib "kernel32.dll" Alias "lstrcpyW" (ByVal lpString1 As Long, ByVal lpString2 As Long) As Long
+ #If VBA7 Then
+    Declare PtrSafe Function OpenClipboard Lib "user32" (ByVal hwnd As LongPtr) As Long
+    Declare PtrSafe Function EmptyClipboard Lib "user32" () As Long
+    Declare PtrSafe Function CloseClipboard Lib "user32" () As Long
+    Declare PtrSafe Function IsClipboardFormatAvailable Lib "user32" (ByVal wFormat As Long) As Long
+    Declare PtrSafe Function GetClipboardData Lib "user32" Alias "GetClipboardDataA" (ByVal wFormat As Long) As LongPtr
+    Declare PtrSafe Function SetClipboardData Lib "user32" Alias "SetClipboardDataA" (ByVal wFormat As Long, ByVal hMem As LongPtr) As LongPtr
+    Declare PtrSafe Function GlobalAlloc Lib "kernel32" (ByVal wFlags As Long, ByVal dwBytes As LongPtr) As LongPtr
+    Declare PtrSafe Function GlobalLock Lib "kernel32" (ByVal hMem As LongPtr) As LongPtr
+    Declare PtrSafe Function GlobalUnlock Lib "kernel32" (ByVal hMem As LongPtr) As Long
+    Declare PtrSafe Function GlobalSize Lib "kernel32" (ByVal hMem As LongPtr) As LongPtr
+    Declare PtrSafe Function lstrcpy Lib "kernel32" Alias "lstrcpyW" (ByVal lpString1 As String, ByVal lpString2 As String) As LongPtr
+ #Else
+    Private Declare Function OpenClipboard Lib "user32.dll" (ByVal hwnd As Long) As Long
+    Private Declare Function EmptyClipboard Lib "user32.dll" () As Long
+    Private Declare Function CloseClipboard Lib "user32.dll" () As Long
+    Private Declare Function IsClipboardFormatAvailable Lib "user32.dll" (ByVal wFormat As Long) As Long
+    Private Declare Function GetClipboardData Lib "user32.dll" (ByVal wFormat As Long) As Long
+    Private Declare Function SetClipboardData Lib "user32.dll" (ByVal wFormat As Long, ByVal hMem As Long) As Long
+    Private Declare Function GlobalAlloc Lib "kernel32.dll" (ByVal wFlags As Long, ByVal dwBytes As Long) As Long
+    Private Declare Function GlobalLock Lib "kernel32.dll" (ByVal hMem As Long) As Long
+    Private Declare Function GlobalUnlock Lib "kernel32.dll" (ByVal hMem As Long) As Long
+    Private Declare Function GlobalSize Lib "kernel32" (ByVal hMem As Long) As Long
+    Private Declare Function lstrcpy Lib "kernel32.dll" Alias "lstrcpyW" (ByVal lpString1 As Long, ByVal lpString2 As Long) As Long
+ #End If
 
 Private Const StrMODULE As String = "ModLibrary"
 

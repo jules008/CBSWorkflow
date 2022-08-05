@@ -19,35 +19,64 @@ Private Const StrMODULE As String = "ModAPICalls"
 ' ShellExecute
 ' Executes shell commands
 ' ---------------------------------------------------------------
-Public Declare Function ShellExecute Lib "shell32.dll" Alias "ShellExecuteA" ( _
-ByVal hwnd As Long, _
-ByVal lpOperation As String, _
-ByVal lpFile As String, _
-ByVal lpParameters As String, _
-ByVal lpDirectory As String, _
-ByVal nShowCmd As Long) As Long
+ #If VBA7 Then
+    Public Declare PtrSafe Function ShellExecute Lib "shell32.dll" Alias "ShellExecuteA" ( _
+    ByVal hwnd As LongPtr, _
+    ByVal lpOperation As String, _
+    ByVal lpFile As String, _
+    ByVal lpParameters As String, _
+    ByVal lpDirectory As String, _
+    ByVal nShowCmd As Long) As LongPtr
+#Else
+    Public Declare Function ShellExecute Lib "shell32.dll" Alias "ShellExecuteA" ( _
+    ByVal hwnd As Long, _
+    ByVal lpOperation As String, _
+    ByVal lpFile As String, _
+    ByVal lpParameters As String, _
+    ByVal lpDirectory As String, _
+    ByVal nShowCmd As Long) As Long
+ #End If
 
 ' ===============================================================
 ' CopyMemory
 ' Copies blocks of memory from one location to another
 ' ---------------------------------------------------------------
-Public Declare Sub CopyMemory _
-Lib "kernel32" Alias "RtlMoveMemory" (pDst As Any, pSrc As Any, ByVal ByteLen As Long)
+ #If VBA7 Then
+    Public Declare PtrSafe Sub CopyMemory _
+    Lib "kernel32" Alias "RtlMoveMemory" (pDst As Any, pSrc As Any, ByVal ByteLen As LongPtr)
+ #Else
+    Public Declare Sub CopyMemory _
+    Lib "kernel32" Alias "RtlMoveMemory" (pDst As Any, pSrc As Any, ByVal ByteLen As Long)
+ #End If
 
 ' ===============================================================
 ' Sleep
 ' Pauses execution for a defined number of milliseconds
 ' ---------------------------------------------------------------
-Public Declare Sub Sleep Lib "kernel32" (ByVal dwMilliseconds As Long)
+ #If VBA7 Then
+    Declare PtrSafe Sub Sleep Lib "kernel32" (ByVal dwMilliseconds As Long)
+ #Else
+    Public Declare Sub Sleep Lib "kernel32" (ByVal dwMilliseconds As Long)
+ #End If
+
+' ===============================================================
+' GetSystemMetrics
+' Gets the screen height from the API
+' ---------------------------------------------------------------
+ #If VBA7 Then
+    Private Declare PtrSafe Function GetSystemMetrics Lib "user32.dll" (ByVal nIndex As Long) As Long
+    Const SM_CXSCREEN = 0
+    Const SM_CYSCREEN = 1
+ #Else
+    Private Declare Function GetSystemMetrics Lib "user32.dll" (ByVal nIndex As Long) As Long
+    Const SM_CXSCREEN = 0
+    Const SM_CYSCREEN = 1
+ #End If
 
 ' ===============================================================
 ' GetScreenHeight
 ' Gets the screen height from the API
 ' ---------------------------------------------------------------
-Private Declare Function GetSystemMetrics Lib "user32.dll" (ByVal nIndex As Long) As Long
-Const SM_CXSCREEN = 0
-Const SM_CYSCREEN = 1
-
 Public Function GetScreenHeight() As Integer
     Const StrPROCEDURE As String = "GetScreenHeight()"
 

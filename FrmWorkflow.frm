@@ -28,9 +28,17 @@ Attribute VB_Exposed = False
 Option Explicit
 
 Private Const StrMODULE As String = "FrmWorkflow"
-Private Declare Sub Sleep Lib "kernel32" (ByVal dwMilliseconds As Long)
-Private Declare Function FindWindow Lib "user32" Alias "FindWindowA" (ByVal lpClassName As String, ByVal lpWindowName As String) As Long
-Private Declare Function BringWindowToTop Lib "user32" (ByVal hwnd As Long) As Long
+ 
+ #If VBA7 Then
+    Private Declare PtrSafe Sub Sleep Lib "kernel32" (ByVal dwMilliseconds As Long)
+    Private Declare PtrSafe Function FindWindow Lib "user32" Alias "FindWindowA" (ByVal lpClassName As String, ByVal lpWindowName As String) As LongPtr
+    Private Declare PtrSafe Function BringWindowToTop Lib "user32" (ByVal hwnd As LongPtr) As Long
+ #Else
+    Private Declare Sub Sleep Lib "kernel32" (ByVal dwMilliseconds As Long)
+    Private Declare Function FindWindow Lib "user32" Alias "FindWindowA" (ByVal lpClassName As String, ByVal lpWindowName As String) As Long
+    Private Declare Function BringWindowToTop Lib "user32" (ByVal hwnd As Long) As Long
+ #End If
+ 
 Private FormClosing As Boolean
 
 ' ===============================================================
