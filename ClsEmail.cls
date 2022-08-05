@@ -31,7 +31,7 @@ Private pMailTo As String
 Private pCC As String
 Private pProgressBar As FrmProgressBar
 'Private pAttachment As ClsDocument
-Private pParent As Long
+Private pParent As ClsStep
 
 '---------------------------------------------------------------
 Public Property Get Deleted() As Date
@@ -138,14 +138,12 @@ End Property
 
 '---------------------------------------------------------------
 Public Property Get Parent() As ClsStep
-    If pParent <> 0 Then
-        Set Parent = GetParentFromPtr(pParent)
-    End If
+    Set Parent = pParent
 End Property
 
-Friend Function SetParent(ByVal Ptr As Long) As Boolean
-    pParent = Ptr
-End Function
+Public Property Set Parent(obj As ClsStep)
+    Set pParent = obj
+End Property
 
 ' ===============================================================
 ' Method DBGet
@@ -310,7 +308,7 @@ End Sub
 ' Method GetParentFromPtr
 ' Private routine to copy memory address of parent class
 ' ---------------------------------------------------------------
-Private Function GetParentFromPtr(ByVal Ptr As Long) As ClsStep
+Private Function GetParentFromPtr(ByVal Ptr As LongPtr) As ClsStep
     Dim tmp As ClsStep
     
     CopyMemory tmp, Ptr, 4
@@ -319,8 +317,9 @@ Private Function GetParentFromPtr(ByVal Ptr As Long) As ClsStep
 End Function
 
 ' ===============================================================
-Private Sub Class_Initialize()
+Public Sub Initialize(obj As ClsStep)
     Set pProgressBar = New FrmProgressBar
+    Set Me.Parent = obj
 End Sub
 
 '---------------------------------------------------------------

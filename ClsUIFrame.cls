@@ -36,7 +36,7 @@ Private pLineitems As ClsUILineitems
 Private pShpFrame As Shape
 'Private pMatrixs As ClsUIMatrixs
 Private pVisible As Boolean
-Private pParent As Long
+Private pParent As ClsUIScreen
 
 '---------------------------------------------------------------
 Public Property Get Top() As Integer
@@ -90,16 +90,24 @@ Public Property Let Name(ByVal vNewValue As String)
 End Property
 
 '---------------------------------------------------------------
-Public Property Get DashObs() As ClsUIDashObjs
-    Set DashObs = pDashObjs
+Public Property Get DashObjs() As ClsUIDashObjs
+    If pDashObjs Is Nothing Then
+        Set pDashObjs = New ClsUIDashObjs
+        pDashObjs.Initialize Me
+    End If
+    Set DashObjs = pDashObjs
 End Property
 
-Public Property Let DashObs(ByVal vNewValue As ClsUIDashObjs)
+Public Property Let DashObjs(ByVal vNewValue As ClsUIDashObjs)
     Set pDashObjs = vNewValue
 End Property
 
 '---------------------------------------------------------------
 Public Property Get Menu() As ClsUIMenu
+    If pMenu Is Nothing Then
+        Set pMenu = New ClsUIMenu
+        pMenu.Initialize Me
+    End If
     Set Menu = pMenu
 End Property
 
@@ -118,16 +126,23 @@ End Property
 
 '---------------------------------------------------------------
 Public Property Get Header() As ClsUIHeader
+    If pHeader Is Nothing Then
+        Set pHeader = New ClsUIHeader
+        pHeader.Initialize Me
+    End If
     Set Header = pHeader
 End Property
 
 Public Property Let Header(ByVal vNewValue As ClsUIHeader)
     Set pHeader = vNewValue
-    pHeader.SetParent ObjPtr(Me)
 End Property
 
 '---------------------------------------------------------------
 Public Property Get LineitemHeaders() As ClsUILineitems
+    If pLineitemHeaders Is Nothing Then
+        Set pLineitemHeaders = New ClsUILineitems
+        pLineitemHeaders.Initialize Me
+    End If
     Set LineitemHeaders = pLineitemHeaders
 End Property
 
@@ -137,6 +152,10 @@ End Property
 
 '---------------------------------------------------------------
 Public Property Get Lineitems() As ClsUILineitems
+    If pLineitems Is Nothing Then
+        Set pLineitems = New ClsUILineitems
+        pLineitems.Initialize Me
+    End If
     Set Lineitems = pLineitems
 End Property
 
@@ -177,14 +196,12 @@ End Property
 
 '---------------------------------------------------------------
 Public Property Get Parent() As ClsUIScreen
-    If pParent <> 0 Then
-        Set Parent = GetParentFromPtr(pParent)
-    End If
+    Set Parent = pParent
 End Property
 
-Friend Function SetParent(ByVal Ptr As Long) As Boolean
-    pParent = Ptr
-End Function
+Public Property Set Parent(obj As ClsUIScreen)
+    Set pParent = obj
+End Property
 
 '---------------------------------------------------------------
 Public Property Get Style() As TypeStyle
@@ -236,18 +253,18 @@ Public Sub ReOrder()
     pShpFrame.ZOrder msoBringToFront
     pHeader.ReOrder
     
-    For Each DashObj In pDashObjs
+    For Each DashObj In DashObjs
         DashObj.ShpDashObj.ZOrder msoBringToFront
     Next
     
-    For Each UILineitem In pLineitems
+    For Each UILineitem In Lineitems
         With UILineitem
             .ShpLineitem.ZOrder msoBringToFront
             If Not .Badge Is Nothing Then .Badge.ZOrder msoBringToFront
         End With
     Next
     
-    For Each UILineitem In pLineitemHeaders
+    For Each UILineitem In LineitemHeaders
         With UILineitem
             .ShpLineitem.ZOrder msoBringToFront
             If Not .Badge Is Nothing Then .Badge.ZOrder msoBringToFront
@@ -258,46 +275,15 @@ Public Sub ReOrder()
 End Sub
 
 ' ===============================================================
-' Method GetParentFromPtr
-' Private routine to copy memory address of parent class
-' ---------------------------------------------------------------
-Private Function GetParentFromPtr(ByVal Ptr As Long) As ClsUIScreen
-    Dim tmp As ClsUIScreen
-
-    CopyMemory tmp, Ptr, 4
-    Set GetParentFromPtr = tmp
-    CopyMemory tmp, 0&, 4
-End Function
-
-' ===============================================================
-Private Sub Class_Initialize()
-    Set pMenu = New ClsUIMenu
-    Set pHeader = New ClsUIHeader
-    Set pDashObjs = New ClsUIDashObjs
-    Set pLineitems = New ClsUILineitems
-    Set pLineitemHeaders = New ClsUILineitems
+Public Sub Initialize(obj As ClsUIScreen)
+    Set Me.Parent = obj
     Set pShpFrame = ShtMain.Shapes.AddShape(msoShapeRectangle, 0, 0, 10, 10)
-    
-    pMenu.SetParent ObjPtr(Me)
-    pHeader.SetParent ObjPtr(Me)
-    pDashObjs.SetParent ObjPtr(Me)
-    pLineitems.SetParent ObjPtr(Me)
-    pLineitemHeaders.SetParent ObjPtr(Me)
 End Sub
 
 '---------------------------------------------------------------
 Private Sub Class_Terminate()
-    pDashObjs.SetParent 0
-    pMenu.SetParent 0
-    pHeader.SetParent 0
-    pLineitems.SetParent 0
-    pLineitemHeaders.SetParent 0
-    
-    Set pDashObjs = Nothing
+    Set pShpFrame = Nothing
     Set pMenu = Nothing
-    Set pHeader = Nothing
-    Set pLineitems = Nothing
-    Set pLineitemHeaders = Nothing
 End Sub
 
 '---------------------------------------------------------------

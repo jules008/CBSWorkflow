@@ -54,8 +54,8 @@ Public Const WS_CAPTION = &HC00000
  #End If
  
 Sub HideTitleBar(Frm As Object)
-    Dim lFrmHdl As Long
-    Dim lngWindow As Long
+    Dim lFrmHdl As LongPtr
+    Dim lngWindow As LongPtr
     
     
     #If VBA7 Then

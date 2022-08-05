@@ -21,18 +21,16 @@ Attribute VB_Exposed = False
 
 Option Explicit
 Private pUIFrames As Collection
-Private pParent As Long
+Private pParent As ClsUIScreen
 
 '---------------------------------------------------------------
 Public Property Get Parent() As ClsUIScreen
-    If pParent <> 0 Then
-        Set Parent = GetParentFromPtr(pParent)
-    End If
+    Set Parent = pParent
 End Property
 
-Friend Function SetParent(ByVal Ptr As Long) As Boolean
-    pParent = Ptr
-End Function
+Friend Property Set Parent(obj As ClsUIScreen)
+    Set pParent = obj
+End Property
 
 Public Function NewEnum() As IUnknown
 Attribute NewEnum.VB_UserMemId = -4
@@ -56,7 +54,7 @@ End Function
 '---------------------------------------------------------------
 
 Public Sub AddItem(UIFrame As ClsUIFrame)
-    UIFrame.SetParent ObjPtr(Me.Parent)
+    UIFrame.Initialize Me.Parent
     pUIFrames.Add UIFrame, Key:=CStr(UIFrame.Name)
 End Sub
 
@@ -93,36 +91,13 @@ Public Sub ReOrder()
 End Sub
 
 ' ===============================================================
-' Method GetParentFromPtr
-' Private routine to copy memory address of parent class
-' ---------------------------------------------------------------
-Private Function GetParentFromPtr(ByVal Ptr As Long) As ClsUIScreen
-    Dim tmp As ClsUIScreen
-
-    CopyMemory tmp, Ptr, 4
-    Set GetParentFromPtr = tmp
-    CopyMemory tmp, 0&, 4
-End Function
-
-' ===============================================================
-Private Sub Class_Initialize()
+Public Sub Initialize(obj As ClsUIScreen)
     Set pUIFrames = New Collection
-
+    Set Me.Parent = obj
 End Sub
 
 '---------------------------------------------------------------
 Private Sub Class_Terminate()
-    Dim UIFrame As ClsUIFrame
-    Dim i As Long
-    
-    For i = pUIFrames.Count To 1 Step -1
-        Set UIFrame = pUIFrames(i)
-        UIFrame.SetParent 0
-        pUIFrames.Remove i
-        Set UIFrame = Nothing
-    Next i
-        
-    Set pUIFrames = Nothing
 End Sub
 
 '---------------------------------------------------------------

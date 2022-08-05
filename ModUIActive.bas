@@ -28,8 +28,8 @@ Private Function BuildMainFrame() As Boolean
     
     'add main frame
     With MainFrame
-        .Name = "Main Frame"
         MainScreen.Frames.AddItem MainFrame
+        .Name = "Main Frame"
             
         .Top = MAIN_FRAME_TOP
         .Left = MAIN_FRAME_LEFT

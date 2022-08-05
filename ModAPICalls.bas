@@ -54,7 +54,7 @@ Private Const StrMODULE As String = "ModAPICalls"
 ' Pauses execution for a defined number of milliseconds
 ' ---------------------------------------------------------------
  #If VBA7 Then
-    Declare PtrSafe Sub Sleep Lib "kernel32" (ByVal dwMilliseconds As Long)
+    Public Declare PtrSafe Sub Sleep Lib "kernel32" (ByVal dwMilliseconds As Long)
  #Else
     Public Declare Sub Sleep Lib "kernel32" (ByVal dwMilliseconds As Long)
  #End If

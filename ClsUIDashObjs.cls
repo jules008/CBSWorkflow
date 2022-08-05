@@ -20,23 +20,21 @@ Attribute VB_Exposed = False
 '===============================================================
 
 Option Explicit
-Private pUIDashObs As Collection
-Private pParent As Long
+Private pUIDashObjs As Collection
+Private pParent As ClsUIFrame
 
 '---------------------------------------------------------------
 Public Property Get Parent() As ClsUIFrame
-    If pParent <> 0 Then
-        Set Parent = GetParentFromPtr(pParent)
-    End If
+    Set Parent = pParent
 End Property
 
-Friend Function SetParent(ByVal Ptr As Long) As Boolean
-    pParent = Ptr
-End Function
+Public Property Set Parent(obj As ClsUIFrame)
+    Set pParent = obj
+End Property
 
 Public Function NewEnum() As IUnknown
 Attribute NewEnum.VB_UserMemId = -4
-    Set NewEnum = pUIDashObs.[_NewEnum]
+    Set NewEnum = pUIDashObjs.[_NewEnum]
 End Function
 
 ' ===============================================================
@@ -47,17 +45,19 @@ End Function
 Public Function FindItem(Name As Variant) As ClsUIDashObj
 Attribute FindItem.VB_UserMemId = 0
     On Error Resume Next
-    Set FindItem = pUIDashObs.Item(Name)
+    Set FindItem = pUIDashObjs.Item(Name)
 End Function
 
 ' ===============================================================
 ' Method AddItem
 ' Add item to Collection
 '---------------------------------------------------------------
-
-Public Sub AddItem(UIDashOb As ClsUIDashObj)
-    UIDashOb.SetParent ObjPtr(Me.Parent)
-    pUIDashObs.Add UIDashOb, Key:=CStr(UIDashOb.Name)
+Public Sub AddItem(UIDashObj As ClsUIDashObj)
+    If UIDashObj Is Nothing Then
+        Set UIDashObj = New ClsUIDashObj
+    End If
+    UIDashObj.Initialize Me.Parent
+    pUIDashObjs.Add UIDashObj, Key:=CStr(UIDashObj.Name)
 End Sub
 
 ' ===============================================================
@@ -66,7 +66,7 @@ End Sub
 '---------------------------------------------------------------
 
 Public Sub RemoveItem(Name As Variant)
-    pUIDashObs.Remove Name
+    pUIDashObjs.Remove Name
 End Sub
 
 ' ===============================================================
@@ -75,40 +75,18 @@ End Sub
 '---------------------------------------------------------------
 
 Public Function Count() As Integer
-    Count = pUIDashObs.Count
+    Count = pUIDashObjs.Count
 End Function
 
 ' ===============================================================
-' Method GetParentFromPtr
-' Private routine to copy memory address of parent class
-' ---------------------------------------------------------------
-Private Function GetParentFromPtr(ByVal Ptr As Long) As ClsUIFrame
-    Dim tmp As ClsUIFrame
-
-    CopyMemory tmp, Ptr, 4
-    Set GetParentFromPtr = tmp
-    CopyMemory tmp, 0&, 4
-End Function
-
-' ===============================================================
-Private Sub Class_Initialize()
-    Set pUIDashObs = New Collection
+Public Sub Initialize(obj As ClsUIFrame)
+    Set pUIDashObjs = New Collection
+    Set Me.Parent = obj
 
 End Sub
 
 '---------------------------------------------------------------
 Private Sub Class_Terminate()
-    Dim UIDashObj As ClsUIDashObj
-    Dim i As Long
-    
-    For i = pUIDashObs.Count To 1 Step -1
-        Set UIDashObj = pUIDashObs(i)
-        UIDashObj.SetParent 0
-        pUIDashObs.Remove i
-        Set UIDashObj = Nothing
-    Next i
-        
-    Set pUIDashObs = Nothing
 
 End Sub
 

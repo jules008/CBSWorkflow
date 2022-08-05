@@ -50,7 +50,7 @@ Private pWait As Boolean
 Private pEmail As ClsEmail
 Private pAltEmail As ClsEmail
 Private pUniqueID As Integer
-Private pParent As Long
+Private pParent As LongPtr
 
 '---------------------------------------------------------------
 Public Property Get Deleted() As Date
@@ -360,7 +360,7 @@ Public Property Get Parent() As ClsWorkflow
     End If
 End Property
 
-Friend Function SetParent(ByVal Ptr As Long) As Boolean
+Friend Function SetParent(ByVal Ptr As LongPtr) As Boolean
     pParent = Ptr
 End Function
 '---------------------------------------------------------------
@@ -557,7 +557,7 @@ End Sub
 ' Method GetParentFromPtr
 ' Private routine to copy memory address of parent class
 ' ---------------------------------------------------------------
-Private Function GetParentFromPtr(ByVal Ptr As Long) As ClsWorkflow
+Private Function GetParentFromPtr(ByVal Ptr As LongPtr) As ClsWorkflow
     Dim tmp As ClsWorkflow
 
     CopyMemory tmp, Ptr, 4
@@ -601,19 +601,12 @@ End Sub
 
 ' ===============================================================
 Private Sub Class_Initialize()
-    Set pEmail = New ClsEmail
-    Set pAltEmail = New ClsEmail
     
-    pEmail.SetParent ObjPtr(Me)
-    pAltEmail.SetParent ObjPtr(Me)
 End Sub
 
 '---------------------------------------------------------------
 Private Sub Class_Terminate()
-    Set pEmail = Nothing
     
-    If Not pEmail Is Nothing Then pEmail.SetParent 0
-    If Not pAltEmail Is Nothing Then pAltEmail.SetParent 0
 End Sub
 
 '---------------------------------------------------------------

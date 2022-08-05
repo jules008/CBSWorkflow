@@ -32,7 +32,6 @@ Private pActiveStep As ClsStep
 Private pStatus As enStatus
 Private pFrmInputBox As FrmInputBox
 Private pSteps As ClsSteps
-Private pParent As Long
 
 '---------------------------------------------------------------
 Public Property Get Deleted() As Date
@@ -142,23 +141,16 @@ End Property
 
 '---------------------------------------------------------------
 Public Property Get Steps() As ClsSteps
+    If pSteps Is Nothing Then
+        Set pSteps = New ClsSteps
+        pSteps.Initialize Me
+    End If
     Set Steps = pSteps
 End Property
 
 Public Property Let Steps(ByVal vNewValue As ClsSteps)
     Set pSteps = vNewValue
 End Property
-
-'---------------------------------------------------------------
-Public Property Get Parent() As ClsWorkflows
-    If pParent <> 0 Then
-        Set Parent = GetParentFromPtr(pParent)
-    End If
-End Property
-
-Friend Function SetParent(ByVal Ptr As Long) As Boolean
-    pParent = Ptr
-End Function
 
 ' ===============================================================
 ' Method DBGet
@@ -382,34 +374,12 @@ Public Sub Pause()
 End Sub
 
 ' ===============================================================
-' Method GetParentFromPtr
-' Private routine to copy memory address of parent class
-' ---------------------------------------------------------------
-Private Function GetParentFromPtr(ByVal Ptr As Long) As ClsWorkflows
-    Dim tmp As ClsWorkflows
-
-    CopyMemory tmp, Ptr, 4
-    Set GetParentFromPtr = tmp
-    CopyMemory tmp, 0&, 4
-End Function
-
-' ===============================================================
 Private Sub Class_Initialize()
-    Set pSteps = New ClsSteps
-    Set pActiveStep = New ClsStep
     Set pFrmInputBox = New FrmInputBox
-    
-    pSteps.SetParent ObjPtr(Me)
-    pActiveStep.SetParent ObjPtr(Me)
 End Sub
 
 '---------------------------------------------------------------
 Private Sub Class_Terminate()
-    Set pSteps = Nothing
-    Set pActiveStep = Nothing
     Set pFrmInputBox = Nothing
-    
-    If Not pSteps Is Nothing Then pSteps.SetParent 0
-    If Not pActiveStep Is Nothing Then pActiveStep.SetParent 0
 End Sub
 '---------------------------------------------------------------

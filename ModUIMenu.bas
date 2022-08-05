@@ -119,7 +119,7 @@ Private Function BuildMenuBar() As Boolean
     End With
 
     'Logo
-    MenuBar.DashObs.AddItem Logo
+    MenuBar.DashObjs.AddItem Logo
     
     With Logo
         .EnumObjType = ObjImage
@@ -236,8 +236,8 @@ Public Function ProcessBtnPress(Optional ButtonNo As EnumBtnNo) As Boolean
 Restart:
     Application.StatusBar = ""
             
-    If Not ResetScreen Then Err.Raise HANDLED_ERROR
-    If Not ModUIActive.BuildScreen Then Err.Raise HANDLED_ERROR
+'    If Not ResetScreen Then Err.Raise HANDLED_ERROR
+'    If Not ModUIActive.BuildScreen Then Err.Raise HANDLED_ERROR
     
     If ButtonNo = 0 Then
         If Not ShtMain.[MenuItem] Is Nothing Then
@@ -378,16 +378,16 @@ Public Function ResetScreen() As Boolean
     
     ShtMain.Unprotect PROTECT_KEY
         
-    For Each MenuItem In MainScreen.Menu
-        MainScreen.Menu.RemoveItem MenuItem.Name
-        MenuItem.ShpMenuItem.Delete
-        Set MenuItem = Nothing
-    Next
+'    For Each MenuItem In MainScreen.Menu
+'        MainScreen.Menu.RemoveItem MenuItem.Name
+'        MenuItem.ShpMenuItem.Delete
+'        Set MenuItem = Nothing
+'    Next
     
     For Each Frame In MainScreen.Frames
         If Frame.Name <> "MenuBar" Then
-            For Each DashObj In Frame.DashObs
-                Frame.DashObs.RemoveItem DashObj.Name
+            For Each DashObj In Frame.DashObjs
+                Frame.DashObjs.RemoveItem DashObj.Name
                 DashObj.ShpDashObj.Delete
                 Set DashObj = Nothing
             Next
@@ -411,20 +411,17 @@ Public Function ResetScreen() As Boolean
             Next
             
             Frame.Header.ShpHeader.Delete
-            Frame.Header.Icon.Delete
-            Set Frame.Header = Nothing
-            
-            MainScreen.Frames.RemoveItem Frame.Name
+'            Frame.Header.Icon.Delete
             Frame.ShpFrame.Delete
             Set Frame = Nothing
             
         End If
     Next
     
-    For Each MenuItem In MainScreen.Menu
-        MainScreen.Menu.RemoveItem MenuItem.Name
-        Set MenuItem = Nothing
-    Next
+'    For Each MenuItem In MainScreen.Menu
+'        MainScreen.Menu.RemoveItem MenuItem.Name
+'        Set MenuItem = Nothing
+'    Next
     
     If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
         

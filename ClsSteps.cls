@@ -23,13 +23,15 @@ Option Explicit
 Private pSteps As Collection
 Private pStart As String
 Private pPCComplete As Single
-Private pParent As Long
+Private pParent As ClsWorkflow
 
 '---------------------------------------------------------------
 Public Property Get Parent() As ClsWorkflow
-    If pParent <> 0 Then
-        Set Parent = GetParentFromPtr(pParent)
-    End If
+    Set Parent = pParent
+End Property
+
+Public Property Set Parent(obj As ClsWorkflow)
+    Set pParent = obj
 End Property
 
 '---------------------------------------------------------------
@@ -56,7 +58,7 @@ Public Property Let Start(ByVal vNewValue As String)
     pStart = vNewValue
 End Property
 
-Friend Function SetParent(ByVal Ptr As Long) As Boolean
+Friend Function SetParent(ByVal Ptr As LongPtr) As Boolean
     pParent = Ptr
 End Function
 
@@ -88,7 +90,6 @@ End Function
 '---------------------------------------------------------------
 
 Public Sub AddItem(Step As ClsStep)
-    Step.SetParent ObjPtr(Me.Parent)
     
     pSteps.Add Step, Key:=Parent.WorkflowNo & "-" & Step.StepNo
     
@@ -393,7 +394,7 @@ End Sub
 ' Method GetParentFromPtr
 ' Private routine to copy memory address of parent class
 ' ---------------------------------------------------------------
-Private Function GetParentFromPtr(ByVal Ptr As Long) As ClsWorkflow
+Private Function GetParentFromPtr(ByVal Ptr As LongPtr) As ClsWorkflow
     Dim tmp As ClsWorkflow
 
     CopyMemory tmp, Ptr, 4
@@ -402,24 +403,15 @@ Private Function GetParentFromPtr(ByVal Ptr As Long) As ClsWorkflow
 End Function
 
 ' ===============================================================
-Private Sub Class_Initialize()
+Public Sub Initialize(obj As ClsWorkflow)
     Set pSteps = New Collection
+    Set Me.Parent = obj
 
 End Sub
 
 '---------------------------------------------------------------
 Private Sub Class_Terminate()
-    Dim Step As ClsStep
-    Dim i As Long
     
-    For i = pSteps.Count To 1 Step -1
-        Set Step = pSteps(i)
-        Step.SetParent 0
-        pSteps.Remove i
-        Set Step = Nothing
-    Next i
-        
-    Set pSteps = Nothing
 
 End Sub
 

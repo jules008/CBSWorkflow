@@ -267,7 +267,7 @@ Public Function ProcessDataInput() As Boolean
     Dim TblField As String
     Dim SQL As String
     Dim Step As ClsStep
-    Dim Obj As Object
+    Dim obj As Object
     
     Const StrPROCEDURE As String = "ProcessDataInput()"
 
@@ -302,13 +302,13 @@ Public Function ProcessDataInput() As Boolean
     ProcessDataInput = True
     
     Set Step = Nothing
-    Set Obj = Nothing
+    Set obj = Nothing
 Exit Function
 
 ErrorExit:
 
     Set Step = Nothing
-    Set Obj = Nothing
+    Set obj = Nothing
     
     ProcessDataInput = False
 

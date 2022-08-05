@@ -26,7 +26,7 @@ Private pHeight As Integer
 Private pWidth As Integer
 Private pName As String
 Private pStyle As TypeStyle
-Private pMenu As ClsUIMenu
+'Private pMenu As ClsUIMenu
 Private pShpScreen As Shape
 Private pFrames As ClsUIFrames
 Private pVisible As Boolean
@@ -92,21 +92,25 @@ End Property
 
 '---------------------------------------------------------------
 Public Property Get Frames() As ClsUIFrames
+    If pFrames Is Nothing Then
+        Set pFrames = New ClsUIFrames
+        pFrames.Initialize Me
+    End If
     Set Frames = pFrames
 End Property
 
 Public Property Let Frames(ByVal vNewValue As ClsUIFrames)
     Set pFrames = vNewValue
 End Property
-
-'---------------------------------------------------------------
-Public Property Get Menu() As ClsUIMenu
-    Set Menu = pMenu
-End Property
-
-Public Property Let Menu(ByVal vNewValue As ClsUIMenu)
-    Set pMenu = vNewValue
-End Property
+'
+''---------------------------------------------------------------
+'Public Property Get Menu() As ClsUIMenu
+'    Set Menu = pMenu
+'End Property
+'
+'Public Property Let Menu(ByVal vNewValue As ClsUIMenu)
+'    Set pMenu = vNewValue
+'End Property
 
 '---------------------------------------------------------------
 Public Property Get Style() As TypeStyle
@@ -174,23 +178,12 @@ End Sub
 
 ' ===============================================================
 Private Sub Class_Initialize()
-    Set pFrames = New ClsUIFrames
-    Set pMenu = New ClsUIMenu
-    
-    pFrames.SetParent ObjPtr(Me)
-    pMenu.SetParent ObjPtr(Me)
     
     Set pShpScreen = ShtMain.Shapes.AddShape(msoShapeRectangle, 0, 0, 10, 10)
 End Sub
 
 '---------------------------------------------------------------
 Private Sub Class_Terminate()
-    pFrames.SetParent 0
-    pMenu.SetParent 0
-    
-    Set pFrames = Nothing
-    Set pMenu = Nothing
-    
 End Sub
 
 '---------------------------------------------------------------

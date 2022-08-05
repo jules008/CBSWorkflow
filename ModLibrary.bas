@@ -173,9 +173,9 @@ End Sub
 ' ---------------------------------------------------------------
 Sub CopyTextToClipboard(sUniText As String)
 
-    Dim iStrPtr As Long
+    Dim iStrPtr As LongPtr
     Dim iLen As Long
-    Dim iLock As Long
+    Dim iLock As LongPtr
     Const GMEM_MOVEABLE As Long = &H2
     Const GMEM_ZEROINIT As Long = &H40
     Const CF_UNICODETEXT As Long = &HD
@@ -306,7 +306,7 @@ End Function
 ' Prints any document
 ' ---------------------------------------------------------------
 Public Function PrintDoc(FileName As String)
-    Dim x As Long
+    Dim x As LongPtr
     
     On Error Resume Next
     
@@ -319,7 +319,7 @@ End Function
 ' Opens any document
 ' ---------------------------------------------------------------
 Public Function OpenDoc(FileName As String)
-    Dim x As Long
+    Dim x As LongPtr
     
 '    On Error Resume Next
     

@@ -44,7 +44,10 @@ End Function
 ' Add item to Collection
 '---------------------------------------------------------------
 Public Sub AddItem(Email As ClsEmail)
-    Email.SetParent ObjPtr(Me)
+    If pEmails Is Nothing Then
+        Set pEmails = New ClsUIFrames
+        pEmails.Initialize Me
+    End If
     pEmails.Add Email, Key:=CStr(Email.EmailNo)
 End Sub
 
@@ -102,22 +105,10 @@ End Sub
 
 ' ===============================================================
 Private Sub Class_Initialize()
-    Set pEmails = New Collection
     GetCollection
 End Sub
 
 '---------------------------------------------------------------
 Private Sub Class_Terminate()
-    Dim Email As ClsEmail
-    Dim i As Long
-    
-    For i = pEmails.Count To 1 Step -1
-        Set Email = pEmails(i)
-        Email.SetParent 0
-        pEmails.Remove i
-        Set Email = Nothing
-    Next i
-        
-    Set pEmails = Nothing
 End Sub
 '---------------------------------------------------------------

@@ -35,7 +35,7 @@ Private pShpMenuItem As Shape
 Private pSelected As Boolean
 Private pVisible As Boolean
 Private pOnAction As String
-Private pParent As Long
+Private pParent As LongPtr
 
 '---------------------------------------------------------------
 Public Property Get Top() As Integer
@@ -258,7 +258,7 @@ Public Property Get Parent() As ClsUIMenu
     End If
 End Property
 
-Friend Function SetParent(ByVal Ptr As Long) As Boolean
+Friend Function SetParent(ByVal Ptr As LongPtr) As Boolean
     pParent = Ptr
 End Function
 
@@ -266,7 +266,7 @@ End Function
 ' Method GetParentFromPtr
 ' Private routine to copy memory address of parent class
 ' ---------------------------------------------------------------
-Private Function GetParentFromPtr(ByVal Ptr As Long) As ClsUIMenu
+Private Function GetParentFromPtr(ByVal Ptr As LongPtr) As ClsUIMenu
     Dim tmp As ClsUIMenu
 
     CopyMemory tmp, Ptr, 4

@@ -31,8 +31,7 @@ Private pShpDashObj As Shape
 Private pEnumObjType As EnumObjType
 Private pVisible As Boolean
 Private pStyle As TypeStyle
-Private pParent As Long
-
+Private pParent As ClsUIFrame
 
 '---------------------------------------------------------------
 Public Property Get Top() As Integer
@@ -182,14 +181,12 @@ End Property
 
 '---------------------------------------------------------------
 Public Property Get Parent() As ClsUIFrame
-    If pParent <> 0 Then
-        Set Parent = GetParentFromPtr(pParent)
-    End If
+    Set Parent = pParent
 End Property
 
-Friend Function SetParent(ByVal Ptr As Long) As Boolean
-    pParent = Ptr
-End Function
+Public Property Set Parent(obj As ClsUIFrame)
+    Set pParent = obj
+End Property
 
 ' ===============================================================
 ' Method ReOrder
@@ -202,19 +199,8 @@ Public Sub ReOrder()
 End Sub
 
 ' ===============================================================
-' Method GetParentFromPtr
-' Private routine to copy memory address of parent class
-' ---------------------------------------------------------------
-Private Function GetParentFromPtr(ByVal Ptr As Long) As ClsUIFrame
-    Dim tmp As ClsUIFrame
-
-    CopyMemory tmp, Ptr, 4
-    Set GetParentFromPtr = tmp
-    CopyMemory tmp, 0&, 4
-End Function
-
-' ===============================================================
-Private Sub Class_Initialize()
+Public Sub Initialize(obj As ClsUIFrame)
+    Set Me.Parent = obj
 End Sub
 
 '---------------------------------------------------------------

@@ -24,7 +24,7 @@ Private pUIMenu As Collection
 Private pTop As Integer
 Private pLeft As Integer
 Private pVisible As Integer
-Private pParent As Long
+Private pParent As ClsUIFrame
 
 '---------------------------------------------------------------
 Public Property Get Top() As Integer
@@ -62,14 +62,12 @@ End Property
 
 '---------------------------------------------------------------
 Public Property Get Parent() As ClsUIFrame
-    If pParent <> 0 Then
-        Set Parent = GetParentFromPtr(pParent)
-    End If
+    Set Parent = pParent
 End Property
 
-Friend Function SetParent(ByVal Ptr As Long) As Boolean
-    pParent = Ptr
-End Function
+Public Property Set Parent(obj As ClsUIFrame)
+    Set pParent = obj
+End Property
 
 Public Function NewEnum() As IUnknown
 Attribute NewEnum.VB_UserMemId = -4
@@ -93,7 +91,6 @@ End Function
 '---------------------------------------------------------------
 
 Public Sub AddItem(UIMenuItem As ClsUIMenuItem)
-    UIMenuItem.SetParent ObjPtr(Me.Parent)
     pUIMenu.Add UIMenuItem, Key:=CStr(UIMenuItem.Name)
 End Sub
 
@@ -130,37 +127,13 @@ Public Sub ReOrder()
 End Sub
 
 ' ===============================================================
-' Method GetParentFromPtr
-' Private routine to copy memory address of parent class
-' ---------------------------------------------------------------
-Private Function GetParentFromPtr(ByVal Ptr As Long) As ClsUIFrame
-    Dim tmp As ClsUIFrame
-
-    CopyMemory tmp, Ptr, 4
-    Set GetParentFromPtr = tmp
-    CopyMemory tmp, 0&, 4
-End Function
-
-' ===============================================================
-Private Sub Class_Initialize()
+Public Sub Initialize(obj As ClsUIFrame)
     Set pUIMenu = New Collection
-
+    Set Me.Parent = obj
 End Sub
 
 '---------------------------------------------------------------
 Private Sub Class_Terminate()
-    Dim MenuItem As ClsUIMenuItem
-    Dim i As Long
-    
-    For i = pUIMenu.Count To 1 Step -1
-        Set MenuItem = pUIMenu(i)
-        MenuItem.SetParent 0
-        pUIMenu.Remove i
-        Set MenuItem = Nothing
-    Next i
-        
-    Set pUIMenu = Nothing
-
 End Sub
 
 '---------------------------------------------------------------

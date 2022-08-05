@@ -30,7 +30,16 @@ Private pText As String
 Private pShpHeader As Shape
 Private pIcon As Shape
 Private pVisible As Boolean
-Private pParent As Long
+Private pParent As ClsUIFrame
+
+'---------------------------------------------------------------
+Public Property Get Parent() As ClsUIFrame
+    Set Parent = pParent
+End Property
+
+Public Property Set Parent(obj As ClsUIFrame)
+    Set pParent = obj
+End Property
 
 '---------------------------------------------------------------
 Public Property Get Top() As Integer
@@ -158,17 +167,6 @@ Public Property Let Icon(ByVal vNewValue As Shape)
     Set pIcon = vNewValue
 End Property
 
-'---------------------------------------------------------------
-Public Property Get Parent() As ClsUIFrame
-    If pParent <> 0 Then
-        Set Parent = GetParentFromPtr(pParent)
-    End If
-End Property
-
-Friend Function SetParent(ByVal Ptr As Long) As Boolean
-    pParent = Ptr
-End Function
-
 ' ===============================================================
 ' Method ReOrder
 ' Re-orders the shapes so that they are in the right stack order
@@ -179,19 +177,8 @@ Public Sub ReOrder()
 End Sub
 
 ' ===============================================================
-' Method GetParentFromPtr
-' Private routine to copy memory address of parent class
-' ---------------------------------------------------------------
-Private Function GetParentFromPtr(ByVal Ptr As Long) As ClsUIFrame
-    Dim tmp As ClsUIFrame
-
-    CopyMemory tmp, Ptr, 4
-    Set GetParentFromPtr = tmp
-    CopyMemory tmp, 0&, 4
-End Function
-
-' ===============================================================
-Private Sub Class_Initialize()
+Public Sub Initialize(obj As ClsUIFrame)
+    Set Me.Parent = obj
     Set pShpHeader = ShtMain.Shapes.AddShape(msoShapeRectangle, 0, 0, 10, 10)
 
 End Sub

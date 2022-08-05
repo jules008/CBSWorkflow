@@ -115,7 +115,6 @@ End Function
 '---------------------------------------------------------------
 Public Sub AddItem(Workflow As ClsWorkflow)
     On Error Resume Next
-    Workflow.SetParent ObjPtr(Me)
     pWorkflows.Add Workflow, Key:=CStr(Workflow.WorkflowNo)
 End Sub
 
@@ -283,17 +282,6 @@ End Sub
 
 '---------------------------------------------------------------
 Private Sub Class_Terminate()
-    Dim Workflow As ClsWorkflow
-    Dim i As Long
-    
-    For i = pWorkflows.Count To 1 Step -1
-        Set Workflow = pWorkflows(i)
-        Workflow.SetParent 0
-        pWorkflows.Remove i
-        Set Workflow = Nothing
-    Next i
-        
-    Set pWorkflows = Nothing
 End Sub
 
 '---------------------------------------------------------------

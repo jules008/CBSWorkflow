@@ -32,7 +32,7 @@ Private pOnAction As String
 Private pBadge As Shape
 Private pShpLineitem As Shape
 Private pVisible As Boolean
-Private pParent As Long
+Private pParent As ClsUIFrame
 
 '---------------------------------------------------------------
 Public Property Get Top() As Integer
@@ -186,16 +186,13 @@ Public Property Let Style(vNewValue As TypeStyle)
 End Property
 
 '---------------------------------------------------------------
-Public Property Get Parent() As ClsUILineitems
-    If pParent <> 0 Then
-        Set Parent = GetParentFromPtr(pParent)
-    End If
+Public Property Get Parent() As ClsUIFrame
+    Set Parent = pParent
 End Property
 
-Friend Function SetParent(ByVal Ptr As Long) As Boolean
-    pParent = Ptr
-End Function
-
+Public Property Set Parent(obj As ClsUIFrame)
+    Set pParent = obj
+End Property
 
 ' ===============================================================
 ' Method ReOrder
@@ -210,20 +207,8 @@ Public Sub ReOrder()
 End Sub
 
 ' ===============================================================
-' Method GetParentFromPtr
-' Private routine to copy memory address of parent class
-' ---------------------------------------------------------------
-Private Function GetParentFromPtr(ByVal Ptr As Long) As ClsUILineitem
-    Dim tmp As ClsUILineitem
-
-    CopyMemory tmp, Ptr, 4
-    Set GetParentFromPtr = tmp
-    CopyMemory tmp, 0&, 4
-End Function
-
-' ===============================================================
-Private Sub Class_Initialize()
-
+Public Sub Initialize(obj As ClsUIFrame)
+    Set Me.Parent = obj
     Set pShpLineitem = ShtMain.Shapes.AddTextbox(msoTextOrientationHorizontal, 0, 0, 10, 10)
 End Sub
 

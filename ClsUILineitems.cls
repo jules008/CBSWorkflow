@@ -22,14 +22,14 @@ Attribute VB_Exposed = False
 Option Explicit
 Private pNoColumns As Integer
 Private pColumns() As Integer
-Private PUILineitems As Collection
+Private pUILineitems As Collection
 Private pTop As Integer
 Private pLeft As Integer
 Private pHeight As Integer
 Private pWidth As Integer
 Private pStyle As TypeStyle
 Private pRowOffset As Integer
-Private pParent As Long
+Private pParent As ClsUIFrame
 
 '---------------------------------------------------------------
 Public Property Get NoColumns() As Integer
@@ -113,18 +113,16 @@ End Property
 
 '---------------------------------------------------------------
 Public Property Get Parent() As ClsUIFrame
-    If pParent <> 0 Then
-        Set Parent = GetParentFromPtr(pParent)
-    End If
+    Set Parent = pParent
 End Property
 
-Friend Function SetParent(ByVal Ptr As Long) As Boolean
-    pParent = Ptr
-End Function
+Public Property Set Parent(obj As ClsUIFrame)
+    Set pParent = obj
+End Property
 
 Public Function NewEnum() As IUnknown
 Attribute NewEnum.VB_UserMemId = -4
-    Set NewEnum = PUILineitems.[_NewEnum]
+    Set NewEnum = pUILineitems.[_NewEnum]
 End Function
 
 ' ===============================================================
@@ -135,7 +133,7 @@ End Function
 Public Function FindItem(Name As Variant) As ClsUILineitem
 Attribute FindItem.VB_UserMemId = 0
     On Error Resume Next
-    Set FindItem = PUILineitems.Item(Name)
+    Set FindItem = pUILineitems.Item(Name)
 End Function
 
 ' ===============================================================
@@ -144,8 +142,11 @@ End Function
 '---------------------------------------------------------------
 
 Public Sub AddItem(UILineitem As ClsUILineitem)
-    UILineitem.SetParent ObjPtr(Me)
-    PUILineitems.Add UILineitem, Key:=CStr(UILineitem.Name)
+    If UILineitem Is Nothing Then
+        Set UILineitem = New ClsUILineitem
+    End If
+    UILineitem.Initialize Me.Parent
+    pUILineitems.Add UILineitem, Key:=UILineitem.Name
 End Sub
 
 ' ===============================================================
@@ -154,7 +155,7 @@ End Sub
 '---------------------------------------------------------------
 
 Public Sub RemoveItem(Name As Variant)
-    PUILineitems.Remove Name
+    pUILineitems.Remove Name
 End Sub
 
 ' ===============================================================
@@ -163,7 +164,7 @@ End Sub
 '---------------------------------------------------------------
 
 Public Function Count() As Integer
-    Count = PUILineitems.Count
+    Count = pUILineitems.Count
 End Function
 
 ' ===============================================================
@@ -182,6 +183,7 @@ Public Sub Text(Row As Integer, Col As Integer, ItemText As String, LineStyle As
     Loop
     
     Set UILineitem = New ClsUILineitem
+    Me.AddItem UILineitem
     
     With UILineitem
         .Style = LineStyle
@@ -194,7 +196,6 @@ Public Sub Text(Row As Integer, Col As Integer, ItemText As String, LineStyle As
         .OnAction = OnAction
     End With
     
-    Me.AddItem UILineitem
 End Sub
 
 ' ===============================================================
@@ -203,45 +204,23 @@ End Sub
 '---------------------------------------------------------------
 Public Sub ReOrder()
     Dim Lineitem As ClsUILineitem
-        
-    For Each Lineitem In PUILineitems
+    For Each Lineitem In pUILineitems
         Lineitem.ShpLineitem.ZOrder msoBringToFront
         Lineitem.ReOrder
     Next
     
 End Sub
 
-' ===============================================================
-' Method GetParentFromPtr
-' Private routine to copy memory address of parent class
-' ---------------------------------------------------------------
-Private Function GetParentFromPtr(ByVal Ptr As Long) As ClsUIScreen
-    Dim tmp As ClsUIScreen
-
-    CopyMemory tmp, Ptr, 4
-    Set GetParentFromPtr = tmp
-    CopyMemory tmp, 0&, 4
-End Function
 
 ' ===============================================================
-Private Sub Class_Initialize()
-    Set PUILineitems = New Collection
+Public Sub Initialize(obj As ClsUIFrame)
+    Set Me.Parent = obj
+    Set pUILineitems = New Collection
 
 End Sub
 
 '---------------------------------------------------------------
 Private Sub Class_Terminate()
-    Dim UILineitem As ClsUILineitem
-    Dim i As Long
-    
-    For i = PUILineitems.Count To 1 Step -1
-        Set UILineitem = PUILineitems(i)
-        UILineitem.SetParent 0
-        PUILineitems.Remove i
-        Set UILineitem = Nothing
-    Next i
-        
-    Set PUILineitems = Nothing
     
 End Sub
 
