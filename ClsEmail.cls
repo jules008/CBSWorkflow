@@ -304,24 +304,21 @@ Public Sub Send()
 '        .Send
 '    End With
 End Sub
-' ===============================================================
-' Method GetParentFromPtr
-' Private routine to copy memory address of parent class
-' ---------------------------------------------------------------
-Private Function GetParentFromPtr(ByVal Ptr As LongPtr) As ClsStep
-    Dim tmp As ClsStep
-    
-    CopyMemory tmp, Ptr, 4
-    Set GetParentFromPtr = tmp
-    CopyMemory tmp, 0&, 4
-End Function
 
 ' ===============================================================
 Public Sub Initialize(obj As ClsStep)
-    Set pProgressBar = New FrmProgressBar
     Set Me.Parent = obj
 End Sub
+'---------------------------------------------------------------
 
+Private Sub Class_Initialize()
+    Set pProgressBar = New FrmProgressBar
+End Sub
+' ===============================================================
+Public Sub Terminate()
+    Set pParent = Nothing
+    Set pProgressBar = Nothing
+End Sub
 '---------------------------------------------------------------
 Private Sub Class_Terminate()
     Set pProgressBar = Nothing

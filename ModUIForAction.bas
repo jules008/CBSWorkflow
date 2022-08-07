@@ -26,11 +26,10 @@ Private Function BuildMainFrame() As Boolean
 
     Set MainFrame = New ClsUIFrame
     
+    MainScreen.Frames.AddItem MainFrame, "Main Frame"
+    
     'add main frame
     With MainFrame
-        MainScreen.Frames.AddItem MainFrame
-        .Name = "Main Frame"
-            
         .Top = MAIN_FRAME_TOP
         .Left = MAIN_FRAME_LEFT
         .Width = MAIN_FRAME_WIDTH
@@ -275,6 +274,7 @@ GracefulExit:
 
     RefreshList = True
     
+    Workflows.Terminate
     Set RstWorkflowList = Nothing
     Set Workflows = Nothing
     
@@ -282,6 +282,7 @@ Exit Function
 
 ErrorExit:
 
+    Workflows.Terminate
     Set RstWorkflowList = Nothing
     Set Workflows = Nothing
     
@@ -303,7 +304,6 @@ End Function
 ' Opens the selected Workflow
 ' ---------------------------------------------------------------
 Private Sub OpenWorkflow(WorkflowNo As Integer)
-    Dim Workflow As ClsWorkflow
     
     Const StrPROCEDURE As String = "OpenWorkflow()"
        
@@ -313,9 +313,10 @@ Private Sub OpenWorkflow(WorkflowNo As Integer)
         
 Restart:
     
-    Set Workflow = New ClsWorkflow
-    Workflow.DBGet CStr(WorkflowNo)
-    Set ActiveWorkFlow = Workflow
+    Set ActiveWorkFlow = Nothing
+    Set ActiveWorkFlow = New ClsWorkflow
+    
+    ActiveWorkFlow.DBGet CStr(WorkflowNo)
     
     If Not FrmWorkflow.ShowForm() Then Err.Raise HANDLED_ERROR
     

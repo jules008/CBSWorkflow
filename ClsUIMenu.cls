@@ -128,12 +128,26 @@ End Sub
 
 ' ===============================================================
 Public Sub Initialize(obj As ClsUIFrame)
-    Set pUIMenu = New Collection
     Set Me.Parent = obj
 End Sub
 
+Private Sub Class_Initialize()
+    Set pUIMenu = New Collection
+End Sub
+
+' ===============================================================
+Public Sub Terminate()
+    Dim MenuItem As ClsUIMenuItem
+        
+    For Each MenuItem In pUIMenu
+        MenuItem.Terminate
+    Next
+    Set pParent = Nothing
+    Set pUIMenu = Nothing
+End Sub
 '---------------------------------------------------------------
 Private Sub Class_Terminate()
+    Set pUIMenu = Nothing
 End Sub
 
 '---------------------------------------------------------------

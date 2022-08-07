@@ -53,7 +53,8 @@ End Function
 ' Add item to Collection
 '---------------------------------------------------------------
 
-Public Sub AddItem(UIFrame As ClsUIFrame)
+Public Sub AddItem(UIFrame As ClsUIFrame, Name As String)
+    UIFrame.Name = Name
     UIFrame.Initialize Me.Parent
     pUIFrames.Add UIFrame, Key:=CStr(UIFrame.Name)
 End Sub
@@ -92,12 +93,24 @@ End Sub
 
 ' ===============================================================
 Public Sub Initialize(obj As ClsUIScreen)
-    Set pUIFrames = New Collection
     Set Me.Parent = obj
 End Sub
+Private Sub Class_Initialize()
+    Set pUIFrames = New Collection
+End Sub
+' ===============================================================
+Public Sub Terminate()
+    Dim Frame As ClsUIFrame
 
+    For Each Frame In pUIFrames
+        Frame.Terminate
+    Next
+    Set pParent = Nothing
+    Set pUIFrames = Nothing
+End Sub
 '---------------------------------------------------------------
 Private Sub Class_Terminate()
+    Set pUIFrames = Nothing
 End Sub
 
 '---------------------------------------------------------------

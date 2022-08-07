@@ -92,10 +92,6 @@ End Property
 
 '---------------------------------------------------------------
 Public Property Get Frames() As ClsUIFrames
-    If pFrames Is Nothing Then
-        Set pFrames = New ClsUIFrames
-        pFrames.Initialize Me
-    End If
     Set Frames = pFrames
 End Property
 
@@ -178,12 +174,26 @@ End Sub
 
 ' ===============================================================
 Private Sub Class_Initialize()
-    
+    Set pFrames = New ClsUIFrames
     Set pShpScreen = ShtMain.Shapes.AddShape(msoShapeRectangle, 0, 0, 10, 10)
+    
+    pFrames.Initialize Me
+    
 End Sub
+' ===============================================================
+Public Sub Terminate()
+    pFrames.Terminate
+    pShpScreen.Delete
 
+    Set pFrames = Nothing
+    Set pShpScreen = Nothing
+
+End Sub
 '---------------------------------------------------------------
 Private Sub Class_Terminate()
+    Set pFrames = Nothing
+    Set pShpScreen = Nothing
+    
 End Sub
 
 '---------------------------------------------------------------

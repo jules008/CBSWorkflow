@@ -26,11 +26,10 @@ Private Function BuildMainFrame() As Boolean
 
     Set MainFrame = New ClsUIFrame
     
+    MainScreen.Frames.AddItem MainFrame, "Main Frame"
+    
     'add main frame
     With MainFrame
-        .Name = "Main Frame"
-        MainScreen.Frames.AddItem MainFrame
-            
         .Top = MAIN_FRAME_TOP
         .Left = MAIN_FRAME_LEFT
         .Width = MAIN_FRAME_WIDTH
@@ -339,7 +338,6 @@ End Function
 ' Opens the selected Workflow
 ' ---------------------------------------------------------------
 Private Sub OpenWorkflow(WorkflowNo As Integer)
-    Dim Workflow As ClsWorkflow
     
     Const StrPROCEDURE As String = "OpenWorkflow()"
        
@@ -350,10 +348,9 @@ Private Sub OpenWorkflow(WorkflowNo As Integer)
 Restart:
 '    If CurrentUser.UserLvl = enBasic Then Err.Raise ACCESS_DENIED
     
-    Set Workflow = New ClsWorkflow
-    
-    Workflow.DBGet (CStr(WorkflowNo))
-    Set ActiveWorkFlow = Workflow
+    Set ActiveWorkFlow = Nothing
+    Set ActiveWorkFlow = New ClsWorkflow
+    ActiveWorkFlow.DBGet CStr(WorkflowNo)
     
     If Not FrmWorkflow.ShowForm() Then Err.Raise HANDLED_ERROR
    
@@ -362,12 +359,10 @@ Restart:
     ActiveWorkFlow.DBSave
     
 GracefulExit:
-    Set Workflow = Nothing
 
 Exit Sub
 
 ErrorExit:
-    Set Workflow = Nothing
     ModLibrary.PerfSettingsOff
     Terminate
 Exit Sub

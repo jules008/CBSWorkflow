@@ -492,7 +492,7 @@ Function IsValidEmail(sEmailAddress As String) As Boolean
     bReturn = False
     
     'Check if Email match regex pattern
-    If oRegEx.Test(sEmailAddress) Then
+    If oRegEx.test(sEmailAddress) Then
         'Debug.Print "Valid Email ('" & sEmailAddress & "')"
         bReturn = True
     Else

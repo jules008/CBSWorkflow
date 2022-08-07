@@ -53,9 +53,6 @@ End Function
 ' Add item to Collection
 '---------------------------------------------------------------
 Public Sub AddItem(UIDashObj As ClsUIDashObj)
-    If UIDashObj Is Nothing Then
-        Set UIDashObj = New ClsUIDashObj
-    End If
     UIDashObj.Initialize Me.Parent
     pUIDashObjs.Add UIDashObj, Key:=CStr(UIDashObj.Name)
 End Sub
@@ -80,14 +77,26 @@ End Function
 
 ' ===============================================================
 Public Sub Initialize(obj As ClsUIFrame)
-    Set pUIDashObjs = New Collection
     Set Me.Parent = obj
-
 End Sub
 
+Private Sub Class_Initialize()
+    Set pUIDashObjs = New Collection
+End Sub
+' ===============================================================
+Public Sub Terminate()
+    Dim UIDashObj As ClsUIDashObj
+    
+    For Each UIDashObj In pUIDashObjs
+        UIDashObj.Terminate
+    Next
+
+    Set pParent = Nothing
+    Set pUIDashObjs = Nothing
+End Sub
 '---------------------------------------------------------------
 Private Sub Class_Terminate()
-
+    Set pUIDashObjs = Nothing
 End Sub
 
 '---------------------------------------------------------------

@@ -47,10 +47,10 @@ Private pDataDest As String
 Private pWFName As String
 Private pStatus As enStatus
 Private pWait As Boolean
-Private pEmail As ClsEmail
-Private pAltEmail As ClsEmail
+'Private pEmail As ClsEmail
+'Private pAltEmail As ClsEmail
 Private pUniqueID As Integer
-Private pParent As LongPtr
+Private pParent As ClsWorkflow
 
 '---------------------------------------------------------------
 Public Property Get Deleted() As Date
@@ -327,22 +327,22 @@ Public Property Let Status(ByVal vNewValue As enStatus)
     pStatus = vNewValue
 End Property
 '---------------------------------------------------------------
-Public Property Get Email() As ClsEmail
-    Set Email = pEmail
-End Property
-
-Public Property Let Email(ByVal vNewValue As ClsEmail)
-    Set pEmail = vNewValue
-End Property
-
-'---------------------------------------------------------------
-Public Property Get AltEmail() As ClsEmail
-    Set AltEmail = pAltEmail
-End Property
-
-Public Property Let AltEmail(ByVal vNewValue As ClsEmail)
-    Set pEmail = vNewValue
-End Property
+'Public Property Get Email() As ClsEmail
+'    Set Email = pEmail
+'End Property
+'
+'Public Property Let Email(ByVal vNewValue As ClsEmail)
+'    Set pEmail = vNewValue
+'End Property
+'
+''---------------------------------------------------------------
+'Public Property Get AltEmail() As ClsEmail
+'    Set AltEmail = pAltEmail
+'End Property
+'
+'Public Property Let AltEmail(ByVal vNewValue As ClsEmail)
+'    Set pEmail = vNewValue
+'End Property
 
 '---------------------------------------------------------------
 Public Property Get UniqueID() As Integer
@@ -355,14 +355,12 @@ End Property
 
 '---------------------------------------------------------------
 Public Property Get Parent() As ClsWorkflow
-    If pParent <> 0 Then
-        Set Parent = GetParentFromPtr(pParent)
-    End If
+    Set Parent = pParent
 End Property
 
-Friend Function SetParent(ByVal Ptr As LongPtr) As Boolean
-    pParent = Ptr
-End Function
+Public Property Set Parent(obj As ClsWorkflow)
+    Set pParent = obj
+End Property
 '---------------------------------------------------------------
 ' ===============================================================
 ' Method DBGet
@@ -395,8 +393,8 @@ Public Sub DBGet(WorkflowNo As Integer, StepNo As String)
             If Not IsNull(!DataFormat) Then pDataFormat = !DataFormat
             If Not IsNull(!DataDest) Then pDataDest = !DataDest
             If Not IsNull(!UniqueID) Then pUniqueID = !UniqueID
-            If Not IsNull(!Email) And !Email <> 0 Then pEmail.DBGet !Email
-            If Not IsNull(!AltEmail) And !AltEmail <> 0 Then pAltEmail.DBGet !AltEmail
+'            If Not IsNull(!Email) And !Email <> 0 Then pEmail.DBGet !Email
+'            If Not IsNull(!AltEmail) And !AltEmail <> 0 Then pAltEmail.DBGet !AltEmail
         End If
     End With
 Set RstStep = Nothing
@@ -430,8 +428,8 @@ Public Sub DBGetTemplate(StepNo As String)
             If Not IsNull(!WFName) Then pWFName = !WFName
             If Not IsNull(!UniqueID) Then pUniqueID = !UniqueID
             If Not IsNull(!Wait) Then pWait = !Wait
-            If Not IsNull(!Email) And !Email <> 0 Then pEmail.DBGet !Email
-            If Not IsNull(!AltEmail) And !AltEmail <> 0 Then pAltEmail.DBGet !AltEmail
+'            If Not IsNull(!Email) And !Email <> 0 Then pEmail.DBGet !Email
+'            If Not IsNull(!AltEmail) And !AltEmail <> 0 Then pAltEmail.DBGet !AltEmail
             
         End If
     End With
@@ -446,7 +444,7 @@ Public Sub Start()
     
     pStartTime = Now
     DBSave
-    If pEmail.EmailNo <> 0 Then pEmail.Display
+'    If pEmail.EmailNo <> 0 Then pEmail.Display
 End Sub
 
 ' ===============================================================
@@ -504,8 +502,8 @@ Public Sub DBSave(Optional StepIndex As String)
         !DataDest = pDataDest
         !UniqueID = pUniqueID
         !Status = enStatusStr(pStatus)
-        !Email = pEmail.EmailNo
-        !AltEmail = pAltEmail.EmailNo
+'        !Email = pEmail.EmailNo
+'        !AltEmail = pAltEmail.EmailNo
         !Wait = pWait
         !WorkflowNo = Parent.WorkflowNo
         .Update
@@ -544,8 +542,8 @@ Public Sub DBSaveTemplate(StepNo As String)
         !DataFormat = pDataFormat
         !DataDest = pDataDest
         !UniqueID = pUniqueID
-        !Email = pEmail.EmailNo
-        !AltEmail = pAltEmail.EmailNo
+'        !Email = pEmail.EmailNo
+'        !AltEmail = pAltEmail.EmailNo
         !Wait = pWait
         .Update
 
@@ -553,17 +551,6 @@ Public Sub DBSaveTemplate(StepNo As String)
     Set RstStep = Nothing
     Set RstMaxNo = Nothing
 End Sub
-' ===============================================================
-' Method GetParentFromPtr
-' Private routine to copy memory address of parent class
-' ---------------------------------------------------------------
-Private Function GetParentFromPtr(ByVal Ptr As LongPtr) As ClsWorkflow
-    Dim tmp As ClsWorkflow
-
-    CopyMemory tmp, Ptr, 4
-    Set GetParentFromPtr = tmp
-    CopyMemory tmp, 0&, 4
-End Function
 
 ' ===============================================================
 ' Method DBDelete(Optional FullDelete As Boolean)
@@ -600,13 +587,27 @@ Public Sub Reset()
 End Sub
 
 ' ===============================================================
-Private Sub Class_Initialize()
-    
+Public Sub Initialize(obj As ClsWorkflow)
+    Set Me.Parent = obj
 End Sub
+    
+Private Sub Class_Initialize()
+'    Set pEmail = New ClsEmail
+'    Set pAltEmail = New ClsEmail
+End Sub
+' ===============================================================
+Public Sub Terminate()
+'    pEmail.Terminate
+'    pAltEmail.Terminate
 
+    Set pParent = Nothing
+'    Set pEmail = Nothing
+'    Set pAltEmail = Nothing
+End Sub
 '---------------------------------------------------------------
 Private Sub Class_Terminate()
-    
+'    Set pEmail = Nothing
+'    Set pAltEmail = Nothing
 End Sub
 
 '---------------------------------------------------------------

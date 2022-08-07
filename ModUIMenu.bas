@@ -104,7 +104,7 @@ Private Function BuildMenuBar() As Boolean
     Set Logo = New ClsUIDashObj
 '    Set BtnSupport = New ClsUIMenuItem
     
-    MainScreen.Frames.AddItem MenuBar
+    MainScreen.Frames.AddItem MenuBar, "MenuBar"
    
    'Menubar
     With MenuBar
@@ -112,7 +112,6 @@ Private Function BuildMenuBar() As Boolean
         .Left = MENUBAR_LEFT
         .Height = MENUBAR_HEIGHT
         .Width = MENUBAR_WIDTH
-        .Name = "MenuBar"
         .Style = MENUBAR_STYLE
         .Header.Visible = False
         .EnableHeader = False
@@ -368,60 +367,22 @@ End Function
 ' ---------------------------------------------------------------
 Public Function ResetScreen() As Boolean
     Dim Frame As ClsUIFrame
-    Dim UILineitem As ClsUILineitem
+    Dim UILineItem As ClsUILineitem
     Dim DashObj As ClsUIDashObj
     Dim MenuItem As ClsUIMenuItem
     
     Const StrPROCEDURE As String = "ResetScreen()"
 
-    On Error Resume Next
+'    On Error Resume Next
     
     ShtMain.Unprotect PROTECT_KEY
         
-'    For Each MenuItem In MainScreen.Menu
-'        MainScreen.Menu.RemoveItem MenuItem.Name
-'        MenuItem.ShpMenuItem.Delete
-'        Set MenuItem = Nothing
-'    Next
-    
     For Each Frame In MainScreen.Frames
         If Frame.Name <> "MenuBar" Then
-            For Each DashObj In Frame.DashObjs
-                Frame.DashObjs.RemoveItem DashObj.Name
-                DashObj.ShpDashObj.Delete
-                Set DashObj = Nothing
-            Next
-            
-            For Each UILineitem In Frame.Lineitems
-                Frame.Lineitems.RemoveItem UILineitem.Name
-                UILineitem.ShpLineitem.Delete
-                Set UILineitem = Nothing
-            Next
-            
-            For Each UILineitem In Frame.LineitemHeaders
-                Frame.LineitemHeaders.RemoveItem UILineitem.Name
-                UILineitem.ShpLineitem.Delete
-                Set UILineitem = Nothing
-            Next
-            
-            For Each MenuItem In Frame.Menu
-                Frame.Menu.RemoveItem MenuItem.Name
-                MenuItem.ShpMenuItem.Delete
-                Set MenuItem = Nothing
-            Next
-            
-            Frame.Header.ShpHeader.Delete
-'            Frame.Header.Icon.Delete
-            Frame.ShpFrame.Delete
-            Set Frame = Nothing
-            
+            MainScreen.Frames.RemoveItem Frame.Name
+            Frame.Terminate
         End If
     Next
-    
-'    For Each MenuItem In MainScreen.Menu
-'        MainScreen.Menu.RemoveItem MenuItem.Name
-'        Set MenuItem = Nothing
-'    Next
     
     If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
         

@@ -209,13 +209,29 @@ End Sub
 ' ===============================================================
 Public Sub Initialize(obj As ClsUIFrame)
     Set Me.Parent = obj
+End Sub
+
+Private Sub Class_Initialize()
     Set pShpLineitem = ShtMain.Shapes.AddTextbox(msoTextOrientationHorizontal, 0, 0, 10, 10)
 End Sub
 
+' ===============================================================
+Public Sub Terminate()
+    Set pParent = Nothing
+    pShpLineitem.Delete
+    
+    If Not pBadge Is Nothing Then
+        pBadge.Delete
+        Set pBadge = Nothing
+    End If
+End Sub
 '---------------------------------------------------------------
 Private Sub Class_Terminate()
-    Set pBadge = Nothing
+    Set pShpLineitem = Nothing
 
+    If Not pBadge Is Nothing Then
+        Set pBadge = Nothing
+    End If
 End Sub
 
 '---------------------------------------------------------------

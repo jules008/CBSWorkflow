@@ -35,7 +35,7 @@ Private pShpMenuItem As Shape
 Private pSelected As Boolean
 Private pVisible As Boolean
 Private pOnAction As String
-Private pParent As LongPtr
+Private pParent As ClsUIMenu
 
 '---------------------------------------------------------------
 Public Property Get Top() As Integer
@@ -253,34 +253,31 @@ End Sub
 
 '---------------------------------------------------------------
 Public Property Get Parent() As ClsUIMenu
-    If pParent <> 0 Then
-        Set Parent = GetParentFromPtr(pParent)
-    End If
+    Set Parent = pParent
 End Property
 
-Friend Function SetParent(ByVal Ptr As LongPtr) As Boolean
-    pParent = Ptr
-End Function
+Public Property Set Parent(obj As ClsUIMenu)
+    Set pParent = obj
+End Property
 
 ' ===============================================================
-' Method GetParentFromPtr
-' Private routine to copy memory address of parent class
-' ---------------------------------------------------------------
-Private Function GetParentFromPtr(ByVal Ptr As LongPtr) As ClsUIMenu
-    Dim tmp As ClsUIMenu
+Public Sub Initialize(obj As ClsUIMenu)
+    Set Me.Parent = obj
+End Sub
+'---------------------------------------------------------------
 
-    CopyMemory tmp, Ptr, 4
-    Set GetParentFromPtr = tmp
-    CopyMemory tmp, 0&, 4
-End Function
-
-' ===============================================================
 Private Sub Class_Initialize()
     Set pShpMenuItem = ShtMain.Shapes.AddShape(msoShapeRectangle, 0, 0, 10, 10)
 End Sub
-
+' ===============================================================
+Public Sub Terminate()
+    Set pParent = Nothing
+    pShpMenuItem.Delete
+    Set pShpMenuItem = Nothing
+End Sub
 '---------------------------------------------------------------
 Private Sub Class_Terminate()
+    Set pShpMenuItem = Nothing
 End Sub
 
 '---------------------------------------------------------------

@@ -91,10 +91,6 @@ End Property
 
 '---------------------------------------------------------------
 Public Property Get DashObjs() As ClsUIDashObjs
-    If pDashObjs Is Nothing Then
-        Set pDashObjs = New ClsUIDashObjs
-        pDashObjs.Initialize Me
-    End If
     Set DashObjs = pDashObjs
 End Property
 
@@ -104,10 +100,6 @@ End Property
 
 '---------------------------------------------------------------
 Public Property Get Menu() As ClsUIMenu
-    If pMenu Is Nothing Then
-        Set pMenu = New ClsUIMenu
-        pMenu.Initialize Me
-    End If
     Set Menu = pMenu
 End Property
 
@@ -126,10 +118,6 @@ End Property
 
 '---------------------------------------------------------------
 Public Property Get Header() As ClsUIHeader
-    If pHeader Is Nothing Then
-        Set pHeader = New ClsUIHeader
-        pHeader.Initialize Me
-    End If
     Set Header = pHeader
 End Property
 
@@ -139,10 +127,6 @@ End Property
 
 '---------------------------------------------------------------
 Public Property Get LineitemHeaders() As ClsUILineitems
-    If pLineitemHeaders Is Nothing Then
-        Set pLineitemHeaders = New ClsUILineitems
-        pLineitemHeaders.Initialize Me
-    End If
     Set LineitemHeaders = pLineitemHeaders
 End Property
 
@@ -152,10 +136,6 @@ End Property
 
 '---------------------------------------------------------------
 Public Property Get Lineitems() As ClsUILineitems
-    If pLineitems Is Nothing Then
-        Set pLineitems = New ClsUILineitems
-        pLineitems.Initialize Me
-    End If
     Set Lineitems = pLineitems
 End Property
 
@@ -248,7 +228,7 @@ End Property
 '---------------------------------------------------------------
 Public Sub ReOrder()
     Dim DashObj As ClsUIDashObj
-    Dim UILineitem As ClsUILineitem
+    Dim UILineItem As ClsUILineitem
     
     pShpFrame.ZOrder msoBringToFront
     pHeader.ReOrder
@@ -257,15 +237,15 @@ Public Sub ReOrder()
         DashObj.ShpDashObj.ZOrder msoBringToFront
     Next
     
-    For Each UILineitem In Lineitems
-        With UILineitem
+    For Each UILineItem In Lineitems
+        With UILineItem
             .ShpLineitem.ZOrder msoBringToFront
             If Not .Badge Is Nothing Then .Badge.ZOrder msoBringToFront
         End With
     Next
     
-    For Each UILineitem In LineitemHeaders
-        With UILineitem
+    For Each UILineItem In LineitemHeaders
+        With UILineItem
             .ShpLineitem.ZOrder msoBringToFront
             If Not .Badge Is Nothing Then .Badge.ZOrder msoBringToFront
         End With
@@ -277,13 +257,47 @@ End Sub
 ' ===============================================================
 Public Sub Initialize(obj As ClsUIScreen)
     Set Me.Parent = obj
-    Set pShpFrame = ShtMain.Shapes.AddShape(msoShapeRectangle, 0, 0, 10, 10)
 End Sub
 
+Private Sub Class_Initialize()
+    Set pDashObjs = New ClsUIDashObjs
+    Set pMenu = New ClsUIMenu
+    Set pHeader = New ClsUIHeader
+    Set pLineitemHeaders = New ClsUILineitems
+    Set pLineitems = New ClsUILineitems
+    Set pShpFrame = ShtMain.Shapes.AddShape(msoShapeRectangle, 0, 0, 10, 10)
+    
+    pLineitems.Initialize Me
+    pDashObjs.Initialize Me
+    pMenu.Initialize Me
+    pHeader.Initialize Me
+    pLineitemHeaders.Initialize Me
+End Sub
+' ===============================================================
+Public Sub Terminate()
+    pDashObjs.Terminate
+    pMenu.Terminate
+    pHeader.Terminate
+    pLineitemHeaders.Terminate
+    pLineitems.Terminate
+    Set pParent = Nothing
+    pShpFrame.Delete
+
+    Set pShpFrame = Nothing
+    Set pDashObjs = Nothing
+    Set pMenu = Nothing
+    Set pHeader = Nothing
+    Set pLineitemHeaders = Nothing
+    Set pLineitems = Nothing
+End Sub
 '---------------------------------------------------------------
 Private Sub Class_Terminate()
     Set pShpFrame = Nothing
+    Set pDashObjs = Nothing
     Set pMenu = Nothing
+    Set pHeader = Nothing
+    Set pLineitemHeaders = Nothing
+    Set pLineitems = Nothing
 End Sub
 
 '---------------------------------------------------------------

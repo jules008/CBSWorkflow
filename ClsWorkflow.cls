@@ -110,6 +110,7 @@ Public Property Get ActiveStep() As ClsStep
 End Property
 
 Public Property Let ActiveStep(ByVal vNewValue As ClsStep)
+    vNewValue.Initialize Me
     Set pSteps(pWorkflowNo & "-" & pCurrentStep) = vNewValue
 End Property
 
@@ -118,8 +119,10 @@ Public Property Get Status() As enStatus
     Dim Step As ClsStep
     Dim Completed As Integer
     Dim NotStarted As Integer
+    Dim i As Integer
 
-    For Each Step In pSteps
+    For i = 1 To pSteps.Count
+        Set Step = pSteps(i)
         If Step.Status = enComplete Then Completed = Completed + 1
         If Step.Status = enNotStarted Then NotStarted = NotStarted + 1
     Next
@@ -141,10 +144,6 @@ End Property
 
 '---------------------------------------------------------------
 Public Property Get Steps() As ClsSteps
-    If pSteps Is Nothing Then
-        Set pSteps = New ClsSteps
-        pSteps.Initialize Me
-    End If
     Set Steps = pSteps
 End Property
 
@@ -280,7 +279,7 @@ Public Sub MoveToAltStep()
     
     With ActiveStep
         
-        If .AltEmail.EmailNo <> 0 Then .AltEmail.Display
+'        If .AltEmail.EmailNo <> 0 Then .AltEmail.Display
         
         Select Case .StepType
             
@@ -289,9 +288,9 @@ Public Sub MoveToAltStep()
                 AltStep = ActiveStep.AltStep
                 
                 If AltStep <> "" Then
-                    Do While pCurrentStep <> AltStep And pCurrentStep <> ActiveStep.Parent.Steps.Start
+'                    Do While pCurrentStep <> AltStep And pCurrentStep <> ActiveStep.Parent.Steps.Start
                         MoveToPrevStep
-                    Loop
+'                    Loop
                 End If
             
         End Select
@@ -375,11 +374,26 @@ End Sub
 
 ' ===============================================================
 Private Sub Class_Initialize()
+    Set pSteps = New ClsSteps
+    Set pActiveStep = New ClsStep
     Set pFrmInputBox = New FrmInputBox
+    pActiveStep.Initialize Me
+    pSteps.Initialize Me
 End Sub
 
+' ===============================================================
+Public Sub Terminate()
+    pSteps.Terminate
+    pActiveStep.Terminate
+    
+    Set pSteps = Nothing
+    Set pActiveStep = Nothing
+    Set pFrmInputBox = Nothing
+End Sub
 '---------------------------------------------------------------
 Private Sub Class_Terminate()
+    Set pSteps = Nothing
+    Set pActiveStep = Nothing
     Set pFrmInputBox = Nothing
 End Sub
 '---------------------------------------------------------------

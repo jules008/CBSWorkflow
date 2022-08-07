@@ -58,10 +58,6 @@ Public Property Let Start(ByVal vNewValue As String)
     pStart = vNewValue
 End Property
 
-Friend Function SetParent(ByVal Ptr As LongPtr) As Boolean
-    pParent = Ptr
-End Function
-
 Public Function NewEnum() As IUnknown
 Attribute NewEnum.VB_UserMemId = -4
     Set NewEnum = pSteps.[_NewEnum]
@@ -90,7 +86,7 @@ End Function
 '---------------------------------------------------------------
 
 Public Sub AddItem(Step As ClsStep)
-    
+    Step.Initialize Me.Parent
     pSteps.Add Step, Key:=Parent.WorkflowNo & "-" & Step.StepNo
     
     If Step.PrevStep = "0" Then
@@ -391,28 +387,26 @@ Private Sub UpdateCurrentStep(WFNo As Integer)
 End Sub
 
 ' ===============================================================
-' Method GetParentFromPtr
-' Private routine to copy memory address of parent class
-' ---------------------------------------------------------------
-Private Function GetParentFromPtr(ByVal Ptr As LongPtr) As ClsWorkflow
-    Dim tmp As ClsWorkflow
-
-    CopyMemory tmp, Ptr, 4
-    Set GetParentFromPtr = tmp
-    CopyMemory tmp, 0&, 4
-End Function
-
-' ===============================================================
 Public Sub Initialize(obj As ClsWorkflow)
-    Set pSteps = New Collection
     Set Me.Parent = obj
-
 End Sub
 
+Private Sub Class_Initialize()
+    Set pSteps = New Collection
+End Sub
+' ===============================================================
+Public Sub Terminate()
+    Dim Step As ClsStep
+
+    For Each Step In pSteps
+        Step.Terminate
+    Next
+    Set pParent = Nothing
+    Set pSteps = Nothing
+End Sub
 '---------------------------------------------------------------
 Private Sub Class_Terminate()
-    
-
+    Set pSteps = Nothing
 End Sub
 
 '---------------------------------------------------------------

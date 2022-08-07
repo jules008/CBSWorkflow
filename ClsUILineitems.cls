@@ -141,12 +141,9 @@ End Function
 ' Add item to Collection
 '---------------------------------------------------------------
 
-Public Sub AddItem(UILineitem As ClsUILineitem)
-    If UILineitem Is Nothing Then
-        Set UILineitem = New ClsUILineitem
-    End If
-    UILineitem.Initialize Me.Parent
-    pUILineitems.Add UILineitem, Key:=UILineitem.Name
+Public Sub AddItem(UILineItem As ClsUILineitem)
+    UILineItem.Initialize Me.Parent
+    pUILineitems.Add UILineItem, Key:=UILineItem.Name
 End Sub
 
 ' ===============================================================
@@ -172,7 +169,7 @@ End Function
 ' Adds text to the line item
 '---------------------------------------------------------------
 Public Sub Text(Row As Integer, Col As Integer, ItemText As String, LineStyle As TypeStyle, Optional OnAction As String, Optional Badge As Shape)
-    Dim UILineitem As ClsUILineitem
+    Dim UILineItem As ClsUILineitem
     Dim LocCustomStyle As TypeStyle
     Dim LeftOffset As Integer
     Dim i As Integer
@@ -182,10 +179,10 @@ Public Sub Text(Row As Integer, Col As Integer, ItemText As String, LineStyle As
         i = i + 1
     Loop
     
-    Set UILineitem = New ClsUILineitem
-    Me.AddItem UILineitem
+    Set UILineItem = New ClsUILineitem
+    Me.AddItem UILineItem
     
-    With UILineitem
+    With UILineItem
         .Style = LineStyle
         .Left = Left + LeftOffset
         .Width = pColumns(Col)
@@ -215,13 +212,26 @@ End Sub
 ' ===============================================================
 Public Sub Initialize(obj As ClsUIFrame)
     Set Me.Parent = obj
-    Set pUILineitems = New Collection
-
 End Sub
 
+Private Sub Class_Initialize()
+    Set pUILineitems = New Collection
+End Sub
+
+' ===============================================================
+Public Sub Terminate()
+    Dim UILineItem As ClsUILineitem
+    
+    For Each UILineItem In pUILineitems
+        UILineItem.Terminate
+    Next
+    
+    Set pParent = Nothing
+    Set pUILineitems = Nothing
+End Sub
 '---------------------------------------------------------------
 Private Sub Class_Terminate()
-    
+    Set pUILineitems = Nothing
 End Sub
 
 '---------------------------------------------------------------

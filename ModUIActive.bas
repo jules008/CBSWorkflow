@@ -26,9 +26,10 @@ Private Function BuildMainFrame() As Boolean
 
     Set MainFrame = New ClsUIFrame
     
+    MainScreen.Frames.AddItem MainFrame, "Main Frame"
+    
     'add main frame
     With MainFrame
-        MainScreen.Frames.AddItem MainFrame
         .Name = "Main Frame"
             
         .Top = MAIN_FRAME_TOP
@@ -252,6 +253,7 @@ GracefulExit:
     
     RefreshList = True
  
+    Workflows.Terminate
     Set RstWorkflowList = Nothing
     Set Workflows = Nothing
     
@@ -259,6 +261,7 @@ Exit Function
 
 ErrorExit:
 
+    Workflows.Terminate
     Set RstWorkflowList = Nothing
     Set Workflows = Nothing
     ModLibrary.PerfSettingsOff
@@ -281,7 +284,6 @@ End Function
 ' Opens the selected Workflow
 ' ---------------------------------------------------------------
 Private Sub OpenWorkflow(WorkflowNo As Integer)
-    Dim Workflow As ClsWorkflow
     
     Const StrPROCEDURE As String = "OpenWorkflow()"
        
@@ -292,21 +294,18 @@ Private Sub OpenWorkflow(WorkflowNo As Integer)
 Restart:
 '    If CurrentUser.UserLvl = enBasic Then Err.Raise ACCESS_DENIED
     
-    Set Workflow = New ClsWorkflow
-    Workflow.DBGet CStr(WorkflowNo)
-    Set ActiveWorkFlow = Workflow
+    Set ActiveWorkFlow = Nothing
+    Set ActiveWorkFlow = New ClsWorkflow
+    ActiveWorkFlow.DBGet CStr(WorkflowNo)
     
     If Not FrmWorkflow.ShowForm() Then Err.Raise HANDLED_ERROR
    
     If Not ModUIActive.RefreshList Then Err.Raise HANDLED_ERROR
     
 GracefulExit:
-    Set Workflow = Nothing
-
 Exit Sub
 
 ErrorExit:
-    Set Workflow = Nothing
     ModLibrary.PerfSettingsOff
     Terminate
 Exit Sub

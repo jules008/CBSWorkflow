@@ -203,8 +203,15 @@ Public Sub Initialize(obj As ClsUIFrame)
     Set Me.Parent = obj
 End Sub
 
+' ===============================================================
+Public Sub Terminate()
+    Set pParent = Nothing
+    pShpDashObj.Delete
+    Set pShpDashObj = Nothing
+End Sub
 '---------------------------------------------------------------
 Private Sub Class_Terminate()
+    Set pShpDashObj = Nothing
 End Sub
 ' ===============================================================
 

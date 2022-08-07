@@ -312,7 +312,7 @@ Restart:
 
         Application.StatusBar = ""
                 
-        Set AllWorkflows = New ClsWorkflows
+'        Set AllWorkflows = New ClsWorkflows
         Set ActiveWorkFlow = Nothing
         Set ActiveWorkFlow = New ClsWorkflow
         
@@ -335,7 +335,8 @@ GracefulExit:
 
 '    Set SelMember = Nothing
     Set NewWorkFlow = Nothing
-    Set AllWorkflows = Nothing
+'    Workflows.Terminate
+'    Set Workflows = Nothing
     
     Application.DisplayAlerts = True
 
@@ -344,7 +345,8 @@ Exit Sub
 ErrorExit:
 '    Set SelMember = Nothing
     Set NewWorkFlow = Nothing
-    Set AllWorkflows = Nothing
+'    Workflows.Terminate
+'    Set Workflows = Nothing
     
     Application.DisplayAlerts = True
 

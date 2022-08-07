@@ -22,12 +22,21 @@ Attribute VB_Exposed = False
 Option Explicit
 
 Private pEmails As Collection
-
+Private pParent As ClsStep
 '---------------------------------------------------------------
 Public Function NewEnum() As IUnknown
 Attribute NewEnum.VB_UserMemId = -4
     Set NewEnum = pEmails.[_NewEnum]
 End Function
+
+'---------------------------------------------------------------
+Public Property Get Parent() As ClsStep
+    Set Parent = pParent
+End Property
+
+Public Property Set Parent(obj As ClsStep)
+    Set pParent = obj
+End Property
 
 ' ===============================================================
 ' Method FindItem
@@ -44,10 +53,7 @@ End Function
 ' Add item to Collection
 '---------------------------------------------------------------
 Public Sub AddItem(Email As ClsEmail)
-    If pEmails Is Nothing Then
-        Set pEmails = New ClsUIFrames
-        pEmails.Initialize Me
-    End If
+    Email.Initialize Me.Parent
     pEmails.Add Email, Key:=CStr(Email.EmailNo)
 End Sub
 
@@ -104,7 +110,13 @@ Public Sub DeleteCollection()
 End Sub
 
 ' ===============================================================
+Public Sub Initialize(obj As ClsStep)
+    Set Me.Parent = obj
+End Sub
+
 Private Sub Class_Initialize()
+    Set pEmails = New ClsUIFrames
+    
     GetCollection
 End Sub
 

@@ -179,12 +179,20 @@ End Sub
 ' ===============================================================
 Public Sub Initialize(obj As ClsUIFrame)
     Set Me.Parent = obj
-    Set pShpHeader = ShtMain.Shapes.AddShape(msoShapeRectangle, 0, 0, 10, 10)
-
 End Sub
 
+Private Sub Class_Initialize()
+    Set pShpHeader = ShtMain.Shapes.AddShape(msoShapeRectangle, 0, 0, 10, 10)
+End Sub
+
+' ===============================================================
+Public Sub Terminate()
+    Set pParent = Nothing
+    pShpHeader.Delete
+End Sub
 '---------------------------------------------------------------
 Private Sub Class_Terminate()
+    Set pShpHeader = Nothing
 End Sub
 '---------------------------------------------------------------
 

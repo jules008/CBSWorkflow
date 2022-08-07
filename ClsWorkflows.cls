@@ -279,9 +279,18 @@ Private Sub Class_Initialize()
     Set pWorkflows = New Collection
 
 End Sub
+' ===============================================================
+Public Sub Terminate()
+    Dim Workflow As ClsWorkflow
 
+    For Each Workflow In pWorkflows
+        Workflow.Terminate
+    Next
+    Set pWorkflows = Nothing
+End Sub
 '---------------------------------------------------------------
 Private Sub Class_Terminate()
+    Set pWorkflows = Nothing
 End Sub
 
 '---------------------------------------------------------------

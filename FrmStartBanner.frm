@@ -4,7 +4,7 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FrmStartBanner
    ClientHeight    =   5520
    ClientLeft      =   120
    ClientTop       =   465
-   ClientWidth     =   8685
+   ClientWidth     =   8685.001
    OleObjectBlob   =   "FrmStartBanner.frx":0000
    StartUpPosition =   2  'CenterScreen
 End
