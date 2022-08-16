@@ -25,7 +25,7 @@ Public Function UpdateDBScript() As Boolean
     Const StrPROCEDURE As String = "UpdateDBScript()"
     
     Dim RstTable As Recordset
-    Dim fld As Field
+    Dim Fld As Field
 
     On Error GoTo ErrorExit
     
@@ -60,21 +60,10 @@ Public Function UpdateDBScript() As Boolean
     ' ========================================================================================
     ' Database commands
     ' ----------------------------------------------------------------------------------------
+    DB.Execute "DELETE * FROM TblWorkflow"
+    DB.Execute "DELETE * FROM TblStep"
     
-    DB.Execute "DELETE * FROM TblPosition"
-    DB.Execute "INSERT INTO TblPosition (Position, PosNo) VALUES ('Fire Chief', 1)"
-    DB.Execute "INSERT INTO TblPosition (Position, PosNo) VALUES ('Deputy Chief', 2)"
-    DB.Execute "INSERT INTO TblPosition (Position, PosNo) VALUES ('AC Fire Prov', 3)"
-    DB.Execute "INSERT INTO TblPosition (Position, PosNo) VALUES ('AC H&S', 3)"
-    DB.Execute "INSERT INTO TblPosition (Position, PosNo) VALUES ('AC Training', 3)"
-    DB.Execute "INSERT INTO TblPosition (Position, PosNo) VALUES ('AC Ops', 4)"
-    DB.Execute "INSERT INTO TblPosition (Position, PosNo) VALUES ('Station Captain', 5)"
-    DB.Execute "INSERT INTO TblPosition (Position, PosNo) VALUES ('Crew Manager', 6)"
-    DB.Execute "INSERT INTO TblPosition (Position, PosNo) VALUES ('Driver Op', 7)"
-    DB.Execute "INSERT INTO TblPosition (Position, PosNo) VALUES ('Firefighter', 8)"
-    DB.Execute "INSERT INTO TblPosition (Position, PosNo) VALUES ('Fire Insp', 9)"
-    DB.Execute "INSERT INTO TblPosition (Position, PosNo) VALUES ('Dispatch', 10)"
-    
+    UpdateTable
     
     ' ========================================================================================
         
@@ -116,7 +105,7 @@ Public Function UpdateDBScriptUndo() As Boolean
     Const StrPROCEDURE As String = "UpdateDBScriptUndo()"
     
     Dim RstTable As Recordset
-    Dim fld As DAO.Field
+    Dim Fld As DAO.Field
     
     On Error GoTo ErrorHandler
     
@@ -170,6 +159,54 @@ ErrorHandler:   If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
         Resume ErrorExit
     End If
 End Function
+
+
+' ===============================================================
+' UpdateTable
+' Updates entire table from table update sheet
+' ---------------------------------------------------------------
+Public Sub UpdateTable()
+    Dim RstTable As Recordset
+    Dim Fld As Field
+    Dim i As Integer
+    Dim x As Integer
+    Dim Val As String
+    
+    If DB Is Nothing Then DBConnect
+    
+    DB.Execute "DELETE * FROM TblStepTemplate"
+        
+    Set RstTable = ModDatabase.SQLQuery("TblStepTemplate")
+    
+    With RstTable
+        x = 2
+        Do While ShtTableImport.Cells(x, 1) <> ""
+            i = 1
+            .AddNew
+            For Each Fld In RstTable.Fields
+                    Val = ShtTableImport.Cells(x, i)
+                Debug.Print "i: "; i, Fld.Name, Val, Fld.Type
+                    
+                    Select Case Fld.Type
+                        Case 1
+                            If Val <> "" Then Fld = CBool(Val)
+                        Case 4
+                            If Val <> "" Then Fld = CInt(Val)
+                        Case 10
+                            If Val <> "" Then Fld = CStr(Val)
+                        Case 8
+                            If IsDate(Val) Then Fld = CDate(Val)
+                       
+                    End Select
+    
+                i = i + 1
+            Next
+            x = x + 1
+            .Update
+        Loop
+    End With
+    ShtTableImport.Visible = xlSheetHidden
+End Sub
 
 ' ===============================================================
 ' GetDBVer

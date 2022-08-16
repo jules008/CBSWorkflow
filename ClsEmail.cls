@@ -65,8 +65,8 @@ Public Property Get Subject() As String
     Dim WorkflowNo As Integer
     Dim StepNo As String
     
-    WorkflowNo = Parent.Parent.WorkflowNo
-    StepNo = Parent.Parent.CurrentStep
+'    WorkflowNo = Parent.Parent.WorkflowNo
+'    StepNo = Parent.Parent.CurrentStep
     
     Subject = "||" & WorkflowNo & ":" & StepNo & "|| - " & pSubject
     

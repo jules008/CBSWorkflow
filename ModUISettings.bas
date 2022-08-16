@@ -416,8 +416,8 @@ Public Const MENUITEM_SET_FONT_X_JUST As Integer = xlHAlignCenter
 Public Const MENUITEM_SET_FONT_Y_JUST As Integer = xlVAlignCenter
 
 Public Const MAIN_FRAME_BORDER_WIDTH As Single = 0
-Public Const MAIN_FRAME_FILL_1 As Long = COLOUR_8
-Public Const MAIN_FRAME_FILL_2 As Long = COLOUR_8
+Public Const MAIN_FRAME_FILL_1 As Long = COLOUR_5
+Public Const MAIN_FRAME_FILL_2 As Long = COLOUR_5
 Public Const MAIN_FRAME_SHADOW As Long = msoShadow21
 
 Public Const HEADER_BORDER_WIDTH As Single = 0
