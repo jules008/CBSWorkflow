@@ -131,6 +131,15 @@ Type TypeStyle
     TextDir As MsoTextOrientation
 End Type
 
+Type TypeAddress
+    HouseNameNo As String
+    Address1 As String
+    Address2 As String
+    City As String
+    County As String
+    Country As String
+    Postcode As String
+End Type
 ' ===============================================================
 ' Enum Declarations
 ' ---------------------------------------------------------------

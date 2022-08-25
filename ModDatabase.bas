@@ -31,8 +31,11 @@ Public Function SQLQuery(SQL As String) As Recordset
     On Error GoTo ErrorHandler
       
 Restart:
+    On Error Resume Next
     Application.StatusBar = ""
 
+    On Error GoTo ErrorHandler
+    
     If DB Is Nothing Then DBConnect
         If FaultCount1008 > 0 Then FaultCount1008 = 0
     

@@ -107,7 +107,7 @@ Sub Progress(MessTxt As String, pctCompl As Single)
     LblText = Format(pctCompl, "0") & "%"
     LblProgress.Width = FrmProgBar.Width / 100 * pctCompl
     Repaint
-    Application.Wait (Now + TimeValue("00:00:01"))
+    Sleep 500
     DoEvents
 End Sub
 
