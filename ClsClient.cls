@@ -1,7 +1,7 @@
 VERSION 1.0 CLASS
 BEGIN
     MultiUse = -1  'True
-End
+END
 Attribute VB_Name = "ClsClient"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
@@ -26,8 +26,8 @@ Attribute VB_Exposed = False
 '===============================================================
 
 Option Explicit
-Private pDeleted as Date
-Private pName as String
+Private pDeleted As Date
+Private pName As String
 
 '---------------------------------------------------------------
 Public Property Get Deleted() As Date
@@ -60,7 +60,7 @@ End Sub
 ' Method DBSave
 ' Saves class to Database
 '---------------------------------------------------------------
-Public Sub DBSave
+Public Sub DBSave()
 
 End Sub
 
