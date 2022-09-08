@@ -28,6 +28,7 @@ Private pRAG As enRAG
 Private pCurrentStep As String
 Private pNextStep As String
 Private pPrevStep As String
+Private pAltStep As String
 Private pActiveStep As ClsStep
 Private pStatus As enStatus
 Private pFrmInputBox As FrmInputBox
@@ -102,6 +103,16 @@ End Property
 
 Public Property Let PrevStep(ByVal vNewValue As String)
     pPrevStep = vNewValue
+End Property
+
+'---------------------------------------------------------------
+Public Property Get AltStep() As String
+    pAltStep = ActiveStep.AltStep
+    AltStep = pAltStep
+End Property
+
+Public Property Let AltStep(ByVal vNewValue As String)
+    pAltStep = vNewValue
 End Property
 
 '---------------------------------------------------------------
@@ -275,29 +286,16 @@ End Sub
 ' Clear current step and moves to Alt step
 ' ---------------------------------------------------------------
 Public Sub MoveToAltStep()
-    Dim AltStep As String
-    
     With ActiveStep
-        
-'        If .AltEmail.EmailNo <> 0 Then .AltEmail.Display
-        
-        Select Case .StepType
-            
-            Case enAltBranch
-
-                AltStep = ActiveStep.AltStep
-                
-                If AltStep <> "" Then
-'                    Do While pCurrentStep <> AltStep And pCurrentStep <> ActiveStep.Parent.Steps.Start
-                        MoveToPrevStep
-'                    Loop
-                End If
-            
-        End Select
+        .Complete
+        .DBSave
     End With
     
+        pCurrentStep = AltStep
+        DBSave
     With ActiveStep
         .Start
+            .DBSave
     End With
 End Sub
 

@@ -316,9 +316,25 @@ End Sub
 ' BtnNo_Click
 ' ---------------------------------------------------------------
 Private Sub BtnNo_Click()
-    ActiveWorkFlow.MoveToAltStep
+    
+    With ActiveWorkFlow
+        .MoveToAltStep
+    
+    With ActiveWorkFlow.ActiveStep
+       
+            If .LastStep Then
+                Unload Me
+            Else
+                If .Wait = True Then
     SaveWorkflow
     Me.Hide
+        Else
+            PopulateForm
+            If Not Me.Visible Then Me.Show
+        End If
+            End If
+        End With
+    End With
 End Sub
 
 ' ===============================================================

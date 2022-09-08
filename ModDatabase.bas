@@ -404,7 +404,7 @@ Public Function BackupFiles() As Boolean
 
     Set FSO = New FileSystemObject
             
-    FSO.CopyFile ThisWorkbook.Path & "\System Files\" & DB_FILE_NAME & ".accdb", ThisWorkbook.Path & BAK_FILES & DB_FILE_NAME & " BAK-" & Format(Now, "yy-mm-dd hhmm") & ".accdb", True
+    FSO.CopyFile GetDocLocalPath(ThisWorkbook.Path) & "\System Files\" & DB_FILE_NAME & ".accdb", GetDocLocalPath(ThisWorkbook.Path) & BAK_FILES & DB_FILE_NAME & " BAK-" & Format(Now, "yy-mm-dd hhmm") & ".accdb", True
             
     Set FSO = Nothing
 
