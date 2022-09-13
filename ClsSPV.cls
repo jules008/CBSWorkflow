@@ -2,13 +2,13 @@ VERSION 1.0 CLASS
 BEGIN
   MultiUse = -1  'True
 END
-Attribute VB_Name = "ClsClient"
+Attribute VB_Name = "ClsSPV"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 '===============================================================
-' Class ClsClient
+' Class ClsSPV
 '---------------------------------------------------------------
 ' Created by Julian Turner
 ' OneSheet Consulting
@@ -16,7 +16,7 @@ Attribute VB_Exposed = False
 '===============================================================
 ' v1.0.0 - Initial Version
 '---------------------------------------------------------------
-' Date - 09 Sep 22
+' Date - 12 Sep 22
 '===============================================================
 ' Methods
 '---------------------------------------------------------------
@@ -24,14 +24,22 @@ Attribute VB_Exposed = False
 ' DBSave - Saves class to Database
 ' DBDelete - Deletes record
 '===============================================================
-' Index - ClientNo
+' Index - SPVNo
 '---------------------------------------------------------------
 Option Explicit
 
+Private pSPVNo As Integer
 Private pName As String
-Private pUrl As String
-Private pPhoneNo As String
-Private pClientNo As Integer
+Private pParent As ClsClient
+
+'---------------------------------------------------------------
+Public Property Get SPVNo() As Integer
+    SPVNo = pSPVNo
+End Property
+
+Public Property Let SPVNo(ByVal vNewValue As Integer)
+    pSPVNo = vNewValue
+End Property
 
 '---------------------------------------------------------------
 Public Property Get Name() As String
@@ -43,49 +51,29 @@ Public Property Let Name(ByVal vNewValue As String)
 End Property
 
 '---------------------------------------------------------------
-Public Property Get Url() As String
-    Url = pUrl
+Public Property Get Parent() As ClsClient
+    Set Parent = pParent
 End Property
 
-Public Property Let Url(ByVal vNewValue As String)
-    pUrl = vNewValue
+Public Property Set Parent(obj As ClsClient)
+    Set pParent = obj
 End Property
-
 '---------------------------------------------------------------
-Public Property Get PhoneNo() As String
-    PhoneNo = pPhoneNo
-End Property
-
-Public Property Let PhoneNo(ByVal vNewValue As String)
-    pPhoneNo = vNewValue
-End Property
-
-'---------------------------------------------------------------
-Public Property Get ClientNo() As Integer
-    ClientNo = pClientNo
-End Property
-
-Public Property Let ClientNo(ByVal vNewValue As Integer)
-    pClientNo = vNewValue
-End Property
-
 ' ===============================================================
 ' Method DBGet(Key as Integer)
 ' Gets class from Database
 ' ---------------------------------------------------------------
-Public Sub DBGet(ClientNo As Integer)
-    Dim RstClient As Recordset
+Public Sub DBGet(SPVNo As Integer)
+    Dim RstSPV As Recordset
 
-    Set RstClient = ModDatabase.SQLQuery("SELECT * FROM TblClient WHERE ClientNo = " & ClientNo & " AND Deleted IS NULL")
-    With RstClient
+    Set RstSPV = ModDatabase.SQLQuery("SELECT * FROM TblSPV WHERE SPVNo = " & SPVNo)
+    With RstSPV
         If .RecordCount > 0 Then
+            If Not IsNull(!SPVNo) Then pSPVNo = !SPVNo
             If Not IsNull(!Name) Then pName = !Name
-            If Not IsNull(!Url) Then pUrl = !Url
-            If Not IsNull(!PhoneNo) Then pPhoneNo = !PhoneNo
-            If Not IsNull(!ClientNo) Then pClientNo = !ClientNo
         End If
     End With
-    Set RstClient = Nothing
+    Set RstSPV = Nothing
 End Sub
 
 ' ===============================================================
@@ -93,12 +81,12 @@ End Sub
 ' Saves class to Database
 ' ---------------------------------------------------------------
 Public Sub DBSave()
-    Dim RstClient As Recordset
+    Dim RstSPV As Recordset
     Dim RstMaxNo As Recordset
     Dim LastNo As Integer
 
-    Set RstClient = ModDatabase.SQLQuery("SELECT * FROM TblClient WHERE ClientNo = " & pClientNo & " AND Deleted IS NULL")
-    Set RstMaxNo = ModDatabase.SQLQuery("SELECT MAX(ClientNo) FROM TblClient ")
+    Set RstSPV = ModDatabase.SQLQuery("SELECT * FROM TblSPV WHERE SPVNo = " & pSPVNo)
+    Set RstMaxNo = ModDatabase.SQLQuery("SELECT MAX(SPVNo) FROM TblSPV ")
 
     If RstMaxNo.Fields(0).Value <> 0 Then
         LastNo = RstMaxNo.Fields(0).Value
@@ -106,21 +94,21 @@ Public Sub DBSave()
         LastNo = 0
     End If
 
-    With RstClient
+    With RstSPV
         If .RecordCount = 0 Then
             .AddNew
-            pClientNo = LastNo + 1
+            pSPVNo = LastNo + 1
         Else
             .Edit
         End If
 
-        !Url = pUrl
-        !PhoneNo = pPhoneNo
-        !ClientNo = pClientNo
+        If CStr(pSPVNo) = "" Then !SPVNo = Null Else !SPVNo = pSPVNo
+        If CStr(pName) = "" Then !Name = Null Else !Name = pName
+
         .Update
     End With
 
-    Set RstClient = Nothing
+    Set RstSPV = Nothing
     Set RstMaxNo = Nothing
 End Sub
 
@@ -130,12 +118,22 @@ End Sub
 ' ---------------------------------------------------------------
 Public Sub DBDelete(Optional FullDelete As Boolean)
 
-    DB.Execute "DELETE * FROM TblClient WHERE ClientNo = " & pClientNo
+    DB.Execute "DELETE * FROM TblSPV WHERE SPVNo = " & pSPVNo
 
 End Sub
 ' ===============================================================
+Public Sub Initialize(obj As ClsClient)
+    Set Me.Parent = obj
+End Sub
+'---------------------------------------------------------------
 
 ' ===============================================================
+Public Sub Terminate()
+
+    Set Me.Parent = Nothing
+
+End Sub
+'---------------------------------------------------------------
 Private Sub Class_Terminate()
 End Sub
 ' ===============================================================
