@@ -2,13 +2,13 @@ VERSION 1.0 CLASS
 BEGIN
   MultiUse = -1  'True
 END
-Attribute VB_Name = "ClsClient"
+Attribute VB_Name = "ClsProject"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 '===============================================================
-' Class ClsClient
+' Class ClsProject
 '---------------------------------------------------------------
 ' Created by Julian Turner
 ' OneSheet Consulting
@@ -24,90 +24,78 @@ Attribute VB_Exposed = False
 ' DBSave - Saves class to Database
 ' DBDelete - Deletes record
 '===============================================================
-' Index - ClientNo
+' Index - ProjectNo
 '---------------------------------------------------------------
 Option Explicit
 
-Private pName As String
-Private pUrl As String
-Private pPhoneNo As String
-Private pClientNo As Integer
-Private pSPVs As ClsSPVs
-Private pContacts As ClsContacts
+Private pProjectNo As Integer
+Private pLoanTerm As String
+Private pCBSComPC As Single
+Private pExitFee As Boolean
+Private pParent As ClsSPV
 
 '---------------------------------------------------------------
-Public Property Get Name() As String
-    Name = pName
+Public Property Get ProjectNo() As Integer
+    ProjectNo = pProjectNo
 End Property
 
-Public Property Let Name(ByVal vNewValue As String)
-    pName = vNewValue
-End Property
-
-'---------------------------------------------------------------
-Public Property Get Url() As String
-    Url = pUrl
-End Property
-
-Public Property Let Url(ByVal vNewValue As String)
-    pUrl = vNewValue
+Public Property Let ProjectNo(ByVal vNewValue As Integer)
+    pProjectNo = vNewValue
 End Property
 
 '---------------------------------------------------------------
-Public Property Get PhoneNo() As String
-    PhoneNo = pPhoneNo
+Public Property Get LoanTerm() As String
+    LoanTerm = pLoanTerm
 End Property
 
-Public Property Let PhoneNo(ByVal vNewValue As String)
-    pPhoneNo = vNewValue
-End Property
-
-'---------------------------------------------------------------
-Public Property Get ClientNo() As Integer
-    ClientNo = pClientNo
-End Property
-
-Public Property Let ClientNo(ByVal vNewValue As Integer)
-    pClientNo = vNewValue
+Public Property Let LoanTerm(ByVal vNewValue As String)
+    pLoanTerm = vNewValue
 End Property
 
 '---------------------------------------------------------------
-Public Property Get SPVs() As ClsSPVs
-    Set SPVs = pSPVs
+Public Property Get CBSComPC() As Single
+    CBSComPC = pCBSComPC
 End Property
 
-Public Property Let SPVs(ByVal vNewValue As ClsSPVs)
-    Set pSPVs = vNewValue
+Public Property Let CBSComPC(ByVal vNewValue As Single)
+    pCBSComPC = vNewValue
 End Property
 
 '---------------------------------------------------------------
-Public Property Get Contacts() As ClsContacts
-    Set Contacts = pContacts
+Public Property Get ExitFee() As Boolean
+    ExitFee = pExitFee
 End Property
 
-Public Property Let Contacts(ByVal vNewValue As ClsContacts)
-    Set pContacts = vNewValue
+Public Property Let ExitFee(ByVal vNewValue As Boolean)
+    pExitFee = vNewValue
 End Property
 
+'---------------------------------------------------------------
+Public Property Get Parent() As ClsSPV
+    Set Parent = pParent
+End Property
+
+Public Property Set Parent(obj As ClsSPV)
+    Set pParent = obj
+End Property
+'---------------------------------------------------------------
 ' ===============================================================
 ' Method DBGet(Key as Integer)
 ' Gets class from Database
 ' ---------------------------------------------------------------
-Public Sub DBGet(ClientNo As Integer)
-    Dim RstClient As Recordset
+Public Sub DBGet(ProjectNo As Integer)
+    Dim RstProject As Recordset
 
-    Set RstClient = ModDatabase.SQLQuery("SELECT * FROM TblClient WHERE ClientNo = " & ClientNo)
-    With RstClient
+    Set RstProject = ModDatabase.SQLQuery("SELECT * FROM TblProject WHERE ProjectNo = " & ProjectNo)
+    With RstProject
         If .RecordCount > 0 Then
-            If Not IsNull(!Name) Then pName = !Name
-            If Not IsNull(!Url) Then pUrl = !Url
-            If Not IsNull(!PhoneNo) Then pPhoneNo = !PhoneNo
-            If Not IsNull(!ClientNo) Then pClientNo = !ClientNo
-        pSPVs.GetCollection
-        pContacts.GetCollection
+            If Not IsNull(!ProjectNo) Then pProjectNo = !ProjectNo
+            If Not IsNull(!LoanTerm) Then pLoanTerm = !LoanTerm
+            If Not IsNull(!CBSComPC) Then pCBSComPC = !CBSComPC
+            If Not IsNull(!ExitFee) Then pExitFee = !ExitFee
         End If
     End With
-    Set RstClient = Nothing
+    Set RstProject = Nothing
 End Sub
 
 ' ===============================================================
@@ -115,12 +103,12 @@ End Sub
 ' Saves class to Database
 ' ---------------------------------------------------------------
 Public Sub DBSave()
-    Dim RstClient As Recordset
+    Dim RstProject As Recordset
     Dim RstMaxNo As Recordset
     Dim LastNo As Integer
 
-    Set RstClient = ModDatabase.SQLQuery("SELECT * FROM TblClient WHERE ClientNo = " & pClientNo)
-    Set RstMaxNo = ModDatabase.SQLQuery("SELECT MAX(ClientNo) FROM TblClient ")
+    Set RstProject = ModDatabase.SQLQuery("SELECT * FROM TblProject WHERE ProjectNo = " & pProjectNo)
+    Set RstMaxNo = ModDatabase.SQLQuery("SELECT MAX(ProjectNo) FROM TblProject ")
 
     If RstMaxNo.Fields(0).Value <> 0 Then
         LastNo = RstMaxNo.Fields(0).Value
@@ -128,25 +116,23 @@ Public Sub DBSave()
         LastNo = 0
     End If
 
-    With RstClient
+    With RstProject
         If .RecordCount = 0 Then
             .AddNew
-            pClientNo = LastNo + 1
+            pProjectNo = LastNo + 1
         Else
             .Edit
         End If
 
-        If CStr(pName) = "" Then !Name = Null Else !Name = pName
-        If CStr(pUrl) = "" Then !Url = Null Else !Url = pUrl
-        If CStr(pPhoneNo) = "" Then !PhoneNo = Null Else !PhoneNo = pPhoneNo
-        If CStr(pClientNo) = "" Then !ClientNo = Null Else !ClientNo = pClientNo
+        If CStr(pProjectNo) = "" Then !ProjectNo = Null Else !ProjectNo = pProjectNo
+        If CStr(pLoanTerm) = "" Then !LoanTerm = Null Else !LoanTerm = pLoanTerm
+        If CStr(pCBSComPC) = "" Then !CBSComPC = Null Else !CBSComPC = pCBSComPC
+        If CStr(pExitFee) = "" Then !ExitFee = Null Else !ExitFee = pExitFee
 
-        pSPVs.SaveCollection
-        pContacts.SaveCollection
         .Update
     End With
 
-    Set RstClient = Nothing
+    Set RstProject = Nothing
     Set RstMaxNo = Nothing
 End Sub
 
@@ -156,20 +142,25 @@ End Sub
 ' ---------------------------------------------------------------
 Public Sub DBDelete(Optional FullDelete As Boolean)
 
-    DB.Execute "DELETE * FROM TblClient WHERE ClientNo = " & pClientNo
+    DB.Execute "DELETE * FROM TblProject WHERE ProjectNo = " & pProjectNo
 
 End Sub
 ' ===============================================================
+Public Sub Initialize(obj As ClsSPV)
+    Set Me.Parent = obj
+End Sub
+'---------------------------------------------------------------
 
 Private Sub Class_Initialize()
-    Set pSPVs = New ClsSPVs
-    Set pContacts = New ClsContacts
 
-    pSPVs.Initialize Me
 End Sub
 ' ===============================================================
+Public Sub Terminate()
+
+    Set Me.Parent = Nothing
+
+End Sub
+'---------------------------------------------------------------
 Private Sub Class_Terminate()
-    Set pSPVs = Nothing
-    Set pContacts = Nothing
 End Sub
 ' ===============================================================

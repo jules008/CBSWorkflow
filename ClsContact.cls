@@ -2,13 +2,13 @@ VERSION 1.0 CLASS
 BEGIN
   MultiUse = -1  'True
 END
-Attribute VB_Name = "ClsClient"
+Attribute VB_Name = "ClsContact"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 '===============================================================
-' Class ClsClient
+' Class ClsContact
 '---------------------------------------------------------------
 ' Created by Julian Turner
 ' OneSheet Consulting
@@ -24,90 +24,90 @@ Attribute VB_Exposed = False
 ' DBSave - Saves class to Database
 ' DBDelete - Deletes record
 '===============================================================
-' Index - ClientNo
+' Index - ContactNo
 '---------------------------------------------------------------
 Option Explicit
 
-Private pName As String
-Private pUrl As String
-Private pPhoneNo As String
-Private pClientNo As Integer
-Private pSPVs As ClsSPVs
-Private pContacts As ClsContacts
+Private pContactNo As Integer
+Private pPosition As String
+Private pContactName As String
+Private pAddress As String
+Private pPhone1 As String
+Private pPhone2 As String
 
 '---------------------------------------------------------------
-Public Property Get Name() As String
-    Name = pName
+Public Property Get ContactNo() As Integer
+    ContactNo = pContactNo
 End Property
 
-Public Property Let Name(ByVal vNewValue As String)
-    pName = vNewValue
-End Property
-
-'---------------------------------------------------------------
-Public Property Get Url() As String
-    Url = pUrl
-End Property
-
-Public Property Let Url(ByVal vNewValue As String)
-    pUrl = vNewValue
+Public Property Let ContactNo(ByVal vNewValue As Integer)
+    pContactNo = vNewValue
 End Property
 
 '---------------------------------------------------------------
-Public Property Get PhoneNo() As String
-    PhoneNo = pPhoneNo
+Public Property Get Position() As String
+    Position = pPosition
 End Property
 
-Public Property Let PhoneNo(ByVal vNewValue As String)
-    pPhoneNo = vNewValue
-End Property
-
-'---------------------------------------------------------------
-Public Property Get ClientNo() As Integer
-    ClientNo = pClientNo
-End Property
-
-Public Property Let ClientNo(ByVal vNewValue As Integer)
-    pClientNo = vNewValue
+Public Property Let Position(ByVal vNewValue As String)
+    pPosition = vNewValue
 End Property
 
 '---------------------------------------------------------------
-Public Property Get SPVs() As ClsSPVs
-    Set SPVs = pSPVs
+Public Property Get ContactName() As String
+    ContactName = pContactName
 End Property
 
-Public Property Let SPVs(ByVal vNewValue As ClsSPVs)
-    Set pSPVs = vNewValue
+Public Property Let ContactName(ByVal vNewValue As String)
+    pContactName = vNewValue
 End Property
 
 '---------------------------------------------------------------
-Public Property Get Contacts() As ClsContacts
-    Set Contacts = pContacts
+Public Property Get Address() As String
+    Address = pAddress
 End Property
 
-Public Property Let Contacts(ByVal vNewValue As ClsContacts)
-    Set pContacts = vNewValue
+Public Property Let Address(ByVal vNewValue As String)
+    pAddress = vNewValue
+End Property
+
+'---------------------------------------------------------------
+Public Property Get Phone1() As String
+    Phone1 = pPhone1
+End Property
+
+Public Property Let Phone1(ByVal vNewValue As String)
+    pPhone1 = vNewValue
+End Property
+
+'---------------------------------------------------------------
+Public Property Get Phone2() As String
+    Phone2 = pPhone2
+End Property
+
+Public Property Let Phone2(ByVal vNewValue As String)
+    pPhone2 = vNewValue
 End Property
 
 ' ===============================================================
 ' Method DBGet(Key as Integer)
 ' Gets class from Database
 ' ---------------------------------------------------------------
-Public Sub DBGet(ClientNo As Integer)
-    Dim RstClient As Recordset
+Public Sub DBGet(ContactNo As Integer)
+    Dim RstContact As Recordset
 
-    Set RstClient = ModDatabase.SQLQuery("SELECT * FROM TblClient WHERE ClientNo = " & ClientNo)
-    With RstClient
+    Set RstContact = ModDatabase.SQLQuery("SELECT * FROM TblContact WHERE ContactNo = " & ContactNo)
+    With RstContact
         If .RecordCount > 0 Then
-            If Not IsNull(!Name) Then pName = !Name
-            If Not IsNull(!Url) Then pUrl = !Url
-            If Not IsNull(!PhoneNo) Then pPhoneNo = !PhoneNo
-            If Not IsNull(!ClientNo) Then pClientNo = !ClientNo
-        pSPVs.GetCollection
-        pContacts.GetCollection
+            If Not IsNull(!ContactNo) Then pContactNo = !ContactNo
+            If Not IsNull(!Position) Then pPosition = !Position
+            If Not IsNull(!ContactName) Then pContactName = !ContactName
+            If Not IsNull(!Address) Then pAddress = !Address
+            If Not IsNull(!Phone1) Then pPhone1 = !Phone1
+            If Not IsNull(!Phone2) Then pPhone2 = !Phone2
         End If
     End With
-    Set RstClient = Nothing
+    Set RstContact = Nothing
 End Sub
 
 ' ===============================================================
@@ -115,12 +115,12 @@ End Sub
 ' Saves class to Database
 ' ---------------------------------------------------------------
 Public Sub DBSave()
-    Dim RstClient As Recordset
+    Dim RstContact As Recordset
     Dim RstMaxNo As Recordset
     Dim LastNo As Integer
 
-    Set RstClient = ModDatabase.SQLQuery("SELECT * FROM TblClient WHERE ClientNo = " & pClientNo)
-    Set RstMaxNo = ModDatabase.SQLQuery("SELECT MAX(ClientNo) FROM TblClient ")
+    Set RstContact = ModDatabase.SQLQuery("SELECT * FROM TblContact WHERE ContactNo = " & pContactNo)
+    Set RstMaxNo = ModDatabase.SQLQuery("SELECT MAX(ContactNo) FROM TblContact ")
 
     If RstMaxNo.Fields(0).Value <> 0 Then
         LastNo = RstMaxNo.Fields(0).Value
@@ -128,25 +128,25 @@ Public Sub DBSave()
         LastNo = 0
     End If
 
-    With RstClient
+    With RstContact
         If .RecordCount = 0 Then
             .AddNew
-            pClientNo = LastNo + 1
+            pContactNo = LastNo + 1
         Else
             .Edit
         End If
 
-        If CStr(pName) = "" Then !Name = Null Else !Name = pName
-        If CStr(pUrl) = "" Then !Url = Null Else !Url = pUrl
-        If CStr(pPhoneNo) = "" Then !PhoneNo = Null Else !PhoneNo = pPhoneNo
-        If CStr(pClientNo) = "" Then !ClientNo = Null Else !ClientNo = pClientNo
+        If CStr(pContactNo) = "" Then !ContactNo = Null Else !ContactNo = pContactNo
+        If CStr(pPosition) = "" Then !Position = Null Else !Position = pPosition
+        If CStr(pContactName) = "" Then !ContactName = Null Else !ContactName = pContactName
+        If CStr(pAddress) = "" Then !Address = Null Else !Address = pAddress
+        If CStr(pPhone1) = "" Then !Phone1 = Null Else !Phone1 = pPhone1
+        If CStr(pPhone2) = "" Then !Phone2 = Null Else !Phone2 = pPhone2
 
-        pSPVs.SaveCollection
-        pContacts.SaveCollection
         .Update
     End With
 
-    Set RstClient = Nothing
+    Set RstContact = Nothing
     Set RstMaxNo = Nothing
 End Sub
 
@@ -156,20 +156,15 @@ End Sub
 ' ---------------------------------------------------------------
 Public Sub DBDelete(Optional FullDelete As Boolean)
 
-    DB.Execute "DELETE * FROM TblClient WHERE ClientNo = " & pClientNo
+    DB.Execute "DELETE * FROM TblContact WHERE ContactNo = " & pContactNo
 
 End Sub
 ' ===============================================================
 
 Private Sub Class_Initialize()
-    Set pSPVs = New ClsSPVs
-    Set pContacts = New ClsContacts
 
-    pSPVs.Initialize Me
 End Sub
 ' ===============================================================
 Private Sub Class_Terminate()
-    Set pSPVs = Nothing
-    Set pContacts = Nothing
 End Sub
 ' ===============================================================

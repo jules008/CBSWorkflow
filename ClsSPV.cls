@@ -16,7 +16,7 @@ Attribute VB_Exposed = False
 '===============================================================
 ' v1.0.0 - Initial Version
 '---------------------------------------------------------------
-' Date - 12 Sep 22
+' Date - 13 Sep 22
 '===============================================================
 ' Methods
 '---------------------------------------------------------------
@@ -30,6 +30,8 @@ Option Explicit
 
 Private pSPVNo As Integer
 Private pName As String
+Private pContacts As ClsContacts
+Private pProjects As ClsProjects
 Private pParent As ClsClient
 
 '---------------------------------------------------------------
@@ -48,6 +50,24 @@ End Property
 
 Public Property Let Name(ByVal vNewValue As String)
     pName = vNewValue
+End Property
+
+'---------------------------------------------------------------
+Public Property Get Contacts() As ClsContacts
+    Set Contacts = pContacts
+End Property
+
+Public Property Let Contacts(ByVal vNewValue As ClsContacts)
+    Set pContacts = vNewValue
+End Property
+
+'---------------------------------------------------------------
+Public Property Get Projects() As ClsProjects
+    Set Projects = pProjects
+End Property
+
+Public Property Let Projects(ByVal vNewValue As ClsProjects)
+    Set pProjects = vNewValue
 End Property
 
 '---------------------------------------------------------------
@@ -71,6 +91,8 @@ Public Sub DBGet(SPVNo As Integer)
         If .RecordCount > 0 Then
             If Not IsNull(!SPVNo) Then pSPVNo = !SPVNo
             If Not IsNull(!Name) Then pName = !Name
+        pContacts.GetCollection
+        pProjects.GetCollection
         End If
     End With
     Set RstSPV = Nothing
@@ -105,6 +127,8 @@ Public Sub DBSave()
         If CStr(pSPVNo) = "" Then !SPVNo = Null Else !SPVNo = pSPVNo
         If CStr(pName) = "" Then !Name = Null Else !Name = pName
 
+        pContacts.SaveCollection
+        pProjects.SaveCollection
         .Update
     End With
 
@@ -127,13 +151,24 @@ Public Sub Initialize(obj As ClsClient)
 End Sub
 '---------------------------------------------------------------
 
+Private Sub Class_Initialize()
+    Set pContacts = New ClsContacts
+    Set pProjects = New ClsProjects
+
+    pProjects.Initialize Me
+End Sub
 ' ===============================================================
 Public Sub Terminate()
+    pProjects.Terminate
 
     Set Me.Parent = Nothing
 
+    Set Contacts = Nothing
+    Set Projects = Nothing
 End Sub
 '---------------------------------------------------------------
 Private Sub Class_Terminate()
+    Set pContacts = Nothing
+    Set pProjects = Nothing
 End Sub
 ' ===============================================================

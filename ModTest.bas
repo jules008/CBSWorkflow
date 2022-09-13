@@ -5,9 +5,14 @@ Option Explicit
 Public Sub TestClass()
     Dim Clients As ClsClients
     Dim Client As ClsClient
+    Dim Spv As ClsSPV
+    Dim Project As ClsProject
+    Dim Contact As ClsContact
     Dim i
     
     Set Clients = New ClsClients
+    Set Spv = New ClsSPV
+    Set Project = New ClsProject
     
 Debug.Assert Not Clients Is Nothing
     
@@ -22,10 +27,32 @@ Debug.Assert Not Clients Is Nothing
         End With
         Clients.Add Client
         
-Debug.Assert Clients.Count = i
-    
-    Next
+        Set Spv = New ClsSPV
+        With Spv
+            .Name = "Frogspawn Ltd - " & i
+            .SPVNo = i
+            .DBSave
+        End With
+        Clients(1).SPVs.Add Spv
 
+Debug.Assert Clients.Count = i
+Debug.Assert Clients(1).SPVs.Count = i
+Next
+    
+    Set Contact = New ClsContact
+    
+    With Contact
+        .ContactName = "Dom"
+    End With
+    
+    With Project
+        .ExitFee = True
+        .ProjectNo = 1
+    End With
+
+    Client.Contacts.Add Contact
+    Clients("1").SPVs("1").Contacts.Add Contact
+    Clients("1").SPVs("1").Projects.Add Project
     Set Client = Nothing
     
     Set Client = Clients("2")
@@ -52,6 +79,7 @@ Debug.Assert Clients Is Nothing
     
     Clients.GetCollection
     
+    Stop
 Debug.Assert Clients.Count = 5
 
     Clients.Remove 4
@@ -80,13 +108,14 @@ Debug.Assert Clients.Count = 4
     
 Debug.Assert Clients.Count = 0
 
-    Stop
     
     DB.Execute "DELETE * FROM TblClient"
     
     Set Client = Nothing
     Set Clients = Nothing
-    
+    Set Spv = Nothing
+    Set Contact = Nothing
+    Set Project = Nothing
 End Sub
 
 

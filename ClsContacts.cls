@@ -2,13 +2,13 @@ VERSION 1.0 CLASS
 BEGIN
   MultiUse = -1  'True
 END
-Attribute VB_Name = "ClsSPVs"
+Attribute VB_Name = "ClsContacts"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 '===============================================================
-' Class ClsSPVs
+' Class ClsContacts
 '---------------------------------------------------------------
 ' Created by Julian Turner
 ' OneSheet Consulting
@@ -16,7 +16,7 @@ Attribute VB_Exposed = False
 '===============================================================
 ' v1.0.0 - Initial Version
 '---------------------------------------------------------------
-' Date - 12 Sep 22
+' Date - 13 Sep 22
 '===============================================================
 ' Methods
 '---------------------------------------------------------------
@@ -33,50 +33,38 @@ Attribute VB_Exposed = False
 '---------------------------------------------------------------
 Option Explicit
 
-Private pSPVs As Collection
-Private pParent As ClsClient
+Private pContacts As Collection
 
-'---------------------------------------------------------------
-Public Property Get Parent() As ClsClient
-    Set Parent = pParent
-End Property
-
-Public Property Set Parent(obj As ClsClient)
-    Set pParent = obj
-End Property
-'---------------------------------------------------------------
 
 Public Function NewEnum() As IUnknown
 Attribute NewEnum.VB_UserMemId = -4
-    Set NewEnum = pSPVs.[_NewEnum]
+    Set NewEnum = pContacts.[_NewEnum]
 End Function
 
 ' ===============================================================
 ' Method Find
 ' Finds Item from index
 ' ---------------------------------------------------------------
-Public Function Find(SPVNo As Variant) As ClsSPV
+Public Function Find(ContactNo As Variant) As ClsContact
 Attribute Find.VB_UserMemId = 0
-'    On Error Resume Next
-    Set Find = pSPVs.Item(SPVNo)
+    On Error Resume Next
+    Set Find = pContacts.Item(ContactNo)
 End Function
 
 ' ===============================================================
 ' Method Add
 ' Add item to Collection
 ' ---------------------------------------------------------------
-Public Sub Add(Spv As ClsSPV)
-    Spv.Initialize Me.Parent
-    pSPVs.Add Spv, Key:=CStr(Spv.SPVNo)
+Public Sub Add(Contact As ClsContact)
+    pContacts.Add Contact, Key:=CStr(Contact.ContactNo)
 End Sub
 
 ' ===============================================================
 ' Method Remove
 ' Removes item from collection
 ' ---------------------------------------------------------------
-Public Sub Remove(SPVNo As Variant)
-    pSPVs(SPVNo).Parent = Nothing
-    pSPVs.Remove SPVNo
+Public Sub Remove(ContactNo As Variant)
+    pContacts.Remove ContactNo
 End Sub
 
 ' ===============================================================
@@ -84,7 +72,7 @@ End Sub
 ' Returns number of items in collection
 ' ---------------------------------------------------------------
 Public Function Count() As Integer
-    Count = pSPVs.Count
+    Count = pContacts.Count
 End Function
 
 ' ===============================================================
@@ -92,19 +80,19 @@ End Function
 ' Gets all items in collection
 ' ---------------------------------------------------------------
 Public Sub GetCollection()
-    Dim RstSPV As Recordset
-    Dim Spv As ClsSPV
+    Dim RstContact As Recordset
+    Dim Contact As ClsContact
     Dim i As Integer
 
-    Set RstSPV = ModDatabase.SQLQuery("TblSPV")
-    With RstSPV
+    Set RstContact = ModDatabase.SQLQuery("TblContact")
+    With RstContact
         If .RecordCount > 0 Then
             .MoveLast
             .MoveFirst
             For i = 1 To .RecordCount
-                Set Spv = New ClsSPV
-                Spv.DBGet !SPVNo
-                pSPVs.Add Spv, Key:=CStr(Spv.SPVNo)
+                Set Contact = New ClsContact
+                Contact.DBGet !ContactNo
+                pContacts.Add Contact, Key:=CStr(Contact.ContactNo)
                 .MoveNext
             Next
         End If
@@ -116,9 +104,9 @@ End Sub
 ' Saves all items in collection to database
 ' ---------------------------------------------------------------
 Public Sub SaveCollection()
-    Dim Spv As ClsSPV
-    For Each Spv In pSPVs
-        Spv.DBSave
+    Dim Contact As ClsContact
+    For Each Contact In pContacts
+        Contact.DBSave
     Next
 End Sub
 
@@ -127,9 +115,9 @@ End Sub
 ' Deletes all items in collection
 ' ---------------------------------------------------------------
 Public Sub RemoveCollection()
-    Dim Spv As ClsSPV
-    For Each Spv In pSPVs
-        pSPVs.Remove CStr(Spv.SPVNo)
+    Dim Contact As ClsContact
+    For Each Contact In pContacts
+        pContacts.Remove CStr(Contact.ContactNo)
     Next
 End Sub
 
@@ -138,10 +126,10 @@ End Sub
 ' Deletes all items in collection
 ' ---------------------------------------------------------------
 Public Sub DeleteCollection()
-    Dim Spv As ClsSPV
-    For Each Spv In pSPVs
-        pSPVs.Remove CStr(Spv.SPVNo)
-        Spv.DBDelete
+    Dim Contact As ClsContact
+    For Each Contact In pContacts
+        pContacts.Remove CStr(Contact.ContactNo)
+        Contact.DBDelete
     Next
 End Sub
 
@@ -149,35 +137,23 @@ End Sub
 ' Method Destroy
 ' Removes item from collection and destroys it
 ' ---------------------------------------------------------------
-Public Sub Destroy(SPVNo As Variant)
-    Dim Spv As ClsSPV
+Public Sub Destroy(ContactNo As Variant)
+    Dim Contact As ClsContact
 
-    Set Spv = pSPVs(SPVNo)
-    Spv.Parent = Nothing
-    Spv.Terminate
-    pSPVs.Remove SPVNo
-    Spv.DBDelete True
+    Set Contact = pContacts(ContactNo)
+    pContacts.Remove ContactNo
+    Contact.DBDelete True
 
-    Set Spv = Nothing
+    Set Contact = Nothing
 End Sub
 ' ===============================================================
-Public Sub Initialize(obj As ClsClient)
-    Set Me.Parent = obj
-End Sub
-'---------------------------------------------------------------
 
 Private Sub Class_Initialize()
-    Set pSPVs = New Collection
+    Set pContacts = New Collection
 
 End Sub
 ' ===============================================================
-Public Sub Terminate()
-
-    Set Me.Parent = Nothing
-
-End Sub
-'---------------------------------------------------------------
 Private Sub Class_Terminate()
-    Set pSPVs = Nothing
+    Set pContacts = Nothing
 End Sub
 ' ===============================================================

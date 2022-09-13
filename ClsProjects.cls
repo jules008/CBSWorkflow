@@ -2,13 +2,13 @@ VERSION 1.0 CLASS
 BEGIN
   MultiUse = -1  'True
 END
-Attribute VB_Name = "ClsSPVs"
+Attribute VB_Name = "ClsProjects"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 '===============================================================
-' Class ClsSPVs
+' Class ClsProjects
 '---------------------------------------------------------------
 ' Created by Julian Turner
 ' OneSheet Consulting
@@ -16,7 +16,7 @@ Attribute VB_Exposed = False
 '===============================================================
 ' v1.0.0 - Initial Version
 '---------------------------------------------------------------
-' Date - 12 Sep 22
+' Date - 13 Sep 22
 '===============================================================
 ' Methods
 '---------------------------------------------------------------
@@ -33,50 +33,50 @@ Attribute VB_Exposed = False
 '---------------------------------------------------------------
 Option Explicit
 
-Private pSPVs As Collection
-Private pParent As ClsClient
+Private pProjects As Collection
+Private pParent As ClsSPV
 
 '---------------------------------------------------------------
-Public Property Get Parent() As ClsClient
+Public Property Get Parent() As ClsSPV
     Set Parent = pParent
 End Property
 
-Public Property Set Parent(obj As ClsClient)
+Public Property Set Parent(obj As ClsSPV)
     Set pParent = obj
 End Property
 '---------------------------------------------------------------
 
 Public Function NewEnum() As IUnknown
 Attribute NewEnum.VB_UserMemId = -4
-    Set NewEnum = pSPVs.[_NewEnum]
+    Set NewEnum = pProjects.[_NewEnum]
 End Function
 
 ' ===============================================================
 ' Method Find
 ' Finds Item from index
 ' ---------------------------------------------------------------
-Public Function Find(SPVNo As Variant) As ClsSPV
+Public Function Find(ProjectNo As Variant) As ClsProject
 Attribute Find.VB_UserMemId = 0
-'    On Error Resume Next
-    Set Find = pSPVs.Item(SPVNo)
+    On Error Resume Next
+    Set Find = pProjects.Item(ProjectNo)
 End Function
 
 ' ===============================================================
 ' Method Add
 ' Add item to Collection
 ' ---------------------------------------------------------------
-Public Sub Add(Spv As ClsSPV)
-    Spv.Initialize Me.Parent
-    pSPVs.Add Spv, Key:=CStr(Spv.SPVNo)
+Public Sub Add(Project As ClsProject)
+    Project.Initialize Me.Parent
+    pProjects.Add Project, Key:=CStr(Project.ProjectNo)
 End Sub
 
 ' ===============================================================
 ' Method Remove
 ' Removes item from collection
 ' ---------------------------------------------------------------
-Public Sub Remove(SPVNo As Variant)
-    pSPVs(SPVNo).Parent = Nothing
-    pSPVs.Remove SPVNo
+Public Sub Remove(ProjectNo As Variant)
+    pProjects(ProjectNo).Parent = Nothing
+    pProjects.Remove ProjectNo
 End Sub
 
 ' ===============================================================
@@ -84,7 +84,7 @@ End Sub
 ' Returns number of items in collection
 ' ---------------------------------------------------------------
 Public Function Count() As Integer
-    Count = pSPVs.Count
+    Count = pProjects.Count
 End Function
 
 ' ===============================================================
@@ -92,19 +92,19 @@ End Function
 ' Gets all items in collection
 ' ---------------------------------------------------------------
 Public Sub GetCollection()
-    Dim RstSPV As Recordset
-    Dim Spv As ClsSPV
+    Dim RstProject As Recordset
+    Dim Project As ClsProject
     Dim i As Integer
 
-    Set RstSPV = ModDatabase.SQLQuery("TblSPV")
-    With RstSPV
+    Set RstProject = ModDatabase.SQLQuery("TblProject")
+    With RstProject
         If .RecordCount > 0 Then
             .MoveLast
             .MoveFirst
             For i = 1 To .RecordCount
-                Set Spv = New ClsSPV
-                Spv.DBGet !SPVNo
-                pSPVs.Add Spv, Key:=CStr(Spv.SPVNo)
+                Set Project = New ClsProject
+                Project.DBGet !ProjectNo
+                pProjects.Add Project, Key:=CStr(Project.ProjectNo)
                 .MoveNext
             Next
         End If
@@ -116,9 +116,9 @@ End Sub
 ' Saves all items in collection to database
 ' ---------------------------------------------------------------
 Public Sub SaveCollection()
-    Dim Spv As ClsSPV
-    For Each Spv In pSPVs
-        Spv.DBSave
+    Dim Project As ClsProject
+    For Each Project In pProjects
+        Project.DBSave
     Next
 End Sub
 
@@ -127,9 +127,9 @@ End Sub
 ' Deletes all items in collection
 ' ---------------------------------------------------------------
 Public Sub RemoveCollection()
-    Dim Spv As ClsSPV
-    For Each Spv In pSPVs
-        pSPVs.Remove CStr(Spv.SPVNo)
+    Dim Project As ClsProject
+    For Each Project In pProjects
+        pProjects.Remove CStr(Project.ProjectNo)
     Next
 End Sub
 
@@ -138,10 +138,10 @@ End Sub
 ' Deletes all items in collection
 ' ---------------------------------------------------------------
 Public Sub DeleteCollection()
-    Dim Spv As ClsSPV
-    For Each Spv In pSPVs
-        pSPVs.Remove CStr(Spv.SPVNo)
-        Spv.DBDelete
+    Dim Project As ClsProject
+    For Each Project In pProjects
+        pProjects.Remove CStr(Project.ProjectNo)
+        Project.DBDelete
     Next
 End Sub
 
@@ -149,25 +149,25 @@ End Sub
 ' Method Destroy
 ' Removes item from collection and destroys it
 ' ---------------------------------------------------------------
-Public Sub Destroy(SPVNo As Variant)
-    Dim Spv As ClsSPV
+Public Sub Destroy(ProjectNo As Variant)
+    Dim Project As ClsProject
 
-    Set Spv = pSPVs(SPVNo)
-    Spv.Parent = Nothing
-    Spv.Terminate
-    pSPVs.Remove SPVNo
-    Spv.DBDelete True
+    Set Project = pProjects(ProjectNo)
+    Project.Parent = Nothing
+    Project.Terminate
+    pProjects.Remove ProjectNo
+    Project.DBDelete True
 
-    Set Spv = Nothing
+    Set Project = Nothing
 End Sub
 ' ===============================================================
-Public Sub Initialize(obj As ClsClient)
+Public Sub Initialize(obj As ClsSPV)
     Set Me.Parent = obj
 End Sub
 '---------------------------------------------------------------
 
 Private Sub Class_Initialize()
-    Set pSPVs = New Collection
+    Set pProjects = New Collection
 
 End Sub
 ' ===============================================================
@@ -178,6 +178,6 @@ Public Sub Terminate()
 End Sub
 '---------------------------------------------------------------
 Private Sub Class_Terminate()
-    Set pSPVs = Nothing
+    Set pProjects = Nothing
 End Sub
 ' ===============================================================

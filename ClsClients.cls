@@ -16,7 +16,7 @@ Attribute VB_Exposed = False
 '===============================================================
 ' v1.0.0 - Initial Version
 '---------------------------------------------------------------
-' Date - 09 Sep 22
+' Date - 13 Sep 22
 '===============================================================
 ' Methods
 '---------------------------------------------------------------
@@ -25,6 +25,7 @@ Attribute VB_Exposed = False
 ' Remove - Removes item from collection
 ' Count - Returns number of items in collection
 ' GetCollection - Gets all items in collection
+' SaveCollection - Saves all items in collection to database
 ' RemoveCollection - Removes all items in collection
 ' DeleteCollection - Deletes all items in collection
 ' Destroy - Removes item from collection and deletes it
@@ -46,7 +47,7 @@ End Function
 ' ---------------------------------------------------------------
 Public Function Find(ClientNo As Variant) As ClsClient
 Attribute Find.VB_UserMemId = 0
-    On Error Resume Next
+'    On Error Resume Next
     Set Find = pClients.Item(ClientNo)
 End Function
 
@@ -83,7 +84,7 @@ Public Sub GetCollection()
     Dim Client As ClsClient
     Dim i As Integer
 
-    Set RstClient = ModDatabase.SQLQuery("SELECT * FROM TblClient WHERE Deleted IS NULL")
+    Set RstClient = ModDatabase.SQLQuery("TblClient")
     With RstClient
         If .RecordCount > 0 Then
             .MoveLast
@@ -96,6 +97,17 @@ Public Sub GetCollection()
             Next
         End If
     End With
+End Sub
+
+' ===============================================================
+' Method SaveCollection
+' Saves all items in collection to database
+' ---------------------------------------------------------------
+Public Sub SaveCollection()
+    Dim Client As ClsClient
+    For Each Client In pClients
+        Client.DBSave
+    Next
 End Sub
 
 ' ===============================================================
