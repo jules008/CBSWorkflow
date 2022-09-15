@@ -16,16 +16,8 @@ Attribute VB_Exposed = False
 '===============================================================
 ' v1.0.0 - Initial Version
 '---------------------------------------------------------------
-' Date - 15 Sep 22
+' Date - 19 Jun 20
 '===============================================================
-' Methods
-'---------------------------------------------------------------
-' DBGet - Gets class from Database
-' DBSave - Saves class to Database
-' DBDelete - Deletes record
-'===============================================================
-' Index - StepNo
-'---------------------------------------------------------------
 Option Explicit
 Private pDeleted As Date
 Private pStepIndex As Integer
@@ -371,13 +363,14 @@ Public Property Set Parent(obj As ClsWorkflow)
 End Property
 '---------------------------------------------------------------
 ' ===============================================================
-' Method DBGet(Key as Integer)
+' Method DBGet
 ' Gets class from Database
 '---------------------------------------------------------------
 Public Sub DBGet(WorkflowNo As Integer, StepNo As String)
     Dim RstStep As Recordset
 
-    Set RstStep = ModDatabase.SQLQuery("SELECT * FROM TblStep WHERE StepNo = " & StepNo)
+    Set RstStep = ModDatabase.SQLQuery("SELECT * FROM TblStep WHERE StepNo = '" & StepNo _
+                                    & "' AND WorkflowNo = " & WorkflowNo)
     With RstStep
         If .RecordCount > 0 Then
             If Not IsNull(!StepIndex) Then pStepIndex = !StepIndex
@@ -560,12 +553,29 @@ Public Sub DBSaveTemplate(StepNo As String)
 End Sub
 
 ' ===============================================================
-' Method DBDelete
-' Deletes Record
-' ---------------------------------------------------------------
+' Method DBDelete(Optional FullDelete As Boolean)
+' Marks record as deleted or fully deletes
+'---------------------------------------------------------------
 Public Sub DBDelete(Optional FullDelete As Boolean)
+    Dim RstStep As Recordset
+    Dim i As Integer
 
-    DB.Execute "DELETE * FROM TblStep WHERE StepNo = " & pStepNo
+    Set RstStep = ModDatabase.SQLQuery("SELECT * FROM TblStep WHERE StepNo = " & pStepNo & " AND Deleted IS NULL")
+    With RstStep
+        For i = .RecordCount To 1 Step -1
+            If FullDelete Then
+                .Delete
+                .MoveNext
+            Else
+                .Edit
+                !Deleted = Now
+                .Update
+            End If
+        Next
+    End With
+
+    Set RstStep = Nothing
+End Sub
 
 ' ===============================================================
 ' Method Reset
@@ -580,7 +590,6 @@ End Sub
 Public Sub Initialize(obj As ClsWorkflow)
     Set Me.Parent = obj
 End Sub
-'---------------------------------------------------------------
     
 Private Sub Class_Initialize()
 '    Set pEmail = New ClsEmail
@@ -591,14 +600,15 @@ Public Sub Terminate()
 '    pEmail.Terminate
 '    pAltEmail.Terminate
 
-    Set Me.Parent = Nothing
-
-    Set pEmail = Nothing
-    Set pAltEmail = Nothing
+    Set pParent = Nothing
+'    Set pEmail = Nothing
+'    Set pAltEmail = Nothing
 End Sub
 '---------------------------------------------------------------
 Private Sub Class_Terminate()
 '    Set pEmail = Nothing
 '    Set pAltEmail = Nothing
 End Sub
-' ===============================================================
+
+'---------------------------------------------------------------
+
