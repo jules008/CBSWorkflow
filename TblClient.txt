@@ -1,0 +1,4 @@
+Name,  dbText
+Url,  dbText
+PhoneNo,  dbText
+ClientNo,  dbInteger

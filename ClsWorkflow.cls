@@ -16,11 +16,18 @@ Attribute VB_Exposed = False
 '===============================================================
 ' v1.0.0 - Initial Version
 '---------------------------------------------------------------
-' Date - 19 Jun 20
+' Date - 15 Sep 22
 '===============================================================
-
+' Methods
+'---------------------------------------------------------------
+' DBGet - Gets class from Database
+' DBSave - Saves class to Database
+' DBDelete - Deletes record
+'===============================================================
+' Index - WorkflowNo
+'---------------------------------------------------------------
 Option Explicit
-Private pDeleted As Date
+
 Private pWorkflowNo As Integer
 Private pName As String
 Private pMember As String
@@ -33,15 +40,7 @@ Private pActiveStep As ClsStep
 Private pStatus As enStatus
 Private pFrmInputBox As FrmInputBox
 Private pSteps As ClsSteps
-
-'---------------------------------------------------------------
-Public Property Get Deleted() As Date
-    Deleted = pDeleted
-End Property
-
-Public Property Let Deleted(ByVal vNewValue As Date)
-    pDeleted = vNewValue
-End Property
+Private pParent As ClsProject
 
 '---------------------------------------------------------------
 Public Property Get WorkflowNo() As Integer
@@ -162,18 +161,26 @@ Public Property Let Steps(ByVal vNewValue As ClsSteps)
     Set pSteps = vNewValue
 End Property
 
+'---------------------------------------------------------------
+Public Property Get Parent() As ClsProject
+    Set Parent = pParent
+End Property
+
+Public Property Set Parent(obj As ClsProject)
+    Set pParent = obj
+End Property
+'---------------------------------------------------------------
 ' ===============================================================
-' Method DBGet
+' Method DBGet(Key as Integer)
 ' Gets class from Database
 '---------------------------------------------------------------
 Public Sub DBGet(WorkflowNo As String)
     Dim RstWorkflow As Recordset
     Dim IndexNo As Integer
     
-    Set RstWorkflow = ModDatabase.SQLQuery("SELECT * FROM TblWorkflow WHERE WorkflowNo = " & WorkflowNo & " AND Deleted IS NULL")
+    Set RstWorkflow = ModDatabase.SQLQuery("SELECT * FROM TblWorkflow WHERE WorkflowNo = " & WorkflowNo)
     With RstWorkflow
         If .RecordCount > 0 Then
-            If Not IsNull(!Deleted) Then pDeleted = !Deleted
             If Not IsNull(!WorkflowNo) Then pWorkflowNo = !WorkflowNo
             If Not IsNull(!CurrentStep) Then pCurrentStep = !CurrentStep
             If Not IsNull(!Name) Then pName = !Name
@@ -191,13 +198,13 @@ End Sub
 ' ===============================================================
 ' Method DBSave
 ' Saves class to Database
-'---------------------------------------------------------------
+' ---------------------------------------------------------------
 Public Sub DBSave()
     Dim RstWorkflow As Recordset
     Dim RstMaxNo As Recordset
     Dim LastNo As Integer
 
-    Set RstWorkflow = ModDatabase.SQLQuery("SELECT * FROM TblWorkflow WHERE WorkflowNo = " & pWorkflowNo & " AND Deleted IS NULL")
+    Set RstWorkflow = ModDatabase.SQLQuery("SELECT * FROM TblWorkflow WHERE WorkflowNo = " & pWorkflowNo)
     Set RstMaxNo = ModDatabase.SQLQuery("SELECT MAX(WorkflowNo) FROM TblWorkflow ")
 
     If RstMaxNo.Fields(0).Value <> 0 Then
@@ -233,75 +240,8 @@ Public Sub DBSave()
 End Sub
 
 ' ===============================================================
-' Method DBDelete(Optional FullDelete As Boolean)
-' Marks record as deleted or fully deletes
-'---------------------------------------------------------------
-Public Sub DBDelete(Optional FullDelete As Boolean)
-    Dim RstWorkflow As Recordset
-    Dim i As Integer
-
-    Set RstWorkflow = ModDatabase.SQLQuery("SELECT * FROM TblWorkflow WHERE WorkflowNo = " & pWorkflowNo & " AND Deleted IS NULL")
-    With RstWorkflow
-        For i = .RecordCount To 1 Step -1
-            If FullDelete Then
-                .Delete
-                .MoveNext
-            Else
-                .Edit
-                !Deleted = Now
-                .Update
-            End If
-        Next
-    End With
-
-    Set RstWorkflow = Nothing
-End Sub
-
-' ===============================================================
-' Method MoveToPrevStep
-' Clear current step and moves to previous
-' ---------------------------------------------------------------
-Public Sub MoveToPrevStep()
-    
-    If PrevStep <> "" Then
-        With ActiveStep
-            .Reset
-            .DBSave
-        End With
-        
-        If PrevStep <> "0" Then
-            
-            pCurrentStep = PrevStep
-            DBSave
-            With ActiveStep
-                .Reset
-                .DBSave
-            End With
-        End If
-    End If
-End Sub
-
-' ===============================================================
-' Method MoveToAltStep
-' Clear current step and moves to Alt step
-' ---------------------------------------------------------------
-Public Sub MoveToAltStep()
-    With ActiveStep
-        .Complete
-        .DBSave
-    End With
-    
-        pCurrentStep = AltStep
-        DBSave
-    With ActiveStep
-        .Start
-            .DBSave
-    End With
-End Sub
-
-' ===============================================================
-' Method MoveToNextStep
-' Completes current step and starts the next
+' Method DBDelete
+' Deletes Record
 ' ---------------------------------------------------------------
 Public Sub MoveToNextStep()
     
@@ -372,7 +312,6 @@ End Sub
 
 ' ===============================================================
 Private Sub Class_Initialize()
-    Set pSteps = New ClsSteps
     Set pActiveStep = New ClsStep
     Set pFrmInputBox = New FrmInputBox
     pActiveStep.Initialize Me
@@ -384,7 +323,8 @@ Public Sub Terminate()
     pSteps.Terminate
     pActiveStep.Terminate
     
-    Set pSteps = Nothing
+    Set Me.Parent = Nothing
+
     Set pActiveStep = Nothing
     Set pFrmInputBox = Nothing
 End Sub

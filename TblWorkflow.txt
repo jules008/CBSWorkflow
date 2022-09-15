@@ -1,0 +1,12 @@
+WorkflowNo,  dbInteger
+Name,  dbText
+Member,  dbText
+RAG,  dbText
+CurrentStep,  dbText
+NextStep,  dbText
+PrevStep,  dbText
+AltStep,  dbText
+ActiveStep,  dbText
+Status,  dbText
+FrmInputBox,  dbText
+Steps,  dbText

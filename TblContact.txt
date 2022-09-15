@@ -1,0 +1,6 @@
+ContactNo,  dbInteger
+Position,  dbText
+ContactName,  dbText
+Address,  dbText
+Phone1,  dbText
+Phone2,  dbText

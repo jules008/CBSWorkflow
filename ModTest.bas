@@ -8,6 +8,7 @@ Public Sub TestClass()
     Dim Spv As ClsSPV
     Dim Project As ClsProject
     Dim Contact As ClsContact
+    Dim Workflow As ClsWorkflow
     Dim i
     
     Set Clients = New ClsClients
@@ -48,12 +49,19 @@ Next
     With Project
         .ExitFee = True
         .ProjectNo = 1
+        .DBSave
+    End
+        
+    With Workflow
+        
     End With
 
     Client.Contacts.Add Contact
     Clients("1").SPVs("1").Contacts.Add Contact
     Clients("1").SPVs("1").Projects.Add Project
     Set Client = Nothing
+    
+    Stop
     
     Set Client = Clients("2")
             
@@ -79,7 +87,6 @@ Debug.Assert Clients Is Nothing
     
     Clients.GetCollection
     
-    Stop
 Debug.Assert Clients.Count = 5
 
     Clients.Remove 4
@@ -116,6 +123,7 @@ Debug.Assert Clients.Count = 0
     Set Spv = Nothing
     Set Contact = Nothing
     Set Project = Nothing
+    Set Workflow = Nothing
 End Sub
 
 

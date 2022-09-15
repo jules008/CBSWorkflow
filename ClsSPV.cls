@@ -16,7 +16,7 @@ Attribute VB_Exposed = False
 '===============================================================
 ' v1.0.0 - Initial Version
 '---------------------------------------------------------------
-' Date - 13 Sep 22
+' Date - 14 Sep 22
 '===============================================================
 ' Methods
 '---------------------------------------------------------------
@@ -163,8 +163,8 @@ Public Sub Terminate()
 
     Set Me.Parent = Nothing
 
-    Set Contacts = Nothing
-    Set Projects = Nothing
+    Set pContacts = Nothing
+    Set pProjects = Nothing
 End Sub
 '---------------------------------------------------------------
 Private Sub Class_Terminate()

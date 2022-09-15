@@ -351,8 +351,7 @@ Public Function GetActiveList(StrSortBy As String) As Recordset
                 & "TblWorkflow " _
             & "INNER JOIN TblStep ON TblStep.StepNo = TblWorkflow.CurrentStep AND TblStep.WorkflowNo = TblWorkflow.WorkflowNo " _
             & "WHERE " _
-                & "TblWorkflow.Status <> 'enComplete' AND " _
-                & "TblWorkflow.Deleted IS NULL ")
+                & "TblWorkflow.Status <> 'enComplete'")
                 
     Set RstWorkflow = ModDatabase.SQLQuery(SQL)
     

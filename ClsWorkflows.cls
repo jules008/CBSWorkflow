@@ -35,8 +35,8 @@ Public Property Get Active() As Boolean
     Active = pActive
 End Property
 
-Public Property Let Active(newval As Boolean)
-    pActive = newval
+Public Property Let Active(NewVal As Boolean)
+    pActive = NewVal
 End Property
 
 '---------------------------------------------------------------
@@ -44,8 +44,8 @@ Public Property Get Deleted() As Boolean
     Deleted = pDeleted
 End Property
 
-Public Property Let Deleted(newval As Boolean)
-    pDeleted = newval
+Public Property Let Deleted(NewVal As Boolean)
+    pDeleted = NewVal
 End Property
 
 ' ===============================================================
