@@ -2,3 +2,9 @@ ProjectNo,  dbInteger
 LoanTerm,  dbText
 CBSComPC,  dbSingle
 ExitFee,  dbBoolean
+SPVNo,  dbLong
+ClientNo,  dbLong
+PCComplete,  dbLong
+Status,  dbText
+NoLenders,  dbLong
+RAG,  dbText

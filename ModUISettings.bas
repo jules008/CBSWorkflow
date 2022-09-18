@@ -24,7 +24,7 @@ Public Const SCREEN_HEIGHT As Integer = 2000
 Public Const SCREEN_WIDTH As Integer = 1825
 Public Const MAIN_FRAME_TOP As Integer = 70
 Public Const MAIN_FRAME_LEFT As Integer = 170
-Public Const MAIN_FRAME_WIDTH As Integer = 890
+Public Const MAIN_FRAME_WIDTH As Integer = 1000
 Public Const MAIN_FRAME_HEIGHT As Integer = 360
 Public Const MAIN_FRAME_2_TOP As Integer = 440
 Public Const MAIN_FRAME_2_LEFT As Integer = 170
@@ -51,8 +51,8 @@ Public Const MENUBAR_LEFT As Integer = 0
 Public Const MENU_TOP As Integer = 150
 Public Const MENU_LEFT As Integer = 10
 Public Const MENUITEM_WIDTH As Integer = 150
-Public Const MENUITEM_COUNT As Integer = 4
-Public Const MENUITEM_TEXT = "For Action:Active:Complete:Exit"
+Public Const MENUITEM_COUNT As Integer = 7
+Public Const MENUITEM_TEXT = "For Action:Projects:CRM:Dashboard:Reports:Admin:Exit"
 'Public Const MENUITEM_ICONS = "TEMPLATE - For Action:TEMPLATE - Active:TEMPLATE - Complete:TEMPLATE - Dashboard:TEMPLATE - Reports:TEMPLATE - Admin:TEMPLATE - Exit"
 'Public Const MENUITEM_BADGES = "TEMPLATE - No Action Items::::::"
 'Public Const MENUITEM_ICON_TOP As Integer = 6
@@ -73,11 +73,11 @@ Public Const BTN_MAIN_1_LEFT As Integer = 960
 Public Const BTN_MAIN_1_WIDTH As Integer = 100
 Public Const BTN_MAIN_1_HEIGHT As Integer = 40
 
-'Public Const BTN_MAIN_2_TOP As Integer = 143
-'Public Const BTN_MAIN_2_LEFT As Integer = 1075
-'Public Const BTN_MAIN_2_WIDTH As Integer = 80
-'Public Const BTN_MAIN_2_HEIGHT As Integer = 20
-'
+Public Const BTN_MAIN_2_TOP As Integer = 15
+Public Const BTN_MAIN_2_LEFT As Integer = 1070
+Public Const BTN_MAIN_2_WIDTH As Integer = 100
+Public Const BTN_MAIN_2_HEIGHT As Integer = 40
+
 'Public Const BTN_MAIN_3_TOP As Integer = 15
 'Public Const BTN_MAIN_3_LEFT As Integer = 280
 'Public Const BTN_MAIN_3_WIDTH As Integer = 100
@@ -107,12 +107,12 @@ Public Const FOR_ACTION_LINEITEM_TITLES As String = "Workflow No:Name:Step No:St
 Public Const FOR_ACTION_MAX_LINES As Integer = 40
 
 ' ---------------------------------------------------------------
-' Active Screen
+' Projects Screen
 ' ---------------------------------------------------------------
-Public Const ACTIVE_LINEITEM_NOCOLS As Integer = 5
-Public Const ACTIVE_LINEITEM_COL_WIDTHS As String = "100:200:200:290:100"
-Public Const ACTIVE_LINEITEM_TITLES As String = "Workflow No:Name:Step No:Step Name:Status"
-Public Const ACTIVE_MAX_LINES As Integer = 150
+Public Const PROJECTS_LINEITEM_NOCOLS As Integer = 6
+Public Const PROJECTS_LINEITEM_COL_WIDTHS As String = "100:250:250:200:100:100"
+Public Const PROJECTS_LINEITEM_TITLES As String = "Project No:Client:SPV:Number of Workflows:% Complete:Status"
+Public Const PROJECTS_MAX_LINES As Integer = 150
 
 ' ---------------------------------------------------------------
 ' Complete Screen

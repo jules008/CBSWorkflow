@@ -90,22 +90,22 @@ Private Function BuildScreenBtn1() As Boolean
 
     On Error GoTo ErrorHandler
 
-    Set BtnNewWorkflow = New ClsUIMenuItem
+    Set BtnNewProject = New ClsUIMenuItem
 
-    With BtnNewWorkflow
+    With BtnNewProject
         
         .Height = BTN_MAIN_1_HEIGHT
         .Left = BTN_MAIN_1_LEFT
         .Top = BTN_MAIN_1_TOP
         .Width = BTN_MAIN_1_WIDTH
         .Name = "BtnMain1"
-        .OnAction = "'ModUIComplete.ProcessBtnPress(" & enBtnNewWorkflow & ")'"
+        .OnAction = "'ModUIComplete.ProcessBtnPress(" & enBtnNewProject & ")'"
         .UnSelectStyle = GENERIC_BUTTON
         .Selected = False
         .Text = "New Workflow"
     End With
 
-    MainFrame.Menu.AddItem BtnNewWorkflow
+    MainFrame.Menu.AddItem BtnNewProject
     
     BuildScreenBtn1 = True
 

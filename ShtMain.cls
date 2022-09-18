@@ -22,6 +22,10 @@ Attribute VB_Exposed = True
 Private Const StrMODULE As String = "ModLibrary"
 Option Explicit
 
-Private Sub BtnNewWorkflow_Click()
-    ModUIScreenCom.ProcessBtnPress enBtnNewWorkflow
+Private Sub BtnNewProject_Click()
+    ModUIScreenCom.ProcessBtnPress enBtnNewProject
+End Sub
+
+Private Sub Worksheet_SelectionChange(ByVal Target As Range)
+
 End Sub

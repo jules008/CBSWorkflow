@@ -38,7 +38,7 @@ Debug.Assert Not Clients Is Nothing
 
 Debug.Assert Clients.Count = i
 Debug.Assert Clients(1).SPVs.Count = i
-Next
+    Next
     
     Set Contact = New ClsContact
     
@@ -50,7 +50,7 @@ Next
         .ExitFee = True
         .ProjectNo = 1
         .DBSave
-    End
+    End With
         
     With Workflow
         

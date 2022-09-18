@@ -42,15 +42,15 @@ Public Function EnumBtnNoVal(EnumValue As String) As EnumBtnNo
     Select Case EnumValue
         Case "enBtnForAction"
             EnumBtnNoVal = 1
-        Case "enBtnActive"
+        Case "enProjects"
             EnumBtnNoVal = 2
-        Case "enBtnComplete"
+        Case "enCRM"
             EnumBtnNoVal = 3
         Case "enBtnExit"
             EnumBtnNoVal = 4
         Case "enBtnSupport"
             EnumBtnNoVal = 5
-        Case "enBtnNewWorkflow"
+        Case "enBtnNewProject"
             EnumBtnNoVal = 6
     End Select
 End Function
@@ -171,15 +171,15 @@ Public Function EnumBtnNoStr(EnumValue As EnumBtnNo) As String
         Case 1
             EnumBtnNoStr = "enBtnForAction"
         Case 2
-            EnumBtnNoStr = "enBtnActive"
+            EnumBtnNoStr = "enProjects"
         Case 3
-            EnumBtnNoStr = "enBtnComplete"
+            EnumBtnNoStr = "enCRM"
         Case 4
             EnumBtnNoStr = "enBtnExit"
         Case 5
             EnumBtnNoStr = "enBtnSupport"
         Case 6
-            EnumBtnNoStr = "enBtnNewWorkflow"
+            EnumBtnNoStr = "enBtnNewProject"
     End Select
 End Function
 

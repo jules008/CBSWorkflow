@@ -236,13 +236,13 @@ Restart:
     Application.StatusBar = ""
             
 '    If Not ResetScreen Then Err.Raise HANDLED_ERROR
-'    If Not ModUIActive.BuildScreen Then Err.Raise HANDLED_ERROR
+'    If Not ModUIProjects.BuildScreen Then Err.Raise HANDLED_ERROR
     
     If ButtonNo = 0 Then
         If Not ShtMain.[MenuItem] Is Nothing Then
             ButtonNo = ShtMain.[MenuItem]
         Else
-            ButtonNo = enBtnActive
+            ButtonNo = enProjects
         End If
     Else
         If ButtonNo < 4 And ButtonNo = ShtMain.[MenuItem] Then Exit Function
@@ -255,9 +255,6 @@ Restart:
             ShtMain.Unprotect PROTECT_KEY
             ShtMain.[MenuItem] = 1
 
-            If Not ResetScreen Then Err.Raise HANDLED_ERROR
-            If Not ModUIForAction.BuildScreen Then Err.Raise HANDLED_ERROR
-
             ShtMain.Unprotect PROTECT_KEY
 
             With MenuBar
@@ -265,36 +262,39 @@ Restart:
                 .Menu(2).Selected = False
                 .Menu(3).Selected = False
                 .Menu(4).Selected = False
+                .Menu(5).Selected = False
+                .Menu(6).Selected = False
+                .Menu(7).Selected = False
             End With
 
             If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
             
-        Case enBtnActive
+        Case enProjects
 
             ShtMain.Unprotect PROTECT_KEY
             ShtMain.[MenuItem] = 2
 
-            If Not ResetScreen Then Err.Raise HANDLED_ERROR
-            If Not ModUIActive.BuildScreen Then Err.Raise HANDLED_ERROR
-
             ShtMain.Unprotect PROTECT_KEY
 
+'            ModUIProjects.HidePictures
+'            ModUIProjects.ShowPictures
+            
             With MenuBar
                 .Menu(1).Selected = False
                 .Menu(2).Selected = True
                 .Menu(3).Selected = False
                 .Menu(4).Selected = False
+                .Menu(5).Selected = False
+                .Menu(6).Selected = False
+                .Menu(7).Selected = False
             End With
 
             If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
 
-        Case enBtnComplete
+        Case enCRM
 
             ShtMain.Unprotect PROTECT_KEY
             ShtMain.[MenuItem] = 3
-
-            If Not ResetScreen Then Err.Raise HANDLED_ERROR
-            If Not ModUIComplete.BuildScreen Then Err.Raise HANDLED_ERROR
 
             ShtMain.Unprotect PROTECT_KEY
 
@@ -303,6 +303,66 @@ Restart:
                 .Menu(2).Selected = False
                 .Menu(3).Selected = True
                 .Menu(4).Selected = False
+                .Menu(5).Selected = False
+                .Menu(6).Selected = False
+                .Menu(7).Selected = False
+            End With
+
+            If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
+            
+        Case enDashboard
+
+            ShtMain.Unprotect PROTECT_KEY
+            ShtMain.[MenuItem] = 4
+
+            ShtMain.Unprotect PROTECT_KEY
+
+            With MenuBar
+                .Menu(1).Selected = False
+                .Menu(2).Selected = False
+                .Menu(3).Selected = False
+                .Menu(4).Selected = True
+                .Menu(5).Selected = False
+                .Menu(6).Selected = False
+                .Menu(7).Selected = False
+            End With
+
+            If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
+            
+        Case enReports
+
+            ShtMain.Unprotect PROTECT_KEY
+            ShtMain.[MenuItem] = 5
+
+            ShtMain.Unprotect PROTECT_KEY
+
+            With MenuBar
+                .Menu(1).Selected = False
+                .Menu(2).Selected = False
+                .Menu(3).Selected = False
+                .Menu(4).Selected = False
+                .Menu(5).Selected = True
+                .Menu(6).Selected = False
+                .Menu(7).Selected = False
+            End With
+
+            If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
+            
+        Case enAdminPage
+
+            ShtMain.Unprotect PROTECT_KEY
+            ShtMain.[MenuItem] = 6
+
+            ShtMain.Unprotect PROTECT_KEY
+
+            With MenuBar
+                .Menu(1).Selected = False
+                .Menu(2).Selected = False
+                .Menu(3).Selected = False
+                .Menu(4).Selected = False
+                .Menu(5).Selected = False
+                .Menu(6).Selected = True
+                .Menu(7).Selected = False
             End With
 
             If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY

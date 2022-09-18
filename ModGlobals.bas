@@ -34,10 +34,10 @@ Public Const SEND_ERR_MSG As Boolean = False
 Public Const TEST_PREFIX As String = "TEST - "
 Public Const BACKUP_INT As Integer = 5
 Public Const FILE_ERROR_LOG As String = "Error.log"
-Public Const OLD_DB_VER = "V0.0.1"
-Public Const DB_VER = "V0.0.2"
-Public Const VERSION = "V0.0.1"
-Public Const VER_DATE = "16 Aug 22"
+Public Const OLD_DB_VER = "V0.0.2"
+Public Const DB_VER = "V0.0.3"
+Public Const VERSION = "V0.0.2"
+Public Const VER_DATE = "16 Sep 22"
 ' ===============================================================
 ' Error Constants
 ' ---------------------------------------------------------------
@@ -89,7 +89,8 @@ Public MainScreen As ClsUIScreen
 Public MenuBar As ClsUIFrame
 Public MenuItem As ClsUIMenuItem
 Public MainFrame As ClsUIFrame
-Public BtnNewWorkflow As ClsUIMenuItem
+Public BtnNewProject As ClsUIMenuItem
+Public BtnNewLender As ClsUIMenuItem
 Public Logo As ClsUIDashObj
 
 ' ===============================================================
@@ -156,11 +157,15 @@ End Enum
 
 Enum EnumBtnNo
     enBtnForAction = 1
-    enBtnActive
-    enBtnComplete
+    enProjects
+    enCRM
+    enDashboard
+    enReports
+    enAdminPage
     enBtnExit
     enBtnSupport
-    enBtnNewWorkflow
+    enBtnNewProject
+    enBtnNewLender
 End Enum
 
 Enum enStatus           'Status
