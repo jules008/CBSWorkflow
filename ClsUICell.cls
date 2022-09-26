@@ -2,13 +2,13 @@ VERSION 1.0 CLASS
 BEGIN
   MultiUse = -1  'True
 END
-Attribute VB_Name = "ClsUIFrame"
+Attribute VB_Name = "ClsUICell"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 '===============================================================
-' Class ClsUIFrame
+' Class ClsUICell
 '---------------------------------------------------------------
 ' Created by Julian Turner
 ' OneSheet Consulting
@@ -16,85 +16,102 @@ Attribute VB_Exposed = False
 '===============================================================
 ' v1.0.0 - Initial Version
 '---------------------------------------------------------------
-' Date - 21 May 20
+' Date - 25 May 20
 '===============================================================
 
 Option Explicit
 Private pTop As Integer
-Private pLeft As Integer
+Private pRow As Integer
+Private pCol As Integer
 Private pHeight As Integer
+Private pLeft As Integer
 Private pWidth As Integer
-Private pName As String
+Private pText As String
 Private pStyle As TypeStyle
-Private pDashObjs As ClsUIDashObjs
+Private pName As String
 Private pMenu As ClsUIMenu
-Private pEnableHeader As Boolean
-Private pHeader As ClsUIHeader
-Private pCellHeaders As ClsUICells
-Private pCells As ClsUICells
-Private pShpFrame As Shape
+Private pOnAction As String
+Private pBadge As Shape
+Private pShpCell As Shape
 Private pVisible As Boolean
-Private pTable As ClsUITable
-Private pParent As ClsUIScreen
+Private pParent As ClsUITable
 
 '---------------------------------------------------------------
 Public Property Get Top() As Integer
-    Top = pTop
+    Top = pShpCell.Top
 End Property
 
 Public Property Let Top(ByVal vNewValue As Integer)
+    pTop = vNewValue
+    pShpCell.Top = pTop
+End Property
 
-    pTop = vNewValue + Parent.Top
-    pShpFrame.Top = pTop
+'---------------------------------------------------------------
+Public Property Get Row() As Integer
+    Row = pRow
+End Property
+
+Public Property Let Row(ByVal vNewValue As Integer)
+    pRow = vNewValue
+End Property
+
+'---------------------------------------------------------------
+Public Property Get Col() As Integer
+    Col = pCol
+End Property
+
+Public Property Let Col(ByVal vNewValue As Integer)
+    pCol = vNewValue
 End Property
 
 '---------------------------------------------------------------
 Public Property Get Left() As Integer
-    Left = pShpFrame.Left
+    Left = pShpCell.Left
 End Property
 
 Public Property Let Left(ByVal vNewValue As Integer)
-    pLeft = vNewValue + Parent.Left
-    pShpFrame.Left = pLeft
+    pLeft = vNewValue
+    pShpCell.Left = pLeft
 End Property
 
 '---------------------------------------------------------------
 Public Property Get Height() As Integer
-    Height = pShpFrame.Height
+    Height = pShpCell.Height
 End Property
 
 Public Property Let Height(ByVal vNewValue As Integer)
     pHeight = vNewValue
-    pShpFrame.Height = pHeight
+    pShpCell.Height = pHeight
 End Property
 
 '---------------------------------------------------------------
 Public Property Get Width() As Integer
-    Width = pShpFrame.Width
+    Width = pShpCell.Width
 End Property
 
 Public Property Let Width(ByVal vNewValue As Integer)
     pWidth = vNewValue
-    pShpFrame.Width = pWidth
+    pShpCell.Width = pWidth
+End Property
+
+'---------------------------------------------------------------
+Public Property Get Text() As String
+    Text = pShpCell.TextFrame.Characters.Text
+End Property
+
+Public Property Let Text(ByVal vNewValue As String)
+    pText = vNewValue
+    pShpCell.TextFrame.Characters.Text = pText
 End Property
 
 '---------------------------------------------------------------
 Public Property Get Name() As String
-    Name = pShpFrame.Name
+    Name = pShpCell.Name
 End Property
 
 Public Property Let Name(ByVal vNewValue As String)
     pName = vNewValue
-    pShpFrame.Name = pName
-End Property
-
-'---------------------------------------------------------------
-Public Property Get DashObjs() As ClsUIDashObjs
-    Set DashObjs = pDashObjs
-End Property
-
-Public Property Let DashObjs(ByVal vNewValue As ClsUIDashObjs)
-    Set pDashObjs = vNewValue
+    pShpCell.Name = pName
 End Property
 
 '---------------------------------------------------------------
@@ -107,120 +124,78 @@ Public Property Let Menu(ByVal vNewValue As ClsUIMenu)
 End Property
 
 '---------------------------------------------------------------
-Public Property Get EnableHeader() As Boolean
-    EnableHeader = pEnableHeader
+Public Property Get Badge() As Shape
+    Set Badge = pBadge
 End Property
 
-Public Property Let EnableHeader(ByVal vNewValue As Boolean)
-    pEnableHeader = vNewValue
-End Property
-
-'---------------------------------------------------------------
-Public Property Get Header() As ClsUIHeader
-    Set Header = pHeader
-End Property
-
-Public Property Let Header(ByVal vNewValue As ClsUIHeader)
-    Set pHeader = vNewValue
+Public Property Let Badge(ByVal vNewValue As Shape)
+    Set pBadge = vNewValue
+    With pBadge
+        .Top = Top + 1
+        .Left = Left + 1
+        .Height = 15
+        .Width = 18
+    End With
 End Property
 
 '---------------------------------------------------------------
-Public Property Get CellHeaders() As ClsUICells
-    Set CellHeaders = pCellHeaders
+Public Property Get OnAction() As String
+    OnAction = pShpCell.OnAction
 End Property
 
-Public Property Let CellHeaders(ByVal vNewValue As ClsUICells)
-    Set pCellHeaders = vNewValue
-End Property
-
-'---------------------------------------------------------------
-Public Property Get Cells() As ClsUICells
-    Set Cells = pCells
-End Property
-
-Public Property Let Cells(ByVal vNewValue As ClsUICells)
-    Set pCells = vNewValue
+Public Property Let OnAction(ByVal vNewValue As String)
+    pOnAction = vNewValue
+    pShpCell.OnAction = vNewValue
 End Property
 
 '---------------------------------------------------------------
 Public Property Get Visible() As Boolean
-    Visible = pShpFrame.Visible
+    Visible = pShpCell.Visible
 End Property
 
 Public Property Let Visible(ByVal vNewValue As Boolean)
-    Dim DashObj As ClsUIDashObj
     
     pVisible = vNewValue
     
-    pShpFrame.Visible = pVisible
-    
-    For Each DashObj In pDashObjs
-        DashObj.Visible = pVisible
-    Next
-    
-    If pEnableHeader Then pHeader.Visible = pVisible
-    
-    pMenu.Visible = pVisible
-    
+    pShpCell.Visible = pVisible
+       
 End Property
 
 '---------------------------------------------------------------
-Public Property Get Table() As Variant
-    Set Table = pTable
+Public Property Get ShpCell() As Shape
+    Set ShpCell = pShpCell
 End Property
 
-Public Property Let Table(ByVal vNewValue As Variant)
-    Set pTable = vNewValue
-End Property
-
-'---------------------------------------------------------------
-Public Property Get ShpFrame() As Shape
-    Set ShpFrame = pShpFrame
-End Property
-
-Public Property Let ShpFrame(ByVal vNewValue As Shape)
-    Set pShpFrame = vNewValue
-End Property
-
-'---------------------------------------------------------------
-Public Property Get Parent() As ClsUIScreen
-    Set Parent = pParent
-End Property
-
-Public Property Set Parent(obj As ClsUIScreen)
-    Set pParent = obj
-End Property
-
-'---------------------------------------------------------------
-Public Property Get Style() As TypeStyle
-    Style = pStyle
+Public Property Let ShpCell(ByVal vNewValue As Shape)
+    Set pShpCell = vNewValue
 End Property
 
 Public Property Let Style(vNewValue As TypeStyle)
     pStyle = vNewValue
     
-    With pShpFrame.Fill
+    With pShpCell.Fill
         .TwoColorGradient msoGradientHorizontal, 1
         .ForeColor.RGB = vNewValue.Fill1
         .BackColor.RGB = vNewValue.Fill2
     End With
     
-    With pShpFrame.Line
+    With pShpCell.Line
         .ForeColor.RGB = vNewValue.BorderColour
         .Weight = vNewValue.BorderWidth
         If .Weight = 0 Then .Visible = msoFalse Else .Visible = msoCTrue
     End With
     
-    With pShpFrame.TextFrame
+    With pShpCell.TextFrame
         .Characters.Font.Bold = vNewValue.FontBold
         .Characters.Font.Name = vNewValue.FontStyle
         .Characters.Font.Color = vNewValue.FontColour
         .Characters.Font.Size = vNewValue.FontSize
+        If vNewValue.TextDir <> 0 Then .Orientation = vNewValue.TextDir
         If vNewValue.FontXJust <> 0 Then .HorizontalAlignment = vNewValue.FontXJust
         If vNewValue.FontYJust <> 0 Then .VerticalAlignment = vNewValue.FontYJust
     End With
     
-    With pShpFrame.Shadow
+    With pShpCell.Shadow
         If vNewValue.Shadow = 0 Then
             .Visible = msoFalse
         Else
@@ -230,66 +205,53 @@ Public Property Let Style(vNewValue As TypeStyle)
     End With
 End Property
 
+'---------------------------------------------------------------
+Public Property Get Parent() As ClsUITable
+    Set Parent = pParent
+End Property
+
+Public Property Set Parent(obj As ClsUITable)
+    Set pParent = obj
+End Property
+
 ' ===============================================================
 ' Method ReOrder
-' re-orders the shapes so that the frames sit on top of the screen
+' re-orders the shapes so that the Cells sit on top of the screen
 '---------------------------------------------------------------
 Public Sub ReOrder()
-    Dim DashObj As ClsUIDashObj
-    Dim UICell As ClsUICell
     
-    pShpFrame.ZOrder msoBringToFront
-    pHeader.ReOrder
-    
-    For Each DashObj In DashObjs
-        DashObj.ShpDashObj.ZOrder msoBringToFront
-    Next
-    
+    pShpCell.ZOrder msoBringToFront
+    If Not pBadge Is Nothing Then pBadge.ZOrder msoBringToFront
     
     pMenu.ReOrder
 End Sub
 
 ' ===============================================================
-Public Sub Initialize(obj As ClsUIScreen)
+Public Sub Initialize(obj As ClsUITable)
     Set Me.Parent = obj
 End Sub
 
 Private Sub Class_Initialize()
-    Set pDashObjs = New ClsUIDashObjs
-    Set pMenu = New ClsUIMenu
-    Set pHeader = New ClsUIHeader
-    Set pCells = New ClsUICells
-    Set pShpFrame = ShtMain.Shapes.AddShape(msoShapeRectangle, 0, 0, 10, 10)
-    Set pTable = New ClsUITable
-    
-    pDashObjs.Initialize Me
-    pMenu.Initialize Me
-    pHeader.Initialize Me
-    pTable.Initialize Me
+    Set pShpCell = ShtMain.Shapes.AddTextbox(msoTextOrientationHorizontal, 0, 0, 10, 10)
 End Sub
+
 ' ===============================================================
 Public Sub Terminate()
-    pDashObjs.Terminate
-    pMenu.Terminate
-    pHeader.Terminate
-    pTable.Terminate
-    
     Set pParent = Nothing
-    pShpFrame.Delete
-
-    Set pShpFrame = Nothing
-    Set pDashObjs = Nothing
-    Set pMenu = Nothing
-    Set pHeader = Nothing
-    Set pTable = Nothing
+    pShpCell.Delete
+    
+    If Not pBadge Is Nothing Then
+        pBadge.Delete
+        Set pBadge = Nothing
+    End If
 End Sub
 '---------------------------------------------------------------
 Private Sub Class_Terminate()
-    Set pShpFrame = Nothing
-    Set pDashObjs = Nothing
-    Set pMenu = Nothing
-    Set pHeader = Nothing
-    Set pCellHeaders = Nothing
-    Set pCells = Nothing
-    Set pTable = Nothing
+    Set pShpCell = Nothing
+
+    If Not pBadge Is Nothing Then
+        Set pBadge = Nothing
+    End If
 End Sub
+
+'---------------------------------------------------------------

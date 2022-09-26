@@ -50,10 +50,6 @@ Next
         .ExitFee = True
         .ProjectNo = 1
         .DBSave
-    End
-        
-    With Workflow
-        
     End With
 
     Client.Contacts.Add Contact
@@ -127,3 +123,50 @@ Debug.Assert Clients.Count = 0
 End Sub
 
 
+
+Public Sub TestTable()
+    Dim MainScreen As ClsUIScreen
+    Dim Frame As ClsUIFrame
+    Dim Table As ClsUITable
+    
+    Set Frame = New ClsUIFrame
+    Set MainScreen = New ClsUIScreen
+    Set Table = New ClsUITable
+    
+    BuildScreenStyles
+    
+    With MainScreen
+        .Name = "Main Screen"
+        .Top = 0
+        .Left = 0
+        .Width = 1500
+        .Height = 1200
+        .Style = MENUBAR_STYLE
+        .Frames.AddItem Frame, "Frame 1"
+    End With
+    
+    With Frame
+        .Top = 100
+        .Left = 100
+        .Width = 1200
+        .Height = 1000
+        .Style = GENERIC_BUTTON
+        
+        .ReOrder
+    End With
+    
+    With Table
+        .Left = 200
+        .Top = 200
+        .NoCols = 2
+        .NoRows = 2
+        .ColWidths = "100:100"
+        .RowHeights = "30:30"
+        
+        
+    End With
+    
+    Stop
+    
+    MainScreen.Terminate
+End Sub

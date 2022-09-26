@@ -183,6 +183,7 @@ End Sub
 
 Private Sub Class_Initialize()
     Set pShpHeader = ShtMain.Shapes.AddShape(msoShapeRectangle, 0, 0, 10, 10)
+    pShpHeader.Visible = msoFalse
 End Sub
 
 ' ===============================================================

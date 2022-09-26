@@ -87,9 +87,8 @@ Public ActiveWorkFlow As ClsWorkflow
 ' ---------------------------------------------------------------
 Public MainScreen As ClsUIScreen
 Public MenuBar As ClsUIFrame
-Public MenuItem As ClsUIMenuItem
 Public MainFrame As ClsUIFrame
-Public BtnNewWorkflow As ClsUIMenuItem
+Public BtnNewWorkflow As ClsUIButton
 Public Logo As ClsUIDashObj
 
 ' ===============================================================

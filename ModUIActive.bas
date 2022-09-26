@@ -54,13 +54,13 @@ Private Function BuildMainFrame() As Boolean
 '            .Icon.Visible = msoCTrue
         End With
 
-        With .Lineitems
-            .NoColumns = ACTIVE_LINEITEM_NOCOLS
-            .Top = GENERIC_LINEITEM_TOP
-            .Left = GENERIC_LINEITEM_LEFT
-            .Height = GENERIC_LINEITEM_HEIGHT
-            .Columns = ACTIVE_LINEITEM_COL_WIDTHS
-            .RowOffset = GENERIC_LINEITEM_ROWOFFSET
+        With .Cells
+            .NoColumns = ACTIVE_Cell_NOCOLS
+            .Top = GENERIC_Cell_TOP
+            .Left = GENERIC_Cell_LEFT
+            .Height = GENERIC_Cell_HEIGHT
+            .Columns = ACTIVE_Cell_COL_WIDTHS
+            .RowOffset = GENERIC_Cell_ROWOFFSET
         End With
     End With
     
@@ -143,7 +143,7 @@ Public Function RefreshList(Optional SortBy As String) As Boolean
     Dim ActionOn As String
     Dim StepStatus As enStatus
     Dim Workflows As ClsWorkflows
-    Dim Lineitem As ClsUILineitem
+    Dim Cell As ClsUICell
     Dim StrOnAction As String
     Dim CustomStyle As TypeStyle
     Dim StrSortBy As String
@@ -169,21 +169,21 @@ Public Function RefreshList(Optional SortBy As String) As Boolean
     Workflows.UpdateRAGs
     
     With MainFrame
-        For Each Lineitem In .Lineitems
-            .Lineitems.RemoveItem Lineitem.Name
-            Lineitem.ShpLineitem.Delete
-            Set Lineitem = Nothing
+        For Each Cell In .Cells
+            .Cells.RemoveItem Cell.Name
+            Cell.ShpCell.Delete
+            Set Cell = Nothing
         Next
 
-        ReDim RowTitles(0 To ACTIVE_LINEITEM_NOCOLS - 1)
-        RowTitles = Split(ACTIVE_LINEITEM_TITLES, ":")
+        ReDim RowTitles(0 To ACTIVE_Cell_NOCOLS - 1)
+        RowTitles = Split(ACTIVE_Cell_TITLES, ":")
 
-        For i = 0 To ACTIVE_LINEITEM_NOCOLS - 1
+        For i = 0 To ACTIVE_Cell_NOCOLS - 1
             StrOnAction = "'ModUIScreenCom.SortBy(""" & RowTitles(i) & """), """ & ScreenSel & """'"
-            .Lineitems.Text 0, i, RowTitles(i), GENERIC_LINEITEM_HEADER, StrOnAction
+            .Cells.Text 0, i, RowTitles(i), GENERIC_Cell_HEADER, StrOnAction
         Next
 
-        .Lineitems.Style = GENERIC_LINEITEM
+        .Cells.Style = GENERIC_Cell
 
     End With
     
@@ -218,19 +218,19 @@ Public Function RefreshList(Optional SortBy As String) As Boolean
             If Not IsNull(!RAG) Then
                 Select Case enRAGVal(!RAG)
                     Case Is = en3Green
-                        CustomStyle = GREEN_LINEITEM
+                        CustomStyle = GREEN_Cell
                     Case en2Amber
-                        CustomStyle = AMBER_LINEITEM
+                        CustomStyle = AMBER_Cell
                     Case Is = en1Red
-                        CustomStyle = RED_LINEITEM
+                        CustomStyle = RED_Cell
                 End Select
             End If
             
-            With MainFrame.Lineitems
-                .Text x, 0, WorkflowNo, GENERIC_LINEITEM, StrOnAction
-                .Text x, 1, MemberName, GENERIC_LINEITEM, StrOnAction
-                .Text x, 2, StepNo, GENERIC_LINEITEM, StrOnAction
-                .Text x, 3, CurrentStep, GENERIC_LINEITEM, StrOnAction
+            With MainFrame.Cells
+                .Text x, 0, WorkflowNo, GENERIC_Cell, StrOnAction
+                .Text x, 1, MemberName, GENERIC_Cell, StrOnAction
+                .Text x, 2, StepNo, GENERIC_Cell, StrOnAction
+                .Text x, 3, CurrentStep, GENERIC_Cell, StrOnAction
                 .Text x, 4, enStatusDisp(StepStatus), CustomStyle, StrOnAction
             End With
             

@@ -25,7 +25,7 @@ Public Function BuildScreenBtn1() As Boolean
 
     On Error GoTo ErrorHandler
 
-    Set BtnNewWorkflow = New ClsUIMenuItem
+    Set BtnNewWorkflow = New ClsUIButton
 
     With BtnNewWorkflow
 
@@ -40,7 +40,7 @@ Public Function BuildScreenBtn1() As Boolean
         .Text = "New Workflow"
     End With
 
-    MainFrame.Menu.AddItem BtnNewWorkflow
+    MainFrame.Menu.AddButton BtnNewWorkflow
 
     BuildScreenBtn1 = True
 
@@ -70,7 +70,7 @@ End Function
 '
 '    On Error GoTo ErrorHandler
 '
-'    Set BtnCopyEmail = New ClsUIMenuItem
+'    Set BtnCopyEmail = New ClsUIButton
 '
 '    With BtnCopyEmail
 '
@@ -86,7 +86,7 @@ End Function
 '        .Text = "Copy Email"
 '    End With
 '
-'    MainFrame.Menu.AddItem BtnCopyEmail
+'    MainFrame.Menu.AddButton BtnCopyEmail
 '
 '    BuildScreenBtn2 = True
 '
@@ -117,7 +117,7 @@ End Function
 '
 '    On Error GoTo ErrorHandler
 '
-'    Set BtnViewDates = New ClsUIMenuItem
+'    Set BtnViewDates = New ClsUIButton
 '
 '    With BtnViewDates
 '
@@ -133,7 +133,7 @@ End Function
 '        .Text = "View Dates"
 '    End With
 '
-'    MainFrame.Menu.AddItem BtnViewDates
+'    MainFrame.Menu.AddButton BtnViewDates
 '
 '    BuildScreenBtn3 = True
 '
@@ -163,7 +163,7 @@ End Function
 '
 '    On Error GoTo ErrorHandler
 '
-'    Set BtnMbrSummary = New ClsUIMenuItem
+'    Set BtnMbrSummary = New ClsUIButton
 '
 '    With BtnMbrSummary
 '
@@ -179,7 +179,7 @@ End Function
 '        .Text = "CDC" & vbCr & "Summary"
 '    End With
 '
-'    MainFrame.Menu.AddItem BtnMbrSummary
+'    MainFrame.Menu.AddButton BtnMbrSummary
 '
 '    BuildScreenBtn4 = True
 '
@@ -209,7 +209,7 @@ End Function
 '
 '    On Error GoTo ErrorHandler
 '
-'    Set BtnCDCLookUp = New ClsUIMenuItem
+'    Set BtnCDCLookUp = New ClsUIButton
 '
 '    With BtnCDCLookUp
 '
@@ -225,7 +225,7 @@ End Function
 '        .Text = "CDC# Look Up "
 '    End With
 '
-'    MainFrame.Menu.AddItem BtnCDCLookUp
+'    MainFrame.Menu.AddButton BtnCDCLookUp
 '
 '    BuildScreenBtn5 = True
 '

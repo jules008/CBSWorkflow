@@ -38,30 +38,30 @@ Public Function BuildScreenStyles() As Boolean
         .Shadow = MENUBAR_SHADOW
     End With
 
-    With MENUITEM_UNSET_STYLE
-        .BorderWidth = MENUITEM_UNSET_BORDER_WIDTH
-        .BorderColour = MENUITEM_UNSET_BORDER_COLOUR
-        .Fill1 = MENUITEM_UNSET_FILL_1
-        .Fill2 = MENUITEM_UNSET_FILL_2
-        .Shadow = MENUITEM_UNSET_SHADOW
-        .FontStyle = MENUITEM_UNSET_FONT_STYLE
-        .FontSize = MENUITEM_UNSET_FONT_SIZE
-        .FontColour = MENUITEM_UNSET_FONT_COLOUR
-        .FontXJust = MENUITEM_UNSET_FONT_X_JUST
-        .FontYJust = MENUITEM_UNSET_FONT_Y_JUST
+    With BUTTON_UNSET_STYLE
+        .BorderWidth = BUTTON_UNSET_BORDER_WIDTH
+        .BorderColour = BUTTON_UNSET_BORDER_COLOUR
+        .Fill1 = BUTTON_UNSET_FILL_1
+        .Fill2 = BUTTON_UNSET_FILL_2
+        .Shadow = BUTTON_UNSET_SHADOW
+        .FontStyle = BUTTON_UNSET_FONT_STYLE
+        .FontSize = BUTTON_UNSET_FONT_SIZE
+        .FontColour = BUTTON_UNSET_FONT_COLOUR
+        .FontXJust = BUTTON_UNSET_FONT_X_JUST
+        .FontYJust = BUTTON_UNSET_FONT_Y_JUST
     End With
 
-    With MENUITEM_SET_STYLE
-        .BorderWidth = MENUITEM_SET_BORDER_WIDTH
-        .BorderColour = MENUITEM_SET_BORDER_COLOUR
-        .Fill1 = MENUITEM_SET_FILL_1
-        .Fill2 = MENUITEM_SET_FILL_2
-        .Shadow = MENUITEM_SET_SHADOW
-        .FontStyle = MENUITEM_SET_FONT_STYLE
-        .FontSize = MENUITEM_SET_FONT_SIZE
-        .FontColour = MENUITEM_SET_FONT_COLOUR
-        .FontXJust = MENUITEM_SET_FONT_X_JUST
-        .FontYJust = MENUITEM_SET_FONT_Y_JUST
+    With BUTTON_SET_STYLE
+        .BorderWidth = BUTTON_SET_BORDER_WIDTH
+        .BorderColour = BUTTON_SET_BORDER_COLOUR
+        .Fill1 = BUTTON_SET_FILL_1
+        .Fill2 = BUTTON_SET_FILL_2
+        .Shadow = BUTTON_SET_SHADOW
+        .FontStyle = BUTTON_SET_FONT_STYLE
+        .FontSize = BUTTON_SET_FONT_SIZE
+        .FontColour = BUTTON_SET_FONT_COLOUR
+        .FontXJust = BUTTON_SET_FONT_X_JUST
+        .FontYJust = BUTTON_SET_FONT_Y_JUST
     End With
     
     With MAIN_FRAME_STYLE
@@ -123,69 +123,69 @@ Public Function BuildScreenStyles() As Boolean
 '        .FontYJust = TOOL_BUTTON_FONT_Y_JUST
 '    End With
 
-    With GENERIC_LINEITEM
-        .BorderWidth = GENERIC_LINEITEM_BORDER_WIDTH
-        .Fill1 = GENERIC_LINEITEM_FILL_1
-        .Fill2 = GENERIC_LINEITEM_FILL_2
-        .Shadow = GENERIC_LINEITEM_SHADOW
-        .FontStyle = GENERIC_LINEITEM_FONT_STYLE
-        .FontSize = GENERIC_LINEITEM_FONT_SIZE
-        .FontBold = GENERIC_LINEITEM_FONT_BOLD
-        .FontColour = GENERIC_LINEITEM_FONT_COLOUR
-        .FontXJust = GENERIC_LINEITEM_FONT_X_JUST
-        .FontYJust = GENERIC_LINEITEM_FONT_Y_JUST
+    With GENERIC_Cell
+        .BorderWidth = GENERIC_Cell_BORDER_WIDTH
+        .Fill1 = GENERIC_Cell_FILL_1
+        .Fill2 = GENERIC_Cell_FILL_2
+        .Shadow = GENERIC_Cell_SHADOW
+        .FontStyle = GENERIC_Cell_FONT_STYLE
+        .FontSize = GENERIC_Cell_FONT_SIZE
+        .FontBold = GENERIC_Cell_FONT_BOLD
+        .FontColour = GENERIC_Cell_FONT_COLOUR
+        .FontXJust = GENERIC_Cell_FONT_X_JUST
+        .FontYJust = GENERIC_Cell_FONT_Y_JUST
     End With
 
-    With GREEN_LINEITEM
-        .BorderWidth = GREEN_LINEITEM_BORDER_WIDTH
-        .Fill1 = GREEN_LINEITEM_FILL_1
-        .Fill2 = GREEN_LINEITEM_FILL_2
-        .Shadow = GREEN_LINEITEM_SHADOW
-        .FontStyle = GREEN_LINEITEM_FONT_STYLE
-        .FontSize = GREEN_LINEITEM_FONT_SIZE
-        .FontBold = GREEN_LINEITEM_FONT_BOLD
-        .FontColour = GREEN_LINEITEM_FONT_COLOUR
-        .FontXJust = GREEN_LINEITEM_FONT_X_JUST
-        .FontYJust = GREEN_LINEITEM_FONT_Y_JUST
+    With GREEN_Cell
+        .BorderWidth = GREEN_Cell_BORDER_WIDTH
+        .Fill1 = GREEN_Cell_FILL_1
+        .Fill2 = GREEN_Cell_FILL_2
+        .Shadow = GREEN_Cell_SHADOW
+        .FontStyle = GREEN_Cell_FONT_STYLE
+        .FontSize = GREEN_Cell_FONT_SIZE
+        .FontBold = GREEN_Cell_FONT_BOLD
+        .FontColour = GREEN_Cell_FONT_COLOUR
+        .FontXJust = GREEN_Cell_FONT_X_JUST
+        .FontYJust = GREEN_Cell_FONT_Y_JUST
     End With
 
-    With AMBER_LINEITEM
-        .BorderWidth = AMBER_LINEITEM_BORDER_WIDTH
-        .Fill1 = AMBER_LINEITEM_FILL_1
-        .Fill2 = AMBER_LINEITEM_FILL_2
-        .Shadow = AMBER_LINEITEM_SHADOW
-        .FontStyle = AMBER_LINEITEM_FONT_STYLE
-        .FontSize = AMBER_LINEITEM_FONT_SIZE
-        .FontBold = AMBER_LINEITEM_FONT_BOLD
-        .FontColour = AMBER_LINEITEM_FONT_COLOUR
-        .FontXJust = AMBER_LINEITEM_FONT_X_JUST
-        .FontYJust = AMBER_LINEITEM_FONT_Y_JUST
+    With AMBER_Cell
+        .BorderWidth = AMBER_Cell_BORDER_WIDTH
+        .Fill1 = AMBER_Cell_FILL_1
+        .Fill2 = AMBER_Cell_FILL_2
+        .Shadow = AMBER_Cell_SHADOW
+        .FontStyle = AMBER_Cell_FONT_STYLE
+        .FontSize = AMBER_Cell_FONT_SIZE
+        .FontBold = AMBER_Cell_FONT_BOLD
+        .FontColour = AMBER_Cell_FONT_COLOUR
+        .FontXJust = AMBER_Cell_FONT_X_JUST
+        .FontYJust = AMBER_Cell_FONT_Y_JUST
     End With
 
-    With RED_LINEITEM
-        .BorderWidth = RED_LINEITEM_BORDER_WIDTH
-        .Fill1 = RED_LINEITEM_FILL_1
-        .Fill2 = RED_LINEITEM_FILL_2
-        .Shadow = RED_LINEITEM_SHADOW
-        .FontStyle = RED_LINEITEM_FONT_STYLE
-        .FontSize = RED_LINEITEM_FONT_SIZE
-        .FontBold = RED_LINEITEM_FONT_BOLD
-        .FontColour = RED_LINEITEM_FONT_COLOUR
-        .FontXJust = RED_LINEITEM_FONT_X_JUST
-        .FontYJust = RED_LINEITEM_FONT_Y_JUST
+    With RED_Cell
+        .BorderWidth = RED_Cell_BORDER_WIDTH
+        .Fill1 = RED_Cell_FILL_1
+        .Fill2 = RED_Cell_FILL_2
+        .Shadow = RED_Cell_SHADOW
+        .FontStyle = RED_Cell_FONT_STYLE
+        .FontSize = RED_Cell_FONT_SIZE
+        .FontBold = RED_Cell_FONT_BOLD
+        .FontColour = RED_Cell_FONT_COLOUR
+        .FontXJust = RED_Cell_FONT_X_JUST
+        .FontYJust = RED_Cell_FONT_Y_JUST
     End With
 
-    With GENERIC_LINEITEM_HEADER
-        .BorderWidth = GENERIC_LINEITEM_HEADER_BORDER_WIDTH
-        .Fill1 = GENERIC_LINEITEM_HEADER_FILL_1
-        .Fill2 = GENERIC_LINEITEM_HEADER_FILL_2
-        .Shadow = GENERIC_LINEITEM_HEADER_SHADOW
-        .FontStyle = GENERIC_LINEITEM_HEADER_FONT_STYLE
-        .FontSize = GENERIC_LINEITEM_HEADER_FONT_SIZE
-        .FontBold = GENERIC_LINEITEM_HEADER_FONT_BOLD
-        .FontColour = GENERIC_LINEITEM_HEADER_FONT_COLOUR
-        .FontXJust = GENERIC_LINEITEM_HEADER_FONT_X_JUST
-        .FontYJust = GENERIC_LINEITEM_HEADER_FONT_Y_JUST
+    With GENERIC_Cell_HEADER
+        .BorderWidth = GENERIC_Cell_HEADER_BORDER_WIDTH
+        .Fill1 = GENERIC_Cell_HEADER_FILL_1
+        .Fill2 = GENERIC_Cell_HEADER_FILL_2
+        .Shadow = GENERIC_Cell_HEADER_SHADOW
+        .FontStyle = GENERIC_Cell_HEADER_FONT_STYLE
+        .FontSize = GENERIC_Cell_HEADER_FONT_SIZE
+        .FontBold = GENERIC_Cell_HEADER_FONT_BOLD
+        .FontColour = GENERIC_Cell_HEADER_FONT_COLOUR
+        .FontXJust = GENERIC_Cell_HEADER_FONT_X_JUST
+        .FontYJust = GENERIC_Cell_HEADER_FONT_Y_JUST
     End With
 
 '    With TRANSPARENT_TEXT_BOX
@@ -214,18 +214,18 @@ Public Function BuildScreenStyles() As Boolean
 '        .FontYJust = TRANSPARENT_TEXT_BOX_FONT_Y_JUST
 '    End With
 '
-'    With VERT_LINEITEM_HEADER
-'        .BorderWidth = VERT_LINEITEM_HEADER_BORDER_WIDTH
-'        .Fill1 = VERT_LINEITEM_HEADER_FILL_1
-'        .Fill2 = VERT_LINEITEM_HEADER_FILL_2
-'        .Shadow = VERT_LINEITEM_HEADER_SHADOW
-'        .FontStyle = VERT_LINEITEM_HEADER_FONT_STYLE
-'        .FontSize = VERT_LINEITEM_HEADER_FONT_SIZE
-'        .FontBold = VERT_LINEITEM_HEADER_FONT_BOLD
-'        .FontColour = VERT_LINEITEM_HEADER_FONT_COLOUR
-'        .FontXJust = VERT_LINEITEM_HEADER_FONT_X_JUST
-'        .FontYJust = VERT_LINEITEM_HEADER_FONT_Y_JUST
-'        .TextDir = VERT_LINEITEM_HEADER_TEXT_DIR
+'    With VERT_Cell_HEADER
+'        .BorderWidth = VERT_Cell_HEADER_BORDER_WIDTH
+'        .Fill1 = VERT_Cell_HEADER_FILL_1
+'        .Fill2 = VERT_Cell_HEADER_FILL_2
+'        .Shadow = VERT_Cell_HEADER_SHADOW
+'        .FontStyle = VERT_Cell_HEADER_FONT_STYLE
+'        .FontSize = VERT_Cell_HEADER_FONT_SIZE
+'        .FontBold = VERT_Cell_HEADER_FONT_BOLD
+'        .FontColour = VERT_Cell_HEADER_FONT_COLOUR
+'        .FontXJust = VERT_Cell_HEADER_FONT_X_JUST
+'        .FontYJust = VERT_Cell_HEADER_FONT_Y_JUST
+'        .TextDir = VERT_Cell_HEADER_TEXT_DIR
 '    End With
 '
 '    With MATRIX_DEF
