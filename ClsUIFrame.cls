@@ -25,17 +25,16 @@ Private pLeft As Integer
 Private pHeight As Integer
 Private pWidth As Integer
 Private pName As String
-Private pStyle As TypeStyle
-'Private pGraphs As ClsUiGraphs
+Private pStyle As ClsUIStyle
 Private pDashObjs As ClsUIDashObjs
 Private pMenu As ClsUIMenu
 Private pEnableHeader As Boolean
 Private pHeader As ClsUIHeader
-Private pLineitemHeaders As ClsUILineitems
-Private pLineitems As ClsUILineitems
+Private pCellHeaders As ClsUICells
+Private pCells As ClsUICells
 Private pShpFrame As Shape
-'Private pMatrixs As ClsUIMatrixs
 Private pVisible As Boolean
+Private pTable As ClsUITable
 Private pParent As ClsUIScreen
 
 '---------------------------------------------------------------
@@ -126,21 +125,21 @@ Public Property Let Header(ByVal vNewValue As ClsUIHeader)
 End Property
 
 '---------------------------------------------------------------
-Public Property Get LineitemHeaders() As ClsUILineitems
-    Set LineitemHeaders = pLineitemHeaders
+Public Property Get CellHeaders() As ClsUICells
+    Set CellHeaders = pCellHeaders
 End Property
 
-Public Property Let LineitemHeaders(ByVal vNewValue As ClsUILineitems)
-    Set pLineitemHeaders = vNewValue
+Public Property Let CellHeaders(ByVal vNewValue As ClsUICells)
+    Set pCellHeaders = vNewValue
 End Property
 
 '---------------------------------------------------------------
-Public Property Get Lineitems() As ClsUILineitems
-    Set Lineitems = pLineitems
+Public Property Get Cells() As ClsUICells
+    Set Cells = pCells
 End Property
 
-Public Property Let Lineitems(ByVal vNewValue As ClsUILineitems)
-    Set pLineitems = vNewValue
+Public Property Let Cells(ByVal vNewValue As ClsUICells)
+    Set pCells = vNewValue
 End Property
 
 '---------------------------------------------------------------
@@ -166,6 +165,15 @@ Public Property Let Visible(ByVal vNewValue As Boolean)
 End Property
 
 '---------------------------------------------------------------
+Public Property Get Table() As ClsUITable
+    Set Table = pTable
+End Property
+
+Public Property Let Table(ByVal vNewValue As ClsUITable)
+    Set pTable = vNewValue
+End Property
+
+'---------------------------------------------------------------
 Public Property Get ShpFrame() As Shape
     Set ShpFrame = pShpFrame
 End Property
@@ -184,12 +192,12 @@ Public Property Set Parent(obj As ClsUIScreen)
 End Property
 
 '---------------------------------------------------------------
-Public Property Get Style() As TypeStyle
+Public Property Get Style() As ClsUIStyle
     Style = pStyle
 End Property
 
-Public Property Let Style(vNewValue As TypeStyle)
-    pStyle = vNewValue
+Public Property Let Style(vNewValue As ClsUIStyle)
+    Set pStyle = vNewValue
     
     With pShpFrame.Fill
         .TwoColorGradient msoGradientHorizontal, 1
@@ -209,7 +217,7 @@ Public Property Let Style(vNewValue As TypeStyle)
         .Characters.Font.Color = vNewValue.FontColour
         .Characters.Font.Size = vNewValue.FontSize
         If vNewValue.FontXJust <> 0 Then .HorizontalAlignment = vNewValue.FontXJust
-        If vNewValue.FontYJust <> 0 Then .VerticalAlignment = vNewValue.FontYJust
+        If vNewValue.FontVJust <> 0 Then .VerticalAlignment = vNewValue.FontVJust
     End With
     
     With pShpFrame.Shadow
@@ -228,7 +236,7 @@ End Property
 '---------------------------------------------------------------
 Public Sub ReOrder()
     Dim DashObj As ClsUIDashObj
-    Dim UILineItem As ClsUILineitem
+    Dim UICell As ClsUICell
     
     pShpFrame.ZOrder msoBringToFront
     pHeader.ReOrder
@@ -237,19 +245,6 @@ Public Sub ReOrder()
         DashObj.ShpDashObj.ZOrder msoBringToFront
     Next
     
-    For Each UILineItem In Lineitems
-        With UILineItem
-            .ShpLineitem.ZOrder msoBringToFront
-            If Not .Badge Is Nothing Then .Badge.ZOrder msoBringToFront
-        End With
-    Next
-    
-    For Each UILineItem In LineitemHeaders
-        With UILineItem
-            .ShpLineitem.ZOrder msoBringToFront
-            If Not .Badge Is Nothing Then .Badge.ZOrder msoBringToFront
-        End With
-    Next
     
     pMenu.ReOrder
 End Sub
@@ -263,41 +258,42 @@ Private Sub Class_Initialize()
     Set pDashObjs = New ClsUIDashObjs
     Set pMenu = New ClsUIMenu
     Set pHeader = New ClsUIHeader
-    Set pLineitemHeaders = New ClsUILineitems
-    Set pLineitems = New ClsUILineitems
+    Set pCells = New ClsUICells
     Set pShpFrame = ShtMain.Shapes.AddShape(msoShapeRectangle, 0, 0, 10, 10)
+    Set pTable = New ClsUITable
+    Set pStyle = New ClsUIStyle
     
-    pLineitems.Initialize Me
     pDashObjs.Initialize Me
     pMenu.Initialize Me
     pHeader.Initialize Me
-    pLineitemHeaders.Initialize Me
+    pTable.Initialize Me
 End Sub
 ' ===============================================================
 Public Sub Terminate()
     pDashObjs.Terminate
     pMenu.Terminate
     pHeader.Terminate
-    pLineitemHeaders.Terminate
-    pLineitems.Terminate
+    pTable.Terminate
+    pCells.Terminate
+    
     Set pParent = Nothing
     pShpFrame.Delete
 
+    Set pStyle = Nothing
     Set pShpFrame = Nothing
     Set pDashObjs = Nothing
     Set pMenu = Nothing
     Set pHeader = Nothing
-    Set pLineitemHeaders = Nothing
-    Set pLineitems = Nothing
+    Set pTable = Nothing
 End Sub
 '---------------------------------------------------------------
 Private Sub Class_Terminate()
+    Set pStyle = Nothing
     Set pShpFrame = Nothing
     Set pDashObjs = Nothing
     Set pMenu = Nothing
     Set pHeader = Nothing
-    Set pLineitemHeaders = Nothing
-    Set pLineitems = Nothing
+    Set pCellHeaders = Nothing
+    Set pCells = Nothing
+    Set pTable = Nothing
 End Sub
-
-'---------------------------------------------------------------

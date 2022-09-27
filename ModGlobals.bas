@@ -22,8 +22,10 @@ Public Const APP_NAME As String = "CBSWorkflow"
 Public Const DB_FILE_NAME As String = "CBSWorkflowDB"
 Public Const INI_FILE_PATH As String = "\System Files\"
 Public Const ERROR_PATH As String = "\System Files\"
+Public Const DEV_FILE_PATH As String = "C:\Users\jules\OneDrive\Documents\Development Areas\CBS Workflow\"
 Public Const TMP_FILES As String = "\System Files\Tmp\"
 Public Const BAK_FILES As String = "\System Files\Backups\"
+Public Const DEV_LIB As String = "Library\"
 Public Const TEMPLATE_STORE As String = "\System Files\Templates\"
 Public Const INI_FILE_NAME As String = "System.ini"
 Public Const PROTECT_ON As Boolean = True
@@ -81,16 +83,16 @@ Global G_FORM As Boolean
 ' Global Class Declarations
 ' ---------------------------------------------------------------
 Public ActiveWorkFlow As ClsWorkflow
+Public CTimer As ClsCodeTimer
 
 ' ===============================================================
 ' Global UI Class Declarations
 ' ---------------------------------------------------------------
 Public MainScreen As ClsUIScreen
 Public MenuBar As ClsUIFrame
-Public MenuItem As ClsUIMenuItem
 Public MainFrame As ClsUIFrame
-Public BtnNewWorkflow As ClsUIMenuItem
-Public Logo As ClsUIDashObj
+'Public BtnNewWorkflow As ClsUIButton
+'Public Logo As ClsUIDashObj
 
 ' ===============================================================
 ' Colours
@@ -115,21 +117,6 @@ Public Const COLOUR_16 As Long = &HFFFFFF    'White
 ' ===============================================================
 ' Type Declarations
 ' ---------------------------------------------------------------
-Type TypeStyle
-    ForeColour As Long
-    BorderColour As Long
-    BorderWidth As Single
-    FontStyle As String
-    FontBold As Boolean
-    FontSize As Integer
-    FontColour As Long
-    FontXJust As XlHAlign
-    FontYJust As XlVAlign
-    Fill1 As Long
-    Fill2 As Long
-    Shadow As MsoShadowType
-    TextDir As MsoTextOrientation
-End Type
 
 Type TypeAddress
     HouseNameNo As String

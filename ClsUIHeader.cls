@@ -25,7 +25,7 @@ Private pLeft As Integer
 Private pHeight As Integer
 Private pWidth As Integer
 Private pName As String
-Private pStyle As TypeStyle
+Private pStyle As ClsUIStyle
 Private pText As String
 Private pShpHeader As Shape
 Private pIcon As Shape
@@ -101,11 +101,11 @@ Public Property Let ShpHeader(ByVal vNewValue As Shape)
 End Property
 
 '---------------------------------------------------------------
-Public Property Get Style() As TypeStyle
+Public Property Get Style() As ClsUIStyle
     Style = pStyle
 End Property
 
-Public Property Let Style(vNewValue As TypeStyle)
+Public Property Let Style(vNewValue As ClsUIStyle)
     With ShpHeader.Fill
         .TwoColorGradient msoGradientHorizontal, 1
         .ForeColor.RGB = vNewValue.Fill1
@@ -124,7 +124,7 @@ Public Property Let Style(vNewValue As TypeStyle)
         .Characters.Font.Color = vNewValue.FontColour
         .Characters.Font.Size = vNewValue.FontSize
         If vNewValue.FontXJust <> 0 Then .HorizontalAlignment = vNewValue.FontXJust
-        If vNewValue.FontYJust <> 0 Then .VerticalAlignment = vNewValue.FontYJust
+        If vNewValue.FontVJust <> 0 Then .VerticalAlignment = vNewValue.FontVJust
     End With
     
     With ShpHeader.Shadow
@@ -183,6 +183,7 @@ End Sub
 
 Private Sub Class_Initialize()
     Set pShpHeader = ShtMain.Shapes.AddShape(msoShapeRectangle, 0, 0, 10, 10)
+    pShpHeader.Visible = msoFalse
 End Sub
 
 ' ===============================================================
