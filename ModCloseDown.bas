@@ -20,10 +20,6 @@ Private Const StrMODULE As String = "ModCloseDown"
 ' Closedown processing
 ' ---------------------------------------------------------------
 Public Function Terminate() As Boolean
-    Dim Frame As ClsUIFrame
-    Dim DashObj As ClsUIDashObj
-    Dim MenuItem As ClsUIMenuItem
-    Dim Lineitem As ClsUILineitem
 
     Const StrPROCEDURE As String = "Terminate()"
 

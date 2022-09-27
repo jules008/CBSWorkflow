@@ -1,12 +1,9 @@
 WorkflowNo,  dbInteger
 Name,  dbText
-Member,  dbText
-RAG,  dbText
 CurrentStep,  dbText
-NextStep,  dbText
-PrevStep,  dbText
-AltStep,  dbText
-ActiveStep,  dbText
+Member,  dbText
+Steps,  dbLong
 Status,  dbText
-FrmInputBox,  dbText
-Steps,  dbText
+RAG,  dbText
+Deleted,  dbText
+DDate,  dbDate

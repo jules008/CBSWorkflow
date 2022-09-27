@@ -52,14 +52,14 @@ Private Function BuildMainFrame() As Boolean
 '            .Icon.Visible = msoCTrue
         End With
 
-        With .Lineitems
-            .NoColumns = FOR_ACTION_LINEITEM_NOCOLS
-            .Top = GENERIC_LINEITEM_TOP
-            .Left = GENERIC_LINEITEM_LEFT
-            .Height = GENERIC_LINEITEM_HEIGHT
-            .Columns = FOR_ACTION_LINEITEM_COL_WIDTHS
-            .RowOffset = GENERIC_LINEITEM_ROWOFFSET
-        End With
+'        With .Lineitems
+'            .NoColumns = FOR_ACTION_LINEITEM_NOCOLS
+'            .Top = GENERIC_LINEITEM_TOP
+'            .Left = GENERIC_LINEITEM_LEFT
+'            .Height = GENERIC_LINEITEM_HEIGHT
+'            .Columns = FOR_ACTION_LINEITEM_COL_WIDTHS
+'            .RowOffset = GENERIC_LINEITEM_ROWOFFSET
+'        End With
     End With
     
     BuildMainFrame = True
@@ -172,9 +172,9 @@ Public Function RefreshList(Optional SortBy As String) As Boolean
     Dim ActionOn As String
     Dim StepStatus As enStatus
     Dim Workflows As ClsWorkflows
-    Dim Lineitem As ClsUILineitem
+'    Dim Lineitem As ClsUILineitem
     Dim StrOnAction As String
-    Dim CustomStyle As TypeStyle
+'    Dim CustomStyle As TypeStyle
     Dim StrSortBy As String
     Dim RstWorkflowList As Recordset
     Dim ScreenSel As String
@@ -197,23 +197,23 @@ Public Function RefreshList(Optional SortBy As String) As Boolean
     Set Workflows = New ClsWorkflows
     Workflows.UpdateRAGs
     
-    With MainFrame
-        For Each Lineitem In .Lineitems
-            .Lineitems.RemoveItem Lineitem.Name
-            Set Lineitem = Nothing
-        Next
+'    With MainFrame
+'        For Each Lineitem In .Lineitems
+'            .Lineitems.RemoveItem Lineitem.Name
+'            Set Lineitem = Nothing
+'        Next
+'
+'        ReDim RowTitles(0 To FOR_ACTION_LINEITEM_NOCOLS - 1)
+'        RowTitles = Split(FOR_ACTION_LINEITEM_TITLES, ":")
+'
+'        For i = 0 To FOR_ACTION_LINEITEM_NOCOLS - 1
+'            StrOnAction = "'ModUIScreenCom.SortBy(""" & RowTitles(i) & """), """ & ScreenSel & """'"
+'            .Lineitems.Text 0, i, RowTitles(i), GENERIC_LINEITEM_HEADER, StrOnAction
+'        Next
 
-        ReDim RowTitles(0 To FOR_ACTION_LINEITEM_NOCOLS - 1)
-        RowTitles = Split(FOR_ACTION_LINEITEM_TITLES, ":")
+'        .Lineitems.Style = GENERIC_LINEITEM
 
-        For i = 0 To FOR_ACTION_LINEITEM_NOCOLS - 1
-            StrOnAction = "'ModUIScreenCom.SortBy(""" & RowTitles(i) & """), """ & ScreenSel & """'"
-            .Lineitems.Text 0, i, RowTitles(i), GENERIC_LINEITEM_HEADER, StrOnAction
-        Next
-
-        .Lineitems.Style = GENERIC_LINEITEM
-
-    End With
+'    End With
     
     x = 1
     
@@ -236,24 +236,24 @@ Public Function RefreshList(Optional SortBy As String) As Boolean
             ActionOn = ""
             If Not IsNull(!Status) Then StepStatus = enStatusVal(!Status)
         
-            If Not IsNull(!RAG) Then
-                Select Case enRAGVal(!RAG)
-                    Case Is = en3Green
-                        CustomStyle = GREEN_LINEITEM
-                    Case en2Amber
-                        CustomStyle = AMBER_LINEITEM
-                    Case Is = en1Red
-                        CustomStyle = RED_LINEITEM
-                End Select
-            End If
+'            If Not IsNull(!RAG) Then
+'                Select Case enRAGVal(!RAG)
+'                    Case Is = en3Green
+'                        CustomStyle = GREEN_LINEITEM
+'                    Case en2Amber
+'                        CustomStyle = AMBER_LINEITEM
+'                    Case Is = en1Red
+'                        CustomStyle = RED_LINEITEM
+'                End Select
+'            End If
             
-            With MainFrame.Lineitems
-                .Text x, 0, WorkflowNo, GENERIC_LINEITEM, StrOnAction
-                .Text x, 1, MemberName, GENERIC_LINEITEM, StrOnAction
-                .Text x, 2, StepNo, GENERIC_LINEITEM, StrOnAction
-                .Text x, 3, CurrentStep, GENERIC_LINEITEM, StrOnAction
-                .Text x, 4, enStatusDisp(StepStatus), CustomStyle, StrOnAction
-            End With
+'            With MainFrame.Lineitems
+'                .Text x, 0, WorkflowNo, GENERIC_LINEITEM, StrOnAction
+'                .Text x, 1, MemberName, GENERIC_LINEITEM, StrOnAction
+'                .Text x, 2, StepNo, GENERIC_LINEITEM, StrOnAction
+'                .Text x, 3, CurrentStep, GENERIC_LINEITEM, StrOnAction
+'                .Text x, 4, enStatusDisp(StepStatus), CustomStyle, StrOnAction
+'            End With
             
             If x > FOR_ACTION_MAX_LINES Then Exit For
         

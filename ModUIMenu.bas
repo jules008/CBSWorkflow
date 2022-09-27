@@ -92,9 +92,10 @@ End Function
 ' Builds menu on menu bar
 ' ---------------------------------------------------------------
 Private Function BuildMenuBar() As Boolean
-    Dim MenuItemText() As String
-    Dim MenuItemIcon() As String
-    Dim MenuItemBadge() As String
+    Dim ButtonText() As String
+    Dim ButtonIcon() As String
+    Dim ButtonBadge() As String
+    Dim Button As ClsUIButton
     Dim i As Integer
     
     Const StrPROCEDURE As String = "BuildMenuBar()"
@@ -102,7 +103,7 @@ Private Function BuildMenuBar() As Boolean
     On Error GoTo ErrorHandler
     
     Set Logo = New ClsUIDashObj
-'    Set BtnSupport = New ClsUIMenuItem
+'    Set BtnSupport = New ClsUIButton
     
     MainScreen.Frames.AddItem MenuBar, "MenuBar"
    
@@ -138,26 +139,26 @@ Private Function BuildMenuBar() As Boolean
     End With
 
     'Menu Items
-    MenuItemText() = Split(MENUITEM_TEXT, ":")
-'    MenuItemIcon() = Split(MENUITEM_ICONS, ":")
-'    MenuItemBadge() = Split(MENUITEM_BADGES, ":")
+    ButtonText() = Split(Button_TEXT, ":")
+'    ButtonIcon() = Split(Button_ICONS, ":")
+'    ButtonBadge() = Split(Button_BADGES, ":")
 
-    For i = 0 To MENUITEM_COUNT - 1
+    For i = 0 To Button_COUNT - 1
 
-        Set MenuItem = New ClsUIMenuItem
+        Set Button = New ClsUIButton
     
-        With MenuItem
-            .SelectStyle = MENUITEM_SET_STYLE
-            .UnSelectStyle = MENUITEM_UNSET_STYLE
-            .Height = MENUITEM_HEIGHT
-            .Width = MENUITEM_WIDTH
-            .Text = MenuItemText(i)
-            .Name = "MenuItem - " & .Text
+        With Button
+            .SelectStyle = BUTTON_SET_STYLE
+            .UnSelectStyle = BUTTON_UNSET_STYLE
+            .Height = Button_HEIGHT
+            .Width = Button_WIDTH
+            .Text = ButtonText(i)
+            .Name = "Button - " & .Text
             .OnAction = "'ModUIMenu.ProcessBtnPress(" & i + 1 & ")'"
-'            .Icon = ShtMain.Shapes(MenuItemIcon(i)).Duplicate
-'            If MenuItemBadge(i) <> "" Then .Badge = ShtMain.Shapes(MenuItemBadge(i)).Duplicate
+'            .Icon = ShtMain.Shapes(ButtonIcon(i)).Duplicate
+'            If ButtonBadge(i) <> "" Then .Badge = ShtMain.Shapes(ButtonBadge(i)).Duplicate
 
-            MenuBar.Menu.AddItem MenuItem
+            MenuBar.Menu.AddButton Button
 
             .Top = MENU_TOP + (i * .Height) - i
             .Left = .Left
@@ -165,17 +166,17 @@ Private Function BuildMenuBar() As Boolean
 
 '            With .Icon
 '                .Visible = True
-'                .Name = "Icon - " & MenuItem.Text
-'                .Left = MenuItem.Left + MENUITEM_ICON_LEFT
-'                .Top = MenuItem.Top + MENUITEM_ICON_TOP
+'                .Name = "Icon - " & Button.Text
+'                .Left = Button.Left + Button_ICON_LEFT
+'                .Top = Button.Top + Button_ICON_TOP
 '            End With
             
-'            If MenuItemBadge(i) <> "" Then
+'            If ButtonBadge(i) <> "" Then
 '                With .Badge
 '                    .Visible = True
-'                    .Name = "Icon - " & MenuItem.Text
-'                    .Left = MenuItem.Left + MENUITEM_BADGE_LEFT
-'                    .Top = MenuItem.Top + MENUITEM_BADGE_TOP
+'                    .Name = "Icon - " & Button.Text
+'                    .Left = Button.Left + Button_BADGE_LEFT
+'                    .Top = Button.Top + Button_BADGE_TOP
 '                End With
 '                .BadgeText = "0"
 '           End If
@@ -190,14 +191,14 @@ Private Function BuildMenuBar() As Boolean
 '        .Top = BTN_SUPPORT_TOP
 '        .Left = BTN_SUPPORT_LEFT
 '        .Text = "Send Support Message"
-'        .Name = "MenuItem - " & .Text
+'        .Name = "Button - " & .Text
 '        .OnAction = "'ModUIMenu.ProcessBtnPress(" & i + 1 & ")'"
 '
 '        MenuBar.Menu.AddItem BtnSupport
 '
 '    End With
     
-    Set MenuItem = Nothing
+    Set Button = Nothing
 
     BuildMenuBar = True
 
@@ -205,7 +206,7 @@ Exit Function
 
 ErrorExit:
 
-    Set MenuItem = Nothing
+    Set Button = Nothing
     
     BuildMenuBar = False
 
@@ -239,13 +240,13 @@ Restart:
 '    If Not ModUIActive.BuildScreen Then Err.Raise HANDLED_ERROR
     
     If ButtonNo = 0 Then
-        If Not ShtMain.[MenuItem] Is Nothing Then
-            ButtonNo = ShtMain.[MenuItem]
+        If Not ShtMain.[Button] Is Nothing Then
+            ButtonNo = ShtMain.[Button]
         Else
             ButtonNo = enBtnActive
         End If
     Else
-        If ButtonNo < 4 And ButtonNo = ShtMain.[MenuItem] Then Exit Function
+        If ButtonNo < 4 And ButtonNo = ShtMain.[Button] Then Exit Function
     End If
     
     Select Case ButtonNo
@@ -253,7 +254,7 @@ Restart:
         Case enBtnForAction
             
             ShtMain.Unprotect PROTECT_KEY
-            ShtMain.[MenuItem] = 1
+            ShtMain.[Button] = 1
 
             If Not ResetScreen Then Err.Raise HANDLED_ERROR
             If Not ModUIForAction.BuildScreen Then Err.Raise HANDLED_ERROR
@@ -272,7 +273,7 @@ Restart:
         Case enBtnActive
 
             ShtMain.Unprotect PROTECT_KEY
-            ShtMain.[MenuItem] = 2
+            ShtMain.[Button] = 2
 
             If Not ResetScreen Then Err.Raise HANDLED_ERROR
             If Not ModUIActive.BuildScreen Then Err.Raise HANDLED_ERROR
@@ -291,7 +292,7 @@ Restart:
         Case enBtnComplete
 
             ShtMain.Unprotect PROTECT_KEY
-            ShtMain.[MenuItem] = 3
+            ShtMain.[Button] = 3
 
             If Not ResetScreen Then Err.Raise HANDLED_ERROR
             If Not ModUIComplete.BuildScreen Then Err.Raise HANDLED_ERROR
@@ -367,9 +368,6 @@ End Function
 ' ---------------------------------------------------------------
 Public Function ResetScreen() As Boolean
     Dim Frame As ClsUIFrame
-    Dim UILineItem As ClsUILineitem
-    Dim DashObj As ClsUIDashObj
-    Dim MenuItem As ClsUIMenuItem
     
     Const StrPROCEDURE As String = "ResetScreen()"
 

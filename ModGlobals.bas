@@ -91,8 +91,8 @@ Public CTimer As ClsCodeTimer
 Public MainScreen As ClsUIScreen
 Public MenuBar As ClsUIFrame
 Public MainFrame As ClsUIFrame
-'Public BtnNewWorkflow As ClsUIButton
-'Public Logo As ClsUIDashObj
+Public BtnNewWorkflow As ClsUIButton
+Public Logo As ClsUIDashObj
 
 ' ===============================================================
 ' Colours
