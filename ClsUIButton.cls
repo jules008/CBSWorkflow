@@ -148,20 +148,20 @@ End Property
 
 '---------------------------------------------------------------
 Public Property Get SelectStyle() As ClsUIStyle
-    SelectStyle = pSelectStyle
+    Set SelectStyle = pSelectStyle
 End Property
 
 Public Property Let SelectStyle(vNewValue As ClsUIStyle)
-    pSelectStyle = vNewValue
+    Set pSelectStyle = vNewValue
 End Property
 
 '---------------------------------------------------------------
 Public Property Get UnSelectStyle() As ClsUIStyle
-    UnSelectStyle = pUnSelectStyle
+    Set UnSelectStyle = pUnSelectStyle
 End Property
 
 Public Property Let UnSelectStyle(vNewValue As ClsUIStyle)
-    pUnSelectStyle = vNewValue
+    Set pUnSelectStyle = vNewValue
 End Property
 
 '---------------------------------------------------------------
@@ -184,9 +184,9 @@ Public Property Let Selected(ByVal vNewValue As Boolean)
     pSelected = vNewValue
         
     If pSelected Then
-        Style = pSelectStyle
+        Set Style = pSelectStyle
     Else
-        Style = pUnSelectStyle
+        Set Style = pUnSelectStyle
     End If
     
     With pShpButton.Fill

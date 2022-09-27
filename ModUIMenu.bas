@@ -236,9 +236,6 @@ Public Function ProcessBtnPress(Optional ButtonNo As EnumBtnNo) As Boolean
 Restart:
     Application.StatusBar = ""
             
-'    If Not ResetScreen Then Err.Raise HANDLED_ERROR
-'    If Not ModUIActive.BuildScreen Then Err.Raise HANDLED_ERROR
-    
     If ButtonNo = 0 Then
         If Not ShtMain.[Button] Is Nothing Then
             ButtonNo = ShtMain.[Button]
@@ -261,12 +258,7 @@ Restart:
 
             ShtMain.Unprotect PROTECT_KEY
 
-            With MenuBar
-                .Menu(1).Selected = True
-                .Menu(2).Selected = False
-                .Menu(3).Selected = False
-                .Menu(4).Selected = False
-            End With
+            MenuBar.Menu.ButtonClick "Button - For Action"
 
             If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
             
@@ -280,12 +272,7 @@ Restart:
 
             ShtMain.Unprotect PROTECT_KEY
 
-            With MenuBar
-                .Menu(1).Selected = False
-                .Menu(2).Selected = True
-                .Menu(3).Selected = False
-                .Menu(4).Selected = False
-            End With
+            MenuBar.Menu.ButtonClick "Button - Active"
 
             If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
 
@@ -299,12 +286,7 @@ Restart:
 
             ShtMain.Unprotect PROTECT_KEY
 
-            With MenuBar
-                .Menu(1).Selected = False
-                .Menu(2).Selected = False
-                .Menu(3).Selected = True
-                .Menu(4).Selected = False
-            End With
+            MenuBar.Menu.ButtonClick "Button - Complete"
 
             If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
 
