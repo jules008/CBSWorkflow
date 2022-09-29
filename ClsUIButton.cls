@@ -29,8 +29,8 @@ Private pText As String
 Private pIcon As Shape
 Private pBadge As Shape
 Private pBadgeText As String
-Private pSelectStyle As TypeStyle
-Private pUnSelectStyle As TypeStyle
+Private pSelectStyle As ClsUIStyle
+Private pUnSelectStyle As ClsUIStyle
 Private pShpButton As Shape
 Private pSelected As Boolean
 Private pVisible As Boolean
@@ -147,21 +147,21 @@ Public Property Let BadgeText(ByVal vNewValue As String)
 End Property
 
 '---------------------------------------------------------------
-Public Property Get SelectStyle() As TypeStyle
-    SelectStyle = pSelectStyle
+Public Property Get SelectStyle() As ClsUIStyle
+    Set SelectStyle = pSelectStyle
 End Property
 
-Public Property Let SelectStyle(vNewValue As TypeStyle)
-    pSelectStyle = vNewValue
+Public Property Let SelectStyle(vNewValue As ClsUIStyle)
+    Set pSelectStyle = vNewValue
 End Property
 
 '---------------------------------------------------------------
-Public Property Get UnSelectStyle() As TypeStyle
-    UnSelectStyle = pUnSelectStyle
+Public Property Get UnSelectStyle() As ClsUIStyle
+    Set UnSelectStyle = pUnSelectStyle
 End Property
 
-Public Property Let UnSelectStyle(vNewValue As TypeStyle)
-    pUnSelectStyle = vNewValue
+Public Property Let UnSelectStyle(vNewValue As ClsUIStyle)
+    Set pUnSelectStyle = vNewValue
 End Property
 
 '---------------------------------------------------------------
@@ -179,14 +179,14 @@ Public Property Get Selected() As Boolean
 End Property
 
 Public Property Let Selected(ByVal vNewValue As Boolean)
-    Dim Style As TypeStyle
+    Dim Style As ClsUIStyle
     
     pSelected = vNewValue
         
     If pSelected Then
-        Style = pSelectStyle
+        Set Style = pSelectStyle
     Else
-        Style = pUnSelectStyle
+        Set Style = pUnSelectStyle
     End If
     
     With pShpButton.Fill
@@ -207,7 +207,7 @@ Public Property Let Selected(ByVal vNewValue As Boolean)
         .Characters.Font.Color = Style.FontColour
         .Characters.Font.Size = Style.FontSize
         If Style.FontXJust <> 0 Then .HorizontalAlignment = Style.FontXJust
-        If Style.FontYJust <> 0 Then .VerticalAlignment = Style.FontYJust
+        If Style.FontVJust <> 0 Then .VerticalAlignment = Style.FontVJust
     End With
     
     With pShpButton.Shadow

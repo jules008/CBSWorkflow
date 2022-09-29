@@ -25,7 +25,7 @@ Private pLeft As Integer
 Private pHeight As Integer
 Private pWidth As Integer
 Private pName As String
-Private pStyle As TypeStyle
+Private pStyle As ClsUIStyle
 Private pDashObjs As ClsUIDashObjs
 Private pMenu As ClsUIMenu
 Private pEnableHeader As Boolean
@@ -165,11 +165,11 @@ Public Property Let Visible(ByVal vNewValue As Boolean)
 End Property
 
 '---------------------------------------------------------------
-Public Property Get Table() As Variant
+Public Property Get Table() As ClsUITable
     Set Table = pTable
 End Property
 
-Public Property Let Table(ByVal vNewValue As Variant)
+Public Property Let Table(ByVal vNewValue As ClsUITable)
     Set pTable = vNewValue
 End Property
 
@@ -192,12 +192,12 @@ Public Property Set Parent(obj As ClsUIScreen)
 End Property
 
 '---------------------------------------------------------------
-Public Property Get Style() As TypeStyle
+Public Property Get Style() As ClsUIStyle
     Style = pStyle
 End Property
 
-Public Property Let Style(vNewValue As TypeStyle)
-    pStyle = vNewValue
+Public Property Let Style(vNewValue As ClsUIStyle)
+    Set pStyle = vNewValue
     
     With pShpFrame.Fill
         .TwoColorGradient msoGradientHorizontal, 1
@@ -217,7 +217,7 @@ Public Property Let Style(vNewValue As TypeStyle)
         .Characters.Font.Color = vNewValue.FontColour
         .Characters.Font.Size = vNewValue.FontSize
         If vNewValue.FontXJust <> 0 Then .HorizontalAlignment = vNewValue.FontXJust
-        If vNewValue.FontYJust <> 0 Then .VerticalAlignment = vNewValue.FontYJust
+        If vNewValue.FontVJust <> 0 Then .VerticalAlignment = vNewValue.FontVJust
     End With
     
     With pShpFrame.Shadow
@@ -240,6 +240,7 @@ Public Sub ReOrder()
     
     pShpFrame.ZOrder msoBringToFront
     pHeader.ReOrder
+    pTable.ReOrder
     
     For Each DashObj In DashObjs
         DashObj.ShpDashObj.ZOrder msoBringToFront
@@ -261,6 +262,7 @@ Private Sub Class_Initialize()
     Set pCells = New ClsUICells
     Set pShpFrame = ShtMain.Shapes.AddShape(msoShapeRectangle, 0, 0, 10, 10)
     Set pTable = New ClsUITable
+    Set pStyle = New ClsUIStyle
     
     pDashObjs.Initialize Me
     pMenu.Initialize Me
@@ -273,10 +275,12 @@ Public Sub Terminate()
     pMenu.Terminate
     pHeader.Terminate
     pTable.Terminate
+    pCells.Terminate
     
     Set pParent = Nothing
     pShpFrame.Delete
 
+    Set pStyle = Nothing
     Set pShpFrame = Nothing
     Set pDashObjs = Nothing
     Set pMenu = Nothing
@@ -285,6 +289,7 @@ Public Sub Terminate()
 End Sub
 '---------------------------------------------------------------
 Private Sub Class_Terminate()
+    Set pStyle = Nothing
     Set pShpFrame = Nothing
     Set pDashObjs = Nothing
     Set pMenu = Nothing

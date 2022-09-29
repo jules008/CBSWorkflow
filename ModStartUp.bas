@@ -188,12 +188,15 @@ Public Function ReadINIFile() As Boolean
     Dim DBPath() As String
     Dim SendEmails() As String
     Dim DevMode() As String
+    Dim StopOnStart() As String
+    
     Dim INIFile As Integer
     Dim Line1 As String
     Dim Line2 As String
     Dim Line3 As String
     Dim Line4 As String
     Dim Line5 As String
+    Dim Line6 As String
     
     Const StrPROCEDURE As String = "ReadINIFile()"
 
@@ -212,6 +215,7 @@ Public Function ReadINIFile() As Boolean
     Line Input #INIFile, Line3
     Line Input #INIFile, Line4
     Line Input #INIFile, Line5
+    Line Input #INIFile, Line6
     
     Close #INIFile
     DebugMode = Split(Line1, ":")
@@ -219,18 +223,21 @@ Public Function ReadINIFile() As Boolean
     EnablePrint = Split(Line3, ":")
     DBPath = Split(Line4, ":")
     DevMode = Split(Line5, ":")
+    StopOnStart = Split(Line6, ":")
     
     Line1 = Trim(DebugMode(1))
     Line2 = Trim(SendEmails(1))
     Line3 = Trim(EnablePrint(1))
     Line4 = Trim(DBPath(1))
     Line5 = Trim(DevMode(1))
+    Line6 = Trim(StopOnStart(1))
     
     DEBUG_MODE = CBool(Line1)
     SEND_EMAILS = CBool(Line2)
     ENABLE_PRINT = CBool(Line3)
     DB_PATH = Line4
     DEV_MODE = CBool(Line5)
+    STOP_FLAG = CBool(Line6)
     
     If STOP_FLAG = True Then Stop
     

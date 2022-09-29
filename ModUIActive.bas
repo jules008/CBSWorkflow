@@ -47,20 +47,22 @@ Private Function BuildMainFrame() As Boolean
             .Name = "Main Frame Header"
             .Text = "Active Workflows"
             .Style = HEADER_STYLE
-'            .Icon = ShtMain.Shapes("TEMPLATE - Active").Duplicate
-'            .Icon.Top = .Parent.Top + HEADER_ICON_TOP
-'            .Icon.Left = .Parent.Left + .Parent.Width - .Icon.Width - HEADER_ICON_RIGHT
-'            .Icon.Name = .Parent.Name & " Icon"
-'            .Icon.Visible = msoCTrue
+            .Visible = True
         End With
 
-        With .Cells
-            .NoColumns = ACTIVE_Cell_NOCOLS
-            .Top = GENERIC_Cell_TOP
-            .Left = GENERIC_Cell_LEFT
-            .Height = GENERIC_Cell_HEIGHT
-            .Columns = ACTIVE_Cell_COL_WIDTHS
-            .RowOffset = GENERIC_Cell_ROWOFFSET
+        With .Table
+            .Left = GENERIC_TABLE_LEFT
+            .Top = GENERIC_TABLE_TOP
+            .NoCols = ACTIVE_TABLE_NOCOLS
+            .HPad = GENERIC_TABLE_ROWOFFSET
+            .VPad = GENERIC_TABLE_COLOFFSET
+            .SubTableVOff = 50
+            .SubTableHOff = 20
+            .HeadingText = ACTIVE_TABLE_TITLES
+            .HeadingStyle = GENERIC_TABLE_HEADER
+            .HeadingHeight = GENERIC_TABLE_HEADING_HEIGHT
+            .ColWidths = ACTIVE_TABLE_COL_WIDTHS
+            .RowHeights = GENERIC_TABLE_HEIGHT
         End With
     End With
     
@@ -98,18 +100,11 @@ Public Function BuildScreen() As Boolean
     
     If Not ModUIActive.BuildMainFrame Then Err.Raise HANDLED_ERROR
     If Not ModUIScreenCom.BuildScreenBtn1 Then Err.Raise HANDLED_ERROR
-'    If Not ModUIScreenCom.BuildScreenBtn2 Then Err.Raise HANDLED_ERROR
-'    If Not ModUIScreenCom.BuildScreenBtn3 Then Err.Raise HANDLED_ERROR
-'    If Not ModUIScreenCom.BuildScreenBtn4 Then Err.Raise HANDLED_ERROR
-'    If Not ModUIScreenCom.BuildScreenBtn5 Then Err.Raise HANDLED_ERROR
     If Not ModUIActive.RefreshList Then Err.Raise HANDLED_ERROR
     
     MainScreen.ReOrder
     
     If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
-    
-'    ShtMain.Shapes("TEMPLATE - Reset").ZOrder msoSendToBack
-'    ShtMain.Shapes("TEMPLATE - Logo II").ZOrder msoSendToBack
     
     ModLibrary.PerfSettingsOff
                     
@@ -138,22 +133,23 @@ End Function
 ' Refreshes the list of active workflows
 ' ---------------------------------------------------------------
 Public Function RefreshList(Optional SortBy As String) As Boolean
-    Dim StepNo As String
-    Dim CurrentStep As String
-    Dim ActionOn As String
-    Dim StepStatus As enStatus
+'    Dim StepNo As String
+'    Dim CurrentStep As String
+'    Dim ActionOn As String
+'    Dim StepStatus As enStatus
+    Dim NoCols As Integer
+    Dim NoRows As Integer
     Dim Workflows As ClsWorkflows
-    Dim Cell As ClsUICell
-    Dim StrOnAction As String
-    Dim CustomStyle As TypeStyle
+'    Dim StrOnAction As String
     Dim StrSortBy As String
     Dim RstWorkflowList As Recordset
-    Dim ScreenSel As String
-    Dim i As Integer
+'    Dim ScreenSel As String
+    Dim y As Integer
     Dim x As Integer
-    Dim RowTitles() As String
-    Dim WorkflowNo As String
-    Dim MemberName As String
+'    Dim RowTitles() As String
+'    Dim WorkflowNo As String
+'    Dim MemberName As String
+    Dim AryStyles() As String
 
     Const StrPROCEDURE As String = "RefreshList()"
 
@@ -163,31 +159,62 @@ Public Function RefreshList(Optional SortBy As String) As Boolean
 
     ShtMain.Unprotect PROTECT_KEY
     
-    ScreenSel = "UIActive"
+'    ScreenSel = "UIActive"
     
     Set Workflows = New ClsWorkflows
     Workflows.UpdateRAGs
     
-    With MainFrame
-        For Each Cell In .Cells
-            .Cells.RemoveItem Cell.Name
-            Cell.ShpCell.Delete
-            Set Cell = Nothing
-        Next
+    Set RstWorkflowList = GetActiveList(StrSortBy)
 
-        ReDim RowTitles(0 To ACTIVE_Cell_NOCOLS - 1)
-        RowTitles = Split(ACTIVE_Cell_TITLES, ":")
-
-        For i = 0 To ACTIVE_Cell_NOCOLS - 1
-            StrOnAction = "'ModUIScreenCom.SortBy(""" & RowTitles(i) & """), """ & ScreenSel & """'"
-            .Cells.Text 0, i, RowTitles(i), GENERIC_Cell_HEADER, StrOnAction
-        Next
-
-        .Cells.Style = GENERIC_Cell
+    With RstWorkflowList
+        .MoveLast
+        .MoveFirst
+        If .RecordCount = 0 Then GoTo GracefulExit
 
     End With
+
+    NoCols = ACTIVE_TABLE_NOCOLS
+    NoRows = RstWorkflowList.RecordCount + 1
     
-    x = 1
+    ReDim AryStyles(1 To NoCols, 0 To NoRows)
+    
+    For x = 1 To NoCols
+        For y = 0 To NoRows
+            AryStyles(x, y) = "GENERIC_TABLE"
+        Next
+    Next
+
+    With MainFrame.Table
+        .RstText = RstWorkflowList
+        .NoRows = RstWorkflowList.RecordCount
+        .Styles = AryStyles
+        .StylesColl.Add GENERIC_TABLE
+        .StylesColl.Add GENERIC_TABLE_HEADER
+        .RowHeights = FOR_ACTION_CELL_ROW_HEIGHTS
+        .ColWidths = FOR_ACTION_CELL_COL_WIDTHS
+        .BuildCells
+    End With
+    
+'    With MainFrame
+'        For Each Lineitem In .Lineitems
+'            .Lineitems.RemoveItem Lineitem.Name
+'            Lineitem.ShpLineitem.Delete
+'            Set Lineitem = Nothing
+'        Next
+'
+'        ReDim RowTitles(0 To ACTIVE_LINEITEM_NOCOLS - 1)
+'        RowTitles = Split(ACTIVE_LINEITEM_TITLES, ":")
+'
+'        For i = 0 To ACTIVE_LINEITEM_NOCOLS - 1
+'            StrOnAction = "'ModUIScreenCom.SortBy(""" & RowTitles(i) & """), """ & ScreenSel & """'"
+'            .Lineitems.Text 0, i, RowTitles(i), GENERIC_TABLE_HEADER, StrOnAction
+'        Next
+'
+'        .Lineitems.Style = GENERIC_TABLE
+'
+'    End With
+    
+'    x = 1
     
     If SortBy = "" Then
         If StrSortBy = "" Then
@@ -197,55 +224,52 @@ Public Function RefreshList(Optional SortBy As String) As Boolean
        StrSortBy = SortBy
     End If
     
-    Set RstWorkflowList = GetActiveList(StrSortBy)
-    
-    If RstWorkflowList.RecordCount = 0 Then GoTo GracefulExit
-    
-    With RstWorkflowList
-        .MoveLast
-        .MoveFirst
-        For x = 1 To .RecordCount
-    
-            StrOnAction = "'ModUIActive.OpenWorkflow(" & !WorkflowNo & ")'"
             
-            If Not IsNull(!CurrentStep) Then StepNo = !CurrentStep Else StepNo = ""
-            If Not IsNull(!WorkflowNo) Then WorkflowNo = !WorkflowNo Else WorkflowNo = ""
-            If Not IsNull(!Member) Then MemberName = !Member Else MemberName = ""
-            If Not IsNull(!StepName) Then CurrentStep = !StepName Else CurrentStep = ""
-            ActionOn = ""
-            If Not IsNull(!Status) Then StepStatus = enStatusVal(!Status)
+'    With RstWorkflowList
+'        .MoveLast
+'        .MoveFirst
+'        For x = 1 To .RecordCount
+'
+'            StrOnAction = "'ModUIActive.OpenWorkflow(" & !WorkflowNo & ")'"
+'
+'            If Not IsNull(!CurrentStep) Then StepNo = !CurrentStep Else StepNo = ""
+'            If Not IsNull(!WorkflowNo) Then WorkflowNo = !WorkflowNo Else WorkflowNo = ""
+'            If Not IsNull(!Member) Then MemberName = !Member Else MemberName = ""
+'            If Not IsNull(!StepName) Then CurrentStep = !StepName Else CurrentStep = ""
+'            ActionOn = ""
+'            If Not IsNull(!Status) Then StepStatus = enStatusVal(!Status)
         
-            If Not IsNull(!RAG) Then
-                Select Case enRAGVal(!RAG)
-                    Case Is = en3Green
-                        CustomStyle = GREEN_Cell
-                    Case en2Amber
-                        CustomStyle = AMBER_Cell
-                    Case Is = en1Red
-                        CustomStyle = RED_Cell
-                End Select
-            End If
+'            If Not IsNull(!RAG) Then
+'                Select Case enRAGVal(!RAG)
+'                    Case Is = en3Green
+'                        CustomStyle = GREEN_LINEITEM
+'                    Case en2Amber
+'                        CustomStyle = AMBER_LINEITEM
+'                    Case Is = en1Red
+'                        CustomStyle = RED_LINEITEM
+'                End Select
+'            End If
             
-            With MainFrame.Cells
-                .Text x, 0, WorkflowNo, GENERIC_Cell, StrOnAction
-                .Text x, 1, MemberName, GENERIC_Cell, StrOnAction
-                .Text x, 2, StepNo, GENERIC_Cell, StrOnAction
-                .Text x, 3, CurrentStep, GENERIC_Cell, StrOnAction
-                .Text x, 4, enStatusDisp(StepStatus), CustomStyle, StrOnAction
-            End With
-            
-            If x > ACTIVE_MAX_LINES Then Exit For
-        
-            .MoveNext
-        Next
-    End With
+'            With MainFrame.Lineitems
+'                .Text x, 0, WorkflowNo, GENERIC_TABLE, StrOnAction
+'                .Text x, 1, MemberName, GENERIC_TABLE, StrOnAction
+'                .Text x, 2, StepNo, GENERIC_TABLE, StrOnAction
+'                .Text x, 3, CurrentStep, GENERIC_TABLE, StrOnAction
+'                .Text x, 4, enStatusDisp(StepStatus), CustomStyle, StrOnAction
+'            End With
+'
+'            If x > ACTIVE_MAX_LINES Then Exit For
+'
+'            .MoveNext
+'        Next
+'    End With
     
 '    MenuBar.Menu(1).BadgeText = Workflows.CountForAction
     
-    MainFrame.Height = (x + 1) * 21
-    If MainScreen.Height < MainFrame.Height + 500 Then
-        MainScreen.Height = MainFrame.Height + 500
-    End If
+'    MainFrame.Height = (x + 1) * 21
+'    If MainScreen.Height < MainFrame.Height + 500 Then
+'        MainScreen.Height = MainFrame.Height + 500
+'    End If
     
     ModLibrary.PerfSettingsOff
 

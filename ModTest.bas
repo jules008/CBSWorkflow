@@ -2,136 +2,30 @@ Attribute VB_Name = "ModTest"
 Option Explicit
 
 
-Public Sub TestClass()
-    Dim Clients As ClsClients
-    Dim Client As ClsClient
-    Dim Spv As ClsSPV
-    Dim Project As ClsProject
-    Dim Contact As ClsContact
-    Dim Workflow As ClsWorkflow
-    Dim i
-    
-    Set Clients = New ClsClients
-    Set Spv = New ClsSPV
-    Set Project = New ClsProject
-    
-Debug.Assert Not Clients Is Nothing
-    
-    For i = 1 To 5
-        Set Client = New ClsClient
-        With Client
-            .Name = "Frogspawn Ltd - " & i
-            .ClientNo = i
-            .PhoneNo = "14234242"
-            .Url = "www.hockey.com"
-            .DBSave
-        End With
-        Clients.Add Client
-        
-        Set Spv = New ClsSPV
-        With Spv
-            .Name = "Frogspawn Ltd - " & i
-            .SPVNo = i
-            .DBSave
-        End With
-        Clients(1).SPVs.Add Spv
-
-Debug.Assert Clients.Count = i
-Debug.Assert Clients(1).SPVs.Count = i
-Next
-    
-    Set Contact = New ClsContact
-    
-    With Contact
-        .ContactName = "Dom"
-    End With
-    
-    With Project
-        .ExitFee = True
-        .ProjectNo = 1
-        .DBSave
-    End With
-
-    Client.Contacts.Add Contact
-    Clients("1").SPVs("1").Contacts.Add Contact
-    Clients("1").SPVs("1").Projects.Add Project
-    Set Client = Nothing
-    
-    Stop
-    
-    Set Client = Clients("2")
-            
-Debug.Assert Client.ClientNo = 2
-
-    With Client
-        Debug.Print .Name, .ClientNo, .PhoneNo, .Url
-        
-        .Name = "New Name"
-        .DBSave
-        Debug.Print .Name, .ClientNo, .PhoneNo, .Url
-    End With
-    
-    Clients.RemoveCollection
-    
-Debug.Assert Clients.Count = 0
-
-    Set Clients = Nothing
-    
-Debug.Assert Clients Is Nothing
-
-    Set Clients = New ClsClients
-    
-    Clients.GetCollection
-    
-Debug.Assert Clients.Count = 5
-
-    Clients.Remove 4
-
-Debug.Assert Clients.Count = 4
-
-    Clients.RemoveCollection
-    Clients.GetCollection
-    
-Debug.Assert Clients.Count = 5
-
-    Clients.Destroy 4
-    
-Debug.Assert Clients.Count = 4
-
-    Clients.RemoveCollection
-    Clients.GetCollection
-    
-Debug.Assert Clients.Count = 4
-    
-    For Each Client In Clients
-        Debug.Print Client.ClientNo
-    Next
-    
-    Clients.DeleteCollection
-    
-Debug.Assert Clients.Count = 0
-
-    
-    DB.Execute "DELETE * FROM TblClient"
-    
-    Set Client = Nothing
-    Set Clients = Nothing
-    Set Spv = Nothing
-    Set Contact = Nothing
-    Set Project = Nothing
-    Set Workflow = Nothing
-End Sub
-
-
-
 Public Sub TestTable()
     Dim MainScreen As ClsUIScreen
     Dim Frame As ClsUIFrame
-    Dim Table As ClsUITable
+    Dim SubTable As ClsUITable
+    Dim AryColWidths() As Integer
+    Dim AryRowHeights() As Integer
+    Dim x As Integer
+    Dim y As Integer
+    Dim AryText() As String
+    Dim AryOnAction() As String
+    Dim AryStyles() As String
     
     Set Frame = New ClsUIFrame
     Set MainScreen = New ClsUIScreen
-    Set Table = New ClsUITable
+    Set SubTable = New ClsUITable
+    Set CTimer = New ClsCodeTimer
+    
+    ReDim AryColWidths(1 To 8)
+    ReDim AryRowHeights(1 To 20)
+    ReDim AryText(1 To 8, 1 To 20)
+    ReDim AryOnAction(1 To 8, 1 To 20)
+    ReDim AryStyles(1 To 8, 1 To 20)
+    
+    CTimer.StartTimer
     
     BuildScreenStyles
     
@@ -145,6 +39,31 @@ Public Sub TestTable()
         .Frames.AddItem Frame, "Frame 1"
     End With
     
+    CTimer.MarkTime "Main Screen Built"
+    
+    AryColWidths(1) = 100
+    AryColWidths(2) = 50
+    AryColWidths(3) = 50
+    AryColWidths(4) = 30
+    AryColWidths(5) = 50
+    AryColWidths(6) = 50
+    AryColWidths(7) = 50
+    AryColWidths(8) = 130
+    
+    AryRowHeights(1) = 30
+    AryStyles(1, 1) = "AMBER_CELL"
+    AryStyles(1, 2) = "GREEN_CELL"
+    
+    With SubTable
+        .NoCols = 8
+        .NoRows = 3
+'        .ColWidths = AryColWidths
+        .StylesColl.Add GREEN_CELL
+        .StylesColl.Add AMBER_CELL
+'        .RowHeights = AryRowHeights
+        .Styles = AryStyles
+    End With
+    
     With Frame
         .Top = 100
         .Left = 100
@@ -155,18 +74,85 @@ Public Sub TestTable()
         .ReOrder
     End With
     
-    With Table
-        .Left = 200
-        .Top = 200
-        .NoCols = 2
-        .NoRows = 2
-        .ColWidths = "100:100"
-        .RowHeights = "30:30"
+    CTimer.MarkTime "Frame Built"
         
         
+    AryColWidths(1) = 100
+    AryColWidths(2) = 50
+    AryColWidths(3) = 50
+    AryColWidths(4) = 30
+    AryColWidths(5) = 50
+    AryColWidths(6) = 50
+    AryColWidths(7) = 50
+    AryColWidths(8) = 130
+
+    AryRowHeights(1) = 50
+'    AryRowHeights(2) = 90
+
+    For x = 1 To 8
+        For y = 1 To 20
+            AryText(x, y) = x & ", " & y
+            AryOnAction(x, y) = "'ModTest.Test'"
+            
+            If y = 1 Then
+                AryStyles(x, y) = "AMBER_CELL"
+            Else
+                AryStyles(x, y) = "GREEN_CELL"
+            End If
+        Next
+    Next
+    
+
+    With Frame.Table
+        .Left = 100
+        .Top = 100
+        .NoCols = 8
+        .NoRows = 20
+        .HPad = 5
+        .VPad = 0
+        .SubTableVOff = 50
+        .SubTableHOff = 20
+'        .ColWidths = AryColWidths
+'        .RowHeights = AryRowHeights
+        .OnAction = AryOnAction
+'        .Text = AryText
+        .Styles = AryStyles
+        .StylesColl.Add GREEN_CELL
+        .StylesColl.Add AMBER_CELL
+        .BuildCells 5, 100, SubTable
     End With
+    CTimer.MarkTime "Cells Built"
     
     Stop
+    Set CTimer = Nothing
+    SubTable.Terminate
+    Set SubTable = Nothing
     
+    DestroyScreenStyles
     MainScreen.Terminate
+End Sub
+    
+Public Sub DeleteAllShapes()
+    Dim Shp As Shape
+    
+    For Each Shp In ShtMain.Shapes
+        Shp.Delete
+    Next
+End Sub
+    
+Public Sub Test()
+    Dim Frame As ClsUIFrame
+    Dim Table As ClsUITable
+    
+    Set Frame = New ClsUIFrame
+    Set Table = New ClsUITable
+
+    Frame.Table = Table
+    
+    
+    Stop
+
+
+    Set Frame = Nothing
+    Set Table = Nothing
 End Sub

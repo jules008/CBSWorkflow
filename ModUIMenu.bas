@@ -103,6 +103,7 @@ Private Function BuildMenuBar() As Boolean
     On Error GoTo ErrorHandler
     
     Set Logo = New ClsUIDashObj
+'    Set BtnSupport = New ClsUIButton
     
     MainScreen.Frames.AddItem MenuBar, "MenuBar"
    
@@ -165,7 +166,7 @@ Private Function BuildMenuBar() As Boolean
 
 '            With .Icon
 '                .Visible = True
-'                .Name = "Icon - " & MenuItem.Text
+'                .Name = "Icon - " & Button.Text
 '                .Left = Button.Left + Button_ICON_LEFT
 '                .Top = Button.Top + Button_ICON_TOP
 '            End With
@@ -181,6 +182,21 @@ Private Function BuildMenuBar() As Boolean
 '           End If
         End With
     Next
+    
+'    With BtnSupport
+'        .UnSelectStyle = BTN_SUPPORT
+'        .Selected = False
+'        .Height = BTN_SUPPORT_HEIGHT
+'        .Width = BTN_SUPPORT_WIDTH
+'        .Top = BTN_SUPPORT_TOP
+'        .Left = BTN_SUPPORT_LEFT
+'        .Text = "Send Support Message"
+'        .Name = "Button - " & .Text
+'        .OnAction = "'ModUIMenu.ProcessBtnPress(" & i + 1 & ")'"
+'
+'        MenuBar.Menu.AddItem BtnSupport
+'
+'    End With
     
     Set Button = Nothing
 
@@ -220,9 +236,6 @@ Public Function ProcessBtnPress(Optional ButtonNo As EnumBtnNo) As Boolean
 Restart:
     Application.StatusBar = ""
             
-'    If Not ResetScreen Then Err.Raise HANDLED_ERROR
-'    If Not ModUIActive.BuildScreen Then Err.Raise HANDLED_ERROR
-    
     If ButtonNo = 0 Then
         If Not ShtMain.[Button] Is Nothing Then
             ButtonNo = ShtMain.[Button]
@@ -245,7 +258,7 @@ Restart:
 
             ShtMain.Unprotect PROTECT_KEY
 
-            MenuBar.Menu.ButtonClick 1
+            MenuBar.Menu.ButtonClick "Button - For Action"
 
             If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
             
@@ -259,7 +272,7 @@ Restart:
 
             ShtMain.Unprotect PROTECT_KEY
 
-            MenuBar.Menu.ButtonClick 2
+            MenuBar.Menu.ButtonClick "Button - Active"
 
             If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
 
@@ -273,7 +286,7 @@ Restart:
 
             ShtMain.Unprotect PROTECT_KEY
 
-            MenuBar.Menu.ButtonClick 3
+            MenuBar.Menu.ButtonClick "Button - Complete"
 
             If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
 
@@ -337,9 +350,6 @@ End Function
 ' ---------------------------------------------------------------
 Public Function ResetScreen() As Boolean
     Dim Frame As ClsUIFrame
-    Dim UICell As ClsUICell
-    Dim DashObj As ClsUIDashObj
-    Dim Button As ClsUIButton
     
     Const StrPROCEDURE As String = "ResetScreen()"
 

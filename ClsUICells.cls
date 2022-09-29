@@ -20,7 +20,7 @@ Attribute VB_Exposed = False
 '===============================================================
 
 Option Explicit
-Private pUICells As Collection
+Private pCells As Collection
 Private pParent As ClsUITable
 
 '---------------------------------------------------------------
@@ -34,112 +34,86 @@ End Property
 
 Public Function NewEnum() As IUnknown
 Attribute NewEnum.VB_UserMemId = -4
-    Set NewEnum = pUICells.[_NewEnum]
+    Set NewEnum = pCells.[_NewEnum]
 End Function
 
 ' ===============================================================
-' Method FindItem
-' Finds Item from index
+' Method FindCell
+' Finds Cell from index
 '---------------------------------------------------------------
-Public Function FindItem(Name As Variant) As ClsUICell
-Attribute FindItem.VB_UserMemId = 0
+Public Function FindCell(Name As Variant) As ClsUICell
+Attribute FindCell.VB_UserMemId = 0
     On Error Resume Next
-    Set FindItem = pUICells.Item(Name)
+    Set FindCell = pCells.Item(Name)
 End Function
 
 ' ===============================================================
-' Method AddItem
-' Add item to Collection
+' Method AddCell
+' Add Cell to Collection
 '---------------------------------------------------------------
-Public Sub AddItem(UICell As ClsUICell)
+Public Sub AddCell(UICell As ClsUICell, ByVal Col As Integer, ByVal Row As Integer)
     UICell.Initialize Me.Parent
-    pUICells.Add UICell, Key:=UICell.Row & "-" & UICell.Col
+    UICell.Col = Col
+    UICell.Row = Row
+    UICell.Name = Col & "-" & Row
+    pCells.Add UICell, Key:=UICell.Name
 End Sub
 
 ' ===============================================================
-' Method RemoveItem
-' Deletes item from collection
+' Method RemoveCell
+' Deletes Cell from collection
 '---------------------------------------------------------------
-Public Sub RemoveItem(Name As Variant)
-    pUICells.Remove Name
+Public Sub RemoveCell(Name As Variant)
+    pCells.Remove Name
 End Sub
 
 ' ===============================================================
-' Method ItemCount
-' Returns number of items in collection
+' Method DeleteCollection
+' Deletes all Cells from collection
+'---------------------------------------------------------------
+Public Sub DeleteCollection()
+    Dim Cell As ClsUICell
+    
+    Sin 0
+    For Each Cell In pCells
+        pCells.Remove Cell.Name
+        Cell.Terminate
+        Set Cell = Nothing
+    Next
+End Sub
+
+' ===============================================================
+' Method CellCount
+' Returns number of Cells in collection
 '---------------------------------------------------------------
 Public Function Count() As Integer
-    Count = pUICells.Count
+    Count = pCells.Count
 End Function
 
 ' ===============================================================
-' Method Text
-' Adds text to the line item
-'---------------------------------------------------------------
-Public Sub Text(Row As Integer, Col As Integer, ItemText As String, LineStyle As TypeStyle, Optional OnAction As String, Optional Badge As Shape)
-    Dim UICell As ClsUICell
-    Dim LocCustomStyle As TypeStyle
-    Dim LeftOffset As Integer
-    Dim i As Integer
-    
-    Do While i <> Col
-        LeftOffset = LeftOffset + pColumns(i)
-        i = i + 1
-    Loop
-    
-    Set UICell = New ClsUICell
-    Me.AddItem UICell
-    
-    With UICell
-        .Style = LineStyle
-        .Left = Left + LeftOffset
-        .Width = pColumns(Col)
-        .Height = pHeight
-        .Top = Top + (Row * pRowOffset)
-        If Not Badge Is Nothing Then .Badge = Badge
-        .Text = ItemText
-        .OnAction = OnAction
-    End With
-    
-End Sub
-
-' ===============================================================
-' Method ReOrder
-' re-orders the shapes so that the Cells sit on top of the screen
-'---------------------------------------------------------------
-Public Sub ReOrder()
-    Dim Cell As ClsUICell
-    For Each Cell In pUICells
-        Cell.ShpCell.ZOrder msoBringToFront
-        Cell.ReOrder
-    Next
-    
-End Sub
-
-
 ' ===============================================================
 Public Sub Initialize(obj As ClsUITable)
     Set Me.Parent = obj
 End Sub
 
 Private Sub Class_Initialize()
-    Set pUICells = New Collection
+    Set pCells = New Collection
 End Sub
 
 ' ===============================================================
 Public Sub Terminate()
-    Dim UICell As ClsUICell
+    Dim Cell As ClsUICell
     
-    For Each UICell In pUICells
-        UICell.Terminate
+    For Each Cell In pCells
+        Cell.Terminate
     Next
     
     Set pParent = Nothing
-    Set pUICells = Nothing
+    Set pCells = Nothing
 End Sub
 '---------------------------------------------------------------
 Private Sub Class_Terminate()
-    Set pUICells = Nothing
+    Set pCells = Nothing
 End Sub
 
 '---------------------------------------------------------------

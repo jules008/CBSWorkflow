@@ -27,7 +27,7 @@ Private pHeight As Integer
 Private pLeft As Integer
 Private pWidth As Integer
 Private pText As String
-Private pStyle As TypeStyle
+Private pStyle As ClsUIStyle
 Private pName As String
 Private pMenu As ClsUIMenu
 Private pOnAction As String
@@ -170,8 +170,13 @@ Public Property Let ShpCell(ByVal vNewValue As Shape)
     Set pShpCell = vNewValue
 End Property
 
-Public Property Let Style(vNewValue As TypeStyle)
-    pStyle = vNewValue
+'---------------------------------------------------------------
+Public Property Get Style() As ClsUIStyle
+    Style = pStyle
+End Property
+
+Public Property Let Style(vNewValue As ClsUIStyle)
+    Set pStyle = vNewValue
     
     With pShpCell.Fill
         .TwoColorGradient msoGradientHorizontal, 1
@@ -192,7 +197,7 @@ Public Property Let Style(vNewValue As TypeStyle)
         .Characters.Font.Size = vNewValue.FontSize
         If vNewValue.TextDir <> 0 Then .Orientation = vNewValue.TextDir
         If vNewValue.FontXJust <> 0 Then .HorizontalAlignment = vNewValue.FontXJust
-        If vNewValue.FontYJust <> 0 Then .VerticalAlignment = vNewValue.FontYJust
+        If vNewValue.FontVJust <> 0 Then .VerticalAlignment = vNewValue.FontVJust
     End With
     
     With pShpCell.Shadow
@@ -233,11 +238,13 @@ End Sub
 
 Private Sub Class_Initialize()
     Set pShpCell = ShtMain.Shapes.AddTextbox(msoTextOrientationHorizontal, 0, 0, 10, 10)
+    Set pStyle = New ClsUIStyle
 End Sub
 
 ' ===============================================================
 Public Sub Terminate()
     Set pParent = Nothing
+    Set pStyle = Nothing
     pShpCell.Delete
     
     If Not pBadge Is Nothing Then
@@ -248,6 +255,7 @@ End Sub
 '---------------------------------------------------------------
 Private Sub Class_Terminate()
     Set pShpCell = Nothing
+    Set pStyle = Nothing
 
     If Not pBadge Is Nothing Then
         Set pBadge = Nothing
