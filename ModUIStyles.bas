@@ -30,11 +30,11 @@ Public Function BuildScreenStyles() As Boolean
     Set BTN_MAIN_STYLE = New ClsUIStyle
     Set GENERIC_BUTTON = New ClsUIStyle
     Set HEADER_STYLE = New ClsUIStyle
-    Set GENERIC_CELL = New ClsUIStyle
+    Set GENERIC_TABLE = New ClsUIStyle
     Set GREEN_CELL = New ClsUIStyle
     Set AMBER_CELL = New ClsUIStyle
     Set RED_CELL = New ClsUIStyle
-    Set GENERIC_CELL_HEADER = New ClsUIStyle
+    Set GENERIC_TABLE_HEADER = New ClsUIStyle
 
     With SCREEN_STYLE
         .Name = "SCREEN_STYLE"
@@ -143,18 +143,18 @@ Public Function BuildScreenStyles() As Boolean
 '        .FontVJust = TOOL_BUTTON_FONT_Y_JUST
 '    End With
 
-    With GENERIC_CELL
-        .Name = "GENERIC_CELL"
-        .BorderWidth = GENERIC_CELL_BORDER_WIDTH
-        .Fill1 = GENERIC_CELL_FILL_1
-        .Fill2 = GENERIC_CELL_FILL_2
-        .Shadow = GENERIC_CELL_SHADOW
-        .FontStyle = GENERIC_CELL_FONT_STYLE
-        .FontSize = GENERIC_CELL_FONT_SIZE
-        .FontBold = GENERIC_CELL_FONT_BOLD
-        .FontColour = GENERIC_CELL_FONT_COLOUR
-        .FontXJust = GENERIC_CELL_FONT_X_JUST
-        .FontVJust = GENERIC_CELL_FONT_Y_JUST
+    With GENERIC_TABLE
+        .Name = "GENERIC_TABLE"
+        .BorderWidth = GENERIC_TABLE_BORDER_WIDTH
+        .Fill1 = GENERIC_TABLE_FILL_1
+        .Fill2 = GENERIC_TABLE_FILL_2
+        .Shadow = GENERIC_TABLE_SHADOW
+        .FontStyle = GENERIC_TABLE_FONT_STYLE
+        .FontSize = GENERIC_TABLE_FONT_SIZE
+        .FontBold = GENERIC_TABLE_FONT_BOLD
+        .FontColour = GENERIC_TABLE_FONT_COLOUR
+        .FontXJust = GENERIC_TABLE_FONT_X_JUST
+        .FontVJust = GENERIC_TABLE_FONT_Y_JUST
     End With
 
     With GREEN_CELL
@@ -199,18 +199,18 @@ Public Function BuildScreenStyles() As Boolean
         .FontVJust = RED_CELL_FONT_Y_JUST
     End With
 
-    With GENERIC_CELL_HEADER
-        .Name = "GENERIC_CELL_HEADER"
-        .BorderWidth = GENERIC_CELL_HEADER_BORDER_WIDTH
-        .Fill1 = GENERIC_CELL_HEADER_FILL_1
-        .Fill2 = GENERIC_CELL_HEADER_FILL_2
-        .Shadow = GENERIC_CELL_HEADER_SHADOW
-        .FontStyle = GENERIC_CELL_HEADER_FONT_STYLE
-        .FontSize = GENERIC_CELL_HEADER_FONT_SIZE
-        .FontBold = GENERIC_CELL_HEADER_FONT_BOLD
-        .FontColour = GENERIC_CELL_HEADER_FONT_COLOUR
-        .FontXJust = GENERIC_CELL_HEADER_FONT_X_JUST
-        .FontVJust = GENERIC_CELL_HEADER_FONT_Y_JUST
+    With GENERIC_TABLE_HEADER
+        .Name = "GENERIC_TABLE_HEADER"
+        .BorderWidth = GENERIC_TABLE_HEADER_BORDER_WIDTH
+        .Fill1 = GENERIC_TABLE_HEADER_FILL_1
+        .Fill2 = GENERIC_TABLE_HEADER_FILL_2
+        .Shadow = GENERIC_TABLE_HEADER_SHADOW
+        .FontStyle = GENERIC_TABLE_HEADER_FONT_STYLE
+        .FontSize = GENERIC_TABLE_HEADER_FONT_SIZE
+        .FontBold = GENERIC_TABLE_HEADER_FONT_BOLD
+        .FontColour = GENERIC_TABLE_HEADER_FONT_COLOUR
+        .FontXJust = GENERIC_TABLE_HEADER_FONT_X_JUST
+        .FontVJust = GENERIC_TABLE_HEADER_FONT_Y_JUST
     End With
 
 '    With TRANSPARENT_TEXT_BOX

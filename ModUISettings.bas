@@ -22,7 +22,7 @@ Private Const StrMODULE As String = "ModUISettings"
 ' ---------------------------------------------------------------
 Public Const SCREEN_HEIGHT As Integer = 2000
 Public Const SCREEN_WIDTH As Integer = 1825
-Public Const MAIN_FRAME_TOP As Integer = 70
+Public Const MAIN_FRAME_TOP As Integer = 90
 Public Const MAIN_FRAME_LEFT As Integer = 170
 Public Const MAIN_FRAME_WIDTH As Integer = 890
 Public Const MAIN_FRAME_HEIGHT As Integer = 360
@@ -32,13 +32,15 @@ Public Const MAIN_FRAME_2_WIDTH As Integer = 890
 Public Const MAIN_FRAME_2_HEIGHT As Integer = 360
 
 ' ---------------------------------------------------------------
-' Generic Cell Settings
+' Generic Table Settings
 ' ---------------------------------------------------------------
-Public Const GENERIC_CELL_HEIGHT As Integer = 21
-Public Const GENERIC_CELL_WIDTH As Integer = 550
-Public Const GENERIC_CELL_LEFT As Integer = 0
-Public Const GENERIC_CELL_TOP As Integer = 21
-Public Const GENERIC_CELL_ROWOFFSET As Integer = 21
+Public Const GENERIC_TABLE_HEIGHT As Integer = 15
+Public Const GENERIC_TABLE_WIDTH As Integer = 550
+Public Const GENERIC_TABLE_LEFT As Integer = 0
+Public Const GENERIC_TABLE_TOP As Integer = 25
+Public Const GENERIC_TABLE_ROWOFFSET As Integer = 0
+Public Const GENERIC_TABLE_COLOFFSET As Integer = 0
+Public Const GENERIC_TABLE_HEADING_HEIGHT As Integer = 20
 
 ' ---------------------------------------------------------------
 ' Menu Bar
@@ -101,25 +103,27 @@ Public Const BTN_MAIN_1_HEIGHT As Integer = 40
 ' ---------------------------------------------------------------
 ' For Action Screen
 ' ---------------------------------------------------------------
-Public Const FOR_ACTION_Cell_NOCOLS As Integer = 5
-Public Const FOR_ACTION_Cell_COL_WIDTHS As String = "100:200:200:290:100"
-Public Const FOR_ACTION_Cell_TITLES As String = "Workflow No:Name:Step No:Step Name:Status"
+Public Const FOR_ACTION_CELL_NOCOLS As Integer = 5
+Public Const FOR_ACTION_CELL_COL_WIDTHS As String = "100:200:200:290:100"
+Public Const FOR_ACTION_CELL_ROW_HEIGHTS As String = "30:30"
+Public Const FOR_ACTION_CELL_TITLES As String = "Workflow No:Name:Step No:Step Name:Status"
 Public Const FOR_ACTION_MAX_LINES As Integer = 40
 
 ' ---------------------------------------------------------------
 ' Active Screen
 ' ---------------------------------------------------------------
-Public Const ACTIVE_Cell_NOCOLS As Integer = 5
-Public Const ACTIVE_Cell_COL_WIDTHS As String = "100:200:200:290:100"
-Public Const ACTIVE_Cell_TITLES As String = "Workflow No:Name:Step No:Step Name:Status"
+Public Const ACTIVE_TABLE_NOCOLS As Integer = 5
+Public Const ACTIVE_TABLE_COL_WIDTHS As String = "100:200:200:290:100"
+Public Const ACTIVE_TABLE_STYLES As String = "GENERIC_TABLE"
+Public Const ACTIVE_TABLE_TITLES As String = "Workflow No:Name:Step No:Step Name:Status"
 Public Const ACTIVE_MAX_LINES As Integer = 150
 
 ' ---------------------------------------------------------------
 ' Complete Screen
 ' ---------------------------------------------------------------
-Public Const COMPLETE_Cell_NOCOLS As Integer = 5
-Public Const COMPLETE_Cell_COL_WIDTHS As String = "100:200:200:290:100"
-Public Const COMPLETE_Cell_TITLES As String = "Workflow No:Name:Step No:Step Name:Status"
+Public Const COMPLETE_CELL_NOCOLS As Integer = 5
+Public Const COMPLETE_CELL_COL_WIDTHS As String = "100:200:200:290:100"
+Public Const COMPLETE_CELL_TITLES As String = "Workflow No:Name:Step No:Step Name:Status"
 Public Const COMPLETE_MAX_LINES As Integer = 100
 
 ' ---------------------------------------------------------------
@@ -170,49 +174,49 @@ Public Const COMPLETE_MAX_LINES As Integer = 100
 'Public Const BTN_ADMIN_9_WIDTH As Integer = 80
 'Public Const BTN_ADMIN_9_HEIGHT As Integer = 20
 '
-'Public Const ADMIN_MEMBER_Cell_NOCOLS As Integer = 10
-'Public Const ADMIN_MEMBER_Cell_COL_WIDTHS As String = "120:80:80:60:60:60:100:80:180:70"
-'Public Const ADMIN_MEMBER_Cell_TITLES As String = "Name:SSN:Student ID:Watch:Grade:FIN No:Position:DoB:Email:Active"
+'Public Const ADMIN_MEMBER_CELL_NOCOLS As Integer = 10
+'Public Const ADMIN_MEMBER_CELL_COL_WIDTHS As String = "120:80:80:60:60:60:100:80:180:70"
+'Public Const ADMIN_MEMBER_CELL_TITLES As String = "Name:SSN:Student ID:Watch:Grade:FIN No:Position:DoB:Email:Active"
 'Public Const ADMIN_MEMBER_MAX_LINES As Integer = 500
 '
-'Public Const ADMIN_EMAIL_ADDR_Cell_NOCOLS As Integer = 3
-'Public Const ADMIN_EMAIL_ADDR_Cell_COL_WIDTHS As String = "200:200:490"
-'Public Const ADMIN_EMAIL_ADDR_Cell_TITLES As String = "Name:Email Address:"
+'Public Const ADMIN_EMAIL_ADDR_CELL_NOCOLS As Integer = 3
+'Public Const ADMIN_EMAIL_ADDR_CELL_COL_WIDTHS As String = "200:200:490"
+'Public Const ADMIN_EMAIL_ADDR_CELL_TITLES As String = "Name:Email Address:"
 'Public Const ADMIN_EMAIL_ADDR_MAX_LINES As Integer = 50
 '
-'Public Const ADMIN_EMAIL_Cell_NOCOLS As Integer = 5
-'Public Const ADMIN_EMAIL_Cell_COL_WIDTHS As String = "80:150:200:300:160"
-'Public Const ADMIN_EMAIL_Cell_TITLES As String = "Email No:Template Name:Mail To:Mail CC:Attachment"
+'Public Const ADMIN_EMAIL_CELL_NOCOLS As Integer = 5
+'Public Const ADMIN_EMAIL_CELL_COL_WIDTHS As String = "80:150:200:300:160"
+'Public Const ADMIN_EMAIL_CELL_TITLES As String = "Email No:Template Name:Mail To:Mail CC:Attachment"
 'Public Const ADMIN_EMAIL_MAX_LINES As Integer = 100
 '
-'Public Const ADMIN_DOC_Cell_NOCOLS As Integer = 5
-'Public Const ADMIN_DOC_Cell_COL_WIDTHS As String = "80:200:350:180:80"
-'Public Const ADMIN_DOC_Cell_TITLES As String = "Doc No:Title:Description:Filename:"
+'Public Const ADMIN_DOC_CELL_NOCOLS As Integer = 5
+'Public Const ADMIN_DOC_CELL_COL_WIDTHS As String = "80:200:350:180:80"
+'Public Const ADMIN_DOC_CELL_TITLES As String = "Doc No:Title:Description:Filename:"
 'Public Const ADMIN_DOC_MAX_LINES As Integer = 100
 '
-'Public Const ADMIN_DOD_CERT_Cell_NOCOLS As Integer = 4
-'Public Const ADMIN_DOD_CERT_Cell_COL_WIDTHS As String = "100:200:200:390"
-'Public Const ADMIN_DOD_CERT_Cell_TITLES As String = "DoD Cert No:Name:Group:"
+'Public Const ADMIN_DOD_CERT_CELL_NOCOLS As Integer = 4
+'Public Const ADMIN_DOD_CERT_CELL_COL_WIDTHS As String = "100:200:200:390"
+'Public Const ADMIN_DOD_CERT_CELL_TITLES As String = "DoD Cert No:Name:Group:"
 'Public Const ADMIN_DOD_CERT_MAX_LINES As Integer = 100
 '
-'Public Const ADMIN_WFLOW_Cell_NOCOLS As Integer = 6
-'Public Const ADMIN_WFLOW_Cell_COL_WIDTHS As String = "100:300:190:100:100:100" '890
-'Public Const ADMIN_WFLOW_Cell_TITLES As String = "Step No:Name:Step Type:Email No:Alt Email No:Document No"
+'Public Const ADMIN_WFLOW_CELL_NOCOLS As Integer = 6
+'Public Const ADMIN_WFLOW_CELL_COL_WIDTHS As String = "100:300:190:100:100:100" '890
+'Public Const ADMIN_WFLOW_CELL_TITLES As String = "Step No:Name:Step Type:Email No:Alt Email No:Document No"
 'Public Const ADMIN_WFLOW_MAX_LINES As Integer = 100
 '
-'Public Const ADMIN_WFTYPES_Cell_NOCOLS As Integer = 3
-'Public Const ADMIN_WFTYPES_Cell_COL_WIDTHS As String = "200:400:290" '890
-'Public Const ADMIN_WFTYPES_Cell_TITLES As String = "Workflow Type:Description:"
+'Public Const ADMIN_WFTYPES_CELL_NOCOLS As Integer = 3
+'Public Const ADMIN_WFTYPES_CELL_COL_WIDTHS As String = "200:400:290" '890
+'Public Const ADMIN_WFTYPES_CELL_TITLES As String = "Workflow Type:Description:"
 'Public Const ADMIN_WFTYPES_MAX_LINES As Integer = 20
 '
-'Public Const ADMIN_ROLES_Cell_NOCOLS As Integer = 3
-'Public Const ADMIN_ROLES_Cell_COL_WIDTHS As String = "200:200:490"
-'Public Const ADMIN_ROLES_Cell_TITLES As String = "Role:Name:"
+'Public Const ADMIN_ROLES_CELL_NOCOLS As Integer = 3
+'Public Const ADMIN_ROLES_CELL_COL_WIDTHS As String = "200:200:490"
+'Public Const ADMIN_ROLES_CELL_TITLES As String = "Role:Name:"
 'Public Const ADMIN_ROLES_MAX_LINES As Integer = 20
 '
-'Public Const ADMIN_LISTS_Cell_NOCOLS As Integer = 2
-'Public Const ADMIN_LISTS_Cell_COL_WIDTHS As String = "200:690"
-'Public Const ADMIN_LISTS_Cell_TITLES As String = "List::"
+'Public Const ADMIN_LISTS_CELL_NOCOLS As Integer = 2
+'Public Const ADMIN_LISTS_CELL_COL_WIDTHS As String = "200:690"
+'Public Const ADMIN_LISTS_CELL_TITLES As String = "List::"
 'Public Const ADMIN_LISTS_MAX_LINES As Integer = 20
 '
 ' ===============================================================
@@ -230,13 +234,13 @@ Public BTN_MAIN_STYLE As ClsUIStyle
 Public GENERIC_BUTTON As ClsUIStyle
 'Public TOOL_BUTTON As ClsUIStyle
 'Public BTN_SUPPORT As ClsUIStyle
-Public GENERIC_CELL As ClsUIStyle
+Public GENERIC_TABLE As ClsUIStyle
 Public GREEN_CELL As ClsUIStyle
 Public AMBER_CELL As ClsUIStyle
 Public RED_CELL As ClsUIStyle
-Public GENERIC_CELL_HEADER As ClsUIStyle
+Public GENERIC_TABLE_HEADER As ClsUIStyle
 'Public TRANSPARENT_TEXT_BOX As ClsUIStyle
-'Public VERT_Cell_HEADER As ClsUIStyle
+'Public VERT_CELL_HEADER As ClsUIStyle
 'Public MATRIX_DEF As ClsUIStyle
 'Public MATRIX_1 As ClsUIStyle
 'Public MATRIX_3 As ClsUIStyle
@@ -268,30 +272,30 @@ Public Const GENERIC_BUTTON_FONT_Y_JUST As Integer = xlVAlignCenter
 ' ---------------------------------------------------------------
 ' Cells
 ' ---------------------------------------------------------------
-Public Const GENERIC_CELL_BORDER_WIDTH As Single = 0
-Public Const GENERIC_CELL_FILL_1 As Long = COLOUR_5
-Public Const GENERIC_CELL_FILL_2 As Long = COLOUR_5
-Public Const GENERIC_CELL_SHADOW As Long = 0
-Public Const GENERIC_CELL_FONT_STYLE As String = "Eras Medium ITC"
-Public Const GENERIC_CELL_FONT_SIZE As Integer = 10
-Public Const GENERIC_CELL_FONT_COLOUR As Long = COLOUR_4
-Public Const GENERIC_CELL_FONT_BOLD As Boolean = False
-Public Const GENERIC_CELL_FONT_X_JUST As Integer = xlHAlignCenter
-Public Const GENERIC_CELL_FONT_Y_JUST As Integer = xlVAlignBottom
+Public Const GENERIC_TABLE_BORDER_WIDTH As Single = 0
+Public Const GENERIC_TABLE_FILL_1 As Long = COLOUR_5
+Public Const GENERIC_TABLE_FILL_2 As Long = COLOUR_5
+Public Const GENERIC_TABLE_SHADOW As Long = 0
+Public Const GENERIC_TABLE_FONT_STYLE As String = "Eras Medium ITC"
+Public Const GENERIC_TABLE_FONT_SIZE As Integer = 10
+Public Const GENERIC_TABLE_FONT_COLOUR As Long = COLOUR_4
+Public Const GENERIC_TABLE_FONT_BOLD As Boolean = False
+Public Const GENERIC_TABLE_FONT_X_JUST As Integer = xlHAlignCenter
+Public Const GENERIC_TABLE_FONT_Y_JUST As Integer = xlVAlignBottom
 
 ' ---------------------------------------------------------------
 ' Cell Headers
 ' ---------------------------------------------------------------
-Public Const GENERIC_CELL_HEADER_BORDER_WIDTH As Single = 0
-Public Const GENERIC_CELL_HEADER_FILL_1 As Long = COLOUR_3
-Public Const GENERIC_CELL_HEADER_FILL_2 As Long = COLOUR_3
-Public Const GENERIC_CELL_HEADER_SHADOW As Long = 0
-Public Const GENERIC_CELL_HEADER_FONT_STYLE As String = "Calibri"
-Public Const GENERIC_CELL_HEADER_FONT_SIZE As Integer = 10
-Public Const GENERIC_CELL_HEADER_FONT_COLOUR As Long = COLOUR_5
-Public Const GENERIC_CELL_HEADER_FONT_BOLD As Boolean = False
-Public Const GENERIC_CELL_HEADER_FONT_X_JUST As Integer = xlHAlignCenter
-Public Const GENERIC_CELL_HEADER_FONT_Y_JUST As Integer = xlVAlignBottom
+Public Const GENERIC_TABLE_HEADER_BORDER_WIDTH As Single = 0
+Public Const GENERIC_TABLE_HEADER_FILL_1 As Long = COLOUR_3
+Public Const GENERIC_TABLE_HEADER_FILL_2 As Long = COLOUR_3
+Public Const GENERIC_TABLE_HEADER_SHADOW As Long = 0
+Public Const GENERIC_TABLE_HEADER_FONT_STYLE As String = "Calibri"
+Public Const GENERIC_TABLE_HEADER_FONT_SIZE As Integer = 10
+Public Const GENERIC_TABLE_HEADER_FONT_COLOUR As Long = COLOUR_5
+Public Const GENERIC_TABLE_HEADER_FONT_BOLD As Boolean = False
+Public Const GENERIC_TABLE_HEADER_FONT_X_JUST As Integer = xlHAlignCenter
+Public Const GENERIC_TABLE_HEADER_FONT_Y_JUST As Integer = xlVAlignBottom
 
 ' ---------------------------------------------------------------
 ' Text Box

@@ -240,6 +240,7 @@ Public Sub ReOrder()
     
     pShpFrame.ZOrder msoBringToFront
     pHeader.ReOrder
+    pTable.ReOrder
     
     For Each DashObj In DashObjs
         DashObj.ShpDashObj.ZOrder msoBringToFront

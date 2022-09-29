@@ -37,10 +37,13 @@ Private pSubTableHOff As Integer
 Private pRowHeights() As Integer
 Private pColWidths() As Integer
 Private pCellVisible() As Boolean
-Private pText() As String
+Private pRstText As Recordset
 Private pOnAction() As String
 Private pStyles() As String
 Private pStylesColl As ClsUIStyles
+Private pHeadingText() As String
+Private pHeadingStyle As ClsUIStyle
+Private pHeadingHeight As Integer
 Private pTableVisible As Boolean
 Private pParent As ClsUIFrame
 
@@ -154,29 +157,30 @@ Public Property Let SubTableHOff(ByVal vNewValue As Integer)
     pSubTableHOff = vNewValue
 End Property
 
+Public Property Let RowHeights(ByRef vNewValue As String)
+    Dim AryRows() As String
+    Dim i As Integer
+    
+    AryRows = Split(vNewValue, ":")
+    
+    For i = 1 To UBound(AryRows)
+        pRowHeights(i) = CInt(AryRows(i))
+    Next
+    
+End Property
+
 '---------------------------------------------------------------
-Public Property Get RowHeights() As Integer()
-    RowHeights = pRowHeights
-End Property
+Public Property Let ColWidths(ByRef vNewValue As String)
+    Dim AryCols() As String
+    Dim i As Integer
 
-Public Property Let RowHeights(ByRef vNewValue() As Integer)
+    ReDim pColWidths(1 To pNoCols)
     
-    ReDim RowHeights(1 To NoRows)
-    
-    pRowHeights = vNewValue
-    
-End Property
-
-'---------------------------------------------------------------
-Public Property Get ColWidths() As Integer()
-    ColWidths = pColWidths
-End Property
-
-Public Property Let ColWidths(ByRef vNewValue() As Integer)
-    
-    ReDim ColWidths(1 To NoCols)
+    AryCols = Split(vNewValue, ":")
         
-    pColWidths = vNewValue
+    For i = 1 To UBound(AryCols)
+        pColWidths(i) = CInt(AryCols(i))
+    Next
     
 End Property
 
@@ -199,6 +203,34 @@ Public Property Let StylesColl(vNewValue As ClsUIStyles)
 End Property
 
 '---------------------------------------------------------------
+Public Property Let HeadingText(ByRef vNewValue As String)
+    Dim AryText() As String
+    Dim i As Integer
+        
+    AryText = Split(vNewValue, ":")
+    
+    ReDim pHeadingText(1 To UBound(AryText) + 1)
+    For i = 1 To UBound(AryText) + 1
+        pHeadingText(i) = (AryText(i - 1))
+    Next
+    
+End Property
+
+'---------------------------------------------------------------
+Public Property Let HeadingStyle(ByRef vNewValue As ClsUIStyle)
+    Set pHeadingStyle = vNewValue
+End Property
+
+'---------------------------------------------------------------
+Public Property Get HeadingHeight() As Integer
+    HeadingHeight = pHeadingHeight
+End Property
+
+Public Property Let HeadingHeight(ByVal vNewValue As Integer)
+    pHeadingHeight = vNewValue
+End Property
+
+'---------------------------------------------------------------
 Public Property Get TableVisible() As Boolean
     TableVisible = pTableVisible
 End Property
@@ -213,12 +245,12 @@ Public Property Let TableVisible(ByVal vNewValue As Boolean)
 End Property
 
 '---------------------------------------------------------------
-Public Property Get Text() As String()
-    Text = pText
+Public Property Get RstText() As Recordset
+    Set RstText = pRstText
 End Property
 
-Public Property Let Text(ByRef vNewValue() As String)
-    pText = vNewValue
+Public Property Let RstText(ByVal vNewValue As Recordset)
+    Set pRstText = vNewValue
 End Property
 
 '---------------------------------------------------------------
@@ -255,9 +287,9 @@ End Property
 '---------------------------------------------------------------
 Private Sub ReDimArrays()
     ReDim pColWidths(1 To pNoCols)
-    ReDim pRowHeights(1 To pNoRows)
-    ReDim pText(1 To pNoCols, 1 To pNoRows)
-    ReDim pOnAction(1 To pNoCols, 1 To pNoRows)
+    ReDim pRowHeights(0 To pNoRows)
+    ReDim pOnAction(1 To pNoCols, 0 To pNoRows)
+    ReDim pStyles(1 To pNoCols, 0 To pNoRows)
 End Sub
 
 ' ===============================================================
@@ -267,6 +299,7 @@ End Sub
 Public Sub ReOrder()
     Dim Cell As ClsUICell
     
+    Sin 0
     For Each Cell In pCells
         With Cell
             .ShpCell.ZOrder msoBringToFront
@@ -289,6 +322,26 @@ Public Sub BuildCells(Optional SplitRow As Integer, Optional SplitSize As Intege
        
     If pNoCols > 0 And pNoRows > 0 Then
         pCells.DeleteCollection
+        
+        'heading
+        For x = 1 To pNoCols
+            Set Cell = New ClsUICell
+            Cell.Name = "Cell - " & x & "-" & "0"
+            pCells.AddCell Cell, x, y
+            With Cell
+                .Left = .Parent.Left + ColOffset
+                .Top = .Parent.Top + RowOffset
+                .Width = pColWidths(x)
+                .Text = pHeadingText(x)
+                .OnAction = pOnAction(x, 0)
+                .Style = pHeadingStyle
+                .Height = pHeadingHeight
+            End With
+            ColOffset = ColOffset + Cell.Width + HPad
+        Next
+        ColOffset = 0
+        RowOffset = pHeadingHeight
+        
         For y = 1 To pNoRows
             
             If SplitRow <> 0 Then
@@ -317,8 +370,13 @@ Public Sub BuildCells(Optional SplitRow As Integer, Optional SplitSize As Intege
                     .Left = .Parent.Left + ColOffset
                     .Top = .Parent.Top + RowOffset
                     .Width = pColWidths(x)
-                    .Text = pText(x, y)
+                    
+                    If y = 0 Then
+                        .Text = pHeadingText(x)
+                    Else
+                        If Not IsNull(pRstText.Fields(x)) Then .Text = pRstText.Fields(x)
                     .OnAction = pOnAction(x, y)
+                    End If
                     
                     If pStyles(x, y) = "" Then
                         If pStyles(1, y) = "" Then
@@ -342,7 +400,7 @@ Public Sub BuildCells(Optional SplitRow As Integer, Optional SplitSize As Intege
             ColOffset = 0
             RowOffset = RowOffset + Cell.Height + VPad
                 
-        
+            If y <> 0 Then RstText.MoveNext
         Next
     End If
 End Sub

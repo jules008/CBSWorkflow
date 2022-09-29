@@ -30,7 +30,6 @@ Public Const TEMPLATE_STORE As String = "\System Files\Templates\"
 Public Const INI_FILE_NAME As String = "System.ini"
 Public Const PROTECT_ON As Boolean = True
 Public Const PROTECT_KEY As String = "03383396"
-Public Const STOP_FLAG As Boolean = False
 Public Const MAINT_MSG As String = ""
 Public Const SEND_ERR_MSG As Boolean = False
 Public Const TEST_PREFIX As String = "TEST - "
@@ -78,6 +77,7 @@ Global CURRENT_USER As String
 Global MENU_ITEM_SEL As Integer
 Global G_DATE As String
 Global G_FORM As Boolean
+Global STOP_FLAG As Boolean
 
 ' ===============================================================
 ' Global Class Declarations

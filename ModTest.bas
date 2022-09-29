@@ -57,10 +57,10 @@ Public Sub TestTable()
     With SubTable
         .NoCols = 8
         .NoRows = 3
-        .ColWidths = AryColWidths
+'        .ColWidths = AryColWidths
         .StylesColl.Add GREEN_CELL
         .StylesColl.Add AMBER_CELL
-        .RowHeights = AryRowHeights
+'        .RowHeights = AryRowHeights
         .Styles = AryStyles
     End With
     
@@ -112,10 +112,10 @@ Public Sub TestTable()
         .VPad = 0
         .SubTableVOff = 50
         .SubTableHOff = 20
-        .ColWidths = AryColWidths
-        .RowHeights = AryRowHeights
+'        .ColWidths = AryColWidths
+'        .RowHeights = AryRowHeights
         .OnAction = AryOnAction
-        .Text = AryText
+'        .Text = AryText
         .Styles = AryStyles
         .StylesColl.Add GREEN_CELL
         .StylesColl.Add AMBER_CELL

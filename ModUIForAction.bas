@@ -54,11 +54,11 @@ Private Function BuildMainFrame() As Boolean
 
 '        With .Lineitems
 '            .NoColumns = FOR_ACTION_LINEITEM_NOCOLS
-'            .Top = GENERIC_LINEITEM_TOP
-'            .Left = GENERIC_LINEITEM_LEFT
-'            .Height = GENERIC_LINEITEM_HEIGHT
+'            .Top = GENERIC_TABLE_TOP
+'            .Left = GENERIC_TABLE_LEFT
+'            .Height = GENERIC_TABLE_HEIGHT
 '            .Columns = FOR_ACTION_LINEITEM_COL_WIDTHS
-'            .RowOffset = GENERIC_LINEITEM_ROWOFFSET
+'            .RowOffset = GENERIC_TABLE_ROWOFFSET
 '        End With
     End With
     
@@ -208,10 +208,10 @@ Public Function RefreshList(Optional SortBy As String) As Boolean
 '
 '        For i = 0 To FOR_ACTION_LINEITEM_NOCOLS - 1
 '            StrOnAction = "'ModUIScreenCom.SortBy(""" & RowTitles(i) & """), """ & ScreenSel & """'"
-'            .Lineitems.Text 0, i, RowTitles(i), GENERIC_LINEITEM_HEADER, StrOnAction
+'            .Lineitems.Text 0, i, RowTitles(i), GENERIC_TABLE_HEADER, StrOnAction
 '        Next
 
-'        .Lineitems.Style = GENERIC_LINEITEM
+'        .Lineitems.Style = GENERIC_TABLE
 
 '    End With
     
@@ -248,10 +248,10 @@ Public Function RefreshList(Optional SortBy As String) As Boolean
 '            End If
             
 '            With MainFrame.Lineitems
-'                .Text x, 0, WorkflowNo, GENERIC_LINEITEM, StrOnAction
-'                .Text x, 1, MemberName, GENERIC_LINEITEM, StrOnAction
-'                .Text x, 2, StepNo, GENERIC_LINEITEM, StrOnAction
-'                .Text x, 3, CurrentStep, GENERIC_LINEITEM, StrOnAction
+'                .Text x, 0, WorkflowNo, GENERIC_TABLE, StrOnAction
+'                .Text x, 1, MemberName, GENERIC_TABLE, StrOnAction
+'                .Text x, 2, StepNo, GENERIC_TABLE, StrOnAction
+'                .Text x, 3, CurrentStep, GENERIC_TABLE, StrOnAction
 '                .Text x, 4, enStatusDisp(StepStatus), CustomStyle, StrOnAction
 '            End With
             

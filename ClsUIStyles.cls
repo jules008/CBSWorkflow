@@ -45,7 +45,7 @@ End Function
 ' Method Find
 ' Finds Item from index
 ' ---------------------------------------------------------------
-Public Function Find(Name As Variant) As ClsUIStyle
+Public Function Find(Name As String) As ClsUIStyle
     On Error Resume Next
     If Name <> "" Then
         Set Find = pStyles.Item(Name)
