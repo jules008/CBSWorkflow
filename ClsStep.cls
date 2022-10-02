@@ -208,7 +208,7 @@ End Property
 '---------------------------------------------------------------
 Public Property Get TimeToAmber() As Variant
     
-    If pStatus = enComplete Then
+    If pStatus = enClosed Then
         TimeToAmber = AmberThresh
     ElseIf DateDiff("h", Now, AmberTime) > 0 Then
         pTimeToAmber = DateDiff("h", Now, AmberTime)
@@ -222,7 +222,7 @@ End Property
 '---------------------------------------------------------------
 Public Property Get TimeToRed() As Variant
     
-    If pStatus = enComplete Then
+    If pStatus = enClosed Then
         TimeToRed = RedThresh
     ElseIf DateDiff("h", Now, RedTime) > 0 Then
         pTimeToRed = DateDiff("h", Now, RedTime)
@@ -314,7 +314,7 @@ Public Property Get Status() As enStatus
     If pStartTime = 0 Then
         pStatus = enNotStarted
     ElseIf pStartTime <> 0 And pEndTime <> 0 Then
-        pStatus = enComplete
+        pStatus = enClosed
     ElseIf pWait Then
         pStatus = enWaiting
     Else
@@ -448,10 +448,10 @@ Public Sub Start()
 End Sub
 
 ' ===============================================================
-' Method Complete
-' completes the step
+' Method Closed
+' Closeds the step
 '---------------------------------------------------------------
-Public Sub Complete()
+Public Sub Closed()
     pEndTime = Now
 End Sub
 

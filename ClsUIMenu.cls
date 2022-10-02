@@ -78,10 +78,10 @@ End Function
 ' Method FindButton
 ' Finds Button from index
 '---------------------------------------------------------------
-Public Function FindButton(Name As Variant) As ClsUIButton
+Public Function FindButton(ButtonIndex As String) As ClsUIButton
 Attribute FindButton.VB_UserMemId = 0
     On Error Resume Next
-    Set FindButton = pUIMenu.Item(Name)
+    Set FindButton = pUIMenu.Item(ButtonIndex)
 End Function
 
 ' ===============================================================
@@ -89,14 +89,61 @@ End Function
 ' Add Button to Collection
 '---------------------------------------------------------------
 Public Sub AddButton(UIButton As ClsUIButton)
-    pUIMenu.Add UIButton, Key:=CStr(UIButton.Name)
+    Dim i As Integer
+    Dim AryIndex() As String
+    Dim ParentIndex As Integer
+    Dim HorOffset As Integer
+    Dim ChildNo As Integer
+    
+    AryIndex = Split(UIButton.ButtonIndex, ".")
+    
+    ParentIndex = AryIndex(0)
+    ChildNo = AryIndex(UBound(AryIndex))
+        
+'    Debug.Print "Button Index: "; UIButton.ButtonIndex
+'    Debug.Print "Parent Index: "; ParentIndex
+'    Debug.Print "Child No: "; ChildNo
+    
+    'treat the first button differently as the collection is empty
+    If pUIMenu.Count = 0 Then
+        With UIButton
+            .Top = pTop
+            .Left = pLeft
+'            Debug.Print "i: "; i
+'            Debug.Print "Button Top: "; UIButton.Top
+'            Debug.Print "Button Left: "; UIButton.Left
+        End With
+    End If
+        
+    With UIButton
+        .OnAction = "'ModUIMenu.ButtonClickEvent(" & .ButtonIndex & ")'"
+        If .ButtonLvl = 1 Then
+            .Visible = True
+            .Top = pTop + (.ButtonIndex - 1) * .Height
+            .Left = pLeft
+        Else
+            .Visible = False
+            
+            'get y pos from parent button
+            .Top = FindButton(CStr(ParentIndex)).Top + (CInt(ChildNo) - 1) * .Height
+            .Left = pLeft + (.ButtonLvl - 1) * .Width
+        End If
+        .Selected = False
+'        Debug.Print "i: "; i
+'        Debug.Print "Button Top: "; UIButton.Top
+'        Debug.Print "Button Left: "; UIButton.Left
+    End With
+        
+    Debug.Print
+    
+    pUIMenu.Add UIButton, Key:=CStr(UIButton.ButtonIndex)
 End Sub
 
 ' ===============================================================
 ' Method RemoveButton
 ' Deletes Button from collection
 '---------------------------------------------------------------
-Public Sub RemoveButton(Name As Variant)
+Public Sub RemoveButton(ButtonIndex As String)
     pUIMenu.Remove Name
 End Sub
 
@@ -127,16 +174,48 @@ End Sub
 ' Method ButtonClick
 ' Presses selected button of menu
 '---------------------------------------------------------------
-Public Sub ButtonClick(BtnName)
+Public Sub ButtonClick(BtnName As String)
     Dim Button As ClsUIButton
+    Dim SubButton As ClsUIButton
+    Dim SubMenu As Boolean
         
     For Each Button In pUIMenu
-        If Button.Name = pUIMenu(BtnName).Name Then
-            Button.Selected = True
+        With Button
+            If .Name = pUIMenu(BtnName).Name Then
+                .Selected = True
+                
+                Debug.Print .OnAction
+                'if it isn't a main menu button, show sub menu group
+                Dim i As Integer
+                i = 1
+                Do
+                    Set SubButton = FindButton(.ButtonIndex & "." & i)
+                    If Not SubButton Is Nothing Then
+                        SubButton.Visible = True
+                         SubMenu = True
+                    Else
+                        Exit Do
+                    End If
+                    If i = 10 Then Exit Do
+                    i = i + 1
+                Loop
+                
+                If Not SubMenu Then
+                    
+                    'main button has been clicked, so hide all sub menus and process click
+                    Application.Wait 1000
+                    For Each SubButton In pUIMenu
+                        If SubButton.ButtonLvl > 1 Then SubButton.Visible = False
+                    Next
+                    ModUIButtons.ProcessBtnClicks Replace(.ButtonIndex, ".", "")
+                
+                End If
         Else
-            Button.Selected = False
+                .Selected = False
         End If
+        End With
     Next
+    Set SubButton = Nothing
 End Sub
 
 ' ===============================================================

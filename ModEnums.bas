@@ -44,13 +44,13 @@ Public Function EnumBtnNoVal(EnumValue As String) As EnumBtnNo
             EnumBtnNoVal = 1
         Case "enBtnActive"
             EnumBtnNoVal = 2
-        Case "enBtnComplete"
+        Case "enBtnClosed"
             EnumBtnNoVal = 3
         Case "enBtnExit"
             EnumBtnNoVal = 4
         Case "enBtnSupport"
             EnumBtnNoVal = 5
-        Case "enBtnNewWorkflow"
+        Case "enBtnNewProjectWF"
             EnumBtnNoVal = 6
     End Select
 End Function
@@ -67,7 +67,7 @@ Public Function enStatusVal(EnumValue As String) As enStatus
             enStatusVal = 2
         Case "enWaiting"
             enStatusVal = 3
-        Case "enComplete"
+        Case "enClosed"
             enStatusVal = 4
     End Select
 End Function
@@ -173,13 +173,13 @@ Public Function EnumBtnNoStr(EnumValue As EnumBtnNo) As String
         Case 2
             EnumBtnNoStr = "enBtnActive"
         Case 3
-            EnumBtnNoStr = "enBtnComplete"
+            EnumBtnNoStr = "enBtnClosed"
         Case 4
             EnumBtnNoStr = "enBtnExit"
         Case 5
             EnumBtnNoStr = "enBtnSupport"
         Case 6
-            EnumBtnNoStr = "enBtnNewWorkflow"
+            EnumBtnNoStr = "enBtnNewProjectWF"
     End Select
 End Function
 
@@ -196,7 +196,7 @@ Public Function enStatusStr(EnumValue As enStatus) As String
         Case 3
             enStatusStr = "enWaiting"
         Case 4
-            enStatusStr = "enComplete"
+            enStatusStr = "enClosed"
     End Select
 End Function
 
@@ -287,8 +287,8 @@ Public Function enStatusDisp(EnumValue As enStatus) As String
             enStatusDisp = "Action Req'd"
         Case enWaiting
             enStatusDisp = "Waiting"
-        Case enComplete
-            enStatusDisp = "Complete"
+        Case enClosed
+            enStatusDisp = "Closed"
     End Select
 End Function
 

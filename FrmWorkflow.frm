@@ -101,7 +101,7 @@ Private Function PopulateForm() As Boolean
 
     On Error GoTo ErrorHandler
     
-    ProgPC = ActiveWorkFlow.Steps.PCComplete
+    ProgPC = ActiveWorkFlow.Steps.PCClosed
     Progress ProgPC
     
     With ActiveWorkFlow
@@ -130,7 +130,7 @@ Private Function PopulateForm() As Boolean
             
             With BtnComplete
                 .Visible = True
-                .Caption = "Step Complete"
+                .Caption = "Step Closed"
             End With
             
         Case enDataInput
@@ -142,7 +142,7 @@ Private Function PopulateForm() As Boolean
             
             With BtnComplete
                 .Visible = True
-                .Caption = "Step Complete"
+                .Caption = "Step Closed"
             End With
        
             With FrmCalPicker

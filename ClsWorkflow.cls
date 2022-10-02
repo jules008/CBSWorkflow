@@ -128,20 +128,20 @@ End Property
 '---------------------------------------------------------------
 Public Property Get Status() As enStatus
     Dim Step As ClsStep
-    Dim Completed As Integer
+    Dim Closedd As Integer
     Dim NotStarted As Integer
     Dim i As Integer
 
     For i = 1 To pSteps.Count
         Set Step = pSteps(i)
-        If Step.Status = enComplete Then Completed = Completed + 1
+        If Step.Status = enClosed Then Closedd = Closedd + 1
         If Step.Status = enNotStarted Then NotStarted = NotStarted + 1
     Next
 
     If NotStarted = pSteps.Count Then
         pStatus = enNotStarted
-    ElseIf Completed = pSteps.Count Then
-        pStatus = enComplete
+    ElseIf Closedd = pSteps.Count Then
+        pStatus = enClosed
     ElseIf ActiveStep.Status = enWaiting Then
         pStatus = enWaiting
     Else
@@ -287,7 +287,7 @@ End Sub
 ' ---------------------------------------------------------------
 Public Sub MoveToAltStep()
     With ActiveStep
-        .Complete
+        .Closed
         .DBSave
     End With
     
@@ -301,12 +301,12 @@ End Sub
 
 ' ===============================================================
 ' Method MoveToNextStep
-' Completes current step and starts the next
+' Closeds current step and starts the next
 ' ---------------------------------------------------------------
 Public Sub MoveToNextStep()
     
         With ActiveStep
-            .Complete
+            .Closed
             .DBSave
         End With
         

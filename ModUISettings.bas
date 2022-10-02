@@ -26,10 +26,20 @@ Public Const MAIN_FRAME_TOP As Integer = 90
 Public Const MAIN_FRAME_LEFT As Integer = 170
 Public Const MAIN_FRAME_WIDTH As Integer = 890
 Public Const MAIN_FRAME_HEIGHT As Integer = 360
-Public Const MAIN_FRAME_2_TOP As Integer = 440
-Public Const MAIN_FRAME_2_LEFT As Integer = 170
-Public Const MAIN_FRAME_2_WIDTH As Integer = 890
-Public Const MAIN_FRAME_2_HEIGHT As Integer = 360
+
+' ---------------------------------------------------------------
+' Button Frame
+' ---------------------------------------------------------------
+Public Const BUTTON_FRAME_TOP As Integer = 5
+Public Const BUTTON_FRAME_LEFT As Integer = 790
+Public Const BUTTON_FRAME_WIDTH As Integer = 275
+Public Const BUTTON_FRAME_HEIGHT As Integer = 80
+
+' ---------------------------------------------------------------
+' Generic Button
+' ---------------------------------------------------------------
+Public Const GENERIC_BUTTON_WIDTH As Integer = 100
+Public Const GENERIC_BUTTON_HEIGHT As Integer = 40
 
 ' ---------------------------------------------------------------
 ' Generic Table Settings
@@ -45,60 +55,25 @@ Public Const GENERIC_TABLE_HEADING_HEIGHT As Integer = 20
 ' ---------------------------------------------------------------
 ' Menu Bar
 ' ---------------------------------------------------------------
-Public Const Button_HEIGHT As Integer = 31
+Public Const BUTTON_HEIGHT As Integer = 31
 Public Const MENUBAR_HEIGHT As Integer = 2000
 Public Const MENUBAR_WIDTH As Integer = 155
 Public Const MENUBAR_TOP As Integer = 0
 Public Const MENUBAR_LEFT As Integer = 0
 Public Const MENU_TOP As Integer = 150
-Public Const MENU_LEFT As Integer = 10
-Public Const Button_WIDTH As Integer = 150
-Public Const Button_COUNT As Integer = 4
-Public Const Button_TEXT = "For Action:Active:Complete:Exit"
-'Public Const Button_ICONS = "TEMPLATE - For Action:TEMPLATE - Active:TEMPLATE - Complete:TEMPLATE - Dashboard:TEMPLATE - Reports:TEMPLATE - Admin:TEMPLATE - Exit"
-'Public Const Button_BADGES = "TEMPLATE - No Action Items::::::"
-'Public Const Button_ICON_TOP As Integer = 6
-'Public Const Button_ICON_LEFT As Integer = 5
-'Public Const Button_BADGE_TOP As Integer = -6
-'Public Const Button_BADGE_LEFT As Integer = 125
+Public Const MENU_LEFT As Integer = 5
+Public Const BUTTON_WIDTH As Integer = 150
+Public Const BUTTON_COUNT As Integer = 21
+Public Const BUTTON_TEXT = "For Action:Projects:Active:Closed:CRM:Clients:SPVs:Contacts:Projects:Lenders:Dashboard:Reports:Admin:Users:Email Templates:Documents:Workflows:Workflow Types:Lists:Roles:Exit"
+Public Const BUTTON_INDEX = "1:2:2.1:2.2:3:3.1:3.2:3.3:3.4:3.5:4:5:6:6.1:6.2:6.3:6.4:6.5:6.6:6.7:7"
 Public Const LOGO_TOP As Integer = 13
-Public Const LOGO_LEFT As Integer = 10
+Public Const LOGO_LEFT As Integer = 5
 Public Const LOGO_WIDTH As Integer = 139
 Public Const LOGO_HEIGHT As Integer = 90
 '
 Public Const HEADER_HEIGHT As Integer = 25
 Public Const HEADER_ICON_TOP As Integer = 2
 Public Const HEADER_ICON_RIGHT As Integer = 10
-
-Public Const BTN_MAIN_1_TOP As Integer = 15
-Public Const BTN_MAIN_1_LEFT As Integer = 960
-Public Const BTN_MAIN_1_WIDTH As Integer = 100
-Public Const BTN_MAIN_1_HEIGHT As Integer = 40
-
-'Public Const BTN_MAIN_2_TOP As Integer = 143
-'Public Const BTN_MAIN_2_LEFT As Integer = 1075
-'Public Const BTN_MAIN_2_WIDTH As Integer = 80
-'Public Const BTN_MAIN_2_HEIGHT As Integer = 20
-'
-'Public Const BTN_MAIN_3_TOP As Integer = 15
-'Public Const BTN_MAIN_3_LEFT As Integer = 280
-'Public Const BTN_MAIN_3_WIDTH As Integer = 100
-'Public Const BTN_MAIN_3_HEIGHT As Integer = 40
-'
-'Public Const BTN_MAIN_4_TOP As Integer = 15
-'Public Const BTN_MAIN_4_LEFT As Integer = 170
-'Public Const BTN_MAIN_4_WIDTH As Integer = 100
-'Public Const BTN_MAIN_4_HEIGHT As Integer = 40
-'
-'Public Const BTN_MAIN_5_TOP As Integer = 113
-'Public Const BTN_MAIN_5_LEFT As Integer = 1075
-'Public Const BTN_MAIN_5_WIDTH As Integer = 80
-'Public Const BTN_MAIN_5_HEIGHT As Integer = 20
-'
-'Public Const BTN_SUPPORT_TOP As Integer = 500
-'Public Const BTN_SUPPORT_LEFT As Integer = 20
-'Public Const BTN_SUPPORT_WIDTH As Integer = 110
-'Public Const BTN_SUPPORT_HEIGHT As Integer = 20
 
 ' ---------------------------------------------------------------
 ' For Action Screen
@@ -117,14 +92,18 @@ Public Const ACTIVE_TABLE_COL_WIDTHS As String = "100:200:200:290:100"
 Public Const ACTIVE_TABLE_STYLES As String = "GENERIC_TABLE"
 Public Const ACTIVE_TABLE_TITLES As String = "Workflow No:Name:Step No:Step Name:Status"
 Public Const ACTIVE_MAX_LINES As Integer = 150
+Public Const ACTIVE_BTN_MAIN_1_LEFT As Integer = 30
+Public Const ACTIVE_BTN_MAIN_1_TOP As Integer = 20
+Public Const ACTIVE_BTN_MAIN_2_LEFT As Integer = 155
+Public Const ACTIVE_BTN_MAIN_2_TOP As Integer = 20
 
 ' ---------------------------------------------------------------
-' Complete Screen
+' Closed Screen
 ' ---------------------------------------------------------------
-Public Const COMPLETE_CELL_NOCOLS As Integer = 5
-Public Const COMPLETE_CELL_COL_WIDTHS As String = "100:200:200:290:100"
-Public Const COMPLETE_CELL_TITLES As String = "Workflow No:Name:Step No:Step Name:Status"
-Public Const COMPLETE_MAX_LINES As Integer = 100
+Public Const Closed_CELL_NOCOLS As Integer = 5
+Public Const Closed_CELL_COL_WIDTHS As String = "100:200:200:290:100"
+Public Const Closed_CELL_TITLES As String = "Workflow No:Name:Step No:Step Name:Status"
+Public Const Closed_MAX_LINES As Integer = 100
 
 ' ---------------------------------------------------------------
 ' Admin Screen
@@ -229,23 +208,16 @@ Public MENUBAR_STYLE As ClsUIStyle
 Public BUTTON_SET_STYLE As ClsUIStyle
 Public BUTTON_UNSET_STYLE As ClsUIStyle
 Public MAIN_FRAME_STYLE As ClsUIStyle
+Public BUTTON_FRAME_STYLE As ClsUIStyle
 Public HEADER_STYLE As ClsUIStyle
 Public BTN_MAIN_STYLE As ClsUIStyle
 Public GENERIC_BUTTON As ClsUIStyle
-'Public TOOL_BUTTON As ClsUIStyle
-'Public BTN_SUPPORT As ClsUIStyle
 Public GENERIC_TABLE As ClsUIStyle
 Public GREEN_CELL As ClsUIStyle
 Public AMBER_CELL As ClsUIStyle
 Public RED_CELL As ClsUIStyle
 Public GENERIC_TABLE_HEADER As ClsUIStyle
-'Public TRANSPARENT_TEXT_BOX As ClsUIStyle
-'Public VERT_CELL_HEADER As ClsUIStyle
-'Public MATRIX_DEF As ClsUIStyle
-'Public MATRIX_1 As ClsUIStyle
-'Public MATRIX_3 As ClsUIStyle
-'Public MATRIX_4 As ClsUIStyle
-'
+
 ' ---------------------------------------------------------------
 ' New Order Workflow
 ' ---------------------------------------------------------------
@@ -423,6 +395,11 @@ Public Const MAIN_FRAME_BORDER_WIDTH As Single = 0
 Public Const MAIN_FRAME_FILL_1 As Long = COLOUR_5
 Public Const MAIN_FRAME_FILL_2 As Long = COLOUR_5
 Public Const MAIN_FRAME_SHADOW As Long = msoShadow21
+
+Public Const BUTTON_FRAME_BORDER_WIDTH As Single = 0
+Public Const BUTTON_FRAME_FILL_1 As Long = COLOUR_5
+Public Const BUTTON_FRAME_FILL_2 As Long = COLOUR_5
+Public Const BUTTON_FRAME_SHADOW As Long = msoShadow21
 
 Public Const HEADER_BORDER_WIDTH As Single = 0
 Public Const HEADER_FILL_1 As Long = COLOUR_2

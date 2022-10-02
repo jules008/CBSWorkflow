@@ -93,7 +93,7 @@ Public Function Initialise() As Boolean
             
     If Not HideTabs Then Err.Raise HANDLED_ERROR
     
-    If Not ModUIMenu.ProcessBtnPress() Then Err.Raise HANDLED_ERROR
+    If Not ModUIMenu.ButtonClickEvent("1") Then Err.Raise HANDLED_ERROR
     
     ShtMain.Unprotect PROTECT_KEY
 

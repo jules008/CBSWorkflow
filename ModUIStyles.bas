@@ -27,6 +27,7 @@ Public Function BuildScreenStyles() As Boolean
     Set BUTTON_UNSET_STYLE = New ClsUIStyle
     Set BUTTON_SET_STYLE = New ClsUIStyle
     Set MAIN_FRAME_STYLE = New ClsUIStyle
+    Set BUTTON_FRAME_STYLE = New ClsUIStyle
     Set BTN_MAIN_STYLE = New ClsUIStyle
     Set GENERIC_BUTTON = New ClsUIStyle
     Set HEADER_STYLE = New ClsUIStyle
@@ -86,6 +87,14 @@ Public Function BuildScreenStyles() As Boolean
         .Fill1 = MAIN_FRAME_FILL_1
         .Fill2 = MAIN_FRAME_FILL_2
         .Shadow = MAIN_FRAME_SHADOW
+    End With
+    
+    With BUTTON_FRAME_STYLE
+        .Name = "BUTTON_FRAME_STYLE"
+        .BorderWidth = BUTTON_FRAME_BORDER_WIDTH
+        .Fill1 = BUTTON_FRAME_FILL_1
+        .Fill2 = BUTTON_FRAME_FILL_2
+        .Shadow = BUTTON_FRAME_SHADOW
     End With
 
     With HEADER_STYLE

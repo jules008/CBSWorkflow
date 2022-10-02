@@ -22,7 +22,7 @@ Attribute VB_Exposed = False
 Option Explicit
 Private pSteps As Collection
 Private pStart As String
-Private pPCComplete As Single
+Private pPCClosed As Single
 Private pParent As ClsWorkflow
 
 '---------------------------------------------------------------
@@ -35,18 +35,18 @@ Public Property Set Parent(obj As ClsWorkflow)
 End Property
 
 '---------------------------------------------------------------
-Public Property Get PCComplete() As String
+Public Property Get PCClosed() As String
     Dim Step As ClsStep
-    Dim Complete As Integer
+    Dim Closed As Integer
     
-    Complete = 0
+    Closed = 0
     For Each Step In pSteps
-        If Step.Status = enComplete Then Complete = Complete + 1
+        If Step.Status = enClosed Then Closed = Closed + 1
     Next
     
-    pPCComplete = Complete / pSteps.Count * 100
+    pPCClosed = Closed / pSteps.Count * 100
     
-    PCComplete = pPCComplete
+    PCClosed = pPCClosed
 End Property
 
 '---------------------------------------------------------------
@@ -260,7 +260,7 @@ Public Sub UpdateSteps()
              & "  WHERE" _
              & "    TblStep.UniqueID = TblStepTemplate.UniqueID"
     
-    SQL = "SELECT WorkflowNo FROM TblWorkflow WHERE Status <> 'enComplete'"
+    SQL = "SELECT WorkflowNo FROM TblWorkflow WHERE Status <> 'enClosed'"
     Set RstWFs = DB.OpenRecordset(SQL)
     
     With RstWFs
@@ -270,7 +270,7 @@ Public Sub UpdateSteps()
             WFNo = !WorkflowNo
             Debug.Print WFNo
             'get cert type
-            SQL = "SELECT Name FROM TblWorkflow WHERE WorkflowNo = " & WFNo & " AND Status <> 'enComplete'"
+            SQL = "SELECT Name FROM TblWorkflow WHERE WorkflowNo = " & WFNo & " AND Status <> 'enClosed'"
             
             Set RstDoDCert = DB.OpenRecordset(SQL)
             
@@ -322,11 +322,11 @@ Public Sub UpdateSteps()
                                 
                                 If RstNextRec.RecordCount = 0 Then Err.Raise HANDLED_ERROR, , "Error loading WF " & WFNo
                                 
-                                'if the next record has been started, set record to be complete
+                                'if the next record has been started, set record to be Closed
                                 If RstNextRec!StartTime <> 0 And Not IsNull(RstNextRec!StartTime) Then
                                     !StartTime = RstNextRec!StartTime
                                     !EndTime = RstNextRec!StartTime
-                                    !Status = "enComplete"
+                                    !Status = "enClosed"
                                 End If
                                 
                                 .Update

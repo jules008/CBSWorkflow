@@ -163,11 +163,16 @@ End Property
 '---------------------------------------------------------------
 Public Sub ReOrder()
     Dim Frame As ClsUIFrame
+    Dim i As Integer
     
     pShpScreen.ZOrder msoSendToBack
     
+    For i = 3 To 0 Step -1
     For Each Frame In pFrames
+            If i = Frame.ZOrder Then
         Frame.ReOrder
+            End If
+        Next
     Next
         
 End Sub

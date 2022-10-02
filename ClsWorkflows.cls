@@ -73,7 +73,7 @@ Public Sub UpdateRAGs()
                                                 & "TblStep On TblStep.WorkflowNo = TblWorkflow.WorkflowNo " _
                                             & "AND TblStep.StepNo = TblWorkflow.CurrentStep " _
                                             & "WHERE " _
-                                                & "TblWorkflow.Status <> 'enComplete' " _
+                                                & "TblWorkflow.Status <> 'enClosed' " _
                                             & "ORDER BY " _
                                                 & "TblWorkflow.WorkflowNo")
                             
@@ -218,7 +218,7 @@ Public Function CountForAction() As Integer
                                         & "WHERE ((RAG = 'en2Amber' Or RAG = 'en1Red') " _
                                         & "OR Status = 'enActionReqd') " _
                                         & "AND Deleted IS NULL " _
-                                        & "AND Status <> 'enComplete'")
+                                        & "AND Status <> 'enClosed'")
                                         
     CountForAction = RstCount![CountX]
     
@@ -226,15 +226,15 @@ Public Function CountForAction() As Integer
 End Function
 
 ' ===============================================================
-' Method GetComplete
+' Method GetClosed
 ' Gets all active items in collection
 '---------------------------------------------------------------
-Public Sub GetComplete()
+Public Sub GetClosed()
     Dim RstWorkflow As Recordset
     Dim Workflow As ClsWorkflow
     Dim i As Integer
 
-    Set RstWorkflow = ModDatabase.SQLQuery("SELECT * FROM TblWorkflow WHERE Status = 'enComplete' " _
+    Set RstWorkflow = ModDatabase.SQLQuery("SELECT * FROM TblWorkflow WHERE Status = 'enClosed' " _
                                             & " AND Deleted IS NULL")
     
     If RstWorkflow.RecordCount = 0 Then Exit Sub

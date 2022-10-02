@@ -91,7 +91,9 @@ Public CTimer As ClsCodeTimer
 Public MainScreen As ClsUIScreen
 Public MenuBar As ClsUIFrame
 Public MainFrame As ClsUIFrame
-Public BtnNewWorkflow As ClsUIButton
+Public ButtonFrame As ClsUIFrame
+Public BtnNewProjectWF As ClsUIButton
+Public BtnNewLenderWF As ClsUIButton
 Public Logo As ClsUIDashObj
 
 ' ===============================================================
@@ -143,18 +145,32 @@ End Enum
 
 Enum EnumBtnNo
     enBtnForAction = 1
-    enBtnActive
-    enBtnComplete
-    enBtnExit
-    enBtnSupport
-    enBtnNewWorkflow
+    enBtnProjectsActive = 21
+    enBtnProjectsClosed = 22
+    enCRMClients = 31
+    enCRMSPVs = 32
+    enCRMContacts = 33
+    enCRMProjects = 34
+    enCRMLenders = 35
+    enDashboard = 4
+    enReports = 5
+    enAdminUsers = 61
+    enAdminEmailTs = 62
+    enAdminDocuments = 63
+    enAdminWorkflows = 64
+    enAdminWFTypes = 65
+    enAdminLists = 66
+    enAdminRoles = 67
+    enBtnNewProjectWF = 7
+    enBtnNewLenderWF = 8
+    enBtnExit = 9
 End Enum
 
 Enum enStatus           'Status
     enNotStarted = 1    'Not Started
     enActionReqd        'Action Req'd
     enWaiting           'Waiting
-    enComplete          'Complete
+    enClosed          'Closed
 End Enum                '
 
 Enum enFormValidation

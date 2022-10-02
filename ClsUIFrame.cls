@@ -31,9 +31,11 @@ Private pMenu As ClsUIMenu
 Private pEnableHeader As Boolean
 Private pHeader As ClsUIHeader
 Private pCellHeaders As ClsUICells
+Private pButtons As ClsUIButtons
 Private pCells As ClsUICells
 Private pShpFrame As Shape
 Private pVisible As Boolean
+Private pZOrder As Integer
 Private pTable As ClsUITable
 Private pParent As ClsUIScreen
 
@@ -143,6 +145,15 @@ Public Property Let Cells(ByVal vNewValue As ClsUICells)
 End Property
 
 '---------------------------------------------------------------
+Public Property Get Buttons() As ClsUIButtons
+    Set Buttons = pButtons
+End Property
+
+Public Property Let Buttons(ByVal vNewValue As ClsUIButtons)
+    Set pButtons = vNewValue
+End Property
+
+'---------------------------------------------------------------
 Public Property Get Visible() As Boolean
     Visible = pShpFrame.Visible
 End Property
@@ -162,6 +173,15 @@ Public Property Let Visible(ByVal vNewValue As Boolean)
     
     pMenu.Visible = pVisible
     
+End Property
+
+'---------------------------------------------------------------
+Public Property Get ZOrder() As Integer
+    ZOrder = pZOrder
+End Property
+
+Public Property Let ZOrder(ByVal vNewValue As Integer)
+    pZOrder = vNewValue
 End Property
 
 '---------------------------------------------------------------
@@ -246,7 +266,7 @@ Public Sub ReOrder()
         DashObj.ShpDashObj.ZOrder msoBringToFront
     Next
     
-    
+    pButtons.ReOrder
     pMenu.ReOrder
 End Sub
 
@@ -263,11 +283,13 @@ Private Sub Class_Initialize()
     Set pShpFrame = ShtMain.Shapes.AddShape(msoShapeRectangle, 0, 0, 10, 10)
     Set pTable = New ClsUITable
     Set pStyle = New ClsUIStyle
+    Set pButtons = New ClsUIButtons
     
     pDashObjs.Initialize Me
     pMenu.Initialize Me
     pHeader.Initialize Me
     pTable.Initialize Me
+    pButtons.Initialize Me
 End Sub
 ' ===============================================================
 Public Sub Terminate()
@@ -276,6 +298,7 @@ Public Sub Terminate()
     pHeader.Terminate
     pTable.Terminate
     pCells.Terminate
+    pButtons.Terminate
     
     Set pParent = Nothing
     pShpFrame.Delete
@@ -286,6 +309,7 @@ Public Sub Terminate()
     Set pMenu = Nothing
     Set pHeader = Nothing
     Set pTable = Nothing
+    Set pButtons = Nothing
 End Sub
 '---------------------------------------------------------------
 Private Sub Class_Terminate()
@@ -297,4 +321,5 @@ Private Sub Class_Terminate()
     Set pCellHeaders = Nothing
     Set pCells = Nothing
     Set pTable = Nothing
+    Set pButtons = Nothing
 End Sub

@@ -29,6 +29,8 @@ Private pText As String
 Private pIcon As Shape
 Private pBadge As Shape
 Private pBadgeText As String
+Private pButtonLvl As Integer
+Private pButtonIndex As String
 Private pSelectStyle As ClsUIStyle
 Private pUnSelectStyle As ClsUIStyle
 Private pShpButton As Shape
@@ -43,13 +45,8 @@ Public Property Get Top() As Integer
 End Property
 
 Public Property Let Top(ByVal vNewValue As Integer)
-    Dim ParentOffset As Integer
-    
     pTop = vNewValue
-    
-    If Not Parent Is Nothing Then ParentOffset = Parent.Top
-    
-    pShpButton.Top = pTop + ParentOffset
+    pShpButton.Top = pTop
 End Property
 
 '---------------------------------------------------------------
@@ -58,13 +55,8 @@ Public Property Get Left() As Integer
 End Property
 
 Public Property Let Left(ByVal vNewValue As Integer)
-    Dim ParentOffset As Integer
-    
     pLeft = vNewValue
-    
-    If Not Parent Is Nothing Then ParentOffset = Parent.Left
-    
-    pShpButton.Left = pLeft + ParentOffset
+    pShpButton.Left = pLeft
 End Property
 
 '---------------------------------------------------------------
@@ -144,6 +136,25 @@ Public Property Let BadgeText(ByVal vNewValue As String)
     ShtMain.Unprotect PROTECT_KEY
     
     pBadge.TextFrame.Characters.Caption = pBadgeText
+End Property
+
+'---------------------------------------------------------------
+Public Property Get ButtonLvl() As Integer
+    Dim AryIndex
+    
+    AryIndex = Split(ButtonIndex, ".")
+    pButtonLvl = UBound(AryIndex) + 1
+    ButtonLvl = pButtonLvl
+    
+End Property
+
+'---------------------------------------------------------------
+Public Property Get ButtonIndex() As String
+    ButtonIndex = pButtonIndex
+End Property
+
+Public Property Let ButtonIndex(ByVal vNewValue As String)
+    pButtonIndex = vNewValue
 End Property
 
 '---------------------------------------------------------------
@@ -280,4 +291,4 @@ Private Sub Class_Terminate()
     Set pShpButton = Nothing
 End Sub
 
-'---------------------------------------------------------------
+
