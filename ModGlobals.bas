@@ -83,6 +83,7 @@ Global STOP_FLAG As Boolean
 ' Global Class Declarations
 ' ---------------------------------------------------------------
 Public ActiveWorkFlow As ClsWorkflow
+Public ActiveProject As ClsProject
 Public CTimer As ClsCodeTimer
 
 ' ===============================================================

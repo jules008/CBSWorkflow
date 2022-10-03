@@ -2,3 +2,5 @@ ProjectNo,  dbInteger
 LoanTerm,  dbText
 CBSComPC,  dbSingle
 ExitFee,  dbBoolean
+Workflows,  dbText
+Contacts,  dbText

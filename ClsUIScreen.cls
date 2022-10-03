@@ -26,7 +26,6 @@ Private pHeight As Integer
 Private pWidth As Integer
 Private pName As String
 Private pStyle As ClsUIStyle
-'Private pMenu As ClsUIMenu
 Private pShpScreen As Shape
 Private pFrames As ClsUIFrames
 Private pVisible As Boolean

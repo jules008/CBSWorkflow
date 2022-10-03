@@ -225,5 +225,49 @@ ErrorHandler:
     End If
 End Function
 
+' ===============================================================
+' ResetScreen
+' resets to start up screen for transitions between pages
+' ---------------------------------------------------------------
+Public Function ResetScreen() As Boolean
+    Dim Frame As ClsUIFrame
+    
+    Const StrPROCEDURE As String = "ResetScreen()"
+
+    On Error Resume Next
+    
+    ShtMain.Unprotect PROTECT_KEY
+        
+    For Each Frame In MainScreen.Frames
+        If Frame.Name <> "MenuBar" Then
+            MainScreen.Frames.RemoveItem Frame.Name
+            Frame.Terminate
+            Set Frame = Nothing
+        End If
+    Next
+    
+    If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
+        
+    ResetScreen = True
+        
+Exit Function
+
+ErrorExit:
+
+    ResetScreen = False
+    If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
+
+Exit Function
+
+ErrorHandler:
+    
+    If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
+        Stop
+        Resume
+    Else
+        Resume ErrorExit
+    End If
+End Function
+
 
 

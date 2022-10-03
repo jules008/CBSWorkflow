@@ -212,6 +212,26 @@ Restart:
 
             If Not ResetScreen Then Err.Raise HANDLED_ERROR
 
+            Set ActiveWorkFlow = New ClsWorkflow
+            Set ActiveProject = New ClsProject
+            
+            With ActiveProject
+                .LoanTerm = 36
+                .ExitFee = True
+                .DBSave
+            End With
+            
+            With ActiveWorkFlow
+                .Name = "Project"
+                .DBSave
+                
+                FrmWorkflow.ShowForm
+                If Not ModUIProjects.RefreshList Then Err.Raise HANDLED_ERROR
+                .DBSave
+            End With
+            
+            ActiveProject.Workflows.Add ActiveWorkFlow
+            
             ShtMain.Unprotect PROTECT_KEY
 
             If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY

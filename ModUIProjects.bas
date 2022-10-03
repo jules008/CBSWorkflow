@@ -135,7 +135,7 @@ Private Function BuildMainFrame() As Boolean
         .Top = ACTIVE_BTN_MAIN_1_TOP
         .Width = GENERIC_BUTTON_WIDTH
         .Name = "BtnMain1"
-        .OnAction = "'ModUIButtons.ProcessBtnPress(" & enBtnNewProjectWF & ")'"
+        .OnAction = "'ModUIButtons.ProcessBtnClicks(" & enBtnNewProjectWF & ")'"
         .UnSelectStyle = GENERIC_BUTTON
         .Selected = False
         .Text = "New Project Workflow"
@@ -148,7 +148,7 @@ Private Function BuildMainFrame() As Boolean
         .Top = ACTIVE_BTN_MAIN_2_TOP
         .Width = GENERIC_BUTTON_WIDTH
         .Name = "BtnMain2"
-        .OnAction = "'ModUIButtons.ProcessBtnPress(" & enBtnNewLenderWF & ")'"
+        .OnAction = "'ModUIButtons.ProcessBtnClicks(" & enBtnNewLenderWF & ")'"
         .UnSelectStyle = GENERIC_BUTTON
         .Selected = False
         .Text = "New Lender Workflow"
@@ -209,11 +209,13 @@ Public Function RefreshList(Optional SortBy As String) As Boolean
     
     Set Workflows = New ClsWorkflows
     
-    Workflows.UpdateRAGs
+'    Workflows.UpdateRAGs
     
     Set RstWorkflowList = GetActiveList(StrSortBy)
     
     With RstWorkflowList
+        If .RecordCount = 0 Then GoTo GracefulExit
+        
         .MoveLast
         .MoveFirst
         If .RecordCount = 0 Then GoTo GracefulExit

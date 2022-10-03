@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FrmWorkflow 
-   Caption         =   "Workflow"
-   ClientHeight    =   5535
+   Caption         =   "New Project Workflow"
+   ClientHeight    =   9885.001
    ClientLeft      =   120
    ClientTop       =   465
    ClientWidth     =   15960
@@ -56,7 +56,6 @@ Restart:
     With ActiveWorkFlow
         .ActiveStep.Start
         .DBSave
-'        .Steps.OpenNewEmails 'disabled as emails move from inbox
     End With
     
     If Not PopulateForm Then Err.Raise HANDLED_ERROR
@@ -87,15 +86,9 @@ End Function
 ' Fills form with data
 ' ---------------------------------------------------------------
 Private Function PopulateForm() As Boolean
-    Dim AmberTime As Date
-    Dim RedTime As Date
-    Dim TimeToAmber As Integer
-    Dim TimeToRed As Integer
     Dim ProgPC As Single
-    Dim TimeNow As Date
     Dim Step As ClsStep
     Dim TmpWorkflow As ClsWorkflow
-    Dim i As Integer
     
     Const StrPROCEDURE As String = "PopulateForm()"
 
@@ -105,8 +98,8 @@ Private Function PopulateForm() As Boolean
     Progress ProgPC
     
     With ActiveWorkFlow
-        TxtWorkflowNo = .WorkflowNo
-        TxtWFName = .Name
+        TxtProjectNo = .WorkflowNo
+'        TxtWFName = .Name
     End With
     
     With ActiveWorkFlow.ActiveStep

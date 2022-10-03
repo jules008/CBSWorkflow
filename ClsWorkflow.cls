@@ -21,6 +21,7 @@ Attribute VB_Exposed = False
 
 Option Explicit
 Private pDeleted As Date
+Private pProjectNo As Integer
 Private pWorkflowNo As Integer
 Private pName As String
 Private pMember As String
@@ -33,6 +34,7 @@ Private pActiveStep As ClsStep
 Private pStatus As enStatus
 Private pFrmInputBox As FrmInputBox
 Private pSteps As ClsSteps
+Private pParent As ClsProject
 
 '---------------------------------------------------------------
 Public Property Get Deleted() As Date
@@ -41,6 +43,15 @@ End Property
 
 Public Property Let Deleted(ByVal vNewValue As Date)
     pDeleted = vNewValue
+End Property
+
+'---------------------------------------------------------------
+Public Property Get ProjectNo() As Integer
+    ProjectNo = pProjectNo
+End Property
+
+Public Property Let ProjectNo(ByVal vNewValue As Integer)
+    pProjectNo = vNewValue
 End Property
 
 '---------------------------------------------------------------
@@ -162,6 +173,15 @@ Public Property Let Steps(ByVal vNewValue As ClsSteps)
     Set pSteps = vNewValue
 End Property
 
+'---------------------------------------------------------------
+Public Property Get Parent() As ClsProject
+    Set Parent = pParent
+End Property
+
+Public Property Let Parent(newval As ClsProject)
+    Set pParent = newval
+End Property
+
 ' ===============================================================
 ' Method DBGet
 ' Gets class from Database
@@ -174,6 +194,7 @@ Public Sub DBGet(WorkflowNo As String)
     With RstWorkflow
         If .RecordCount > 0 Then
             If Not IsNull(!Deleted) Then pDeleted = !Deleted
+            If Not IsNull(!ProjectNo) Then pProjectNo = !ProjectNo
             If Not IsNull(!WorkflowNo) Then pWorkflowNo = !WorkflowNo
             If Not IsNull(!CurrentStep) Then pCurrentStep = !CurrentStep
             If Not IsNull(!Name) Then pName = !Name
@@ -218,6 +239,7 @@ Public Sub DBSave()
                 
         If CurrentStep = "" Then pCurrentStep = pSteps.Start
         !CurrentStep = pCurrentStep
+        !ProjectNo = pProjectNo
         !WorkflowNo = pWorkflowNo
         !Name = pName
         !Status = enStatusStr(Status)
@@ -368,6 +390,11 @@ Public Sub Pause()
             .DBSave
         End With
     End If
+End Sub
+
+' ===============================================================
+Public Sub Initialise(obj As ClsProject)
+    Set Me.Parent = obj
 End Sub
 
 ' ===============================================================

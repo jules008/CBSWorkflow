@@ -16,7 +16,7 @@ Attribute VB_Exposed = False
 '===============================================================
 ' v1.0.0 - Initial Version
 '---------------------------------------------------------------
-' Date - 14 Sep 22
+' Date - 03 Oct 22
 '===============================================================
 ' Methods
 '---------------------------------------------------------------
@@ -32,6 +32,8 @@ Private pProjectNo As Integer
 Private pLoanTerm As String
 Private pCBSComPC As Single
 Private pExitFee As Boolean
+Private pWorkflows As ClsWorkflows
+Private pContacts As ClsContacts
 Private pParent As ClsSPV
 
 '---------------------------------------------------------------
@@ -71,6 +73,24 @@ Public Property Let ExitFee(ByVal vNewValue As Boolean)
 End Property
 
 '---------------------------------------------------------------
+Public Property Get Workflows() As ClsWorkflows
+    Set Workflows = pWorkflows
+End Property
+
+Public Property Let Workflows(ByVal vNewValue As ClsWorkflows)
+    Set pWorkflows = vNewValue
+End Property
+
+'---------------------------------------------------------------
+Public Property Get Contacts() As ClsContacts
+    Set Contacts = pContacts
+End Property
+
+Public Property Let Contacts(ByVal vNewValue As ClsContacts)
+    Set pContacts = vNewValue
+End Property
+
+'---------------------------------------------------------------
 Public Property Get Parent() As ClsSPV
     Set Parent = pParent
 End Property
@@ -93,6 +113,8 @@ Public Sub DBGet(ProjectNo As Integer)
             If Not IsNull(!LoanTerm) Then pLoanTerm = !LoanTerm
             If Not IsNull(!CBSComPC) Then pCBSComPC = !CBSComPC
             If Not IsNull(!ExitFee) Then pExitFee = !ExitFee
+            
+        pContacts.GetCollection
         End If
     End With
     Set RstProject = Nothing
@@ -129,6 +151,8 @@ Public Sub DBSave()
         If CStr(pCBSComPC) = "" Then !CBSComPC = Null Else !CBSComPC = pCBSComPC
         If CStr(pExitFee) = "" Then !ExitFee = Null Else !ExitFee = pExitFee
 
+        pWorkflows.SaveCollection
+        pContacts.SaveCollection
         .Update
     End With
 
@@ -151,13 +175,24 @@ Public Sub Initialize(obj As ClsSPV)
 End Sub
 '---------------------------------------------------------------
 
+Private Sub Class_Initialize()
+    Set pWorkflows = New ClsWorkflows
+    Set pContacts = New ClsContacts
+
+    pWorkflows.Initialize Me
+End Sub
 ' ===============================================================
 Public Sub Terminate()
+    pWorkflows.Terminate
 
     Set Me.Parent = Nothing
 
+    Set pWorkflows = Nothing
+    Set pContacts = Nothing
 End Sub
 '---------------------------------------------------------------
 Private Sub Class_Terminate()
+    Set pWorkflows = Nothing
+    Set pContacts = Nothing
 End Sub
 ' ===============================================================
