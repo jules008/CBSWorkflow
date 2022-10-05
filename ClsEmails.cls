@@ -104,6 +104,7 @@ End Sub
 '---------------------------------------------------------------
 Public Sub DeleteCollection()
     Dim Email As ClsEmail
+    Sin 0
     For Each Email In pEmails
         pEmails.Remove CStr(Email.EmailNo)
     Next

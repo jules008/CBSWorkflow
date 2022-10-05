@@ -1,21 +1,21 @@
 VERSION 5.00
-Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FrmWorkflow 
+Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FrmProject 
    Caption         =   "New Project Workflow"
    ClientHeight    =   9885.001
    ClientLeft      =   120
    ClientTop       =   465
    ClientWidth     =   15960
-   OleObjectBlob   =   "FrmWorkflow.frx":0000
+   OleObjectBlob   =   "FrmProject.frx":0000
    StartUpPosition =   2  'CenterScreen
 End
-Attribute VB_Name = "FrmWorkflow"
+Attribute VB_Name = "FrmProject"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 
 '===============================================================
-' Module FrmWorkflow
+' Module FrmProject
 '---------------------------------------------------------------
 ' Created by Julian Turner
 ' OneSheet Consulting
@@ -27,7 +27,7 @@ Attribute VB_Exposed = False
 '===============================================================
 Option Explicit
 
-Private Const StrMODULE As String = "FrmWorkflow"
+Private Const StrMODULE As String = "FrmProject"
  
 Private Declare PtrSafe Function FindWindow Lib "user32" Alias "FindWindowA" (ByVal lpClassName As String, ByVal lpWindowName As String) As LongPtr
 Private Declare PtrSafe Function BringWindowToTop Lib "user32" (ByVal hwnd As LongPtr) As Long
@@ -46,9 +46,9 @@ Public Function ShowForm() As Boolean
     
 Restart:
     
-    If ActiveWorkFlow.ActiveStep Is Nothing Then Err.Raise HANDLED_ERROR, Description:="No activeworkflow"
+    If ActiveProject Is Nothing Then Err.Raise HANDLED_ERROR, Description:="No Active Project"
     
-    With ActiveWorkFlow
+    With ActiveProject.ProjectWorkflow
         .ActiveStep.Start
         .DBSave
     End With
@@ -89,22 +89,22 @@ Private Function PopulateForm() As Boolean
 
     On Error GoTo ErrorHandler
     
-    ProgPC = ActiveWorkFlow.Steps.PCClosed
+    ProgPC = ActiveProject.ProjectWorkflow.Steps.PCClosed
     Progress ProgPC
     
-    With ActiveWorkFlow.Parent
+    With ActiveProject
         TxtProjectNo = .ProjectNo
         TxtLoanTerm = .LoanTerm
         TxtCommision = .CBSComPC
         ChkExitFee = .ExitFee
     End With
-    
-    With ActiveWorkFlow.ActiveStep
+        
+    With ActiveProject.ProjectWorkflow.ActiveStep
         TxtStepName = .StepNo & " - " & .StepName
         TxtAction = .StepAction
     End With
 
-    Select Case ActiveWorkFlow.ActiveStep.StepType
+    Select Case ActiveProject.ProjectWorkflow.ActiveStep.StepType
         Case enYesNo
             TxtDataInput.Visible = False
             BtnNo.Visible = True
@@ -136,10 +136,10 @@ Private Function PopulateForm() As Boolean
             End With
        
             With FrmCalPicker
-                If ActiveWorkFlow.ActiveStep.DataFormat = "Date" And TxtDataInput = "" Then
-                    Set TmpWorkflow = ActiveWorkFlow
+                If ActiveProject.ProjectWorkflow.ActiveStep.DataFormat = "Date" And TxtDataInput = "" Then
+                    Set TmpWorkflow = ActiveProject.ProjectWorkflow
                     TxtDataInput = Format(.ShowForm, "dd mmm yy")
-                    Set ActiveWorkFlow = TmpWorkflow
+                    Set ActiveProject.ProjectWorkflow = TmpWorkflow
                 End If
             End With
             
@@ -164,10 +164,10 @@ Private Function PopulateForm() As Boolean
             
     End Select
     
-    If ActiveWorkFlow.ActiveStep.CopyTextName <> "" Then
+    If ActiveProject.ProjectWorkflow.ActiveStep.CopyTextName <> "" Then
         With BtnCopyText
             .Visible = True
-            .Caption = ActiveWorkFlow.ActiveStep.CopyTextName
+            .Caption = ActiveProject.ProjectWorkflow.ActiveStep.CopyTextName
         End With
     Else
         BtnCopyText.Visible = False
@@ -211,14 +211,14 @@ End Sub
 Private Sub BtnComplete_Click()
     
     If TxtDataInput <> "" Then
-        ActiveWorkFlow.ActiveStep.DataItem = TxtDataInput
+        ActiveProject.ProjectWorkflow.ActiveStep.DataItem = TxtDataInput
         TxtDataInput = ""
     End If
     
-    With ActiveWorkFlow
+    With ActiveProject.ProjectWorkflow
         .MoveToNextStep
     
-    With ActiveWorkFlow.ActiveStep
+    With ActiveProject.ProjectWorkflow.ActiveStep
        
             If .LastStep Then
                 Unload Me
@@ -241,10 +241,10 @@ End Sub
 ' ---------------------------------------------------------------
 Private Sub BtnNo_Click()
     
-    With ActiveWorkFlow
+    With ActiveProject.ProjectWorkflow
         .MoveToAltStep
     
-    With ActiveWorkFlow.ActiveStep
+    With ActiveProject.ProjectWorkflow.ActiveStep
        
             If .LastStep Then
                 Unload Me
@@ -266,7 +266,7 @@ End Sub
 ' ---------------------------------------------------------------
 Private Sub BtnPrevStep_Click()
     
-    With ActiveWorkFlow
+    With ActiveProject.ProjectWorkflow
         .MoveToPrevStep
         .ActiveStep.Start
         .DBSave
@@ -289,7 +289,7 @@ Private Function SaveWorkflow() As Boolean
 
     FormClosing = True
         
-    ActiveWorkFlow.DBSave
+    ActiveProject.ProjectWorkflow.DBSave
 
     SaveWorkflow = True
 
@@ -336,7 +336,6 @@ Function Refresh() As Boolean
     
     Refresh = True
 
-
 Exit Function
 
 ErrorExit:
@@ -368,3 +367,5 @@ Private Sub UserForm_Initialize()
     Me.Top = Application.Top + (0.5 * Application.Height) - (0.5 * Me.Height)
     
 End Sub
+
+

@@ -132,12 +132,20 @@ Public Sub RecordsetPrint(rst As Recordset)
     
     Debug.Print rst.RecordCount
     rst.MoveFirst
+    
+    For i = 0 To rst.Fields.Count - 1
+        DBString = DBString & rst.Fields(i).Name & ":" & vbTab
+    Next
+    
+    Debug.Print DBString
+    DBString = ""
+    
     Do Until rst.EOF
         For i = 0 To rst.Fields.Count - 1
-             DBString = DBString & rst.Fields(i).Value & vbTab
+             DBString = DBString & rst.Fields(i).Value & ":" & vbTab
         Next
         rst.MoveNext
-        Debug.Print DBString & vbCr
+        Debug.Print DBString
         DBString = ""
     Loop
 

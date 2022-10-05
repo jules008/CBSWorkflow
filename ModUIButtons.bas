@@ -19,18 +19,26 @@ Private Const StrMODULE As String = "ModUIButtons"
 ' ProcessBtnClicks
 ' Processes all button presses in application
 ' ---------------------------------------------------------------
-Public Sub ProcessBtnClicks(ButtonIndex As EnumBtnNo)
+Public Sub ProcessBtnClicks(ButtonNo As String)
     Dim ErrNo As Integer
+    Dim AryBtn() As String
+
+    Dim BtnNo As EnumBtnNo
+    Dim BtnIndex As Integer
 
     Const StrPROCEDURE As String = "ProcessBtnClicks()"
-
     On Error GoTo ErrorHandler
 
 Restart:
 
     If MainScreen Is Nothing Then Err.Raise SYSTEM_RESTART
 
-    Select Case ButtonIndex
+    AryBtn = Split(ButtonNo, ":")
+    BtnNo = CInt(AryBtn(0))
+    
+    If UBound(AryBtn) = 1 Then BtnIndex = AryBtn(1)
+    
+    Select Case BtnNo
     
         Case enBtnForAction
         
@@ -38,7 +46,7 @@ Restart:
 
             If Not ResetScreen Then Err.Raise HANDLED_ERROR
 
-            ShtMain.Unprotect PROTECT_KEY
+            ShtMain.Protect PROTECT_KEY
 
             If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
         
@@ -49,7 +57,7 @@ Restart:
             If Not ResetScreen Then Err.Raise HANDLED_ERROR
             If Not ModUIProjects.BuildScreen("Active") Then Err.Raise HANDLED_ERROR
 
-            ShtMain.Unprotect PROTECT_KEY
+            ShtMain.Protect PROTECT_KEY
 
             If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
             
@@ -60,7 +68,7 @@ Restart:
             If Not ResetScreen Then Err.Raise HANDLED_ERROR
             If Not ModUIProjects.BuildScreen("Closed") Then Err.Raise HANDLED_ERROR
 
-            ShtMain.Unprotect PROTECT_KEY
+            ShtMain.Protect PROTECT_KEY
 
             If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
 
@@ -70,7 +78,7 @@ Restart:
 
             If Not ResetScreen Then Err.Raise HANDLED_ERROR
 
-            ShtMain.Unprotect PROTECT_KEY
+            ShtMain.Protect PROTECT_KEY
 
             If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
 
@@ -80,7 +88,7 @@ Restart:
 
             If Not ResetScreen Then Err.Raise HANDLED_ERROR
 
-            ShtMain.Unprotect PROTECT_KEY
+            ShtMain.Protect PROTECT_KEY
 
             If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
 
@@ -90,7 +98,7 @@ Restart:
 
             If Not ResetScreen Then Err.Raise HANDLED_ERROR
 
-            ShtMain.Unprotect PROTECT_KEY
+            ShtMain.Protect PROTECT_KEY
 
             If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
 
@@ -100,7 +108,7 @@ Restart:
 
             If Not ResetScreen Then Err.Raise HANDLED_ERROR
 
-            ShtMain.Unprotect PROTECT_KEY
+            ShtMain.Protect PROTECT_KEY
 
             If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
         
@@ -110,7 +118,7 @@ Restart:
 
             If Not ResetScreen Then Err.Raise HANDLED_ERROR
 
-            ShtMain.Unprotect PROTECT_KEY
+            ShtMain.Protect PROTECT_KEY
 
             If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
 
@@ -120,7 +128,7 @@ Restart:
 
             If Not ResetScreen Then Err.Raise HANDLED_ERROR
 
-            ShtMain.Unprotect PROTECT_KEY
+            ShtMain.Protect PROTECT_KEY
 
             If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
 
@@ -130,7 +138,7 @@ Restart:
 
             If Not ResetScreen Then Err.Raise HANDLED_ERROR
 
-            ShtMain.Unprotect PROTECT_KEY
+            ShtMain.Protect PROTECT_KEY
 
             If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
 
@@ -140,7 +148,7 @@ Restart:
 
             If Not ResetScreen Then Err.Raise HANDLED_ERROR
 
-            ShtMain.Unprotect PROTECT_KEY
+            ShtMain.Protect PROTECT_KEY
 
             If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
 
@@ -150,7 +158,7 @@ Restart:
 
             If Not ResetScreen Then Err.Raise HANDLED_ERROR
 
-            ShtMain.Unprotect PROTECT_KEY
+            ShtMain.Protect PROTECT_KEY
 
             If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
 
@@ -160,7 +168,7 @@ Restart:
 
             If Not ResetScreen Then Err.Raise HANDLED_ERROR
 
-            ShtMain.Unprotect PROTECT_KEY
+            ShtMain.Protect PROTECT_KEY
 
             If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
 
@@ -170,7 +178,7 @@ Restart:
 
             If Not ResetScreen Then Err.Raise HANDLED_ERROR
 
-            ShtMain.Unprotect PROTECT_KEY
+            ShtMain.Protect PROTECT_KEY
 
             If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
 
@@ -182,7 +190,7 @@ Restart:
             If Not ResetScreen Then Err.Raise HANDLED_ERROR
             If Not ModUIProjects.BuildScreen("Closed") Then Err.Raise HANDLED_ERROR
 
-            ShtMain.Unprotect PROTECT_KEY
+            ShtMain.Protect PROTECT_KEY
 
             If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
 
@@ -192,7 +200,7 @@ Restart:
 
             If Not ResetScreen Then Err.Raise HANDLED_ERROR
 
-            ShtMain.Unprotect PROTECT_KEY
+            ShtMain.Protect PROTECT_KEY
 
             If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
 
@@ -202,7 +210,7 @@ Restart:
 
             If Not ResetScreen Then Err.Raise HANDLED_ERROR
 
-            ShtMain.Unprotect PROTECT_KEY
+            ShtMain.Protect PROTECT_KEY
 
             If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
 
@@ -221,6 +229,8 @@ Restart:
                 .DBSave
             End With
             
+            ActiveProject.Workflows.Add ActiveWorkFlow
+            
             With ActiveWorkFlow
                 .Name = "Project"
                 .DBSave
@@ -231,9 +241,7 @@ Restart:
             End With
             
             ActiveProject.Workflows.Add ActiveWorkFlow
-            
-            ShtMain.Unprotect PROTECT_KEY
-
+            ShtMain.Protect PROTECT_KEY
             If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
 
         Case enBtnNewLenderWF
@@ -241,9 +249,7 @@ Restart:
             ShtMain.Unprotect PROTECT_KEY
 
             If Not ResetScreen Then Err.Raise HANDLED_ERROR
-
-            ShtMain.Unprotect PROTECT_KEY
-
+            ShtMain.Protect PROTECT_KEY
             If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
 
         Case enBtnExit
@@ -251,8 +257,16 @@ Restart:
             ShtMain.Unprotect PROTECT_KEY
 
             If Not ResetScreen Then Err.Raise HANDLED_ERROR
+            ShtMain.Protect PROTECT_KEY
+            If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
+
+        Case enBtnOpenProject
 
             ShtMain.Unprotect PROTECT_KEY
+            Set ActiveProject = New ClsProject
+            ActiveProject.DBGet BtnIndex
+            FrmProject.ShowForm
+            ShtMain.Protect PROTECT_KEY
 
             If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
 

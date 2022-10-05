@@ -1,4 +1,4 @@
+ClientNo,  dbInteger
 Name,  dbText
 Url,  dbText
 PhoneNo,  dbText
-ClientNo,  dbInteger

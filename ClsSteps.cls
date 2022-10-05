@@ -123,6 +123,7 @@ End Function
 Public Function SaveCollection()
     Dim Step As ClsStep
     
+    Sin 0
     For Each Step In pSteps
         Step.DBSave
     Next
@@ -198,6 +199,7 @@ End Sub
 
 Public Sub DeleteCollection()
     Dim Step As ClsStep
+    Sin 0
     For Each Step In pSteps
         pSteps.Remove Parent.WorkflowNo & "-" & CStr(Step.StepNo)
     Next
@@ -398,6 +400,7 @@ End Sub
 Public Sub Terminate()
     Dim Step As ClsStep
 
+    Sin 0
     For Each Step In pSteps
         Step.Terminate
     Next

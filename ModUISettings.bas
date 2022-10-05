@@ -24,7 +24,7 @@ Public Const SCREEN_HEIGHT As Integer = 2000
 Public Const SCREEN_WIDTH As Integer = 1825
 Public Const MAIN_FRAME_TOP As Integer = 90
 Public Const MAIN_FRAME_LEFT As Integer = 170
-Public Const MAIN_FRAME_WIDTH As Integer = 890
+Public Const MAIN_FRAME_WIDTH As Integer = 650
 Public Const MAIN_FRAME_HEIGHT As Integer = 360
 
 ' ---------------------------------------------------------------
@@ -87,10 +87,11 @@ Public Const FOR_ACTION_MAX_LINES As Integer = 40
 ' ---------------------------------------------------------------
 ' Active Screen
 ' ---------------------------------------------------------------
-Public Const ACTIVE_TABLE_NOCOLS As Integer = 5
-Public Const ACTIVE_TABLE_COL_WIDTHS As String = "100:200:200:290:100"
+Public Const ACTIVE_TABLE_NOCOLS As Integer = 6
+Public Const ACTIVE_TABLE_COL_WIDTHS As String = "50:150:100:50:200:100"
+Public Const ACTIVE_CELL_ROW_HEIGHTS As String = "30:30"
 Public Const ACTIVE_TABLE_STYLES As String = "GENERIC_TABLE"
-Public Const ACTIVE_TABLE_TITLES As String = "Workflow No:Name:Step No:Step Name:Status"
+Public Const ACTIVE_TABLE_TITLES As String = "Project No:Client Name:Client Manager:Step No:Step Name:Status"
 Public Const ACTIVE_MAX_LINES As Integer = 150
 Public Const ACTIVE_BTN_MAIN_1_LEFT As Integer = 30
 Public Const ACTIVE_BTN_MAIN_1_TOP As Integer = 20

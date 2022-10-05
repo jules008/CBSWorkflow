@@ -201,7 +201,7 @@ Public Property Let Selected(ByVal vNewValue As Boolean)
     End If
     
     With pShpButton.Fill
-        .TwoColorGradient msoGradientHorizontal, 1
+'        .TwoColorGradient msoGradientHorizontal, 1
         .ForeColor.RGB = Style.Fill1
         .BackColor.RGB = Style.Fill2
     End With
@@ -218,7 +218,7 @@ Public Property Let Selected(ByVal vNewValue As Boolean)
         .Characters.Font.Color = Style.FontColour
         .Characters.Font.Size = Style.FontSize
         If Style.FontXJust <> 0 Then .HorizontalAlignment = Style.FontXJust
-        If Style.FontVJust <> 0 Then .VerticalAlignment = Style.FontVJust
+'        If Style.FontVJust <> 0 Then .VerticalAlignment = Style.FontVJust
     End With
     
     With pShpButton.Shadow

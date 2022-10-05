@@ -1,4 +1,6 @@
 ProjectNo,  dbInteger
+ClientNo,  dbLong
+Client Manager,  dbText
 LoanTerm,  dbText
 CBSComPC,  dbSingle
 ExitFee,  dbBoolean

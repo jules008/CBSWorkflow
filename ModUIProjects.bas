@@ -112,8 +112,6 @@ Private Function BuildMainFrame() As Boolean
             .HeadingText = ACTIVE_TABLE_TITLES
             .HeadingStyle = GENERIC_TABLE_HEADER
             .HeadingHeight = GENERIC_TABLE_HEADING_HEIGHT
-            .ColWidths = ACTIVE_TABLE_COL_WIDTHS
-            .RowHeights = GENERIC_TABLE_HEIGHT
         End With
     End With
     
@@ -196,6 +194,7 @@ Public Function RefreshList(Optional SortBy As String) As Boolean
 '    Dim WorkflowNo As String
 '    Dim MemberName As String
     Dim AryStyles() As String
+    Dim AryOnAction() As String
     
     Const StrPROCEDURE As String = "RefreshList()"
 
@@ -204,8 +203,6 @@ Public Function RefreshList(Optional SortBy As String) As Boolean
     ModLibrary.PerfSettingsOn
 
     ShtMain.Unprotect PROTECT_KEY
-    
-'    ScreenSel = "UIActive"
     
     Set Workflows = New ClsWorkflows
     
@@ -218,29 +215,35 @@ Public Function RefreshList(Optional SortBy As String) As Boolean
         
         .MoveLast
         .MoveFirst
-        If .RecordCount = 0 Then GoTo GracefulExit
-            
     End With
     
     NoCols = ACTIVE_TABLE_NOCOLS
-    NoRows = RstWorkflowList.RecordCount + 1
+    NoRows = RstWorkflowList.RecordCount
     
-    ReDim AryStyles(1 To NoCols, 0 To NoRows)
+    ReDim AryStyles(0 To NoCols - 1, 0 To NoRows - 1)
+    ReDim AryOnAction(0 To NoCols - 1, 0 To NoRows - 1)
     
-    For x = 1 To NoCols
-        For y = 0 To NoRows
+    With RstWorkflowList
+        For x = 0 To NoCols - 1
+            .MoveFirst
+            For y = 0 To NoRows - 1
             AryStyles(x, y) = "GENERIC_TABLE"
+                AryOnAction(x, y) = "'ModUIButtons.ProcessBtnClicks(""" & enBtnOpenProject & ":" & !ProjectNo & """)'"
+                .MoveNext
+'                Debug.Print x; y; AryOnAction(x, y)
         Next
     Next
+    End With
     
     With MainFrame.Table
         .RstText = RstWorkflowList
         .NoRows = RstWorkflowList.RecordCount
         .Styles = AryStyles
+        .OnAction = AryOnAction
         .StylesColl.Add GENERIC_TABLE
         .StylesColl.Add GENERIC_TABLE_HEADER
-        .RowHeights = FOR_ACTION_CELL_ROW_HEIGHTS
-        .ColWidths = FOR_ACTION_CELL_COL_WIDTHS
+        .ColWidths = ACTIVE_TABLE_COL_WIDTHS
+        .RowHeight = GENERIC_TABLE_HEIGHT
         .BuildCells
     End With
     
@@ -412,19 +415,19 @@ Public Function GetActiveList(StrSortBy As String) As Recordset
     Dim i As Integer
 
     SQL = ("SELECT " _
-                & "TblWorkflow.Name, " _
-                & "TblWorkflow.WorkflowNo, " _
-                & "TblWorkflow.CurrentStep, " _
-                & "TblWorkflow.Status, " _
-                & "TblWorkflow.Member, " _
-                & "TblStep.StepName, " _
-                & "TblWorkflow.RAG, " _
-                & "TblWorkflow.WorkflowNo " _
-            & "FROM " _
-                & "TblWorkflow " _
-            & "INNER JOIN TblStep ON TblStep.StepNo = TblWorkflow.CurrentStep AND TblStep.WorkflowNo = TblWorkflow.WorkflowNo " _
-            & "WHERE " _
-                & "TblWorkflow.Status <> 'enClosed'")
+                & "TblProject.ProjectNo, " _
+                & "TblClient.Name , " _
+                & "TblProject.[Client Manager] , " _
+                & "TblStepTemplate.StepNo , " _
+                & "TblStepTemplate.StepName , " _
+                & "TblWorkflow.Status " _
+            & "From TblStepTemplate " _
+                & "INNER JOIN (TblWorkflow " _
+               & "INNER JOIN (TblClient " _
+                & "INNER JOIN TblProject " _
+                & "ON TblClient.ClientNo = TblProject.ClientNo) " _
+                & "ON TblWorkflow.ProjectNo = TblProject.ProjectNo) " _
+                & "ON TblStepTemplate.StepNo = TblWorkflow.CurrentStep")
                 
     Set RstWorkflow = ModDatabase.SQLQuery(SQL)
     

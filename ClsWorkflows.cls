@@ -16,281 +16,172 @@ Attribute VB_Exposed = False
 '===============================================================
 ' v1.0.0 - Initial Version
 '---------------------------------------------------------------
-' Date - 24 Jun 20
+' Date - 03 Oct 22
 '===============================================================
-
-Option Explicit
-Private pWorkflows As Collection
-Private pActive As Boolean
-Private pDeleted As Boolean
+' Methods
 '---------------------------------------------------------------
+' Find - Finds Item from index
+' Add - Add item to Collection
+' Remove - Removes item from collection
+' Count - Returns number of items in collection
+' GetCollection - Gets all items in collection
+' SaveCollection - Saves all items in collection to database
+' RemoveCollection - Removes all items in collection
+' DeleteCollection - Deletes all items in collection
+' Destroy - Removes item from collection and deletes it
+'===============================================================
+'---------------------------------------------------------------
+Option Explicit
 
-Public Property Get NewEnum() As IUnknown
+Private pWorkflows As Collection
+Private pParent As ClsProject
+
+'---------------------------------------------------------------
+Public Property Get Parent() As ClsProject
+    Set Parent = pParent
+End Property
+
+Public Property Set Parent(obj As ClsProject)
+    Set pParent = obj
+End Property
+'---------------------------------------------------------------
+                
+Public Function NewEnum() As IUnknown
 Attribute NewEnum.VB_UserMemId = -4
     Set NewEnum = pWorkflows.[_NewEnum]
-End Property
-
-'---------------------------------------------------------------
-Public Property Get Active() As Boolean
-    Active = pActive
-End Property
-
-Public Property Let Active(newval As Boolean)
-    pActive = newval
-End Property
-
-'---------------------------------------------------------------
-Public Property Get Deleted() As Boolean
-    Deleted = pDeleted
-End Property
-
-Public Property Let Deleted(newval As Boolean)
-    pDeleted = newval
-End Property
-
-' ===============================================================
-' Method UpdateRAGs
-' Updates the RAGs for all workflows
-'---------------------------------------------------------------
-Public Sub UpdateRAGs()
-    Dim AmberDate As Date
-    Dim RedDate As Date
-    Dim RstWorkflow As Recordset
-    Dim RAG As String
-    Dim SQL As String
-    
-    Set RstWorkflow = ModDatabase.SQLQuery("SELECT " _
-                                                & "TblWorkflow.WorkflowNo, " _
-                                                & "TblWorkflow.CurrentStep, " _
-                                                & "TblStep.RedThresh, " _
-                                                & "TblStep.AmberThresh, " _
-                                                & "TblStep.StartTime, " _
-                                                & "TblStep.EndTime, " _
-                                                & "TblWorkflow.Status, " _
-                                                & "TblWorkflow.RAG " _
-                                            & "FROM " _
-                                                & "TblWorkflow Inner Join " _
-                                                & "TblStep On TblStep.WorkflowNo = TblWorkflow.WorkflowNo " _
-                                            & "AND TblStep.StepNo = TblWorkflow.CurrentStep " _
-                                            & "WHERE " _
-                                                & "TblWorkflow.Status <> 'enClosed' " _
-                                            & "ORDER BY " _
-                                                & "TblWorkflow.WorkflowNo")
-                            
-    With RstWorkflow
-        Do While Not .EOF
-            If Not IsNull(!StartTime) Then
-                AmberDate = DateAdd("d", !AmberThresh, !StartTime)
-                RedDate = DateAdd("d", !RedThresh, !StartTime)
-                
-                If DateDiff("s", Now, AmberDate) >= 0 Then
-                    RAG = "en3Green"
-                ElseIf DateDiff("d", Now, RedDate) >= 0 Then
-                    RAG = "en2Amber"
-                Else
-                    RAG = "en1Red"
-                End If
-                
-                SQL = "UPDATE TblWorkflow SET RAG = '" & RAG & "' WHERE WorkflowNo = " & !WorkflowNo
-                DB.Execute SQL
-            End If
-            .MoveNext
-        Loop
-    End With
-    Set RstWorkflow = Nothing
-End Sub
-
-' ===============================================================
-' Method FindItem
-' Finds Item from index
-'---------------------------------------------------------------
-Public Function FindItem(WorkflowNo As Variant) As ClsWorkflow
-    On Error Resume Next
-    Set FindItem = pWorkflows.Item(CStr(WorkflowNo))
 End Function
 
 ' ===============================================================
-' Method AddItem
-' Add item to Collection
-'---------------------------------------------------------------
-Public Sub AddItem(Workflow As ClsWorkflow)
+' Method Find
+' Finds Item from index
+' ---------------------------------------------------------------
+Public Function Find(WorkflowNo As Variant) As ClsWorkflow
+Attribute Find.VB_UserMemId = 0
     On Error Resume Next
+    Set Find = pWorkflows.Item(WorkflowNo)
+End Function
+
+' ===============================================================
+' Method Add
+' Add item to Collection
+' ---------------------------------------------------------------
+Public Sub Add(Workflow As ClsWorkflow)
+    Workflow.Initialise Me.Parent
     pWorkflows.Add Workflow, Key:=CStr(Workflow.WorkflowNo)
 End Sub
 
 ' ===============================================================
-' Method RemoveItem
-' Deletes item from collection
-'---------------------------------------------------------------
-Public Sub RemoveItem(WorkflowNo As Variant)
-    pWorkflows.Remove CStr(WorkflowNo)
+' Method Remove
+' Removes item from collection
+' ---------------------------------------------------------------
+Public Sub Remove(WorkflowNo As Variant)
+    pWorkflows(WorkflowNo).Parent = Nothing
+    pWorkflows.Remove WorkflowNo
 End Sub
 
 ' ===============================================================
-' Method ItemCount
+' Method Count
 ' Returns number of items in collection
-'---------------------------------------------------------------
+' ---------------------------------------------------------------
 Public Function Count() As Integer
     Count = pWorkflows.Count
 End Function
 
 ' ===============================================================
-' Method GetActive
-' Gets all active items in collection
-'---------------------------------------------------------------
-Public Sub GetActive()
+' Method GetCollection
+' Gets all items in collection
+' ---------------------------------------------------------------
+Public Sub GetCollection()
     Dim RstWorkflow As Recordset
     Dim Workflow As ClsWorkflow
     Dim i As Integer
-    Dim Status As enStatus
-
-    Set RstWorkflow = ModDatabase.SQLQuery("SELECT " _
-                                                & " TblWorkflow.* " _
-                                            & "FROM " _
-                                                & "TblMember " _
-                                                & "INNER JOIN TblWorkflow ON TblMember.StudentID = TblWorkflow.Member " _
-                                            & "WHERE " _
-                                                & "TblWorkflow.Deleted IS NULL " _
-                                            & "ORDER BY " _
-                                                & "TblMember.DisplayName")
-
-    If RstWorkflow.RecordCount = 0 Then Exit Sub
     
+    Set RstWorkflow = ModDatabase.SQLQuery("TblWorkflow")
     With RstWorkflow
+        If .RecordCount > 0 Then
         .MoveLast
         .MoveFirst
         For i = 1 To .RecordCount
             Set Workflow = New ClsWorkflow
             Workflow.DBGet !WorkflowNo
-            Me.AddItem Workflow
+                pWorkflows.Add Workflow, Key:=CStr(Workflow.WorkflowNo)
             .MoveNext
         Next
+        End If
     End With
-    pActive = True
 End Sub
 
 ' ===============================================================
-' Method GetDeleted
-' Gets all deleted items in collection
-'---------------------------------------------------------------
-Public Sub GetDeleted()
-    Dim RstWorkflow As Recordset
+' Method SaveCollection
+' Saves all items in collection to database
+' ---------------------------------------------------------------
+Public Sub SaveCollection()
     Dim Workflow As ClsWorkflow
-    Dim i As Integer
-    Dim Status As enStatus
-
-    Set RstWorkflow = ModDatabase.SQLQuery("SELECT " _
-                                                & " TblWorkflow.* " _
-                                            & "FROM " _
-                                                & "TblMember " _
-                                                & "INNER JOIN TblWorkflow ON TblMember.StudentID = TblWorkflow.Member " _
-                                            & "WHERE " _
-                                                & "TblWorkflow.Deleted IS NOT NULL " _
-                                            & "ORDER BY " _
-                                                & "TblMember.DisplayName")
-
-    If RstWorkflow.RecordCount = 0 Then Exit Sub
     
-    With RstWorkflow
-        .MoveLast
-        .MoveFirst
-        For i = 1 To .RecordCount
-            Set Workflow = New ClsWorkflow
-            Workflow.DBGet !WorkflowNo
-            Me.AddItem Workflow
-            .MoveNext
+    Sin 0
+    For Each Workflow In pWorkflows
+        Workflow.DBSave
         Next
-    End With
-    pDeleted = True
 End Sub
 
 ' ===============================================================
-' Method CountForAction
-' returns number of workflows that require action
-'---------------------------------------------------------------
-Public Function CountForAction() As Integer
+' Method RemoveCollection
+' Deletes all items in collection
+' ---------------------------------------------------------------
+Public Sub RemoveCollection()
     Dim Workflow As ClsWorkflow
-    Dim RstCount As Recordset
-    Dim Count As Integer
-    
-    Set RstCount = ModDatabase.SQLQuery("SELECT COUNT(WorkflowNo) AS [CountX] " _
-                                        & "FROM TblWorkflow " _
-                                        & "WHERE ((RAG = 'en2Amber' Or RAG = 'en1Red') " _
-                                        & "OR Status = 'enActionReqd') " _
-                                        & "AND Deleted IS NULL " _
-                                        & "AND Status <> 'enClosed'")
-                                        
-    CountForAction = RstCount![CountX]
-    
-    Set RstCount = Nothing
-End Function
-
-' ===============================================================
-' Method GetClosed
-' Gets all active items in collection
-'---------------------------------------------------------------
-Public Sub GetClosed()
-    Dim RstWorkflow As Recordset
-    Dim Workflow As ClsWorkflow
-    Dim i As Integer
-
-    Set RstWorkflow = ModDatabase.SQLQuery("SELECT * FROM TblWorkflow WHERE Status = 'enClosed' " _
-                                            & " AND Deleted IS NULL")
-    
-    If RstWorkflow.RecordCount = 0 Then Exit Sub
-    
-    With RstWorkflow
-        .MoveLast
-        .MoveFirst
-        For i = 1 To .RecordCount
-            Set Workflow = New ClsWorkflow
-            Workflow.DBGet !WorkflowNo
-            Me.AddItem Workflow
-            .MoveNext
+    Sin 0
+    For Each Workflow In pWorkflows
+        pWorkflows.Remove CStr(Workflow.WorkflowNo)
         Next
-    End With
 End Sub
 
 ' ===============================================================
 ' Method DeleteCollection
 ' Deletes all items in collection
-'---------------------------------------------------------------
+' ---------------------------------------------------------------
 Public Sub DeleteCollection()
     Dim Workflow As ClsWorkflow
+    Sin 0
     For Each Workflow In pWorkflows
         pWorkflows.Remove CStr(Workflow.WorkflowNo)
+        Workflow.DBDelete
     Next
 End Sub
 
 ' ===============================================================
-' Method SaveCollection
-' Deletes all items in collection
-'---------------------------------------------------------------
-Public Sub SaveCollection()
+' Method Destroy
+' Removes item from collection and destroys it
+' ---------------------------------------------------------------
+Public Sub Destroy(WorkflowNo As Variant)
     Dim Workflow As ClsWorkflow
     
-    For Each Workflow In pWorkflows
-        Workflow.DBSave
-    Next
-End Sub
+    Set Workflow = pWorkflows(WorkflowNo)
+    Workflow.Parent = Nothing
+    Workflow.Terminate
+    pWorkflows.Remove WorkflowNo
+    Workflow.DBDelete True
 
+    Set Workflow = Nothing
+End Sub
 ' ===============================================================
+Public Sub Initialize(obj As ClsProject)
+    Set Me.Parent = obj
+End Sub
+'---------------------------------------------------------------
+
 Private Sub Class_Initialize()
     Set pWorkflows = New Collection
 
 End Sub
 ' ===============================================================
 Public Sub Terminate()
-    Dim Workflow As ClsWorkflow
 
-    For Each Workflow In pWorkflows
-        Workflow.Terminate
-    Next
-    Set pWorkflows = Nothing
+    Set Me.Parent = Nothing
+
 End Sub
 '---------------------------------------------------------------
 Private Sub Class_Terminate()
     Set pWorkflows = Nothing
 End Sub
-
-'---------------------------------------------------------------
+' ===============================================================

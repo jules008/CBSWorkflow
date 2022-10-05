@@ -165,6 +165,7 @@ Enum EnumBtnNo
     enBtnNewProjectWF = 7
     enBtnNewLenderWF = 8
     enBtnExit = 9
+    enBtnOpenProject = 10
 End Enum
 
 Enum enStatus           'Status

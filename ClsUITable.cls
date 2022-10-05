@@ -34,7 +34,7 @@ Private pHPad As Integer
 Private pVPad As Integer
 Private pSubTableVOff As Integer
 Private pSubTableHOff As Integer
-Private pRowHeights() As Integer
+Private pRowHeight As Integer
 Private pColWidths() As Integer
 Private pCellVisible() As Boolean
 Private pRstText As Recordset
@@ -88,16 +88,7 @@ Public Property Get Height() As Integer
     Dim i As Integer
     Dim DefHeight As Integer
     
-    DefHeight = pRowHeights(1)
-    
-    For i = 1 To NoRows
-        If pRowHeights(i) = 0 Then
-            pHeight = pHeight + DefHeight + pVPad
-        Else
-            pHeight = pHeight + pRowHeights(i) + pVPad
-        End If
-    Next
-    pHeight = pHeight + pVPad
+    pHeight = (NoRows + 1) * (pHeight + pVPad)
     
     Height = pHeight
 End Property
@@ -157,16 +148,8 @@ Public Property Let SubTableHOff(ByVal vNewValue As Integer)
     pSubTableHOff = vNewValue
 End Property
 
-Public Property Let RowHeights(ByRef vNewValue As String)
-    Dim AryRows() As String
-    Dim i As Integer
-    
-    AryRows = Split(vNewValue, ":")
-    
-    For i = 1 To UBound(AryRows)
-        pRowHeights(i) = CInt(AryRows(i))
-    Next
-    
+Public Property Let RowHeight(ByRef vNewValue As String)
+    pRowHeight = vNewValue
 End Property
 
 '---------------------------------------------------------------
@@ -174,11 +157,11 @@ Public Property Let ColWidths(ByRef vNewValue As String)
     Dim AryCols() As String
     Dim i As Integer
     
-    ReDim pColWidths(1 To pNoCols)
+    ReDim pColWidths(0 To pNoCols - 1)
     
     AryCols = Split(vNewValue, ":")
     
-    For i = 1 To UBound(AryCols)
+    For i = 0 To UBound(AryCols)
         pColWidths(i) = CInt(AryCols(i))
     Next
     
@@ -209,9 +192,9 @@ Public Property Let HeadingText(ByRef vNewValue As String)
         
     AryText = Split(vNewValue, ":")
     
-    ReDim pHeadingText(1 To UBound(AryText) + 1)
-    For i = 1 To UBound(AryText) + 1
-        pHeadingText(i) = (AryText(i - 1))
+    ReDim pHeadingText(0 To UBound(AryText))
+    For i = 0 To UBound(AryText)
+        pHeadingText(i) = (AryText(i))
     Next
     
 End Property
@@ -286,10 +269,9 @@ End Property
 ' Sets dimensions of arrays once no of rows and cols are known
 '---------------------------------------------------------------
 Private Sub ReDimArrays()
-    ReDim pColWidths(1 To pNoCols)
-    ReDim pRowHeights(0 To pNoRows)
-    ReDim pOnAction(1 To pNoCols, 0 To pNoRows)
-    ReDim pStyles(1 To pNoCols, 0 To pNoRows)
+    ReDim pColWidths(0 To pNoCols - 1)
+    ReDim pOnAction(0 To pNoCols - 1, 0 To pNoRows)
+    ReDim pStyles(0 To pNoCols - 1, 0 To pNoRows)
 End Sub
 
 ' ===============================================================
@@ -324,7 +306,7 @@ Public Sub BuildCells(Optional SplitRow As Integer, Optional SplitSize As Intege
         pCells.DeleteCollection
         
         'heading
-    For x = 1 To pNoCols
+        For x = 0 To pNoCols - 1
             Set Cell = New ClsUICell
             Cell.Name = "Cell - " & x & "-" & "0"
             pCells.AddCell Cell, x, y
@@ -342,6 +324,7 @@ Public Sub BuildCells(Optional SplitRow As Integer, Optional SplitSize As Intege
         ColOffset = 0
         RowOffset = pHeadingHeight
         
+        pRstText.MoveFirst
         For y = 1 To pNoRows
             
             If SplitRow <> 0 Then
@@ -362,7 +345,7 @@ Public Sub BuildCells(Optional SplitRow As Integer, Optional SplitSize As Intege
                 End If
             End If
             
-            For x = 1 To pNoCols
+            For x = 0 To pNoCols - 1
                 Set Cell = New ClsUICell
                 Cell.Name = "Cell - " & x & "-" & y
                 pCells.AddCell Cell, x, y
@@ -370,36 +353,32 @@ Public Sub BuildCells(Optional SplitRow As Integer, Optional SplitSize As Intege
                     .Left = .Parent.Left + ColOffset
                     .Top = .Parent.Top + RowOffset
                     .Width = pColWidths(x)
-            
+                    Debug.Print x; y; pRstText.Fields(x)
                     If y = 0 Then
                         .Text = pHeadingText(x)
                     Else
                         If Not IsNull(pRstText.Fields(x)) Then .Text = pRstText.Fields(x)
-                        .OnAction = pOnAction(x, y)
+                        .OnAction = pOnAction(x, y - 1)
                     End If
                         
-                    If pStyles(x, y) = "" Then
-                        If pStyles(1, y) = "" Then
+                    If pStyles(x, y - 1) = "" Then
+                        If pStyles(1, y - 1) = "" Then
                             .Style = pStylesColl.Find(pStyles(1, 2))
                         Else
                             .Style = pStylesColl.Find(pStyles(1, y))
                         End If
                     Else
-                        .Style = pStylesColl.Find(pStyles(x, y))
+                        .Style = pStylesColl.Find(pStyles(x, y - 1))
                     End If
                     
-                    If pRowHeights(y) = 0 Then
-                        .Height = pRowHeights(1)
-                    Else
-                        .Height = pRowHeights(y)
-                    End If
+                    .Height = pRowHeight
                 End With
                 ColOffset = ColOffset + Cell.Width + HPad
         Next
+            pRstText.MoveNext
             ColOffset = 0
             RowOffset = RowOffset + Cell.Height + VPad
                     
-            If y <> 0 Then RstText.MoveNext
     Next
     End If
 End Sub

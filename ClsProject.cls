@@ -30,6 +30,7 @@ Option Explicit
 
 Private pProjectNo As Integer
 Private pLoanTerm As String
+Private pProjectWorkflow As ClsWorkflow
 Private pCBSComPC As Single
 Private pExitFee As Boolean
 Private pWorkflows As ClsWorkflows
@@ -52,6 +53,15 @@ End Property
 
 Public Property Let LoanTerm(ByVal vNewValue As String)
     pLoanTerm = vNewValue
+End Property
+
+'---------------------------------------------------------------
+Public Property Get ProjectWorkflow() As ClsWorkflow
+    Set ProjectWorkflow = pProjectWorkflow
+End Property
+
+Public Property Let ProjectWorkflow(ByVal vNewValue As ClsWorkflow)
+    Set pProjectWorkflow = vNewValue
 End Property
 
 '---------------------------------------------------------------
@@ -177,6 +187,7 @@ End Sub
 
 Private Sub Class_Initialize()
     Set pWorkflows = New ClsWorkflows
+    Set pProjectWorkflow = New ClsWorkflow
     Set pContacts = New ClsContacts
 
     pWorkflows.Initialize Me
@@ -184,15 +195,18 @@ End Sub
 ' ===============================================================
 Public Sub Terminate()
     pWorkflows.Terminate
+    pProjectWorkflow.Terminate
 
     Set Me.Parent = Nothing
 
     Set pWorkflows = Nothing
+    Set pProjectWorkflow = Nothing
     Set pContacts = Nothing
 End Sub
 '---------------------------------------------------------------
 Private Sub Class_Terminate()
     Set pWorkflows = Nothing
+    Set pProjectWorkflow = Nothing
     Set pContacts = Nothing
 End Sub
 ' ===============================================================
