@@ -55,7 +55,7 @@ Restart:
             ShtMain.Unprotect PROTECT_KEY
 
             If Not ResetScreen Then Err.Raise HANDLED_ERROR
-            If Not ModUIProjects.BuildScreen("Active") Then Err.Raise HANDLED_ERROR
+            If Not ModUIProjects.BuildScreen(enActivePage) Then Err.Raise HANDLED_ERROR
 
             ShtMain.Protect PROTECT_KEY
 
@@ -218,29 +218,29 @@ Restart:
         
             ShtMain.Unprotect PROTECT_KEY
 
-            If Not ResetScreen Then Err.Raise HANDLED_ERROR
-
             Set ActiveWorkFlow = New ClsWorkflow
             Set ActiveProject = New ClsProject
-            
-            With ActiveProject
-                .LoanTerm = 36
-                .ExitFee = True
-                .DBSave
-            End With
-            
-            ActiveProject.Workflows.Add ActiveWorkFlow
             
             With ActiveWorkFlow
                 .Name = "Project"
                 .DBSave
-                
-                FrmWorkflow.ShowForm
-                If Not ModUIProjects.RefreshList Then Err.Raise HANDLED_ERROR
+            End With
+            
+            Debug.Assert ActiveWorkFlow.Steps.Count > 0
+            
+            With ActiveProject
+                .LoanTerm = 36
+                .ExitFee = True
+                ActiveProject.ProjectWorkflow = ActiveWorkFlow
+                Debug.Assert ActiveProject.ProjectWorkflow.Steps.Count > 0
+                .DBSave
+                FrmProject.ShowForm
                 .DBSave
             End With
             
-            ActiveProject.Workflows.Add ActiveWorkFlow
+            If Not ResetScreen Then Err.Raise HANDLED_ERROR
+            If Not ModUIProjects.BuildScreen(enActivePage) Then Err.Raise HANDLED_ERROR
+            
             ShtMain.Protect PROTECT_KEY
             If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
 

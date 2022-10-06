@@ -16,14 +16,14 @@ Option Explicit
 Private Const StrMODULE As String = "ModStartUp"
 
 ' ===============================================================
-' Initialise
+' Initialize
 ' Creates the environment for system start up
 ' ---------------------------------------------------------------
-Public Function Initialise() As Boolean
+Public Function Initialize() As Boolean
     Dim UserName As String
     Dim Response As String
     
-    Const StrPROCEDURE As String = "Initialise()"
+    Const StrPROCEDURE As String = "Initialize()"
 
     On Error GoTo ErrorHandler
     
@@ -107,13 +107,13 @@ Public Function Initialise() As Boolean
     
    ModLibrary.PerfSettingsOff
    
-    Initialise = True
+    Initialize = True
 
 Exit Function
 
 ErrorExit:
 
-    Initialise = False
+    Initialize = False
     ModLibrary.PerfSettingsOff
     
 Exit Function
@@ -358,7 +358,7 @@ End Function
 
 ' ===============================================================
 ' SetGlobalClasses
-' initialises or terminates all global classes
+' Initializes or terminates all global classes
 ' ---------------------------------------------------------------
 Private Function SetGlobalClasses() As Boolean
     Const StrPROCEDURE As String = "SetGlobalClasses()"

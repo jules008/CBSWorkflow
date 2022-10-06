@@ -59,7 +59,7 @@ ErrorHandler:
     
     If Err.Number >= 2000 And Err.Number <= 2500 Then
         If CustomErrorHandler(Err.Number) Then
-            If Not Initialise Then Err.Raise HANDLED_ERROR
+            If Not Initialize Then Err.Raise HANDLED_ERROR
             Resume Restart
         Else
             Err.Raise HANDLED_ERROR

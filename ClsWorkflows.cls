@@ -66,7 +66,7 @@ End Function
 ' Add item to Collection
 ' ---------------------------------------------------------------
 Public Sub Add(Workflow As ClsWorkflow)
-    Workflow.Initialise Me.Parent
+    Workflow.Initialize Me.Parent
     pWorkflows.Add Workflow, Key:=CStr(Workflow.WorkflowNo)
 End Sub
 

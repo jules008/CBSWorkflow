@@ -113,15 +113,6 @@ Public Property Get NoCols() As Integer
     NoCols = pNoCols
 End Property
 
-Public Property Let NoCols(ByVal vNewValue As Integer)
-    
-    pNoCols = vNewValue
-    
-    If pNoCols > 0 And pNoRows > 0 Then
-        ReDimArrays
-    End If
-End Property
-
 '---------------------------------------------------------------
 Public Property Get HPad() As Integer
     HPad = pHPad
@@ -157,9 +148,11 @@ Public Property Let ColWidths(ByRef vNewValue As String)
     Dim AryCols() As String
     Dim i As Integer
     
-    ReDim pColWidths(0 To pNoCols - 1)
-    
     AryCols = Split(vNewValue, ":")
+    
+    pNoCols = UBound(AryCols) + 1
+    
+    ReDim pColWidths(0 To pNoCols - 1)
     
     For i = 0 To UBound(AryCols)
         pColWidths(i) = CInt(AryCols(i))
@@ -269,7 +262,6 @@ End Property
 ' Sets dimensions of arrays once no of rows and cols are known
 '---------------------------------------------------------------
 Private Sub ReDimArrays()
-    ReDim pColWidths(0 To pNoCols - 1)
     ReDim pOnAction(0 To pNoCols - 1, 0 To pNoRows)
     ReDim pStyles(0 To pNoCols - 1, 0 To pNoRows)
 End Sub
@@ -302,6 +294,8 @@ Public Sub BuildCells(Optional SplitRow As Integer, Optional SplitSize As Intege
     
     Debug.Print "Buildcells"
        
+    Debug.Assert pNoCols > 0 And pNoRows > 0
+    
     If pNoCols > 0 And pNoRows > 0 Then
         pCells.DeleteCollection
         

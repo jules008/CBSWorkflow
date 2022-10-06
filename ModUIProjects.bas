@@ -20,7 +20,7 @@ Private ScreenPage As String
 ' BuildScreen
 ' Builds the display using shapes
 ' ---------------------------------------------------------------
-Public Function BuildScreen(ScrnPage As String) As Boolean
+Public Function BuildScreen(ScrnPage As enScreenPage) As Boolean
     
     Const StrPROCEDURE As String = "BuildScreen()"
 
@@ -104,7 +104,6 @@ Private Function BuildMainFrame() As Boolean
         With .Table
             .Left = GENERIC_TABLE_LEFT
             .Top = GENERIC_TABLE_TOP
-            .NoCols = ACTIVE_TABLE_NOCOLS
             .HPad = GENERIC_TABLE_ROWOFFSET
             .VPad = GENERIC_TABLE_COLOFFSET
             .SubTableVOff = 50
@@ -210,6 +209,8 @@ Public Function RefreshList(Optional SortBy As String) As Boolean
     
     Set RstWorkflowList = GetActiveList(StrSortBy)
     
+    Debug.Assert RstWorkflowList.RecordCount > 0
+    
     With RstWorkflowList
         If .RecordCount = 0 Then GoTo GracefulExit
         
@@ -217,11 +218,22 @@ Public Function RefreshList(Optional SortBy As String) As Boolean
         .MoveFirst
     End With
     
-    NoCols = ACTIVE_TABLE_NOCOLS
+    With MainFrame.Table
+        .ColWidths = ACTIVE_TABLE_COL_WIDTHS
+        .RstText = RstWorkflowList
+        .NoRows = RstWorkflowList.RecordCount
+        .StylesColl.Add GENERIC_TABLE
+        .StylesColl.Add GENERIC_TABLE_HEADER
+        .RowHeight = GENERIC_TABLE_HEIGHT
+    End With
+    
     NoRows = RstWorkflowList.RecordCount
+    NoCols = MainFrame.Table.NoCols
     
     ReDim AryStyles(0 To NoCols - 1, 0 To NoRows - 1)
     ReDim AryOnAction(0 To NoCols - 1, 0 To NoRows - 1)
+    
+    Debug.Assert MainFrame.Table.Cells.Count = 0
     
     With RstWorkflowList
         For x = 0 To NoCols - 1
@@ -236,92 +248,10 @@ Public Function RefreshList(Optional SortBy As String) As Boolean
     End With
     
     With MainFrame.Table
-        .RstText = RstWorkflowList
-        .NoRows = RstWorkflowList.RecordCount
         .Styles = AryStyles
         .OnAction = AryOnAction
-        .StylesColl.Add GENERIC_TABLE
-        .StylesColl.Add GENERIC_TABLE_HEADER
-        .ColWidths = ACTIVE_TABLE_COL_WIDTHS
-        .RowHeight = GENERIC_TABLE_HEIGHT
         .BuildCells
     End With
-    
-'    With MainFrame
-'        For Each Lineitem In .Lineitems
-'            .Lineitems.RemoveItem Lineitem.Name
-'            Lineitem.ShpLineitem.Delete
-'            Set Lineitem = Nothing
-'        Next
-'
-'        ReDim RowTitles(0 To ACTIVE_LINEITEM_NOCOLS - 1)
-'        RowTitles = Split(ACTIVE_LINEITEM_TITLES, ":")
-'
-'        For i = 0 To ACTIVE_LINEITEM_NOCOLS - 1
-'            StrOnAction = "'ModUIScreenCom.SortBy(""" & RowTitles(i) & """), """ & ScreenSel & """'"
-'            .Lineitems.Text 0, i, RowTitles(i), GENERIC_TABLE_HEADER, StrOnAction
-'        Next
-'
-'        .Lineitems.Style = GENERIC_TABLE
-'
-'    End With
-    
-'    x = 1
-    
-    If SortBy = "" Then
-        If StrSortBy = "" Then
-            StrSortBy = "TblMember.DisplayName"
-        End If
-    Else
-       StrSortBy = SortBy
-    End If
-    
-    
-'    With RstWorkflowList
-'        .MoveLast
-'        .MoveFirst
-'        For x = 1 To .RecordCount
-'
-'            StrOnAction = "'ModUIProjects.OpenWorkflow(" & !WorkflowNo & ")'"
-'
-'            If Not IsNull(!CurrentStep) Then StepNo = !CurrentStep Else StepNo = ""
-'            If Not IsNull(!WorkflowNo) Then WorkflowNo = !WorkflowNo Else WorkflowNo = ""
-'            If Not IsNull(!Member) Then MemberName = !Member Else MemberName = ""
-'            If Not IsNull(!StepName) Then CurrentStep = !StepName Else CurrentStep = ""
-'            ActionOn = ""
-'            If Not IsNull(!Status) Then StepStatus = enStatusVal(!Status)
-        
-'            If Not IsNull(!RAG) Then
-'                Select Case enRAGVal(!RAG)
-'                    Case Is = en3Green
-'                        CustomStyle = GREEN_LINEITEM
-'                    Case en2Amber
-'                        CustomStyle = AMBER_LINEITEM
-'                    Case Is = en1Red
-'                        CustomStyle = RED_LINEITEM
-'                End Select
-'            End If
-            
-'            With MainFrame.Lineitems
-'                .Text x, 0, WorkflowNo, GENERIC_TABLE, StrOnAction
-'                .Text x, 1, MemberName, GENERIC_TABLE, StrOnAction
-'                .Text x, 2, StepNo, GENERIC_TABLE, StrOnAction
-'                .Text x, 3, CurrentStep, GENERIC_TABLE, StrOnAction
-'                .Text x, 4, enStatusDisp(StepStatus), CustomStyle, StrOnAction
-'            End With
-'
-'            If x > ACTIVE_MAX_LINES Then Exit For
-'
-'            .MoveNext
-'        Next
-'    End With
-    
-'    MenuBar.Menu(1).BadgeText = Workflows.CountForAction
-    
-'    MainFrame.Height = (x + 1) * 21
-'    If MainScreen.Height < MainFrame.Height + 500 Then
-'        MainScreen.Height = MainFrame.Height + 500
-'    End If
     
     ModLibrary.PerfSettingsOff
 
@@ -356,55 +286,6 @@ ErrorHandler:
 End Function
 
 ' ===============================================================
-' OpenWorkflow
-' Opens the selected Workflow
-' ---------------------------------------------------------------
-Private Sub OpenWorkflow(WorkflowNo As Integer)
-    
-    Const StrPROCEDURE As String = "OpenWorkflow()"
-       
-    On Error GoTo ErrorHandler
-
-    If MainScreen Is Nothing Then Err.Raise SYSTEM_RESTART
-        
-Restart:
-'    If CurrentUser.UserLvl = enBasic Then Err.Raise ACCESS_DENIED
-    
-    Set ActiveWorkFlow = Nothing
-    Set ActiveWorkFlow = New ClsWorkflow
-    ActiveWorkFlow.DBGet CStr(WorkflowNo)
-    
-    If Not FrmWorkflow.ShowForm() Then Err.Raise HANDLED_ERROR
-   
-    If Not ModUIProjects.RefreshList Then Err.Raise HANDLED_ERROR
-    
-GracefulExit:
-Exit Sub
-
-ErrorExit:
-    ModLibrary.PerfSettingsOff
-    Terminate
-Exit Sub
-
-ErrorHandler:
-    
-    If Err.Number >= 2000 And Err.Number <= 2500 Then
-        If CustomErrorHandler(Err.Number) = SYSTEM_RESTART Then
-            Resume Restart
-        Else
-            Resume GracefulExit
-        End If
-    End If
-    
-    If CentralErrorHandler(StrMODULE, StrPROCEDURE, , True) Then
-       Stop
-        Resume
-    Else
-        Resume ErrorExit
-    End If
-End Sub
-
-' ===============================================================
 ' Method GetActiveList
 ' Gets data for workflow list
 '---------------------------------------------------------------
@@ -417,17 +298,16 @@ Public Function GetActiveList(StrSortBy As String) As Recordset
     SQL = ("SELECT " _
                 & "TblProject.ProjectNo, " _
                 & "TblClient.Name , " _
-                & "TblProject.[Client Manager] , " _
+                & "TblProject.ClientManager , " _
                 & "TblStepTemplate.StepNo , " _
                 & "TblStepTemplate.StepName , " _
                 & "TblWorkflow.Status " _
-            & "From TblStepTemplate " _
-                & "INNER JOIN (TblWorkflow " _
-               & "INNER JOIN (TblClient " _
-                & "INNER JOIN TblProject " _
-                & "ON TblClient.ClientNo = TblProject.ClientNo) " _
-                & "ON TblWorkflow.ProjectNo = TblProject.ProjectNo) " _
-                & "ON TblStepTemplate.StepNo = TblWorkflow.CurrentStep")
+        & "FROM ((TblProject " _
+            & "LEFT JOIN TblClient ON TblProject.ClientNo = TblClient.ClientNo) " _
+            & "LEFT JOIN TblWorkflow ON TblProject.ProjectNo = TblWorkflow.ProjectNo) " _
+            & "LEFT JOIN TblStepTemplate ON TblWorkflow.CurrentStep = TblStepTemplate.StepNo " _
+        & "WHERE " _
+            & "TblWorkflow.WorkflowType = 'enProject'")
                 
     Set RstWorkflow = ModDatabase.SQLQuery(SQL)
     

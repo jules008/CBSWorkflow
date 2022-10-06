@@ -94,6 +94,7 @@ Private Function PopulateForm() As Boolean
     
     With ActiveProject
         TxtProjectNo = .ProjectNo
+        TxtClientManager = .ClientManager
         TxtLoanTerm = .LoanTerm
         TxtCommision = .CBSComPC
         ChkExitFee = .ExitFee

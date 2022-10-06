@@ -118,7 +118,7 @@ Public Function CustomErrorHandler(ErrorCode As Long, Optional Message As String
             FaultCount1002 = FaultCount1002 + 1
 
             If FaultCount1002 <= 3 Then
-                Initialise
+                Initialize
                 Application.DisplayStatusBar = True
                 Application.StatusBar = "System failed...Restarting Attempt " & FaultCount1002
                 Application.Wait (Now + TimeValue("0:00:02"))

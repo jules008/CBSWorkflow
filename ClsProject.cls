@@ -29,6 +29,7 @@ Attribute VB_Exposed = False
 Option Explicit
 
 Private pProjectNo As Integer
+Private pClientManager As String
 Private pLoanTerm As String
 Private pProjectWorkflow As ClsWorkflow
 Private pCBSComPC As Single
@@ -44,6 +45,15 @@ End Property
 
 Public Property Let ProjectNo(ByVal vNewValue As Integer)
     pProjectNo = vNewValue
+End Property
+
+'---------------------------------------------------------------
+Public Property Get ClientManager() As String
+    ClientManager = pClientManager
+End Property
+
+Public Property Let ClientManager(ByVal vNewValue As String)
+    pClientManager = vNewValue
 End Property
 
 '---------------------------------------------------------------
@@ -163,6 +173,7 @@ Public Sub DBSave()
 
         pWorkflows.SaveCollection
         pContacts.SaveCollection
+        pProjectWorkflow.DBSave
         .Update
     End With
 
@@ -191,6 +202,7 @@ Private Sub Class_Initialize()
     Set pContacts = New ClsContacts
 
     pWorkflows.Initialize Me
+    pProjectWorkflow.Initialize Me
 End Sub
 ' ===============================================================
 Public Sub Terminate()

@@ -248,7 +248,7 @@ End Sub
 Public Sub Display()
 '    MailSystem.CreateNewEmail
     
-    FrmWorkflow.Hide
+'    FrmWorkflow.Hide
     
     Me.ProgressBar.Show
     

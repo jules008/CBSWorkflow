@@ -139,6 +139,11 @@ Enum EnumTriState
     xError
 End Enum
 
+Enum enWorkflowType
+    enProject
+    enLender
+End Enum
+
 Enum EnumObjType
     ObjImage = 1
     ObjChart = 2
@@ -205,3 +210,8 @@ Enum EnumFormValidation
     FunctionalError = 0
 End Enum
 
+Enum enScreenPage
+    enActivePage = 0
+    enCompletedPage
+    
+End Enum

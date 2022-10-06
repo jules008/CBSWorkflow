@@ -1,5 +1,6 @@
 WorkflowNo,  dbInteger
 ProjectNo,  dbLong
+WorkflowType,  dbText
 Name,  dbText
 CurrentStep,  dbText
 Member,  dbText

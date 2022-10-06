@@ -87,7 +87,6 @@ Public Const FOR_ACTION_MAX_LINES As Integer = 40
 ' ---------------------------------------------------------------
 ' Active Screen
 ' ---------------------------------------------------------------
-Public Const ACTIVE_TABLE_NOCOLS As Integer = 6
 Public Const ACTIVE_TABLE_COL_WIDTHS As String = "50:150:100:50:200:100"
 Public Const ACTIVE_CELL_ROW_HEIGHTS As String = "30:30"
 Public Const ACTIVE_TABLE_STYLES As String = "GENERIC_TABLE"

@@ -21,8 +21,8 @@ Attribute VB_Exposed = False
 
 Option Explicit
 Private pDeleted As Date
-Private pProjectNo As Integer
 Private pWorkflowNo As Integer
+Private pWorkflowType As enWorkflowType
 Private pName As String
 Private pMember As String
 Private pRAG As enRAG
@@ -46,21 +46,21 @@ Public Property Let Deleted(ByVal vNewValue As Date)
 End Property
 
 '---------------------------------------------------------------
-Public Property Get ProjectNo() As Integer
-    ProjectNo = pProjectNo
-End Property
-
-Public Property Let ProjectNo(ByVal vNewValue As Integer)
-    pProjectNo = vNewValue
-End Property
-
-'---------------------------------------------------------------
 Public Property Get WorkflowNo() As Integer
     WorkflowNo = pWorkflowNo
 End Property
 
 Public Property Let WorkflowNo(ByVal vNewValue As Integer)
     pWorkflowNo = vNewValue
+End Property
+
+'---------------------------------------------------------------
+Public Property Get WorkflowType() As enWorkflowType
+    WorkflowType = pWorkflowType
+End Property
+
+Public Property Let WorkflowType(ByVal vNewValue As enWorkflowType)
+    pWorkflowType = vNewValue
 End Property
 
 '---------------------------------------------------------------
@@ -178,7 +178,7 @@ Public Property Get Parent() As ClsProject
     Set Parent = pParent
 End Property
 
-Public Property Let Parent(newval As ClsProject)
+Public Property Set Parent(newval As ClsProject)
     Set pParent = newval
 End Property
 
@@ -194,8 +194,8 @@ Public Sub DBGet(WorkflowNo As String)
     With RstWorkflow
         If .RecordCount > 0 Then
             If Not IsNull(!Deleted) Then pDeleted = !Deleted
-            If Not IsNull(!ProjectNo) Then pProjectNo = !ProjectNo
             If Not IsNull(!WorkflowNo) Then pWorkflowNo = !WorkflowNo
+            If Not IsNull(!WorkflowType) Then pWorkflowType = !WorkflowType
             If Not IsNull(!CurrentStep) Then pCurrentStep = !CurrentStep
             If Not IsNull(!Name) Then pName = !Name
             If Not IsNull(!Status) Then pStatus = enStatusVal(!Status)
@@ -239,11 +239,12 @@ Public Sub DBSave()
                 
         If CurrentStep = "" Then pCurrentStep = pSteps.Start
         !CurrentStep = pCurrentStep
-        !ProjectNo = pProjectNo
         !WorkflowNo = pWorkflowNo
+        !WorkflowType = pWorkflowType
         !Name = pName
         !Status = enStatusStr(Status)
         !RAG = enRAGStr(RAG)
+        If Not Parent Is Nothing Then Parent!ProjectNo = Parent.ProjectNo
         .Update
                     
         Steps.SaveCollection
@@ -393,7 +394,7 @@ Public Sub Pause()
 End Sub
 
 ' ===============================================================
-Public Sub Initialise(obj As ClsProject)
+Public Sub Initialize(obj As ClsProject)
     Set Me.Parent = obj
 End Sub
 
