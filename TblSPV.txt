@@ -1,2 +1,3 @@
 SPVNo,  dbInteger
+ClientNo,  dbLong
 Name,  dbText

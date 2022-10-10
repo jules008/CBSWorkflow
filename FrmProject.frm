@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FrmProject 
    Caption         =   "New Project Workflow"
-   ClientHeight    =   9885.001
+   ClientHeight    =   9150.001
    ClientLeft      =   120
    ClientTop       =   465
    ClientWidth     =   15960
@@ -94,7 +94,7 @@ Private Function PopulateForm() As Boolean
     
     With ActiveProject
         TxtProjectNo = .ProjectNo
-        TxtClientManager = .ClientManager
+        TxtCaseManager = .CaseManager.UserName
         TxtLoanTerm = .LoanTerm
         TxtCommision = .CBSComPC
         ChkExitFee = .ExitFee
@@ -102,7 +102,7 @@ Private Function PopulateForm() As Boolean
         
     With ActiveProject.ProjectWorkflow.ActiveStep
         TxtStepName = .StepNo & " - " & .StepName
-        TxtAction = .StepAction
+        xTxtAction = .StepAction
     End With
 
     Select Case ActiveProject.ProjectWorkflow.ActiveStep.StepType
@@ -121,7 +121,7 @@ Private Function PopulateForm() As Boolean
             
             With BtnComplete
                 .Visible = True
-                .Caption = "Step Closed"
+                .Caption = "Step Complete"
             End With
             
         Case enDataInput
@@ -133,7 +133,7 @@ Private Function PopulateForm() As Boolean
             
             With BtnComplete
                 .Visible = True
-                .Caption = "Step Closed"
+                .Caption = "Step Complete"
             End With
        
             With FrmCalPicker

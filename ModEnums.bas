@@ -8,7 +8,7 @@ Attribute VB_Name = "ModEnums"
 '===============================================================
 ' v1.0.0 - Initial Version
 '---------------------------------------------------------------
-' Date - 23 Jul 22
+' Date - 09 Oct 22
 '===============================================================
 
 Option Explicit
@@ -35,6 +35,32 @@ Public Function EnumTriStateVal(EnumValue As String) As EnumTriState
 End Function
 
 ' ===============================================================
+' enWorkflowTypeVal
+' Returns integer value from Enum string
+' ---------------------------------------------------------------
+Public Function enWorkflowTypeVal(EnumValue As String) As enWorkflowType
+    Select Case EnumValue
+        Case "enProject"
+            enWorkflowTypeVal = 0
+        Case "enLender"
+            enWorkflowTypeVal = 1
+    End Select
+End Function
+
+' ===============================================================
+' EnumObjTypeVal
+' Returns integer value from Enum string
+' ---------------------------------------------------------------
+Public Function EnumObjTypeVal(EnumValue As String) As EnumObjType
+    Select Case EnumValue
+        Case "ObjImage"
+            EnumObjTypeVal = 1
+        Case "ObjChart"
+            EnumObjTypeVal = 2
+    End Select
+End Function
+
+' ===============================================================
 ' EnumBtnNoVal
 ' Returns integer value from Enum string
 ' ---------------------------------------------------------------
@@ -42,16 +68,46 @@ Public Function EnumBtnNoVal(EnumValue As String) As EnumBtnNo
     Select Case EnumValue
         Case "enBtnForAction"
             EnumBtnNoVal = 1
-        Case "enBtnActive"
+        Case "enBtnProjectsActive"
             EnumBtnNoVal = 2
-        Case "enBtnClosed"
+        Case "enBtnProjectsClosed"
+            EnumBtnNoVal = 2
+        Case "enCRMClients"
             EnumBtnNoVal = 3
-        Case "enBtnExit"
+        Case "enCRMSPVs"
+            EnumBtnNoVal = 3
+        Case "enCRMContacts"
+            EnumBtnNoVal = 3
+        Case "enCRMProjects"
+            EnumBtnNoVal = 3
+        Case "enCRMLenders"
+            EnumBtnNoVal = 3
+        Case "enDashboard"
             EnumBtnNoVal = 4
-        Case "enBtnSupport"
+        Case "enReports"
             EnumBtnNoVal = 5
-        Case "enBtnNewProjectWF"
+        Case "enAdminUsers"
             EnumBtnNoVal = 6
+        Case "enAdminEmailTs"
+            EnumBtnNoVal = 6
+        Case "enAdminDocuments"
+            EnumBtnNoVal = 6
+        Case "enAdminWorkflows"
+            EnumBtnNoVal = 6
+        Case "enAdminWFTypes"
+            EnumBtnNoVal = 6
+        Case "enAdminLists"
+            EnumBtnNoVal = 6
+        Case "enAdminRoles"
+            EnumBtnNoVal = 6
+        Case "enBtnNewProjectWF"
+            EnumBtnNoVal = 7
+        Case "enBtnNewLenderWF"
+            EnumBtnNoVal = 8
+        Case "enBtnExit"
+            EnumBtnNoVal = 9
+        Case "enBtnOpenProject"
+            EnumBtnNoVal = 1
     End Select
 End Function
 
@@ -148,6 +204,21 @@ Public Function EnumFormValidationVal(EnumValue As String) As EnumFormValidation
 End Function
 
 ' ===============================================================
+' enScreenPageVal
+' Returns integer value from Enum string
+' ---------------------------------------------------------------
+Public Function enScreenPageVal(EnumValue As String) As enScreenPage
+    Select Case EnumValue
+        Case "enActivePage"
+            enScreenPageVal = 0
+        Case "enCompletedPage"
+            enScreenPageVal = 1
+        Case ""
+            enScreenPageVal = 2
+    End Select
+End Function
+
+' ===============================================================
 ' EnumTriStateStr
 ' Returns enum string from Enum integer value
 ' ---------------------------------------------------------------
@@ -163,6 +234,32 @@ Public Function EnumTriStateStr(EnumValue As EnumTriState) As String
 End Function
 
 ' ===============================================================
+' enWorkflowTypeStr
+' Returns enum string from Enum integer value
+' ---------------------------------------------------------------
+Public Function enWorkflowTypeStr(EnumValue As enWorkflowType) As String
+    Select Case EnumValue
+        Case 0
+            enWorkflowTypeStr = "enProject"
+        Case 1
+            enWorkflowTypeStr = "enLender"
+    End Select
+End Function
+
+' ===============================================================
+' EnumObjTypeStr
+' Returns enum string from Enum integer value
+' ---------------------------------------------------------------
+Public Function EnumObjTypeStr(EnumValue As EnumObjType) As String
+    Select Case EnumValue
+        Case 1
+            EnumObjTypeStr = "ObjImage"
+        Case 2
+            EnumObjTypeStr = "ObjChart"
+    End Select
+End Function
+
+' ===============================================================
 ' EnumBtnNoStr
 ' Returns enum string from Enum integer value
 ' ---------------------------------------------------------------
@@ -171,15 +268,45 @@ Public Function EnumBtnNoStr(EnumValue As EnumBtnNo) As String
         Case 1
             EnumBtnNoStr = "enBtnForAction"
         Case 2
-            EnumBtnNoStr = "enBtnActive"
+            EnumBtnNoStr = "enBtnProjectsActive"
+        Case 2
+            EnumBtnNoStr = "enBtnProjectsClosed"
         Case 3
-            EnumBtnNoStr = "enBtnClosed"
+            EnumBtnNoStr = "enCRMClients"
+        Case 3
+            EnumBtnNoStr = "enCRMSPVs"
+        Case 3
+            EnumBtnNoStr = "enCRMContacts"
+        Case 3
+            EnumBtnNoStr = "enCRMProjects"
+        Case 3
+            EnumBtnNoStr = "enCRMLenders"
         Case 4
-            EnumBtnNoStr = "enBtnExit"
+            EnumBtnNoStr = "enDashboard"
         Case 5
-            EnumBtnNoStr = "enBtnSupport"
+            EnumBtnNoStr = "enReports"
         Case 6
+            EnumBtnNoStr = "enAdminUsers"
+        Case 6
+            EnumBtnNoStr = "enAdminEmailTs"
+        Case 6
+            EnumBtnNoStr = "enAdminDocuments"
+        Case 6
+            EnumBtnNoStr = "enAdminWorkflows"
+        Case 6
+            EnumBtnNoStr = "enAdminWFTypes"
+        Case 6
+            EnumBtnNoStr = "enAdminLists"
+        Case 6
+            EnumBtnNoStr = "enAdminRoles"
+        Case 7
             EnumBtnNoStr = "enBtnNewProjectWF"
+        Case 8
+            EnumBtnNoStr = "enBtnNewLenderWF"
+        Case 9
+            EnumBtnNoStr = "enBtnExit"
+        Case 1
+            EnumBtnNoStr = "enBtnOpenProject"
     End Select
 End Function
 
@@ -272,6 +399,21 @@ Public Function EnumFormValidationStr(EnumValue As EnumFormValidation) As String
             EnumFormValidationStr = "ValidationError"
         Case 0
             EnumFormValidationStr = "FunctionalError"
+    End Select
+End Function
+
+' ===============================================================
+' enScreenPageStr
+' Returns enum string from Enum integer value
+' ---------------------------------------------------------------
+Public Function enScreenPageStr(EnumValue As enScreenPage) As String
+    Select Case EnumValue
+        Case 0
+            enScreenPageStr = "enActivePage"
+        Case 1
+            enScreenPageStr = "enCompletedPage"
+        Case 2
+            enScreenPageStr = ""
     End Select
 End Function
 

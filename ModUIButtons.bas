@@ -22,7 +22,7 @@ Private Const StrMODULE As String = "ModUIButtons"
 Public Sub ProcessBtnClicks(ButtonNo As String)
     Dim ErrNo As Integer
     Dim AryBtn() As String
-
+    Dim Picker As ClsFrmPicker
     Dim BtnNo As EnumBtnNo
     Dim BtnIndex As Integer
 
@@ -218,30 +218,99 @@ Restart:
         
             ShtMain.Unprotect PROTECT_KEY
 
+            Set ActiveClient = New ClsClient
+            Set ActiveSPV = New ClsSPV
             Set ActiveWorkFlow = New ClsWorkflow
             Set ActiveProject = New ClsProject
+            Set ActiveUser = New ClsCBSUser
+            
+            Set Picker = New ClsFrmPicker
+            With Picker
+                .Title = "Select Client"
+                .Instructions = "Start typing the name of the Client and select from the list"
+                .ClearForm
+                .Data = ModDatabase.SQLQuery("SELECT Name from TblClient")
+                .Show = True
+                If .CreateNew Then
+                    ActiveUser.DBNew
+                    .SelectedItem = ActiveUser.UserName
+                End If
+            
+            End With
+            
+            ActiveClient.DBGet Picker.SelectedItem
+            
+            Set Picker = New ClsFrmPicker
+            With Picker
+                .Title = "Select SPV"
+                .Instructions = "Start typing the name of the SPV and select from the list"
+                .ClearForm
+                .Data = ModDatabase.SQLQuery("SELECT Name from TblSPV")
+                .Show = True
+                If .CreateNew Then
+                    ActiveSPV.DBNew
+                    .SelectedItem = ActiveSPV.Name
+                End If
+            End With
+            
+            ActiveSPV.DBGet Picker.SelectedItem
+            ActiveClient.SPVs.Add ActiveSPV
+            
+            Set Picker = New ClsFrmPicker
+            With Picker
+                .Title = "Select Case Manager"
+                .Instructions = "Start typing the name of the Case Manager who will own the case and select from the list"
+                .ClearForm
+                .Data = ModDatabase.SQLQuery("SELECT Username from TblCBSUser")
+                .Show = True
+                If .CreateNew Then
+                    ActiveUser.DBNew
+                    .SelectedItem = ActiveSPV.Name
+                End If
+            End With
+            
+            ActiveUser.DBGet Picker.SelectedItem
+            
+            With ActiveProject
+                .ProjectWorkflow.Name = "Project"
+                .CaseManager = ActiveUser
+                .DBSave
+            End With
+            
+            ActiveSPV.Projects.Add ActiveProject
+            
+            Debug.Assert ActiveClient.SPVs.Count > 0
+            
+            ActiveClient.DBSave
             
             With ActiveWorkFlow
                 .Name = "Project"
+                .WorkflowType = enProject
                 .DBSave
             End With
             
-            Debug.Assert ActiveWorkFlow.Steps.Count > 0
-            
-            With ActiveProject
-                .LoanTerm = 36
-                .ExitFee = True
                 ActiveProject.ProjectWorkflow = ActiveWorkFlow
                 Debug.Assert ActiveProject.ProjectWorkflow.Steps.Count > 0
-                .DBSave
+                        
                 FrmProject.ShowForm
-                .DBSave
-            End With
+            
+            Debug.Assert Not ActiveClient Is Nothing
+'            Debug.Assert Picker.SelectedItem <> ""
+            Debug.Assert ActiveWorkFlow.Steps.Count > 0
+            
             
             If Not ResetScreen Then Err.Raise HANDLED_ERROR
             If Not ModUIProjects.BuildScreen(enActivePage) Then Err.Raise HANDLED_ERROR
             
             ShtMain.Protect PROTECT_KEY
+            
+            Set ActiveWorkFlow = Nothing
+            Set ActiveSPV = Nothing
+            Set ActiveProject = Nothing
+            Set Picker = Nothing
+            Set ActiveClient = Nothing
+            Set ActiveUser = Nothing
+            
             If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
 
         Case enBtnNewLenderWF

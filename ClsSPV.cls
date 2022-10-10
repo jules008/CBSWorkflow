@@ -33,6 +33,8 @@ Private pName As String
 Private pContacts As ClsContacts
 Private pProjects As ClsProjects
 Private pParent As ClsClient
+Private WithEvents pSPVForm As FrmSPVForm
+Attribute pSPVForm.VB_VarHelpID = -1
 
 '---------------------------------------------------------------
 Public Property Get SPVNo() As Integer
@@ -57,7 +59,7 @@ Public Property Get Contacts() As ClsContacts
     Set Contacts = pContacts
 End Property
 
-Public Property Let Contacts(ByVal vNewValue As ClsContacts)
+Public Property Let Contacts(ByRef vNewValue As ClsContacts)
     Set pContacts = vNewValue
 End Property
 
@@ -66,7 +68,7 @@ Public Property Get Projects() As ClsProjects
     Set Projects = pProjects
 End Property
 
-Public Property Let Projects(ByVal vNewValue As ClsProjects)
+Public Property Let Projects(ByRef vNewValue As ClsProjects)
     Set pProjects = vNewValue
 End Property
 
@@ -80,13 +82,30 @@ Public Property Set Parent(obj As ClsClient)
 End Property
 '---------------------------------------------------------------
 ' ===============================================================
-' Method DBGet(Key as Integer)
+' Method DBNew
+' displays new SPV form
+' ---------------------------------------------------------------
+Public Sub DBNew()
+    
+    With pSPVForm
+        .Tag = "New"
+        .Show
+    End With
+End Sub
+
+' ===============================================================
+' Method DBGet(Key as Variant)
 ' Gets class from Database
 ' ---------------------------------------------------------------
-Public Sub DBGet(SPVNo As Integer)
+Public Sub DBGet(SPVNameOrNo As Variant)
     Dim RstSPV As Recordset
 
-    Set RstSPV = ModDatabase.SQLQuery("SELECT * FROM TblSPV WHERE SPVNo = " & SPVNo)
+    If IsNumeric(SPVNameOrNo) Then
+        Set RstSPV = ModDatabase.SQLQuery("SELECT * FROM TblSPV WHERE SPVNo = " & SPVNameOrNo)
+    Else
+        Set RstSPV = ModDatabase.SQLQuery("SELECT * FROM TblSPV WHERE Name = '" & SPVNameOrNo & "'")
+    End If
+
     With RstSPV
         If .RecordCount > 0 Then
             If Not IsNull(!SPVNo) Then pSPVNo = !SPVNo
@@ -127,6 +146,10 @@ Public Sub DBSave()
         If CStr(pSPVNo) = "" Then !SPVNo = Null Else !SPVNo = pSPVNo
         If CStr(pName) = "" Then !Name = Null Else !Name = pName
 
+        If Not pParent Is Nothing Then !ClientNo = pParent.ClientNo
+        
+        Debug.Assert !ClientNo <> ""
+        
         pContacts.SaveCollection
         pProjects.SaveCollection
         .Update
@@ -145,6 +168,19 @@ Public Sub DBDelete(Optional FullDelete As Boolean)
     DB.Execute "DELETE * FROM TblSPV WHERE SPVNo = " & pSPVNo
 
 End Sub
+
+' ===============================================================
+' Event pSPVForm_CreateNew
+' Event from SPV form to create new SPV
+' ---------------------------------------------------------------
+Private Sub pSPVForm_CreateNew()
+    With pSPVForm
+        pName = .TxtName
+'        pSPVNo = .TxtSPVNo
+    End With
+    DBSave
+End Sub
+
 ' ===============================================================
 Public Sub Initialize(obj As ClsClient)
     Set Me.Parent = obj
@@ -154,6 +190,7 @@ End Sub
 Private Sub Class_Initialize()
     Set pContacts = New ClsContacts
     Set pProjects = New ClsProjects
+    Set pSPVForm = New FrmSPVForm
 
     pProjects.Initialize Me
 End Sub
@@ -165,10 +202,12 @@ Public Sub Terminate()
 
     Set pContacts = Nothing
     Set pProjects = Nothing
+    Set pSPVForm = Nothing
 End Sub
 '---------------------------------------------------------------
 Private Sub Class_Terminate()
     Set pContacts = Nothing
     Set pProjects = Nothing
+    Set pSPVForm = Nothing
 End Sub
 ' ===============================================================

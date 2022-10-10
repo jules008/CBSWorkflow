@@ -31,6 +31,7 @@ Private pData As Recordset
 Private WithEvents pFormPicker As FrmPicker
 Attribute pFormPicker.VB_VarHelpID = -1
 Private pSelectedItem As String
+Private pCreateNew As Boolean
 Private pSelectionMade As Boolean
 Private pTitle As String
 Private pInstructions As String
@@ -49,8 +50,13 @@ Public Property Let SelectedItem(ByVal vNewValue As String)
     pSelectedItem = vNewValue
 End Property
 
+'---------------------------------------------------------------
+Public Property Get CreateNew() As Boolean
+    CreateNew = pCreateNew
+End Property
+
 Public Property Let Title(ByVal vNewValue As String)
-    pFormPicker.LblTitle = vNewValue
+    pFormPicker.TtlTop = vNewValue
 End Property
 
 Public Property Let Instructions(ByVal vNewValue As String)
@@ -107,6 +113,14 @@ Private Sub pFormPicker_ResultsListSelect()
 End Sub
 
 ' ===============================================================
+' Event pformpicker_CreateNew
+' Event on new button being pressed
+'---------------------------------------------------------------
+Private Sub pformpicker_CreateNew()
+    pCreateNew = True
+End Sub
+
+' ===============================================================
 ' Method SearchTextChanged
 ' Event on search text change.  lists all matching data in list box
 '---------------------------------------------------------------
@@ -118,7 +132,7 @@ Private Sub pFormPicker_SearchTextChanged()
     
     If SearchTxt <> "" Then
         FieldName = pData.Fields(0).Name
-        
+        If pData.RecordCount > 0 Then
         pData.MoveFirst
         pFormPicker.LstResults.Clear
         Do While Not pData.EOF
@@ -129,6 +143,7 @@ Private Sub pFormPicker_SearchTextChanged()
             End If
             pData.MoveNext
         Loop
+        End If
     End If
 End Sub
 

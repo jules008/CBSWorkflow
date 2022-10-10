@@ -134,7 +134,7 @@ Sub BuildCal()
                 .ControlTipText = Format(dTemp2, "dd/mm/yy")
                 'add dates to the buttons
                 If Format(dTemp2, "mmmm") = CmoMonth.Value Then
-                    If .BackColor <> COLOUR_3 Then .BackColor = COLOUR_6
+                    If .BackColor <> COL_BLUE Then .BackColor = COL_BLACK
                     If Format(dTemp2, "m/d/yy") = Format(Date, "m/d/yy") Then .SetFocus
                     .Font.Bold = True
                 Else

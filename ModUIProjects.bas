@@ -176,22 +176,13 @@ End Function
 ' Refreshes the list of active workflows
 ' ---------------------------------------------------------------
 Public Function RefreshList(Optional SortBy As String) As Boolean
-'    Dim StepNo As String
-'    Dim CurrentStep As String
-'    Dim ActionOn As String
-'    Dim StepStatus As enStatus
     Dim NoCols As Integer
     Dim NoRows As Integer
     Dim Workflows As ClsWorkflows
-'    Dim StrOnAction As String
     Dim StrSortBy As String
     Dim RstWorkflowList As Recordset
-'    Dim ScreenSel As String
     Dim y As Integer
     Dim x As Integer
-'    Dim RowTitles() As String
-'    Dim WorkflowNo As String
-'    Dim MemberName As String
     Dim AryStyles() As String
     Dim AryOnAction() As String
     
@@ -205,11 +196,7 @@ Public Function RefreshList(Optional SortBy As String) As Boolean
     
     Set Workflows = New ClsWorkflows
     
-'    Workflows.UpdateRAGs
-    
     Set RstWorkflowList = GetActiveList(StrSortBy)
-    
-    Debug.Assert RstWorkflowList.RecordCount > 0
     
     With RstWorkflowList
         If .RecordCount = 0 Then GoTo GracefulExit
@@ -224,7 +211,10 @@ Public Function RefreshList(Optional SortBy As String) As Boolean
         .NoRows = RstWorkflowList.RecordCount
         .StylesColl.Add GENERIC_TABLE
         .StylesColl.Add GENERIC_TABLE_HEADER
-        .RowHeight = GENERIC_TABLE_HEIGHT
+        .StylesColl.Add RED_CELL
+        .StylesColl.Add AMBER_CELL
+        .StylesColl.Add GREEN_CELL
+        .RowHeight = GENERIC_TABLE_ROW_HEIGHT
     End With
     
     NoRows = RstWorkflowList.RecordCount
@@ -239,10 +229,17 @@ Public Function RefreshList(Optional SortBy As String) As Boolean
         For x = 0 To NoCols - 1
             .MoveFirst
             For y = 0 To NoRows - 1
+                
+                If x = 6 Then
+                    If !RAG = "en1Red" Then AryStyles(x, y) = "RED_CELL"
+                    If !RAG = "en2Amber" Then AryStyles(x, y) = "AMBER_CELL"
+                    If !RAG = "en3Green" Then AryStyles(x, y) = "GREEN_CELL"
+                Else
             AryStyles(x, y) = "GENERIC_TABLE"
+                End If
+                
                 AryOnAction(x, y) = "'ModUIButtons.ProcessBtnClicks(""" & enBtnOpenProject & ":" & !ProjectNo & """)'"
                 .MoveNext
-'                Debug.Print x; y; AryOnAction(x, y)
         Next
     Next
     End With
@@ -293,21 +290,14 @@ Public Function GetActiveList(StrSortBy As String) As Recordset
     Dim RstWorkflow As Recordset
     Dim Workflow As ClsWorkflow
     Dim SQL As String
-    Dim i As Integer
+    Dim SQL1 As String
+    Dim SQL2 As String
+    Dim SQL3 As String
 
-    SQL = ("SELECT " _
-                & "TblProject.ProjectNo, " _
-                & "TblClient.Name , " _
-                & "TblProject.ClientManager , " _
-                & "TblStepTemplate.StepNo , " _
-                & "TblStepTemplate.StepName , " _
-                & "TblWorkflow.Status " _
-        & "FROM ((TblProject " _
-            & "LEFT JOIN TblClient ON TblProject.ClientNo = TblClient.ClientNo) " _
-            & "LEFT JOIN TblWorkflow ON TblProject.ProjectNo = TblWorkflow.ProjectNo) " _
-            & "LEFT JOIN TblStepTemplate ON TblWorkflow.CurrentStep = TblStepTemplate.StepNo " _
-        & "WHERE " _
-            & "TblWorkflow.WorkflowType = 'enProject'")
+    SQL = "SELECT TblProject.ProjectNo, TblClient.Name, TblSPV.Name, TblCBSUser.UserName, TblWorkflow.CurrentStep, TblStepTemplate.StepName, TblWorkflow.Status, TblWorkflow.RAG " _
+        & "FROM TblCBSUser RIGHT JOIN (TblStepTemplate RIGHT JOIN (TblClient RIGHT JOIN ((TblSPV RIGHT JOIN TblProject ON TblSPV.SPVNo = TblProject.SPVNo) LEFT JOIN TblWorkflow ON TblProject.ProjectNo = TblWorkflow.ProjectNo) ON TblClient.ClientNo = TblSPV.ClientNo) ON TblStepTemplate.StepNo = TblWorkflow.CurrentStep) ON TblCBSUser.CBSUserNo = TblProject.CaseManager " _
+        & "GROUP BY TblProject.ProjectNo, TblClient.Name, TblSPV.Name, TblCBSUser.UserName, TblWorkflow.CurrentStep, TblStepTemplate.StepName, TblWorkflow.Status, TblWorkflow.WorkflowType, TblWorkflow.RAG " _
+        & "HAVING (((TblWorkflow.WorkflowType)='enProject'))"
                 
     Set RstWorkflow = ModDatabase.SQLQuery(SQL)
     

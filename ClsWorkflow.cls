@@ -83,7 +83,7 @@ End Property
 
 '---------------------------------------------------------------
 Public Property Get RAG() As enRAG
-    pRAG = ActiveStep.RAG
+    pRAG = pActiveStep.RAG
     RAG = pRAG
 End Property
 
@@ -131,7 +131,7 @@ Public Property Get ActiveStep() As ClsStep
     Set ActiveStep = pSteps(pWorkflowNo & "-" & pCurrentStep)
 End Property
 
-Public Property Let ActiveStep(ByVal vNewValue As ClsStep)
+Public Property Let ActiveStep(ByRef vNewValue As ClsStep)
     vNewValue.Initialize Me
     Set pSteps(pWorkflowNo & "-" & pCurrentStep) = vNewValue
 End Property
@@ -169,7 +169,7 @@ Public Property Get Steps() As ClsSteps
     Set Steps = pSteps
 End Property
 
-Public Property Let Steps(ByVal vNewValue As ClsSteps)
+Public Property Let Steps(ByRef vNewValue As ClsSteps)
     Set pSteps = vNewValue
 End Property
 
@@ -195,7 +195,7 @@ Public Sub DBGet(WorkflowNo As String)
         If .RecordCount > 0 Then
             If Not IsNull(!Deleted) Then pDeleted = !Deleted
             If Not IsNull(!WorkflowNo) Then pWorkflowNo = !WorkflowNo
-            If Not IsNull(!WorkflowType) Then pWorkflowType = !WorkflowType
+            If Not IsNull(!WorkflowType) Then pWorkflowType = enWorkflowTypeVal(!WorkflowType)
             If Not IsNull(!CurrentStep) Then pCurrentStep = !CurrentStep
             If Not IsNull(!Name) Then pName = !Name
             If Not IsNull(!Status) Then pStatus = enStatusVal(!Status)
@@ -240,11 +240,11 @@ Public Sub DBSave()
         If CurrentStep = "" Then pCurrentStep = pSteps.Start
         !CurrentStep = pCurrentStep
         !WorkflowNo = pWorkflowNo
-        !WorkflowType = pWorkflowType
+        !WorkflowType = enWorkflowTypeStr(pWorkflowType)
         !Name = pName
         !Status = enStatusStr(Status)
         !RAG = enRAGStr(RAG)
-        If Not Parent Is Nothing Then Parent!ProjectNo = Parent.ProjectNo
+        If Not Parent Is Nothing Then !ProjectNo = Parent.ProjectNo
         .Update
                     
         Steps.SaveCollection

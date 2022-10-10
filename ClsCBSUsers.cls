@@ -2,13 +2,13 @@ VERSION 1.0 CLASS
 BEGIN
   MultiUse = -1  'True
 END
-Attribute VB_Name = "ClsWorkflows"
+Attribute VB_Name = "ClsCBSUsers"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 '===============================================================
-' Class ClsWorkflows
+' Class ClsCBSUsers
 '---------------------------------------------------------------
 ' Created by Julian Turner
 ' OneSheet Consulting
@@ -16,7 +16,7 @@ Attribute VB_Exposed = False
 '===============================================================
 ' v1.0.0 - Initial Version
 '---------------------------------------------------------------
-' Date - 03 Oct 22
+' Date - 10 Oct 22
 '===============================================================
 ' Methods
 '---------------------------------------------------------------
@@ -33,50 +33,38 @@ Attribute VB_Exposed = False
 '---------------------------------------------------------------
 Option Explicit
 
-Private pWorkflows As Collection
-Private pParent As ClsProject
+Private pCBSUsers As Collection
 
-'---------------------------------------------------------------
-Public Property Get Parent() As ClsProject
-    Set Parent = pParent
-End Property
 
-Public Property Set Parent(obj As ClsProject)
-    Set pParent = obj
-End Property
-'---------------------------------------------------------------
-                
 Public Function NewEnum() As IUnknown
 Attribute NewEnum.VB_UserMemId = -4
-    Set NewEnum = pWorkflows.[_NewEnum]
+    Set NewEnum = pCBSUsers.[_NewEnum]
 End Function
 
 ' ===============================================================
 ' Method Find
 ' Finds Item from index
 ' ---------------------------------------------------------------
-Public Function Find(WorkflowNo As Variant) As ClsWorkflow
+Public Function Find(CBSUserNo As Variant) As ClsCBSUser
 Attribute Find.VB_UserMemId = 0
     On Error Resume Next
-    Set Find = pWorkflows.Item(WorkflowNo)
+    Set Find = pCBSUsers.Item(CBSUserNo)
 End Function
 
 ' ===============================================================
 ' Method Add
 ' Add item to Collection
 ' ---------------------------------------------------------------
-Public Sub Add(ByRef Workflow As ClsWorkflow)
-    Workflow.Initialize Me.Parent
-    pWorkflows.Add Workflow, Key:=CStr(Workflow.WorkflowNo)
+Public Sub Add(CBSUser As ClsCBSUser)
+    pCBSUsers.Add CBSUser, Key:=CStr(CBSUser.CBSUserNo)
 End Sub
 
 ' ===============================================================
 ' Method Remove
 ' Removes item from collection
 ' ---------------------------------------------------------------
-Public Sub Remove(WorkflowNo As Variant)
-    pWorkflows(WorkflowNo).Parent = Nothing
-    pWorkflows.Remove WorkflowNo
+Public Sub Remove(CBSUserNo As Variant)
+    pCBSUsers.Remove CBSUserNo
 End Sub
 
 ' ===============================================================
@@ -84,7 +72,7 @@ End Sub
 ' Returns number of items in collection
 ' ---------------------------------------------------------------
 Public Function Count() As Integer
-    Count = pWorkflows.Count
+    Count = pCBSUsers.Count
 End Function
 
 ' ===============================================================
@@ -92,21 +80,21 @@ End Function
 ' Gets all items in collection
 ' ---------------------------------------------------------------
 Public Sub GetCollection()
-    Dim RstWorkflow As Recordset
-    Dim Workflow As ClsWorkflow
+    Dim RstCBSUser As Recordset
+    Dim CBSUser As ClsCBSUser
     Dim i As Integer
-    
-    Set RstWorkflow = ModDatabase.SQLQuery("TblWorkflow")
-    With RstWorkflow
+
+    Set RstCBSUser = ModDatabase.SQLQuery("TblCBSUser")
+    With RstCBSUser
         If .RecordCount > 0 Then
-        .MoveLast
-        .MoveFirst
-        For i = 1 To .RecordCount
-            Set Workflow = New ClsWorkflow
-            Workflow.DBGet !WorkflowNo
-                pWorkflows.Add Workflow, Key:=CStr(Workflow.WorkflowNo)
-            .MoveNext
-        Next
+            .MoveLast
+            .MoveFirst
+            For i = 1 To .RecordCount
+                Set CBSUser = New ClsCBSUser
+                CBSUser.DBGet !CBSUserNo
+                pCBSUsers.Add CBSUser, Key:=CStr(CBSUser.CBSUserNo)
+                .MoveNext
+            Next
         End If
     End With
 End Sub
@@ -116,12 +104,10 @@ End Sub
 ' Saves all items in collection to database
 ' ---------------------------------------------------------------
 Public Sub SaveCollection()
-    Dim Workflow As ClsWorkflow
-    
-    Sin 0
-    For Each Workflow In pWorkflows
-        Workflow.DBSave
-        Next
+    Dim CBSUser As ClsCBSUser
+    For Each CBSUser In pCBSUsers
+        CBSUser.DBSave
+    Next
 End Sub
 
 ' ===============================================================
@@ -129,11 +115,10 @@ End Sub
 ' Deletes all items in collection
 ' ---------------------------------------------------------------
 Public Sub RemoveCollection()
-    Dim Workflow As ClsWorkflow
-    Sin 0
-    For Each Workflow In pWorkflows
-        pWorkflows.Remove CStr(Workflow.WorkflowNo)
-        Next
+    Dim CBSUser As ClsCBSUser
+    For Each CBSUser In pCBSUsers
+        pCBSUsers.Remove CStr(CBSUser.CBSUserNo)
+    Next
 End Sub
 
 ' ===============================================================
@@ -141,11 +126,10 @@ End Sub
 ' Deletes all items in collection
 ' ---------------------------------------------------------------
 Public Sub DeleteCollection()
-    Dim Workflow As ClsWorkflow
-    Sin 0
-    For Each Workflow In pWorkflows
-        pWorkflows.Remove CStr(Workflow.WorkflowNo)
-        Workflow.DBDelete
+    Dim CBSUser As ClsCBSUser
+    For Each CBSUser In pCBSUsers
+        pCBSUsers.Remove CStr(CBSUser.CBSUserNo)
+        CBSUser.DBDelete
     Next
 End Sub
 
@@ -153,35 +137,23 @@ End Sub
 ' Method Destroy
 ' Removes item from collection and destroys it
 ' ---------------------------------------------------------------
-Public Sub Destroy(WorkflowNo As Variant)
-    Dim Workflow As ClsWorkflow
-    
-    Set Workflow = pWorkflows(WorkflowNo)
-    Workflow.Parent = Nothing
-    Workflow.Terminate
-    pWorkflows.Remove WorkflowNo
-    Workflow.DBDelete True
+Public Sub Destroy(CBSUserNo As Variant)
+    Dim CBSUser As ClsCBSUser
 
-    Set Workflow = Nothing
+    Set CBSUser = pCBSUsers(CBSUserNo)
+    pCBSUsers.Remove CBSUserNo
+    CBSUser.DBDelete True
+
+    Set CBSUser = Nothing
 End Sub
 ' ===============================================================
-Public Sub Initialize(obj As ClsProject)
-    Set Me.Parent = obj
-End Sub
-'---------------------------------------------------------------
 
 Private Sub Class_Initialize()
-    Set pWorkflows = New Collection
+    Set pCBSUsers = New Collection
 
 End Sub
 ' ===============================================================
-Public Sub Terminate()
-
-    Set Me.Parent = Nothing
-
-End Sub
-'---------------------------------------------------------------
 Private Sub Class_Terminate()
-    Set pWorkflows = Nothing
+    Set pCBSUsers = Nothing
 End Sub
 ' ===============================================================

@@ -29,7 +29,7 @@ Attribute VB_Exposed = False
 Option Explicit
 
 Private pProjectNo As Integer
-Private pClientManager As String
+Private pCaseManager As ClsCBSUser
 Private pLoanTerm As String
 Private pProjectWorkflow As ClsWorkflow
 Private pCBSComPC As Single
@@ -37,6 +37,7 @@ Private pExitFee As Boolean
 Private pWorkflows As ClsWorkflows
 Private pContacts As ClsContacts
 Private pParent As ClsSPV
+Private pProjectWFNo As Integer
 
 '---------------------------------------------------------------
 Public Property Get ProjectNo() As Integer
@@ -48,12 +49,12 @@ Public Property Let ProjectNo(ByVal vNewValue As Integer)
 End Property
 
 '---------------------------------------------------------------
-Public Property Get ClientManager() As String
-    ClientManager = pClientManager
+Public Property Get CaseManager() As ClsCBSUser
+    Set CaseManager = pCaseManager
 End Property
 
-Public Property Let ClientManager(ByVal vNewValue As String)
-    pClientManager = vNewValue
+Public Property Let CaseManager(ByVal vNewValue As ClsCBSUser)
+    Set pCaseManager = vNewValue
 End Property
 
 '---------------------------------------------------------------
@@ -70,7 +71,9 @@ Public Property Get ProjectWorkflow() As ClsWorkflow
     Set ProjectWorkflow = pProjectWorkflow
 End Property
 
-Public Property Let ProjectWorkflow(ByVal vNewValue As ClsWorkflow)
+Public Property Let ProjectWorkflow(ByRef vNewValue As ClsWorkflow)
+    vNewValue.Initialize Me
+    pProjectWorkflow.Name = "Project"
     Set pProjectWorkflow = vNewValue
 End Property
 
@@ -97,7 +100,7 @@ Public Property Get Workflows() As ClsWorkflows
     Set Workflows = pWorkflows
 End Property
 
-Public Property Let Workflows(ByVal vNewValue As ClsWorkflows)
+Public Property Let Workflows(ByRef vNewValue As ClsWorkflows)
     Set pWorkflows = vNewValue
 End Property
 
@@ -106,7 +109,7 @@ Public Property Get Contacts() As ClsContacts
     Set Contacts = pContacts
 End Property
 
-Public Property Let Contacts(ByVal vNewValue As ClsContacts)
+Public Property Let Contacts(ByRef vNewValue As ClsContacts)
     Set pContacts = vNewValue
 End Property
 
@@ -134,7 +137,9 @@ Public Sub DBGet(ProjectNo As Integer)
             If Not IsNull(!CBSComPC) Then pCBSComPC = !CBSComPC
             If Not IsNull(!ExitFee) Then pExitFee = !ExitFee
             
+        pCaseManager.DBGet !CaseManager
         pContacts.GetCollection
+        pProjectWorkflow.DBGet !ProjectWFNo
         End If
     End With
     Set RstProject = Nothing
@@ -170,6 +175,9 @@ Public Sub DBSave()
         If CStr(pLoanTerm) = "" Then !LoanTerm = Null Else !LoanTerm = pLoanTerm
         If CStr(pCBSComPC) = "" Then !CBSComPC = Null Else !CBSComPC = pCBSComPC
         If CStr(pExitFee) = "" Then !ExitFee = Null Else !ExitFee = pExitFee
+        If pProjectWorkflow.WorkflowNo <> 0 Then !ProjectWFNo = pProjectWorkflow.WorkflowNo
+        If pParent Is Nothing Then !SPVNo = Null Else !SPVNo = pParent.SPVNo
+        If CStr(pCaseManager.CBSUserNo) = "" Then !CaseManager = Null Else !CaseManager = pCaseManager.CBSUserNo
 
         pWorkflows.SaveCollection
         pContacts.SaveCollection
@@ -200,6 +208,7 @@ Private Sub Class_Initialize()
     Set pWorkflows = New ClsWorkflows
     Set pProjectWorkflow = New ClsWorkflow
     Set pContacts = New ClsContacts
+    Set pCaseManager = New ClsCBSUser
 
     pWorkflows.Initialize Me
     pProjectWorkflow.Initialize Me
@@ -214,11 +223,13 @@ Public Sub Terminate()
     Set pWorkflows = Nothing
     Set pProjectWorkflow = Nothing
     Set pContacts = Nothing
+    Set pCaseManager = Nothing
 End Sub
 '---------------------------------------------------------------
 Private Sub Class_Terminate()
     Set pWorkflows = Nothing
     Set pProjectWorkflow = Nothing
     Set pContacts = Nothing
+    Set pCaseManager = Nothing
 End Sub
 ' ===============================================================

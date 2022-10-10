@@ -24,7 +24,7 @@ Public Const SCREEN_HEIGHT As Integer = 2000
 Public Const SCREEN_WIDTH As Integer = 1825
 Public Const MAIN_FRAME_TOP As Integer = 90
 Public Const MAIN_FRAME_LEFT As Integer = 170
-Public Const MAIN_FRAME_WIDTH As Integer = 650
+Public Const MAIN_FRAME_WIDTH As Integer = 700
 Public Const MAIN_FRAME_HEIGHT As Integer = 360
 
 ' ---------------------------------------------------------------
@@ -33,7 +33,7 @@ Public Const MAIN_FRAME_HEIGHT As Integer = 360
 Public Const BUTTON_FRAME_TOP As Integer = 5
 Public Const BUTTON_FRAME_LEFT As Integer = 790
 Public Const BUTTON_FRAME_WIDTH As Integer = 275
-Public Const BUTTON_FRAME_HEIGHT As Integer = 80
+Public Const BUTTON_FRAME_HEIGHT As Integer = 60
 
 ' ---------------------------------------------------------------
 ' Generic Button
@@ -44,7 +44,7 @@ Public Const GENERIC_BUTTON_HEIGHT As Integer = 40
 ' ---------------------------------------------------------------
 ' Generic Table Settings
 ' ---------------------------------------------------------------
-Public Const GENERIC_TABLE_HEIGHT As Integer = 15
+Public Const GENERIC_TABLE_ROW_HEIGHT As Integer = 20
 Public Const GENERIC_TABLE_WIDTH As Integer = 550
 Public Const GENERIC_TABLE_LEFT As Integer = 0
 Public Const GENERIC_TABLE_TOP As Integer = 25
@@ -80,17 +80,17 @@ Public Const HEADER_ICON_RIGHT As Integer = 10
 ' ---------------------------------------------------------------
 Public Const FOR_ACTION_CELL_NOCOLS As Integer = 5
 Public Const FOR_ACTION_CELL_COL_WIDTHS As String = "100:200:200:290:100"
-Public Const FOR_ACTION_CELL_ROW_HEIGHTS As String = "30:30"
+Public Const FOR_ACTION_CELL_ROW_HEIGHTS As String = "50:50"
 Public Const FOR_ACTION_CELL_TITLES As String = "Workflow No:Name:Step No:Step Name:Status"
 Public Const FOR_ACTION_MAX_LINES As Integer = 40
 
 ' ---------------------------------------------------------------
 ' Active Screen
 ' ---------------------------------------------------------------
-Public Const ACTIVE_TABLE_COL_WIDTHS As String = "50:150:100:50:200:100"
-Public Const ACTIVE_CELL_ROW_HEIGHTS As String = "30:30"
+Public Const ACTIVE_TABLE_COL_WIDTHS As String = "50:100:100:100:50:200:100"
+Public Const ACTIVE_CELL_ROW_HEIGHTS As String = "50:50"
 Public Const ACTIVE_TABLE_STYLES As String = "GENERIC_TABLE"
-Public Const ACTIVE_TABLE_TITLES As String = "Project No:Client Name:Client Manager:Step No:Step Name:Status"
+Public Const ACTIVE_TABLE_TITLES As String = "Project No:Client Name:SPV No:Case Manager:Step No:Step Name:Status"
 Public Const ACTIVE_MAX_LINES As Integer = 150
 Public Const ACTIVE_BTN_MAIN_1_LEFT As Integer = 30
 Public Const ACTIVE_BTN_MAIN_1_TOP As Integer = 20
@@ -231,12 +231,12 @@ Public GENERIC_TABLE_HEADER As ClsUIStyle
 ' Buttons
 ' ---------------------------------------------------------------
 Public Const GENERIC_BUTTON_BORDER_WIDTH As Single = 0
-Public Const GENERIC_BUTTON_FILL_1 As Long = COLOUR_3
-Public Const GENERIC_BUTTON_FILL_2 As Long = COLOUR_3
+Public Const GENERIC_BUTTON_FILL_1 As Long = COL_BLUE
+Public Const GENERIC_BUTTON_FILL_2 As Long = COL_BLUE
 Public Const GENERIC_BUTTON_SHADOW As Long = msoShadow21
 Public Const GENERIC_BUTTON_FONT_STYLE As String = "Eras Medium ITC"
 Public Const GENERIC_BUTTON_FONT_SIZE As Integer = 12
-Public Const GENERIC_BUTTON_FONT_COLOUR As Long = COLOUR_5
+Public Const GENERIC_BUTTON_FONT_COLOUR As Long = COL_WHITE
 Public Const GENERIC_BUTTON_FONT_BOLD As Boolean = False
 Public Const GENERIC_BUTTON_FONT_X_JUST As Integer = xlHAlignCenter
 Public Const GENERIC_BUTTON_FONT_Y_JUST As Integer = xlVAlignCenter
@@ -245,12 +245,12 @@ Public Const GENERIC_BUTTON_FONT_Y_JUST As Integer = xlVAlignCenter
 ' Cells
 ' ---------------------------------------------------------------
 Public Const GENERIC_TABLE_BORDER_WIDTH As Single = 0
-Public Const GENERIC_TABLE_FILL_1 As Long = COLOUR_5
-Public Const GENERIC_TABLE_FILL_2 As Long = COLOUR_5
+Public Const GENERIC_TABLE_FILL_1 As Long = COL_WHITE
+Public Const GENERIC_TABLE_FILL_2 As Long = COL_WHITE
 Public Const GENERIC_TABLE_SHADOW As Long = 0
 Public Const GENERIC_TABLE_FONT_STYLE As String = "Eras Medium ITC"
 Public Const GENERIC_TABLE_FONT_SIZE As Integer = 10
-Public Const GENERIC_TABLE_FONT_COLOUR As Long = COLOUR_4
+Public Const GENERIC_TABLE_FONT_COLOUR As Long = COL_DRK_GREY
 Public Const GENERIC_TABLE_FONT_BOLD As Boolean = False
 Public Const GENERIC_TABLE_FONT_X_JUST As Integer = xlHAlignCenter
 Public Const GENERIC_TABLE_FONT_Y_JUST As Integer = xlVAlignBottom
@@ -259,12 +259,12 @@ Public Const GENERIC_TABLE_FONT_Y_JUST As Integer = xlVAlignBottom
 ' Cell Headers
 ' ---------------------------------------------------------------
 Public Const GENERIC_TABLE_HEADER_BORDER_WIDTH As Single = 0
-Public Const GENERIC_TABLE_HEADER_FILL_1 As Long = COLOUR_3
-Public Const GENERIC_TABLE_HEADER_FILL_2 As Long = COLOUR_3
+Public Const GENERIC_TABLE_HEADER_FILL_1 As Long = COL_BLUE
+Public Const GENERIC_TABLE_HEADER_FILL_2 As Long = COL_BLUE
 Public Const GENERIC_TABLE_HEADER_SHADOW As Long = 0
 Public Const GENERIC_TABLE_HEADER_FONT_STYLE As String = "Calibri"
 Public Const GENERIC_TABLE_HEADER_FONT_SIZE As Integer = 10
-Public Const GENERIC_TABLE_HEADER_FONT_COLOUR As Long = COLOUR_5
+Public Const GENERIC_TABLE_HEADER_FONT_COLOUR As Long = COL_WHITE
 Public Const GENERIC_TABLE_HEADER_FONT_BOLD As Boolean = False
 Public Const GENERIC_TABLE_HEADER_FONT_X_JUST As Integer = xlHAlignCenter
 Public Const GENERIC_TABLE_HEADER_FONT_Y_JUST As Integer = xlVAlignBottom
@@ -273,12 +273,12 @@ Public Const GENERIC_TABLE_HEADER_FONT_Y_JUST As Integer = xlVAlignBottom
 ' Text Box
 ' ---------------------------------------------------------------
 Public Const TRANSPARENT_TEXT_BOX_BORDER_WIDTH As Single = 0
-Public Const TRANSPARENT_TEXT_BOX_FILL_1 As Long = COLOUR_3
-Public Const TRANSPARENT_TEXT_BOX_FILL_2 As Long = COLOUR_3
+Public Const TRANSPARENT_TEXT_BOX_FILL_1 As Long = COL_BLUE
+Public Const TRANSPARENT_TEXT_BOX_FILL_2 As Long = COL_BLUE
 Public Const TRANSPARENT_TEXT_BOX_SHADOW As Long = 0
 Public Const TRANSPARENT_TEXT_BOX_FONT_STYLE As String = "Eras Medium ITC"
 Public Const TRANSPARENT_TEXT_BOX_FONT_SIZE As Integer = 10
-Public Const TRANSPARENT_TEXT_BOX_FONT_COLOUR As Long = COLOUR_2
+Public Const TRANSPARENT_TEXT_BOX_FONT_COLOUR As Long = COL_PINK
 Public Const TRANSPARENT_TEXT_BOX_FONT_BOLD As Boolean = False
 Public Const TRANSPARENT_TEXT_BOX_FONT_X_JUST As Integer = xlHAlignLeft
 Public Const TRANSPARENT_TEXT_BOX_FONT_Y_JUST As Integer = xlVAlignCenter
@@ -289,12 +289,12 @@ Public Const TRANSPARENT_TEXT_BOX_FONT_Y_JUST As Integer = xlVAlignCenter
 ' Cell Green
 ' ---------------------------------------------------------------
 Public Const GREEN_CELL_BORDER_WIDTH As Single = 0
-Public Const GREEN_CELL_FILL_1 As Long = COLOUR_9
-Public Const GREEN_CELL_FILL_2 As Long = COLOUR_9
+Public Const GREEN_CELL_FILL_1 As Long = COL_GREEN
+Public Const GREEN_CELL_FILL_2 As Long = COL_GREEN
 Public Const GREEN_CELL_SHADOW As Long = 0
 Public Const GREEN_CELL_FONT_STYLE As String = "Eras Medium ITC"
 Public Const GREEN_CELL_FONT_SIZE As Integer = 11
-Public Const GREEN_CELL_FONT_COLOUR As Long = COLOUR_4
+Public Const GREEN_CELL_FONT_COLOUR As Long = COL_DRK_GREY
 Public Const GREEN_CELL_FONT_BOLD As Boolean = False
 Public Const GREEN_CELL_FONT_X_JUST As Integer = xlHAlignCenter
 Public Const GREEN_CELL_FONT_Y_JUST As Integer = xlVAlignCenter
@@ -303,12 +303,12 @@ Public Const GREEN_CELL_FONT_Y_JUST As Integer = xlVAlignCenter
 ' Cell Amber
 ' ---------------------------------------------------------------
 Public Const AMBER_CELL_BORDER_WIDTH As Single = 0
-Public Const AMBER_CELL_FILL_1 As Long = COLOUR_8
-Public Const AMBER_CELL_FILL_2 As Long = COLOUR_8
+Public Const AMBER_CELL_FILL_1 As Long = COL_AMBER
+Public Const AMBER_CELL_FILL_2 As Long = COL_AMBER
 Public Const AMBER_CELL_SHADOW As Long = 0
 Public Const AMBER_CELL_FONT_STYLE As String = "Eras Medium ITC"
 Public Const AMBER_CELL_FONT_SIZE As Integer = 11
-Public Const AMBER_CELL_FONT_COLOUR As Long = COLOUR_4
+Public Const AMBER_CELL_FONT_COLOUR As Long = COL_DRK_GREY
 Public Const AMBER_CELL_FONT_BOLD As Boolean = False
 Public Const AMBER_CELL_FONT_X_JUST As Integer = xlHAlignCenter
 Public Const AMBER_CELL_FONT_Y_JUST As Integer = xlVAlignCenter
@@ -317,12 +317,12 @@ Public Const AMBER_CELL_FONT_Y_JUST As Integer = xlVAlignCenter
 ' Cell Red
 ' ---------------------------------------------------------------
 Public Const RED_CELL_BORDER_WIDTH As Single = 0
-Public Const RED_CELL_FILL_1 As Long = COLOUR_10
-Public Const RED_CELL_FILL_2 As Long = COLOUR_10
+Public Const RED_CELL_FILL_1 As Long = COL_RED
+Public Const RED_CELL_FILL_2 As Long = COL_RED
 Public Const RED_CELL_SHADOW As Long = 0
 Public Const RED_CELL_FONT_STYLE As String = "Eras Medium ITC"
 Public Const RED_CELL_FONT_SIZE As Integer = 11
-Public Const RED_CELL_FONT_COLOUR As Long = COLOUR_5
+Public Const RED_CELL_FONT_COLOUR As Long = COL_WHITE
 Public Const RED_CELL_FONT_BOLD As Boolean = False
 Public Const RED_CELL_FONT_X_JUST As Integer = xlHAlignCenter
 Public Const RED_CELL_FONT_Y_JUST As Integer = xlVAlignCenter
@@ -331,12 +331,12 @@ Public Const RED_CELL_FONT_Y_JUST As Integer = xlVAlignCenter
 ' Tool Buttons
 ' ---------------------------------------------------------------
 Public Const TOOL_BUTTON_BORDER_WIDTH As Single = 0
-Public Const TOOL_BUTTON_FILL_1 As Long = COLOUR_5
-Public Const TOOL_BUTTON_FILL_2 As Long = COLOUR_5
+Public Const TOOL_BUTTON_FILL_1 As Long = COL_WHITE
+Public Const TOOL_BUTTON_FILL_2 As Long = COL_WHITE
 Public Const TOOL_BUTTON_SHADOW As Long = msoShadow21
 Public Const TOOL_BUTTON_FONT_STYLE As String = "Eras Medium ITC"
 Public Const TOOL_BUTTON_FONT_SIZE As Integer = 9
-Public Const TOOL_BUTTON_FONT_COLOUR As Long = COLOUR_8
+Public Const TOOL_BUTTON_FONT_COLOUR As Long = COL_AMBER
 Public Const TOOL_BUTTON_FONT_BOLD As Boolean = False
 Public Const TOOL_BUTTON_FONT_X_JUST As Integer = xlHAlignCenter
 Public Const TOOL_BUTTON_FONT_Y_JUST As Integer = xlVAlignCenter
@@ -345,13 +345,13 @@ Public Const TOOL_BUTTON_FONT_Y_JUST As Integer = xlVAlignCenter
 ' Support Button
 ' ---------------------------------------------------------------
 Public Const BTN_SUPPORT_BORDER_WIDTH As Single = 0.5
-Public Const BTN_SUPPORT_BORDER_COLOUR As Long = COLOUR_9
-Public Const BTN_SUPPORT_FILL_1 As Long = COLOUR_5
-Public Const BTN_SUPPORT_FILL_2 As Long = COLOUR_5
+Public Const BTN_SUPPORT_BORDER_COLOUR As Long = COL_GREEN
+Public Const BTN_SUPPORT_FILL_1 As Long = COL_WHITE
+Public Const BTN_SUPPORT_FILL_2 As Long = COL_WHITE
 Public Const BTN_SUPPORT_SHADOW As Long = 0
 Public Const BTN_SUPPORT_FONT_STYLE As String = "Eras Medium ITC"
 Public Const BTN_SUPPORT_FONT_SIZE As Integer = 9
-Public Const BTN_SUPPORT_FONT_COLOUR As Long = COLOUR_9
+Public Const BTN_SUPPORT_FONT_COLOUR As Long = COL_GREEN
 Public Const BTN_SUPPORT_FONT_BOLD As Boolean = False
 Public Const BTN_SUPPORT_FONT_X_JUST As Integer = xlHAlignCenter
 Public Const BTN_SUPPORT_FONT_Y_JUST As Integer = xlVAlignCenter
@@ -360,65 +360,65 @@ Public Const BTN_SUPPORT_FONT_Y_JUST As Integer = xlVAlignCenter
 ' Main Screen
 ' ===============================================================
 Public Const SCREEN_BORDER_WIDTH As Single = 0
-Public Const SCREEN_FILL_1 As Long = COLOUR_7
-Public Const SCREEN_FILL_2 As Long = COLOUR_7
+Public Const SCREEN_FILL_1 As Long = COL_OFF_WHITE
+Public Const SCREEN_FILL_2 As Long = COL_OFF_WHITE
 Public Const SCREEN_SHADOW As Long = 0
 
 Public Const MENUBAR_BORDER_WIDTH As Single = 1
-Public Const MENUBAR_FILL_1 As Long = COLOUR_5
-Public Const MENUBAR_FILL_2 As Long = COLOUR_5
+Public Const MENUBAR_FILL_1 As Long = COL_WHITE
+Public Const MENUBAR_FILL_2 As Long = COL_WHITE
 Public Const MENUBAR_SHADOW As Long = msoShadow21
 
 Public Const BUTTON_UNSET_BORDER_WIDTH As Single = 1
-Public Const BUTTON_UNSET_BORDER_COLOUR As Long = COLOUR_3
-Public Const BUTTON_UNSET_FILL_1 As Long = COLOUR_5
-Public Const BUTTON_UNSET_FILL_2 As Long = COLOUR_5
+Public Const BUTTON_UNSET_BORDER_COLOUR As Long = COL_BLUE
+Public Const BUTTON_UNSET_FILL_1 As Long = COL_WHITE
+Public Const BUTTON_UNSET_FILL_2 As Long = COL_WHITE
 Public Const BUTTON_UNSET_SHADOW As Long = 0
 Public Const BUTTON_UNSET_FONT_STYLE As String = "Eras Medium ITC"
 Public Const BUTTON_UNSET_FONT_SIZE As Integer = 12
-Public Const BUTTON_UNSET_FONT_COLOUR As Long = COLOUR_6
+Public Const BUTTON_UNSET_FONT_COLOUR As Long = COL_BLACK
 Public Const BUTTON_UNSET_FONT_X_JUST As Integer = xlHAlignCenter
 Public Const BUTTON_UNSET_FONT_Y_JUST As Integer = xlVAlignCenter
 
 Public Const BUTTON_SET_BORDER_WIDTH As Single = 0
-Public Const BUTTON_SET_BORDER_COLOUR As Long = COLOUR_3
-Public Const BUTTON_SET_FILL_1 As Long = COLOUR_2
-Public Const BUTTON_SET_FILL_2 As Long = COLOUR_2
+Public Const BUTTON_SET_BORDER_COLOUR As Long = COL_BLUE
+Public Const BUTTON_SET_FILL_1 As Long = COL_PINK
+Public Const BUTTON_SET_FILL_2 As Long = COL_PINK
 Public Const BUTTON_SET_SHADOW As Long = 0
 Public Const BUTTON_SET_FONT_STYLE As String = "Eras Medium ITC"
 Public Const BUTTON_SET_FONT_SIZE As Integer = 12
-Public Const BUTTON_SET_FONT_COLOUR As Long = COLOUR_5
+Public Const BUTTON_SET_FONT_COLOUR As Long = COL_WHITE
 Public Const BUTTON_SET_FONT_X_JUST As Integer = xlHAlignCenter
 Public Const BUTTON_SET_FONT_Y_JUST As Integer = xlVAlignCenter
 
 Public Const MAIN_FRAME_BORDER_WIDTH As Single = 0
-Public Const MAIN_FRAME_FILL_1 As Long = COLOUR_5
-Public Const MAIN_FRAME_FILL_2 As Long = COLOUR_5
+Public Const MAIN_FRAME_FILL_1 As Long = COL_WHITE
+Public Const MAIN_FRAME_FILL_2 As Long = COL_WHITE
 Public Const MAIN_FRAME_SHADOW As Long = msoShadow21
 
 Public Const BUTTON_FRAME_BORDER_WIDTH As Single = 0
-Public Const BUTTON_FRAME_FILL_1 As Long = COLOUR_5
-Public Const BUTTON_FRAME_FILL_2 As Long = COLOUR_5
+Public Const BUTTON_FRAME_FILL_1 As Long = COL_WHITE
+Public Const BUTTON_FRAME_FILL_2 As Long = COL_WHITE
 Public Const BUTTON_FRAME_SHADOW As Long = msoShadow21
 
 Public Const HEADER_BORDER_WIDTH As Single = 0
-Public Const HEADER_FILL_1 As Long = COLOUR_2
-Public Const HEADER_FILL_2 As Long = COLOUR_2
+Public Const HEADER_FILL_1 As Long = COL_PINK
+Public Const HEADER_FILL_2 As Long = COL_PINK
 Public Const HEADER_SHADOW As Long = 0
 Public Const HEADER_FONT_STYLE As String = "Eras Medium ITC"
 Public Const HEADER_FONT_SIZE As Integer = 12
-Public Const HEADER_FONT_COLOUR As Long = COLOUR_5
+Public Const HEADER_FONT_COLOUR As Long = COL_WHITE
 Public Const HEADER_FONT_BOLD As Boolean = False
 Public Const HEADER_FONT_X_JUST As Integer = xlHAlignCenter
 Public Const HEADER_FONT_Y_JUST As Integer = xlVAlignCenter
 
 Public Const BTN_MAIN_BORDER_WIDTH As Single = 0
-Public Const BTN_MAIN_FILL_1 As Long = COLOUR_6
-Public Const BTN_MAIN_FILL_2 As Long = COLOUR_6
+Public Const BTN_MAIN_FILL_1 As Long = COL_BLACK
+Public Const BTN_MAIN_FILL_2 As Long = COL_BLACK
 Public Const BTN_MAIN_SHADOW As Long = msoShadow21
 Public Const BTN_MAIN_FONT_STYLE As String = "Calibri"
 Public Const BTN_MAIN_FONT_SIZE As Integer = 32
-Public Const BTN_MAIN_FONT_COLOUR As Long = COLOUR_5
+Public Const BTN_MAIN_FONT_COLOUR As Long = COL_WHITE
 Public Const BTN_MAIN_FONT_BOLD As Boolean = True
 Public Const BTN_MAIN_FONT_X_JUST As Integer = xlHAlignCenter
 Public Const BTN_MAIN_FONT_Y_JUST As Integer = xlVAlignCenter

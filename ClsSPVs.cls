@@ -57,17 +57,24 @@ End Function
 ' ---------------------------------------------------------------
 Public Function Find(SPVNo As Variant) As ClsSPV
 Attribute Find.VB_UserMemId = 0
-'    On Error Resume Next
-    Set Find = pSPVs.Item(SPVNo)
+    On Error Resume Next
+    Set Find = pSPVs.Item(CStr(SPVNo))
+    
 End Function
 
 ' ===============================================================
 ' Method Add
 ' Add item to Collection
 ' ---------------------------------------------------------------
-Public Sub Add(Spv As ClsSPV)
-    Spv.Initialize Me.Parent
-    pSPVs.Add Spv, Key:=CStr(Spv.SPVNo)
+Public Sub Add(ByRef SPV As ClsSPV)
+    Dim LocSPV As ClsSPV
+    
+    Set LocSPV = Find(SPV.SPVNo)
+    
+    If LocSPV Is Nothing Then
+        SPV.Initialize Me.Parent
+        pSPVs.Add SPV, Key:=CStr(SPV.SPVNo)
+    End If
 End Sub
 
 ' ===============================================================
@@ -89,22 +96,25 @@ End Function
 
 ' ===============================================================
 ' Method GetCollection
-' Gets all items in collection
+' Gets all items in collection for parent ClientNo
 ' ---------------------------------------------------------------
 Public Sub GetCollection()
     Dim RstSPV As Recordset
-    Dim Spv As ClsSPV
+    Dim SPV As ClsSPV
+    Dim ClientNo As Integer
     Dim i As Integer
 
-    Set RstSPV = ModDatabase.SQLQuery("TblSPV")
+    ClientNo = pParent.ClientNo
+    
+    Set RstSPV = ModDatabase.SQLQuery("SELECT * FROM TblSPV WHERE ClientNo = " & ClientNo)
     With RstSPV
         If .RecordCount > 0 Then
             .MoveLast
             .MoveFirst
             For i = 1 To .RecordCount
-                Set Spv = New ClsSPV
-                Spv.DBGet !SPVNo
-                pSPVs.Add Spv, Key:=CStr(Spv.SPVNo)
+                Set SPV = New ClsSPV
+                SPV.DBGet !SPVNo
+                pSPVs.Add SPV, Key:=CStr(SPV.SPVNo)
                 .MoveNext
             Next
         End If
@@ -116,9 +126,9 @@ End Sub
 ' Saves all items in collection to database
 ' ---------------------------------------------------------------
 Public Sub SaveCollection()
-    Dim Spv As ClsSPV
-    For Each Spv In pSPVs
-        Spv.DBSave
+    Dim SPV As ClsSPV
+    For Each SPV In pSPVs
+        SPV.DBSave
     Next
 End Sub
 
@@ -127,9 +137,9 @@ End Sub
 ' Deletes all items in collection
 ' ---------------------------------------------------------------
 Public Sub RemoveCollection()
-    Dim Spv As ClsSPV
-    For Each Spv In pSPVs
-        pSPVs.Remove CStr(Spv.SPVNo)
+    Dim SPV As ClsSPV
+    For Each SPV In pSPVs
+        pSPVs.Remove CStr(SPV.SPVNo)
     Next
 End Sub
 
@@ -138,10 +148,10 @@ End Sub
 ' Deletes all items in collection
 ' ---------------------------------------------------------------
 Public Sub DeleteCollection()
-    Dim Spv As ClsSPV
-    For Each Spv In pSPVs
-        pSPVs.Remove CStr(Spv.SPVNo)
-        Spv.DBDelete
+    Dim SPV As ClsSPV
+    For Each SPV In pSPVs
+        pSPVs.Remove CStr(SPV.SPVNo)
+        SPV.DBDelete
     Next
 End Sub
 
@@ -150,15 +160,15 @@ End Sub
 ' Removes item from collection and destroys it
 ' ---------------------------------------------------------------
 Public Sub Destroy(SPVNo As Variant)
-    Dim Spv As ClsSPV
+    Dim SPV As ClsSPV
 
-    Set Spv = pSPVs(SPVNo)
-    Spv.Parent = Nothing
-    Spv.Terminate
+    Set SPV = pSPVs(SPVNo)
+    SPV.Parent = Nothing
+    SPV.Terminate
     pSPVs.Remove SPVNo
-    Spv.DBDelete True
+    SPV.DBDelete True
 
-    Set Spv = Nothing
+    Set SPV = Nothing
 End Sub
 ' ===============================================================
 Public Sub Initialize(obj As ClsClient)

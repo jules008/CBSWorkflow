@@ -2,13 +2,13 @@ VERSION 1.0 CLASS
 BEGIN
   MultiUse = -1  'True
 END
-Attribute VB_Name = "ClsClient"
+Attribute VB_Name = "ClsCBSUser"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 '===============================================================
-' Class ClsClient
+' Class ClsCBSUser
 '---------------------------------------------------------------
 ' Created by Julian Turner
 ' OneSheet Consulting
@@ -16,7 +16,7 @@ Attribute VB_Exposed = False
 '===============================================================
 ' v1.0.0 - Initial Version
 '---------------------------------------------------------------
-' Date - 13 Sep 22
+' Date - 10 Oct 22
 '===============================================================
 ' Methods
 '---------------------------------------------------------------
@@ -24,34 +24,42 @@ Attribute VB_Exposed = False
 ' DBSave - Saves class to Database
 ' DBDelete - Deletes record
 '===============================================================
-' Index - ClientNo
+' Index - CBSUserNo
 '---------------------------------------------------------------
 Option Explicit
 
-Private pName As String
-Private pUrl As String
+Private pCBSUserNo As Integer
+Private pUserName As String
+Private pPosition As String
 Private pPhoneNo As String
-Private pClientNo As Integer
-Private pSPVs As ClsSPVs
-Private pContacts As ClsContacts
-Private WithEvents pClientForm As FrmClientForm
+Private WithEvents pCBSUserForm As FrmCBSUser
+Attribute pCBSUserForm.VB_VarHelpID = -1
 
 '---------------------------------------------------------------
-Public Property Get Name() As String
-    Name = pName
+Public Property Get CBSUserNo() As Integer
+    CBSUserNo = pCBSUserNo
 End Property
 
-Public Property Let Name(ByVal vNewValue As String)
-    pName = vNewValue
+Public Property Let CBSUserNo(ByVal vNewValue As Integer)
+    pCBSUserNo = vNewValue
 End Property
 
 '---------------------------------------------------------------
-Public Property Get Url() As String
-    Url = pUrl
+Public Property Get UserName() As String
+    UserName = pUserName
 End Property
 
-Public Property Let Url(ByVal vNewValue As String)
-    pUrl = vNewValue
+Public Property Let UserName(ByVal vNewValue As String)
+    pUserName = vNewValue
+End Property
+
+'---------------------------------------------------------------
+Public Property Get Position() As String
+    Position = pPosition
+End Property
+
+Public Property Let Position(ByVal vNewValue As String)
+    pPosition = vNewValue
 End Property
 
 '---------------------------------------------------------------
@@ -63,69 +71,40 @@ Public Property Let PhoneNo(ByVal vNewValue As String)
     pPhoneNo = vNewValue
 End Property
 
-'---------------------------------------------------------------
-Public Property Get ClientNo() As Integer
-    ClientNo = pClientNo
-End Property
-
-Public Property Let ClientNo(ByVal vNewValue As Integer)
-    pClientNo = vNewValue
-End Property
-
-'---------------------------------------------------------------
-Public Property Get SPVs() As ClsSPVs
-    Set SPVs = pSPVs
-End Property
-
-Public Property Let SPVs(ByRef vNewValue As ClsSPVs)
-    Set pSPVs = vNewValue
-End Property
-
-'---------------------------------------------------------------
-Public Property Get Contacts() As ClsContacts
-    Set Contacts = pContacts
-End Property
-
-Public Property Let Contacts(ByRef vNewValue As ClsContacts)
-    Set pContacts = vNewValue
-End Property
-
 ' ===============================================================
 ' Method DBNew
-' displays new client form
+' displays new User form
 ' ---------------------------------------------------------------
 Public Sub DBNew()
     
-    With pClientForm
+    With pCBSUserForm
         .Tag = "New"
         .Show
     End With
 End Sub
 
 ' ===============================================================
-' Method DBGet(Key as variant)
+' Method DBGet(Key as Integer)
 ' Gets class from Database
 ' ---------------------------------------------------------------
-Public Sub DBGet(ClientNameNo As Variant)
-    Dim RstClient As Recordset
+Public Sub DBGet(CBSUserNameOrNo As Variant)
+    Dim RstCBSUser As Recordset
 
-    If IsNumeric(ClientNameNo) Then
-        Set RstClient = ModDatabase.SQLQuery("SELECT * FROM TblClient WHERE ClientNo = " & ClientNameNo)
+    If IsNumeric(CBSUserNameOrNo) Then
+        Set RstCBSUser = ModDatabase.SQLQuery("SELECT * FROM TblCBSUser WHERE CBSUserNo = " & CBSUserNameOrNo)
     Else
-        Set RstClient = ModDatabase.SQLQuery("SELECT * FROM TblClient WHERE Name = '" & ClientNameNo & "'")
+        Set RstCBSUser = ModDatabase.SQLQuery("SELECT * FROM TblCBSUser WHERE UserName = '" & CBSUserNameOrNo & "'")
     End If
     
-    With RstClient
+    With RstCBSUser
         If .RecordCount > 0 Then
-            If Not IsNull(!Name) Then pName = !Name
-            If Not IsNull(!Url) Then pUrl = !Url
+            If Not IsNull(!CBSUserNo) Then pCBSUserNo = !CBSUserNo
+            If Not IsNull(!UserName) Then pUserName = !UserName
+            If Not IsNull(!Position) Then pPosition = !Position
             If Not IsNull(!PhoneNo) Then pPhoneNo = !PhoneNo
-            If Not IsNull(!ClientNo) Then pClientNo = !ClientNo
-        pSPVs.GetCollection
-        pContacts.GetCollection
         End If
     End With
-    Set RstClient = Nothing
+    Set RstCBSUser = Nothing
 End Sub
 
 ' ===============================================================
@@ -133,12 +112,12 @@ End Sub
 ' Saves class to Database
 ' ---------------------------------------------------------------
 Public Sub DBSave()
-    Dim RstClient As Recordset
+    Dim RstCBSUser As Recordset
     Dim RstMaxNo As Recordset
     Dim LastNo As Integer
 
-    Set RstClient = ModDatabase.SQLQuery("SELECT * FROM TblClient WHERE ClientNo = " & pClientNo)
-    Set RstMaxNo = ModDatabase.SQLQuery("SELECT MAX(ClientNo) FROM TblClient ")
+    Set RstCBSUser = ModDatabase.SQLQuery("SELECT * FROM TblCBSUser WHERE CBSUserNo = " & pCBSUserNo)
+    Set RstMaxNo = ModDatabase.SQLQuery("SELECT MAX(CBSUserNo) FROM TblCBSUser ")
 
     If RstMaxNo.Fields(0).Value <> 0 Then
         LastNo = RstMaxNo.Fields(0).Value
@@ -146,25 +125,23 @@ Public Sub DBSave()
         LastNo = 0
     End If
 
-    With RstClient
+    With RstCBSUser
         If .RecordCount = 0 Then
             .AddNew
-            pClientNo = LastNo + 1
+            pCBSUserNo = LastNo + 1
         Else
             .Edit
         End If
 
-        If CStr(pName) = "" Then !Name = Null Else !Name = pName
-        If CStr(pUrl) = "" Then !Url = Null Else !Url = pUrl
+        If CStr(pCBSUserNo) = "" Then !CBSUserNo = Null Else !CBSUserNo = pCBSUserNo
+        If CStr(pUserName) = "" Then !UserName = Null Else !UserName = pUserName
+        If CStr(pPosition) = "" Then !Position = Null Else !Position = pPosition
         If CStr(pPhoneNo) = "" Then !PhoneNo = Null Else !PhoneNo = pPhoneNo
-        If CStr(pClientNo) = "" Then !ClientNo = Null Else !ClientNo = pClientNo
 
-        pSPVs.SaveCollection
-        pContacts.SaveCollection
         .Update
     End With
 
-    Set RstClient = Nothing
+    Set RstCBSUser = Nothing
     Set RstMaxNo = Nothing
 End Sub
 
@@ -174,36 +151,31 @@ End Sub
 ' ---------------------------------------------------------------
 Public Sub DBDelete(Optional FullDelete As Boolean)
 
-    DB.Execute "DELETE * FROM TblClient WHERE ClientNo = " & pClientNo
+    DB.Execute "DELETE * FROM TblCBSUser WHERE CBSUserNo = " & pCBSUserNo
 
 End Sub
 
 ' ===============================================================
-' Event pClientForm_CreateNew
-' Event from client form to create new client
+' Event pCBSUserForm_CreateNew
+' Event from user form to create new SPV
 ' ---------------------------------------------------------------
-Private Sub pClientForm_CreateNew()
-    With pClientForm
-        pName = .TxtName
+Private Sub pCBSUserForm_CreateNew()
+    With pCBSUserForm
         pPhoneNo = .TxtPhoneNo
-        pUrl = .TxtUrl
+        pPosition = .TxtPosition
+        pUserName = .TxtUserName
     End With
     DBSave
 End Sub
 
 ' ===============================================================
-
 Private Sub Class_Initialize()
-    Set pSPVs = New ClsSPVs
-    Set pContacts = New ClsContacts
-    Set pClientForm = New FrmClientForm
-
-    pSPVs.Initialize Me
+    Set pCBSUserForm = New FrmCBSUser
+    
 End Sub
+
 ' ===============================================================
 Private Sub Class_Terminate()
-    Set pSPVs = Nothing
-    Set pContacts = Nothing
-    Set pClientForm = Nothing
+    Set pCBSUserForm = Nothing
 End Sub
 ' ===============================================================

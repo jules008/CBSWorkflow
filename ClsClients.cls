@@ -55,7 +55,7 @@ End Function
 ' Method Add
 ' Add item to Collection
 ' ---------------------------------------------------------------
-Public Sub Add(Client As ClsClient)
+Public Sub Add(ByRef Client As ClsClient)
     pClients.Add Client, Key:=CStr(Client.ClientNo)
 End Sub
 
@@ -150,10 +150,11 @@ End Sub
 
 Private Sub Class_Initialize()
     Set pClients = New Collection
-
+    GetCollection
 End Sub
 ' ===============================================================
 Private Sub Class_Terminate()
+    RemoveCollection
     Set pClients = Nothing
 End Sub
 ' ===============================================================

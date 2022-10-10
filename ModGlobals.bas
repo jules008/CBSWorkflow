@@ -82,8 +82,12 @@ Global STOP_FLAG As Boolean
 ' ===============================================================
 ' Global Class Declarations
 ' ---------------------------------------------------------------
+Public Clients As ClsClients
 Public ActiveWorkFlow As ClsWorkflow
 Public ActiveProject As ClsProject
+Public ActiveClient As ClsClient
+Public ActiveSPV As ClsSPV
+Public ActiveUser As ClsCBSUser
 Public CTimer As ClsCodeTimer
 
 ' ===============================================================
@@ -100,16 +104,16 @@ Public Logo As ClsUIDashObj
 ' ===============================================================
 ' Colours
 ' ---------------------------------------------------------------
-Public Const COLOUR_1 As Long = 9613098     'Aqua
-Public Const COLOUR_2 As Long = 7025624     'Pink
-Public Const COLOUR_3 As Long = 6901523    'Blue
-Public Const COLOUR_4 As Long = 4408131    'Dark Grey
-Public Const COLOUR_5 As Long = &HFFFFFF    'White
-Public Const COLOUR_6 As Long = &H0         'Black
-Public Const COLOUR_7 As Long = &HFFF9FB    'off White
-Public Const COLOUR_8 As Long = 1033457     'Amber
-Public Const COLOUR_9 As Long = 2752442    'Green
-Public Const COLOUR_10 As Long = 4007639    'Red
+Public Const COL_AQUA As Long = 9613098     'Aqua
+Public Const COL_PINK As Long = 7025624     'Pink
+Public Const COL_BLUE As Long = 6901523    'Blue
+Public Const COL_DRK_GREY As Long = 4408131    'Dark Grey
+Public Const COL_WHITE As Long = &HFFFFFF    'White
+Public Const COL_BLACK As Long = &H0         'Black
+Public Const COL_OFF_WHITE As Long = &HFFF9FB    'off White
+Public Const COL_AMBER As Long = 1033457     'Amber
+Public Const COL_GREEN As Long = 2752442    'Green
+Public Const COL_RED As Long = 4007639    'Red
 Public Const COLOUR_11 As Long = &HFFFFFF    'White
 Public Const COLOUR_12 As Long = &HFFFFFF    'White
 Public Const COLOUR_13 As Long = &HFFFFFF    'White

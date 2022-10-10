@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FrmPicker 
    Caption         =   "DataPicker"
-   ClientHeight    =   5640
+   ClientHeight    =   5730
    ClientLeft      =   120
    ClientTop       =   465
-   ClientWidth     =   6600
+   ClientWidth     =   6075
    OleObjectBlob   =   "FrmPicker.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -31,12 +31,18 @@ Private Const StrMODULE As String = "FrmPicker"
 Public Event SearchTextChanged()
 Public Event ResultsListSelect()
 Public Event ItemSelected()
+Public Event CreateNew()
 
 Private Sub BtnClose_Click()
     Unload Me
 End Sub
 
-Private Sub BtnUpdate_Click()
+Private Sub BtnNew_Click()
+    RaiseEvent CreateNew
+    Unload Me
+End Sub
+
+Private Sub BtnSelect_Click()
     RaiseEvent ItemSelected
 End Sub
 
