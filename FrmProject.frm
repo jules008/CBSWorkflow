@@ -1,6 +1,5 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FrmProject 
-   Caption         =   "New Project Workflow"
    ClientHeight    =   9150.001
    ClientLeft      =   120
    ClientTop       =   465
@@ -91,6 +90,14 @@ Private Function PopulateForm() As Boolean
     
     ProgPC = ActiveProject.ProjectWorkflow.Steps.PCClosed
     Progress ProgPC
+    
+    With ActiveClient
+        TxtClientName = .Name
+    End With
+    
+    With ActiveSPV
+        TxtSPVName = .Name
+    End With
     
     With ActiveProject
         TxtProjectNo = .ProjectNo

@@ -295,9 +295,10 @@ Public Function GetActiveList(StrSortBy As String) As Recordset
     Dim SQL3 As String
 
     SQL = "SELECT TblProject.ProjectNo, TblClient.Name, TblSPV.Name, TblCBSUser.UserName, TblWorkflow.CurrentStep, TblStepTemplate.StepName, TblWorkflow.Status, TblWorkflow.RAG " _
-        & "FROM TblCBSUser RIGHT JOIN (TblStepTemplate RIGHT JOIN (TblClient RIGHT JOIN ((TblSPV RIGHT JOIN TblProject ON TblSPV.SPVNo = TblProject.SPVNo) LEFT JOIN TblWorkflow ON TblProject.ProjectNo = TblWorkflow.ProjectNo) ON TblClient.ClientNo = TblSPV.ClientNo) ON TblStepTemplate.StepNo = TblWorkflow.CurrentStep) ON TblCBSUser.CBSUserNo = TblProject.CaseManager " _
-        & "GROUP BY TblProject.ProjectNo, TblClient.Name, TblSPV.Name, TblCBSUser.UserName, TblWorkflow.CurrentStep, TblStepTemplate.StepName, TblWorkflow.Status, TblWorkflow.WorkflowType, TblWorkflow.RAG " _
-        & "HAVING (((TblWorkflow.WorkflowType)='enProject'))"
+            & "FROM ((((TblProject LEFT JOIN TblSPV ON TblProject.SPVNo = TblSPV.SPVNo) LEFT JOIN TblClient ON TblSPV.ClientNo = TblClient.ClientNo) LEFT JOIN TblCBSUser ON " _
+            & "TblProject.CaseManager = TblCBSUser.CBSUserNo) LEFT JOIN TblWorkflow ON TblProject.ProjectWFNo = TblWorkflow.WorkflowNo) LEFT JOIN TblStepTemplate ON " _
+            & "TblWorkflow.CurrentStep = TblStepTemplate.StepNo WHERE (((TblWorkflow.WorkflowType)='enProject'))"
+
                 
     Set RstWorkflow = ModDatabase.SQLQuery(SQL)
     

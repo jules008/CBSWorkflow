@@ -227,9 +227,10 @@ Restart:
             Set Picker = New ClsFrmPicker
             With Picker
                 .Title = "Select Client"
-                .Instructions = "Start typing the name of the Client and select from the list"
-                .ClearForm
+                .Instructions = "Start typing the name of the Client and then select from the list. " _
+                                & "Select 'New' to add a new Client"
                 .Data = ModDatabase.SQLQuery("SELECT Name from TblClient")
+                .ClearForm
                 .Show = True
                 If .CreateNew Then
                     ActiveUser.DBNew
@@ -243,9 +244,10 @@ Restart:
             Set Picker = New ClsFrmPicker
             With Picker
                 .Title = "Select SPV"
-                .Instructions = "Start typing the name of the SPV and select from the list"
-                .ClearForm
+                .Instructions = "Start typing the name of the SPV and then select from the list. " _
+                                & "Select 'New' to add a new SPV"
                 .Data = ModDatabase.SQLQuery("SELECT Name from TblSPV")
+                .ClearForm
                 .Show = True
                 If .CreateNew Then
                     ActiveSPV.DBNew
@@ -259,9 +261,10 @@ Restart:
             Set Picker = New ClsFrmPicker
             With Picker
                 .Title = "Select Case Manager"
-                .Instructions = "Start typing the name of the Case Manager who will own the case and select from the list"
-                .ClearForm
+                .Instructions = "Start typing the name of the Case Manager and then select from the list. " _
+                                & "Select 'New' to add a new User"
                 .Data = ModDatabase.SQLQuery("SELECT Username from TblCBSUser")
+                .ClearForm
                 .Show = True
                 If .CreateNew Then
                     ActiveUser.DBNew
@@ -295,7 +298,6 @@ Restart:
                 FrmProject.ShowForm
             
             Debug.Assert Not ActiveClient Is Nothing
-'            Debug.Assert Picker.SelectedItem <> ""
             Debug.Assert ActiveWorkFlow.Steps.Count > 0
             
             

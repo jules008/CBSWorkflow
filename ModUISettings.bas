@@ -31,7 +31,7 @@ Public Const MAIN_FRAME_HEIGHT As Integer = 360
 ' Button Frame
 ' ---------------------------------------------------------------
 Public Const BUTTON_FRAME_TOP As Integer = 5
-Public Const BUTTON_FRAME_LEFT As Integer = 790
+Public Const BUTTON_FRAME_LEFT As Integer = 615
 Public Const BUTTON_FRAME_WIDTH As Integer = 275
 Public Const BUTTON_FRAME_HEIGHT As Integer = 60
 
@@ -90,7 +90,7 @@ Public Const FOR_ACTION_MAX_LINES As Integer = 40
 Public Const ACTIVE_TABLE_COL_WIDTHS As String = "50:100:100:100:50:200:100"
 Public Const ACTIVE_CELL_ROW_HEIGHTS As String = "50:50"
 Public Const ACTIVE_TABLE_STYLES As String = "GENERIC_TABLE"
-Public Const ACTIVE_TABLE_TITLES As String = "Project No:Client Name:SPV No:Case Manager:Step No:Step Name:Status"
+Public Const ACTIVE_TABLE_TITLES As String = "Project No:Client Name:SPV Name:Case Manager:Step No:Step Name:Status"
 Public Const ACTIVE_MAX_LINES As Integer = 150
 Public Const ACTIVE_BTN_MAIN_1_LEFT As Integer = 30
 Public Const ACTIVE_BTN_MAIN_1_TOP As Integer = 20
