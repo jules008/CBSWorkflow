@@ -30,6 +30,7 @@ Option Explicit
 
 Private pSPVNo As Integer
 Private pName As String
+Private pClientNo As Integer
 Private pContacts As ClsContacts
 Private pProjects As ClsProjects
 Private pParent As ClsClient
@@ -74,6 +75,11 @@ End Property
 
 '---------------------------------------------------------------
 Public Property Get Parent() As ClsClient
+    If pParent Is Nothing Then
+        Set pParent = New ClsClient
+        pParent.DBGet pClientNo
+    End If
+    
     Set Parent = pParent
 End Property
 
@@ -110,6 +116,7 @@ Public Sub DBGet(SPVNameOrNo As Variant)
         If .RecordCount > 0 Then
             If Not IsNull(!SPVNo) Then pSPVNo = !SPVNo
             If Not IsNull(!Name) Then pName = !Name
+            If Not IsNull(!ClientNo) Then pClientNo = !ClientNo
         pContacts.GetCollection
         pProjects.GetCollection
         End If
@@ -145,6 +152,7 @@ Public Sub DBSave()
 
         If CStr(pSPVNo) = "" Then !SPVNo = Null Else !SPVNo = pSPVNo
         If CStr(pName) = "" Then !Name = Null Else !Name = pName
+        If CStr(pClientNo) = "" Then !ClientNo = Null Else !ClientNo = pClientNo
 
         If Not pParent Is Nothing Then !ClientNo = pParent.ClientNo
         

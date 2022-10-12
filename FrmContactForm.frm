@@ -1,19 +1,20 @@
 VERSION 5.00
-Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FrmClientForm 
-   ClientHeight    =   3720
+Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FrmContactForm 
+   Caption         =   "Contact"
+   ClientHeight    =   3930
    ClientLeft      =   120
    ClientTop       =   465
-   ClientWidth     =   11820
-   OleObjectBlob   =   "FrmClientForm.frx":0000
+   ClientWidth     =   11760
+   OleObjectBlob   =   "FrmContactForm.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
-Attribute VB_Name = "FrmClientForm"
+Attribute VB_Name = "FrmContactForm"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 '===============================================================
-' Module FrmClientForm
+' Module FrmContactForm
 ' Admin form for members
 '---------------------------------------------------------------
 ' Created by Julian Turner
@@ -24,10 +25,8 @@ Attribute VB_Exposed = False
 '===============================================================
 Option Explicit
 
-Private Const StrMODULE As String = "FrmClientForm"
+Private Const StrMODULE As String = "FrmContactForm"
 Public Event CreateNew()
-Public Event Delete()
-
 '===============================================================
 ' BtnClose_Click
 '---------------------------------------------------------------
@@ -42,12 +41,10 @@ End Sub
 Private Sub BtnDelete_Click()
     Dim Response As Integer
     
-    Response = MsgBox("Are you sure you want to delete the Client from the database?", vbYesNo + vbExclamation, APP_NAME)
+    Response = MsgBox("Are you sure you want to delete the Contact from the database?", vbYesNo + vbExclamation, APP_NAME)
     
     If Response = 6 Then
-        RaiseEvent Delete
     End If
-    Unload Me
 End Sub
 
 ' ===============================================================
@@ -55,10 +52,11 @@ End Sub
 ' Clears form
 ' ---------------------------------------------------------------
 Private Sub ClearForm()
-    TxtClientNo = ""
-    TxtName = ""
-    TxtPhoneNo = ""
-    TxtUrl = ""
+    TxtAddress = ""
+    TxtContactNo = ""
+    TxtPhone1 = ""
+    TxtPhone2 = ""
+    TxtPosition = ""
 End Sub
 
 ' ===============================================================
@@ -113,41 +111,38 @@ ErrorHandler:
 End Sub
 
 ' ===============================================================
-' CmoContract_Change
+' TxtAddress_Change
 ' ---------------------------------------------------------------
-Private Sub TxtClientNo_Change()
-    TxtClientNo.BackColor = COL_OFF_WHITE
+Private Sub TxtAddress_Change()
+    TxtAddress.BackColor = COL_OFF_WHITE
 End Sub
 
 ' ===============================================================
-' TxtName_Change
+' TxtContactNo_Change
 ' ---------------------------------------------------------------
-Private Sub TxtName_Change()
-    TxtName.BackColor = COL_OFF_WHITE
+Private Sub TxtContactNo_Change()
+    TxtContactNo.BackColor = COL_OFF_WHITE
 End Sub
 
 ' ===============================================================
-' TxtPhoneNo_Change
+' TxtPhone1_Change
 ' ---------------------------------------------------------------
-Private Sub TxtPhoneNo_Change()
-    TxtPhoneNo.BackColor = COL_OFF_WHITE
+Private Sub TxtPhone1_Change()
+    TxtPhone1.BackColor = COL_OFF_WHITE
 End Sub
 
 ' ===============================================================
-' TxtUrl_Change
+' TxtPhone2_Change
 ' ---------------------------------------------------------------
-Private Sub TxtUrl_Change()
-    TxtUrl.BackColor = COL_OFF_WHITE
+Private Sub TxtPhone2_Change()
+    TxtPhone2.BackColor = COL_OFF_WHITE
 End Sub
 
-Private Sub UserForm_Activate()
-    If Me.Tag = "New" Then
-        TtlTop.Caption = "Create New Client"
-        BtnUpdate.Caption = "Create"
-    ElseIf Me.Tag = "Update" Then
-        TtlTop.Caption = "Update Client"
-        BtnUpdate.Caption = "Update"
-    End If
+' ===============================================================
+' TxtPosition_Change
+' ---------------------------------------------------------------
+Private Sub TxtPosition_Change()
+    TxtPosition.BackColor = COL_OFF_WHITE
 End Sub
 
 ' ===============================================================
@@ -161,11 +156,8 @@ Private Sub UserForm_Initialize()
     Me.Top = Application.Top + (0.5 * Application.Height) - (0.5 * Me.Height)
     
     If Me.Tag = "New" Then
-        TtlTop.Caption = "Create New Client"
+        BtnNew.Visible = False
         BtnUpdate.Caption = "Create"
-    ElseIf Me.Tag = "Update" Then
-        TtlTop.Caption = "Update Client"
-        BtnUpdate.Caption = "Update"
     End If
     ClearForm
 End Sub
@@ -180,7 +172,7 @@ Private Function ValidateForm() As enFormValidation
 
     On Error GoTo ErrorHandler
            
-    With TxtName
+    With TxtAddress
         If .Value = "" Then
             .BackColor = COL_AMBER
             ValidateForm = enValidationError
@@ -219,4 +211,6 @@ If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
         Resume ErrorExit
     End If
 End Function
+
+' ===============================================================
 

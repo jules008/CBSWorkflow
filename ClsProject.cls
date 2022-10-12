@@ -36,6 +36,7 @@ Private pCBSComPC As Single
 Private pExitFee As Boolean
 Private pWorkflows As ClsWorkflows
 Private pContacts As ClsContacts
+Private pSPVNo As Integer
 Private pParent As ClsSPV
 Private pProjectWFNo As Integer
 
@@ -115,6 +116,11 @@ End Property
 
 '---------------------------------------------------------------
 Public Property Get Parent() As ClsSPV
+    If pParent Is Nothing Then
+        Set pParent = New ClsSPV
+        pParent.DBGet pSPVNo
+    End If
+    
     Set Parent = pParent
 End Property
 
@@ -135,6 +141,7 @@ Public Sub DBGet(ProjectNo As Integer)
             If Not IsNull(!ProjectNo) Then pProjectNo = !ProjectNo
             If Not IsNull(!LoanTerm) Then pLoanTerm = !LoanTerm
             If Not IsNull(!CBSComPC) Then pCBSComPC = !CBSComPC
+            If Not IsNull(!SPVNo) Then pSPVNo = !SPVNo
             If Not IsNull(!ExitFee) Then pExitFee = !ExitFee
             
         pCaseManager.DBGet !CaseManager
@@ -175,6 +182,7 @@ Public Sub DBSave()
         If CStr(pLoanTerm) = "" Then !LoanTerm = Null Else !LoanTerm = pLoanTerm
         If CStr(pCBSComPC) = "" Then !CBSComPC = Null Else !CBSComPC = pCBSComPC
         If CStr(pExitFee) = "" Then !ExitFee = Null Else !ExitFee = pExitFee
+        If CStr(pSPVNo) = "" Then !SPVNo = Null Else !SPVNo = pSPVNo
         If pProjectWorkflow.WorkflowNo <> 0 Then !ProjectWFNo = pProjectWorkflow.WorkflowNo
         If pParent Is Nothing Then !SPVNo = Null Else !SPVNo = pParent.SPVNo
         If CStr(pCaseManager.CBSUserNo) = "" Then !CaseManager = Null Else !CaseManager = pCaseManager.CBSUserNo

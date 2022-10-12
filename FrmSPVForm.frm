@@ -1,9 +1,9 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FrmSPVForm 
-   ClientHeight    =   3555
+   ClientHeight    =   7770
    ClientLeft      =   120
    ClientTop       =   465
-   ClientWidth     =   11760
+   ClientWidth     =   15885
    OleObjectBlob   =   "FrmSPVForm.frx":0000
    StartUpPosition =   1  'CenterOwner
 End

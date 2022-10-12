@@ -101,103 +101,21 @@ Public Const ACTIVE_BTN_MAIN_2_TOP As Integer = 20
 ' Closed Screen
 ' ---------------------------------------------------------------
 Public Const Closed_CELL_NOCOLS As Integer = 5
-Public Const Closed_CELL_COL_WIDTHS As String = "100:200:200:290:100"
+Public Const Closed_CELL_COL_WIDTHS As String = "100:300:200:290:100"
 Public Const Closed_CELL_TITLES As String = "Workflow No:Name:Step No:Step Name:Status"
 Public Const Closed_MAX_LINES As Integer = 100
 
 ' ---------------------------------------------------------------
-' Admin Screen
+' CRM Clients Screen
 ' ---------------------------------------------------------------
-'Public Const BTN_ADMIN_1_TOP As Integer = 70
-'Public Const BTN_ADMIN_1_LEFT As Integer = 1075
-'Public Const BTN_ADMIN_1_WIDTH As Integer = 80
-'Public Const BTN_ADMIN_1_HEIGHT As Integer = 20
-'
-'Public Const BTN_ADMIN_2_TOP As Integer = 100
-'Public Const BTN_ADMIN_2_LEFT As Integer = 1075
-'Public Const BTN_ADMIN_2_WIDTH As Integer = 80
-'Public Const BTN_ADMIN_2_HEIGHT As Integer = 20
-'
-'Public Const BTN_ADMIN_3_TOP As Integer = 130
-'Public Const BTN_ADMIN_3_LEFT As Integer = 1075
-'Public Const BTN_ADMIN_3_WIDTH As Integer = 80
-'Public Const BTN_ADMIN_3_HEIGHT As Integer = 20
-'
-'Public Const BTN_ADMIN_4_TOP As Integer = 160
-'Public Const BTN_ADMIN_4_LEFT As Integer = 1075
-'Public Const BTN_ADMIN_4_WIDTH As Integer = 80
-'Public Const BTN_ADMIN_4_HEIGHT As Integer = 20
-'
-'Public Const BTN_ADMIN_5_TOP As Integer = 190
-'Public Const BTN_ADMIN_5_LEFT As Integer = 1075
-'Public Const BTN_ADMIN_5_WIDTH As Integer = 80
-'Public Const BTN_ADMIN_5_HEIGHT As Integer = 20
-'
-'Public Const BTN_ADMIN_6_TOP As Integer = 220
-'Public Const BTN_ADMIN_6_LEFT As Integer = 1075
-'Public Const BTN_ADMIN_6_WIDTH As Integer = 80
-'Public Const BTN_ADMIN_6_HEIGHT As Integer = 20
-'
-'Public Const BTN_ADMIN_7_TOP As Integer = 310
-'Public Const BTN_ADMIN_7_LEFT As Integer = 1075
-'Public Const BTN_ADMIN_7_WIDTH As Integer = 80
-'Public Const BTN_ADMIN_7_HEIGHT As Integer = 20
-'
-'Public Const BTN_ADMIN_8_TOP As Integer = 280
-'Public Const BTN_ADMIN_8_LEFT As Integer = 1075
-'Public Const BTN_ADMIN_8_WIDTH As Integer = 80
-'Public Const BTN_ADMIN_8_HEIGHT As Integer = 20
-'
-'Public Const BTN_ADMIN_9_TOP As Integer = 250
-'Public Const BTN_ADMIN_9_LEFT As Integer = 1075
-'Public Const BTN_ADMIN_9_WIDTH As Integer = 80
-'Public Const BTN_ADMIN_9_HEIGHT As Integer = 20
-'
-'Public Const ADMIN_MEMBER_CELL_NOCOLS As Integer = 10
-'Public Const ADMIN_MEMBER_CELL_COL_WIDTHS As String = "120:80:80:60:60:60:100:80:180:70"
-'Public Const ADMIN_MEMBER_CELL_TITLES As String = "Name:SSN:Student ID:Watch:Grade:FIN No:Position:DoB:Email:Active"
-'Public Const ADMIN_MEMBER_MAX_LINES As Integer = 500
-'
-'Public Const ADMIN_EMAIL_ADDR_CELL_NOCOLS As Integer = 3
-'Public Const ADMIN_EMAIL_ADDR_CELL_COL_WIDTHS As String = "200:200:490"
-'Public Const ADMIN_EMAIL_ADDR_CELL_TITLES As String = "Name:Email Address:"
-'Public Const ADMIN_EMAIL_ADDR_MAX_LINES As Integer = 50
-'
-'Public Const ADMIN_EMAIL_CELL_NOCOLS As Integer = 5
-'Public Const ADMIN_EMAIL_CELL_COL_WIDTHS As String = "80:150:200:300:160"
-'Public Const ADMIN_EMAIL_CELL_TITLES As String = "Email No:Template Name:Mail To:Mail CC:Attachment"
-'Public Const ADMIN_EMAIL_MAX_LINES As Integer = 100
-'
-'Public Const ADMIN_DOC_CELL_NOCOLS As Integer = 5
-'Public Const ADMIN_DOC_CELL_COL_WIDTHS As String = "80:200:350:180:80"
-'Public Const ADMIN_DOC_CELL_TITLES As String = "Doc No:Title:Description:Filename:"
-'Public Const ADMIN_DOC_MAX_LINES As Integer = 100
-'
-'Public Const ADMIN_DOD_CERT_CELL_NOCOLS As Integer = 4
-'Public Const ADMIN_DOD_CERT_CELL_COL_WIDTHS As String = "100:200:200:390"
-'Public Const ADMIN_DOD_CERT_CELL_TITLES As String = "DoD Cert No:Name:Group:"
-'Public Const ADMIN_DOD_CERT_MAX_LINES As Integer = 100
-'
-'Public Const ADMIN_WFLOW_CELL_NOCOLS As Integer = 6
-'Public Const ADMIN_WFLOW_CELL_COL_WIDTHS As String = "100:300:190:100:100:100" '890
-'Public Const ADMIN_WFLOW_CELL_TITLES As String = "Step No:Name:Step Type:Email No:Alt Email No:Document No"
-'Public Const ADMIN_WFLOW_MAX_LINES As Integer = 100
-'
-'Public Const ADMIN_WFTYPES_CELL_NOCOLS As Integer = 3
-'Public Const ADMIN_WFTYPES_CELL_COL_WIDTHS As String = "200:400:290" '890
-'Public Const ADMIN_WFTYPES_CELL_TITLES As String = "Workflow Type:Description:"
-'Public Const ADMIN_WFTYPES_MAX_LINES As Integer = 20
-'
-'Public Const ADMIN_ROLES_CELL_NOCOLS As Integer = 3
-'Public Const ADMIN_ROLES_CELL_COL_WIDTHS As String = "200:200:490"
-'Public Const ADMIN_ROLES_CELL_TITLES As String = "Role:Name:"
-'Public Const ADMIN_ROLES_MAX_LINES As Integer = 20
-'
-'Public Const ADMIN_LISTS_CELL_NOCOLS As Integer = 2
-'Public Const ADMIN_LISTS_CELL_COL_WIDTHS As String = "200:690"
-'Public Const ADMIN_LISTS_CELL_TITLES As String = "List::"
-'Public Const ADMIN_LISTS_MAX_LINES As Integer = 20
-'
+Public Const CRM_CLIENT_TABLE_COL_WIDTHS As String = "100:250:150:200"
+Public Const CRM_CLIENT_CELL_ROW_HEIGHTS As String = "50:50"
+Public Const CRM_CLIENT_TABLE_STYLES As String = "GENERIC_TABLE"
+Public Const CRM_CLIENT_TABLE_TITLES As String = "Client No:Client Name:Phone No:Url"
+Public Const CRM_CLIENT_MAX_LINES As Integer = 150
+Public Const CRM_CLIENT_BTN_MAIN_1_LEFT As Integer = 155
+Public Const CRM_CLIENT_BTN_MAIN_1_TOP As Integer = 20
+
 ' ===============================================================
 ' Style Declarations
 ' ---------------------------------------------------------------

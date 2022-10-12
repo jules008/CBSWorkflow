@@ -103,6 +103,21 @@ Public Sub DBNew()
 End Sub
 
 ' ===============================================================
+' Method DisplayForm
+' displays new client form
+' ---------------------------------------------------------------
+Public Sub DisplayForm()
+    With pClientForm
+        .Tag = "Update"
+        .TxtClientNo = pClientNo
+        .TxtName = pName
+        .TxtPhoneNo = pPhoneNo
+        .TxtUrl = pUrl
+        .Show
+    End With
+End Sub
+
+' ===============================================================
 ' Method DBGet(Key as variant)
 ' Gets class from Database
 ' ---------------------------------------------------------------
@@ -191,6 +206,13 @@ Private Sub pClientForm_CreateNew()
     DBSave
 End Sub
 
+' ===============================================================
+' Event pClientForm_Delete
+' Deletes client
+' ---------------------------------------------------------------
+Private Sub pClientForm_Delete()
+    DBDelete
+End Sub
 ' ===============================================================
 
 Private Sub Class_Initialize()

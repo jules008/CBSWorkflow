@@ -99,6 +99,7 @@ Public MainFrame As ClsUIFrame
 Public ButtonFrame As ClsUIFrame
 Public BtnNewProjectWF As ClsUIButton
 Public BtnNewLenderWF As ClsUIButton
+Public BtnNewClient As ClsUIButton
 Public Logo As ClsUIDashObj
 
 ' ===============================================================
@@ -175,6 +176,8 @@ Enum EnumBtnNo
     enBtnNewLenderWF = 8
     enBtnExit = 9
     enBtnOpenProject = 10
+    enBtnOpenCRM = 11
+    enBtnNewClient = 12
 End Enum
 
 Enum enStatus           'Status
@@ -217,5 +220,9 @@ End Enum
 Enum enScreenPage
     enActivePage = 0
     enCompletedPage
-    
+    enCRMClient
+    enCRMSPV
+    enCRMContact
+    enCRMProject
+    enCRMLender
 End Enum

@@ -77,6 +77,7 @@ Restart:
             ShtMain.Unprotect PROTECT_KEY
 
             If Not ResetScreen Then Err.Raise HANDLED_ERROR
+            If Not ModUICRM.BuildScreen(enCRMClient) Then Err.Raise HANDLED_ERROR
 
             ShtMain.Protect PROTECT_KEY
 
@@ -335,15 +336,57 @@ Restart:
 
             ShtMain.Unprotect PROTECT_KEY
             Set ActiveProject = New ClsProject
+            Set ActiveSPV = New ClsSPV
+            Set ActiveClient = New ClsClient
+            
             ActiveProject.DBGet BtnIndex
+            Set ActiveSPV = ActiveProject.Parent
+            Set ActiveClient = ActiveProject.Parent.Parent
+            
             FrmProject.ShowForm
+            
+            If Not ResetScreen Then Err.Raise HANDLED_ERROR
+            If Not ModUIProjects.BuildScreen(enActivePage) Then Err.Raise HANDLED_ERROR
+            
+            If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
+            
+            Set ActiveProject = Nothing
+            Set ActiveSPV = Nothing
+            Set ActiveClient = Nothing
+
+        Case enBtnOpenCRM
+        
+            ShtMain.Unprotect PROTECT_KEY
+
+            Set ActiveClient = New ClsClient
+            
+            With ActiveClient
+                .DBGet BtnIndex
+                .DisplayForm
+            End With
+            
+            If Not ResetScreen Then Err.Raise HANDLED_ERROR
+            If Not ModUICRM.BuildScreen(enCRMClient) Then Err.Raise HANDLED_ERROR
+            
             ShtMain.Protect PROTECT_KEY
 
             If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
 
+            Set ActiveClient = Nothing
+
+        Case enBtnNewClient
+        
+            ShtMain.Unprotect PROTECT_KEY
+
+            Set ActiveClient = New ClsClient
+            With ActiveClient
+                .DBNew
+            End With
+            
+            If Not ResetScreen Then Err.Raise HANDLED_ERROR
+            If Not ModUICRM.BuildScreen(enCRMClient) Then Err.Raise HANDLED_ERROR
+
     End Select
-
-
 GracefulExit:
 
 
