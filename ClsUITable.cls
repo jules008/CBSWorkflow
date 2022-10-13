@@ -347,12 +347,14 @@ Public Sub BuildCells(Optional SplitRow As Integer, Optional SplitSize As Intege
                     .Left = .Parent.Left + ColOffset
                     .Top = .Parent.Top + RowOffset
                     .Width = pColWidths(x)
-                    Debug.Print x; y; pRstText.Fields(x)
                     If y = 0 Then
                         .Text = pHeadingText(x)
                     Else
+                        'cater for blank columns with no data
+                        If x < pRstText.Fields.Count Then
                         If Not IsNull(pRstText.Fields(x)) Then .Text = pRstText.Fields(x)
                         .OnAction = pOnAction(x, y - 1)
+                        End If
                     End If
                         
                     If pStyles(x, y - 1) = "" Then

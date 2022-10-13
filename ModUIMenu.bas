@@ -269,5 +269,180 @@ ErrorHandler:
     End If
 End Function
 
+' ===============================================================
+' ProcessMenuClicks
+' Processes menu button presses in application
+' ---------------------------------------------------------------
+Public Sub ProcessMenuClicks(ButtonNo As EnMenuBtnNo)
+    Dim ErrNo As Integer
+    Dim AryBtn() As String
+    Dim Picker As ClsFrmPicker
+    Dim BtnNo As EnumBtnNo
+    Dim BtnIndex As Integer
+
+    Const StrPROCEDURE As String = "ProcessMenuClicks()"
+    On Error GoTo ErrorHandler
+
+Restart:
+
+    If MainScreen Is Nothing Then Err.Raise SYSTEM_RESTART
+
+    Select Case ButtonNo
+    
+        Case enBtnForAction
+
+            If Not ResetScreen Then Err.Raise HANDLED_ERROR
+
+        Case enBtnProjectsActive
+        
+            BtnProjectsClick enScrProjActive
+        
+        Case enBtnProjectsClosed
+        
+            If Not ResetScreen Then Err.Raise HANDLED_ERROR
+            If Not ModUIProjects.BuildScreen("Closed") Then Err.Raise HANDLED_ERROR
+
+        Case enBtnCRMClient
+            
+            BtnCRMClick enScrCRMClient
+        
+        Case enBtnCRMSPV
+        
+            BtnCRMClick enScrCRMSPV
+
+        Case enBtnCRMContacts
+        
+            BtnCRMClick enScrCRMContact
+            
+        Case enBtnCRMProjects
+        
+            BtnCRMClick enScrCRMProject
+            
+        Case enBtnCRMLenders
+        
+            BtnCRMClick enScrCRMLender
+            
+        Case enbtnDashboard
+        
+            ShtMain.Unprotect PROTECT_KEY
+
+            If Not ResetScreen Then Err.Raise HANDLED_ERROR
+
+            ShtMain.Protect PROTECT_KEY
+
+            If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
+
+        Case enBtnReports
+        
+            ShtMain.Unprotect PROTECT_KEY
+
+            If Not ResetScreen Then Err.Raise HANDLED_ERROR
+
+            ShtMain.Protect PROTECT_KEY
+
+            If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
+
+        Case enBtnAdminUsers
+        
+            ShtMain.Unprotect PROTECT_KEY
+
+            If Not ResetScreen Then Err.Raise HANDLED_ERROR
+
+            ShtMain.Protect PROTECT_KEY
+
+            If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
+
+        Case enBtnAdminEmailTs
+        
+            ShtMain.Unprotect PROTECT_KEY
+
+            If Not ResetScreen Then Err.Raise HANDLED_ERROR
+
+            ShtMain.Protect PROTECT_KEY
+
+            If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
+
+        Case enBtnAdminDocuments
+        
+            ShtMain.Unprotect PROTECT_KEY
+
+            If Not ResetScreen Then Err.Raise HANDLED_ERROR
+
+            ShtMain.Protect PROTECT_KEY
+
+            If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
+
+        Case enBtnAdminWorkflows
+        
+            ShtMain.Unprotect PROTECT_KEY
+
+            If Not ResetScreen Then Err.Raise HANDLED_ERROR
+
+            ShtMain.Protect PROTECT_KEY
+
+            If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
+
+        Case enBtnAdminWFTypes
+        
+            ShtMain.Unprotect PROTECT_KEY
+            ShtMain.[Button] = enBtnProjectsClosed
+
+            If Not ResetScreen Then Err.Raise HANDLED_ERROR
+            If Not ModUIProjects.BuildScreen("Closed") Then Err.Raise HANDLED_ERROR
+
+            ShtMain.Protect PROTECT_KEY
+
+            If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
+
+        Case enBtnAdminLists
+        
+            ShtMain.Unprotect PROTECT_KEY
+
+            If Not ResetScreen Then Err.Raise HANDLED_ERROR
+
+            ShtMain.Protect PROTECT_KEY
+
+            If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
+
+        Case enBtnAdminRoles
+        
+            ShtMain.Unprotect PROTECT_KEY
+
+            If Not ResetScreen Then Err.Raise HANDLED_ERROR
+
+            ShtMain.Protect PROTECT_KEY
+
+            If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
+
+            
+    End Select
+
+    If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
+
+GracefulExit:
+
+
+Exit Sub
+
+ErrorExit:
+
+    '***CleanUpCode***
+
+Exit Sub
+
+ErrorHandler:
+    If Err.Number >= 2000 And Err.Number <= 2500 Then
+        ErrNo = Err.Number
+        CustomErrorHandler (Err.Number)
+        If ErrNo = SYSTEM_RESTART Then Resume Restart Else Resume GracefulExit
+    End If
+
+    If CentralErrorHandler(StrMODULE, StrPROCEDURE, , True) Then
+        Stop
+        Resume
+    Else
+        Resume ErrorExit
+    End If
+End Sub
 
 

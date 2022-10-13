@@ -1,20 +1,21 @@
 VERSION 5.00
-Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FrmSPVForm 
-   ClientHeight    =   3120
+Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FrmLenderForm 
+   Caption         =   "Lender"
+   ClientHeight    =   4725
    ClientLeft      =   120
    ClientTop       =   465
-   ClientWidth     =   10065
-   OleObjectBlob   =   "FrmSPVForm.frx":0000
+   ClientWidth     =   11760
+   OleObjectBlob   =   "FrmLenderForm.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
-Attribute VB_Name = "FrmSPVForm"
+Attribute VB_Name = "FrmLenderForm"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 '===============================================================
-' Module FrmSPVForm
-' Admin form for members
+' Module FrmLenderForm
+' Admin form for Lenders
 '---------------------------------------------------------------
 ' Created by Julian Turner
 '===============================================================
@@ -24,7 +25,7 @@ Attribute VB_Exposed = False
 '===============================================================
 Option Explicit
 
-Private Const StrMODULE As String = "FrmSPVForm"
+Private Const StrMODULE As String = "FrmLenderForm"
 Public Event CreateNew()
 Public Event Update()
 Public Event Delete()
@@ -43,7 +44,7 @@ End Sub
 Private Sub BtnDelete_Click()
     Dim Response As Integer
     
-    Response = MsgBox("Are you sure you want to delete the SPV from the database?", vbYesNo + vbExclamation, APP_NAME)
+    Response = MsgBox("Are you sure you want to delete the Lender from the database?", vbYesNo + vbExclamation, APP_NAME)
     
     If Response = 6 Then
         RaiseEvent Delete
@@ -56,8 +57,12 @@ End Sub
 ' Clears form
 ' ---------------------------------------------------------------
 Public Sub ClearForm()
+    TxtAddress = ""
+    TxtLenderNo = ""
     TxtName = ""
-    TxtSPVNo = ""
+    TxtPhoneNo = ""
+    CmoLenderType = ""
+    LstContacts = ""
 End Sub
 
 ' ===============================================================
@@ -92,7 +97,7 @@ Restart:
             
         Case Is = enFormOK
             
-            RaiseEvent CreateNew
+            RaiseEvent Update
             Unload Me
     End Select
     
@@ -124,13 +129,6 @@ End Sub
 ' ---------------------------------------------------------------
 Private Sub TxtName_Change()
     TxtName.BackColor = COL_WHITE
-End Sub
-
-' ===============================================================
-' TxtSPVNo_Change
-' ---------------------------------------------------------------
-Private Sub TxtSPVNo_Change()
-    TxtSPVNo.BackColor = COL_WHITE
 End Sub
 
 ' ===============================================================
@@ -201,3 +199,5 @@ If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
 End Function
 
 ' ===============================================================
+
+

@@ -1,6 +1,6 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FrmClientForm 
-   ClientHeight    =   3720
+   ClientHeight    =   3840
    ClientLeft      =   120
    ClientTop       =   465
    ClientWidth     =   11820
@@ -26,6 +26,7 @@ Option Explicit
 
 Private Const StrMODULE As String = "FrmClientForm"
 Public Event CreateNew()
+Public Event Update()
 Public Event Delete()
 
 '===============================================================
@@ -54,11 +55,19 @@ End Sub
 ' ClearForm
 ' Clears form
 ' ---------------------------------------------------------------
-Private Sub ClearForm()
+Public Sub ClearForm()
     TxtClientNo = ""
     TxtName = ""
     TxtPhoneNo = ""
     TxtUrl = ""
+End Sub
+
+' ===============================================================
+' BtnNew_Click
+' Creates new Contact
+' ---------------------------------------------------------------
+Private Sub BtnNew_Click()
+    RaiseEvent CreateNew
 End Sub
 
 ' ===============================================================
@@ -85,7 +94,7 @@ Restart:
             
         Case Is = enFormOK
             
-            RaiseEvent CreateNew
+            RaiseEvent Update
             Unload Me
     End Select
     
@@ -116,28 +125,28 @@ End Sub
 ' CmoContract_Change
 ' ---------------------------------------------------------------
 Private Sub TxtClientNo_Change()
-    TxtClientNo.BackColor = COL_OFF_WHITE
+    TxtClientNo.BackColor = COL_WHITE
 End Sub
 
 ' ===============================================================
 ' TxtName_Change
 ' ---------------------------------------------------------------
 Private Sub TxtName_Change()
-    TxtName.BackColor = COL_OFF_WHITE
+    TxtName.BackColor = COL_WHITE
 End Sub
 
 ' ===============================================================
 ' TxtPhoneNo_Change
 ' ---------------------------------------------------------------
 Private Sub TxtPhoneNo_Change()
-    TxtPhoneNo.BackColor = COL_OFF_WHITE
+    TxtPhoneNo.BackColor = COL_WHITE
 End Sub
 
 ' ===============================================================
 ' TxtUrl_Change
 ' ---------------------------------------------------------------
 Private Sub TxtUrl_Change()
-    TxtUrl.BackColor = COL_OFF_WHITE
+    TxtUrl.BackColor = COL_WHITE
 End Sub
 
 Private Sub UserForm_Activate()

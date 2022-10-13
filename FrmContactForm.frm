@@ -27,6 +27,9 @@ Option Explicit
 
 Private Const StrMODULE As String = "FrmContactForm"
 Public Event CreateNew()
+Public Event Update()
+Public Event Delete()
+
 '===============================================================
 ' BtnClose_Click
 '---------------------------------------------------------------
@@ -51,12 +54,21 @@ End Sub
 ' ClearForm
 ' Clears form
 ' ---------------------------------------------------------------
-Private Sub ClearForm()
+Public Sub ClearForm()
     TxtAddress = ""
     TxtContactNo = ""
+    TxtContactName = ""
     TxtPhone1 = ""
     TxtPhone2 = ""
     TxtPosition = ""
+End Sub
+
+' ===============================================================
+' BtnNew_Click
+' Creates new Contact
+' ---------------------------------------------------------------
+Private Sub BtnNew_Click()
+    RaiseEvent CreateNew
 End Sub
 
 ' ===============================================================
@@ -83,7 +95,7 @@ Restart:
             
         Case Is = enFormOK
             
-            RaiseEvent CreateNew
+            RaiseEvent Update
             Unload Me
     End Select
     
@@ -111,38 +123,38 @@ ErrorHandler:
 End Sub
 
 ' ===============================================================
-' TxtAddress_Change
+' TxtContactName_Change
 ' ---------------------------------------------------------------
-Private Sub TxtAddress_Change()
-    TxtAddress.BackColor = COL_OFF_WHITE
+Private Sub TxtContactName_Change()
+    TxtContactName.BackColor = COL_WHITE
 End Sub
 
 ' ===============================================================
 ' TxtContactNo_Change
 ' ---------------------------------------------------------------
 Private Sub TxtContactNo_Change()
-    TxtContactNo.BackColor = COL_OFF_WHITE
+    TxtContactNo.BackColor = COL_WHITE
 End Sub
 
 ' ===============================================================
 ' TxtPhone1_Change
 ' ---------------------------------------------------------------
 Private Sub TxtPhone1_Change()
-    TxtPhone1.BackColor = COL_OFF_WHITE
+    TxtPhone1.BackColor = COL_WHITE
 End Sub
 
 ' ===============================================================
 ' TxtPhone2_Change
 ' ---------------------------------------------------------------
 Private Sub TxtPhone2_Change()
-    TxtPhone2.BackColor = COL_OFF_WHITE
+    TxtPhone2.BackColor = COL_WHITE
 End Sub
 
 ' ===============================================================
 ' TxtPosition_Change
 ' ---------------------------------------------------------------
 Private Sub TxtPosition_Change()
-    TxtPosition.BackColor = COL_OFF_WHITE
+    TxtPosition.BackColor = COL_WHITE
 End Sub
 
 ' ===============================================================
@@ -172,7 +184,7 @@ Private Function ValidateForm() As enFormValidation
 
     On Error GoTo ErrorHandler
            
-    With TxtAddress
+    With TxtContactName
         If .Value = "" Then
             .BackColor = COL_AMBER
             ValidateForm = enValidationError

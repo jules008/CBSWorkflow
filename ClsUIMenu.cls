@@ -207,7 +207,7 @@ Public Sub ButtonClick(BtnName As String)
                     For Each SubButton In pUIMenu
                         If SubButton.ButtonLvl > 1 Then SubButton.Visible = False
                     Next
-                    ModUIButtons.ProcessBtnClicks Replace(.ButtonIndex, ".", "")
+                    ModUIMenu.ProcessMenuClicks Replace(.ButtonIndex, ".", "")
                 
                 End If
         Else

@@ -97,9 +97,9 @@ Public MainScreen As ClsUIScreen
 Public MenuBar As ClsUIFrame
 Public MainFrame As ClsUIFrame
 Public ButtonFrame As ClsUIFrame
-Public BtnNewProjectWF As ClsUIButton
+Public BtnProjectNewWF As ClsUIButton
 Public BtnNewLenderWF As ClsUIButton
-Public BtnNewClient As ClsUIButton
+Public BtnCRMNewItem As ClsUIButton
 Public Logo As ClsUIDashObj
 
 ' ===============================================================
@@ -154,30 +154,35 @@ Enum EnumObjType
     ObjChart = 2
 End Enum
 
-Enum EnumBtnNo
+Enum EnMenuBtnNo
     enBtnForAction = 1
     enBtnProjectsActive = 21
     enBtnProjectsClosed = 22
-    enCRMClients = 31
-    enCRMSPVs = 32
-    enCRMContacts = 33
-    enCRMProjects = 34
-    enCRMLenders = 35
-    enDashboard = 4
-    enReports = 5
-    enAdminUsers = 61
-    enAdminEmailTs = 62
-    enAdminDocuments = 63
-    enAdminWorkflows = 64
-    enAdminWFTypes = 65
-    enAdminLists = 66
-    enAdminRoles = 67
-    enBtnNewProjectWF = 7
-    enBtnNewLenderWF = 8
-    enBtnExit = 9
-    enBtnOpenProject = 10
-    enBtnOpenCRM = 11
-    enBtnNewClient = 12
+    enBtnCRMClient = 31
+    enBtnCRMSPV = 32
+    enBtnCRMContacts = 33
+    enBtnCRMProjects = 34
+    enBtnCRMLenders = 35
+    enbtnDashboard = 4
+    enBtnReports = 5
+    enBtnAdminUsers = 61
+    enBtnAdminEmailTs = 62
+    enBtnAdminDocuments = 63
+    enBtnAdminWorkflows = 64
+    enBtnAdminWFTypes = 65
+    enBtnAdminLists = 66
+    enBtnAdminRoles = 67
+    enBtnExit = 7
+End Enum
+
+Enum EnumBtnNo
+    enBtnProjectNew
+    enBtnProjectOpen
+    enBtnLenderNewWF
+    enBtnCRMOpenItem
+    enBtnCRMLenderOpen
+    enBtnCRMLenderNew
+    enBtnCRMNewItem
 End Enum
 
 Enum enStatus           'Status
@@ -218,11 +223,11 @@ Enum EnumFormValidation
 End Enum
 
 Enum enScreenPage
-    enActivePage = 0
-    enCompletedPage
-    enCRMClient
-    enCRMSPV
-    enCRMContact
-    enCRMProject
-    enCRMLender
+    enScrProjActive = 0
+    enScrProjComplete
+    enScrCRMClient
+    enScrCRMSPV
+    enScrCRMContact
+    enScrCRMProject
+    enScrCRMLender
 End Enum

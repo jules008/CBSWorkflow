@@ -32,8 +32,8 @@ Public Function BuildScreen(ScrnPage As enScreenPage) As Boolean
     
     ShtMain.Unprotect PROTECT_KEY
     
-    If Not BuildMainFrame Then Err.Raise HANDLED_ERROR
-    If Not RefreshList Then Err.Raise HANDLED_ERROR
+    If Not BuildMainFrame(ScreenPage) Then Err.Raise HANDLED_ERROR
+    If Not RefreshList(ScreenPage) Then Err.Raise HANDLED_ERROR
     
     MainScreen.ReOrder
     
@@ -65,14 +65,14 @@ End Function
 ' BuildMainFrame
 ' Builds main frame at top of screen
 ' ---------------------------------------------------------------
-Private Function BuildMainFrame() As Boolean
+Private Function BuildMainFrame(ByVal ScreenPage As enScreenPage) As Boolean
     Const StrPROCEDURE As String = "BuildMainFrame()"
 
     On Error GoTo ErrorHandler
 
     Set MainFrame = New ClsUIFrame
     Set ButtonFrame = New ClsUIFrame
-    Set BtnNewProjectWF = New ClsUIButton
+    Set BtnProjectNewWF = New ClsUIButton
     Set BtnNewLenderWF = New ClsUIButton
         
     MainScreen.Frames.AddItem MainFrame, "Main Frame"
@@ -125,14 +125,14 @@ Private Function BuildMainFrame() As Boolean
         .Visible = False
     End With
     
-    With BtnNewProjectWF
+    With BtnProjectNewWF
 
         .Height = GENERIC_BUTTON_HEIGHT
         .Left = ACTIVE_BTN_MAIN_1_LEFT
         .Top = ACTIVE_BTN_MAIN_1_TOP
         .Width = GENERIC_BUTTON_WIDTH
         .Name = "BtnMain1"
-        .OnAction = "'ModUIButtons.ProcessBtnClicks(" & enBtnNewProjectWF & ")'"
+        .OnAction = "'ModUIButtonHandler.ProcessBtnClicks(""" & ScreenPage & ":" & enBtnProjectNew & ": " & """)'"
         .UnSelectStyle = GENERIC_BUTTON
         .Selected = False
         .Text = "New Project Workflow"
@@ -145,13 +145,13 @@ Private Function BuildMainFrame() As Boolean
         .Top = ACTIVE_BTN_MAIN_2_TOP
         .Width = GENERIC_BUTTON_WIDTH
         .Name = "BtnMain2"
-        .OnAction = "'ModUIButtons.ProcessBtnClicks(" & enBtnNewLenderWF & ")'"
+        .OnAction = "'ModUIButtonHandler.ProcessBtnClicks(" & enBtnLenderNewWF & ")'"
         .UnSelectStyle = GENERIC_BUTTON
         .Selected = False
         .Text = "New Lender Workflow"
     End With
     
-    ButtonFrame.Buttons.Add BtnNewProjectWF
+    ButtonFrame.Buttons.Add BtnProjectNewWF
     ButtonFrame.Buttons.Add BtnNewLenderWF
     
     BuildMainFrame = True
@@ -175,7 +175,7 @@ End Function
 ' RefreshList
 ' Refreshes the list of active workflows
 ' ---------------------------------------------------------------
-Public Function RefreshList(Optional SortBy As String) As Boolean
+Public Function RefreshList(ByVal ScreenPage As enScreenPage, Optional SortBy As String) As Boolean
     Dim NoCols As Integer
     Dim NoRows As Integer
     Dim Workflows As ClsWorkflows
@@ -238,7 +238,7 @@ Public Function RefreshList(Optional SortBy As String) As Boolean
             AryStyles(x, y) = "GENERIC_TABLE"
                 End If
                 
-                AryOnAction(x, y) = "'ModUIButtons.ProcessBtnClicks(""" & enBtnOpenProject & ":" & !ProjectNo & """)'"
+                AryOnAction(x, y) = "'ModUIButtonHandler.ProcessBtnClicks(""" & ScreenPage & ":" & enBtnProjectOpen & ":" & !ProjectNo & """)'"
                 .MoveNext
         Next
     Next
@@ -304,5 +304,55 @@ Public Function GetActiveList(StrSortBy As String) As Recordset
     
     Set GetActiveList = RstWorkflow
     
+End Function
+
+' ===============================================================
+' OpenItem
+' Opens project workflow
+' ---------------------------------------------------------------
+Public Function OpenItem(ByVal ScreenPage As enScreenPage, ByVal Index As String) As Boolean
+    Dim CRMItem As Object
+    
+    Const StrPROCEDURE As String = "OpenItem()"
+
+    On Error GoTo ErrorHandler
+
+    Set ActiveProject = New ClsProject
+    Set ActiveSPV = New ClsSPV
+    Set ActiveClient = New ClsClient
+    
+    ActiveProject.DBGet CInt(Index)
+    
+    Set ActiveSPV = ActiveProject.Parent
+    Set ActiveClient = ActiveProject.Parent.Parent
+    
+    FrmProject.ShowForm
+    
+    If Not ResetScreen Then Err.Raise HANDLED_ERROR
+    If Not ModUIProjects.BuildScreen(ScreenPage) Then Err.Raise HANDLED_ERROR
+    
+    If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
+    
+    Set ActiveProject = Nothing
+    Set ActiveSPV = Nothing
+    Set ActiveClient = Nothing
+    OpenItem = True
+
+Exit Function
+
+ErrorExit:
+
+    '***CleanUpCode***
+    OpenItem = False
+
+Exit Function
+
+ErrorHandler:
+    If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
+        Stop
+        Resume
+    Else
+        Resume ErrorExit
+    End If
 End Function
 

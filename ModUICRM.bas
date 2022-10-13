@@ -20,7 +20,7 @@ Private ScreenPage As String
 ' BuildScreen
 ' Builds the display using shapes
 ' ---------------------------------------------------------------
-Public Function BuildScreen(ScrnPage As enScreenPage) As Boolean
+Public Function BuildScreen(ByVal ScrnPage As enScreenPage) As Boolean
     
     Const StrPROCEDURE As String = "BuildScreen()"
 
@@ -32,8 +32,8 @@ Public Function BuildScreen(ScrnPage As enScreenPage) As Boolean
     
     ShtMain.Unprotect PROTECT_KEY
     
-    If Not BuildMainFrame Then Err.Raise HANDLED_ERROR
-    If Not RefreshList Then Err.Raise HANDLED_ERROR
+    If Not BuildMainFrame(ScreenPage) Then Err.Raise HANDLED_ERROR
+    If Not RefreshList(ScreenPage) Then Err.Raise HANDLED_ERROR
     
     MainScreen.ReOrder
     
@@ -65,17 +65,61 @@ End Function
 ' BuildMainFrame
 ' Builds main frame at top of screen
 ' ---------------------------------------------------------------
-Private Function BuildMainFrame() As Boolean
+Private Function BuildMainFrame(ByVal ScreenPage As enScreenPage) As Boolean
+    Dim HeaderText As String
+    Dim TableHeadingText As String
+    Dim TableColWidths As String
+    Dim NewBtnNo As EnumBtnNo
+    Dim NewBtnTxt As String
+    
     Const StrPROCEDURE As String = "BuildMainFrame()"
 
     On Error GoTo ErrorHandler
 
     Set MainFrame = New ClsUIFrame
     Set ButtonFrame = New ClsUIFrame
-    Set BtnNewClient = New ClsUIButton
+    Set BtnCRMNewItem = New ClsUIButton
         
     MainScreen.Frames.AddItem MainFrame, "Main Frame"
     MainScreen.Frames.AddItem ButtonFrame, "Button Frame"
+    
+    'load page specific data
+    Select Case ScreenPage
+        Case enScrCRMClient
+        
+            HeaderText = "CRM - Clients"
+            TableHeadingText = CRM_CLIENT_TABLE_TITLES
+            TableColWidths = CRM_CLIENT_TABLE_COL_WIDTHS
+            NewBtnTxt = "New Client"
+            
+        Case enScrCRMSPV
+        
+            HeaderText = "CRM - SPVs"
+            TableHeadingText = CRM_SPV_TABLE_TITLES
+            TableColWidths = CRM_SPV_TABLE_COL_WIDTHS
+            NewBtnTxt = "New SPV"
+            
+        Case enScrCRMContact
+        
+            HeaderText = "CRM - Contacts"
+            TableHeadingText = CRM_CONTACT_TABLE_TITLES
+            TableColWidths = CRM_CONTACT_TABLE_COL_WIDTHS
+            NewBtnTxt = "New Contact"
+            
+        Case enScrCRMLender
+        
+            HeaderText = "CRM - Lenders"
+            TableHeadingText = CRM_LENDER_TABLE_TITLES
+            TableColWidths = CRM_LENDER_TABLE_COL_WIDTHS
+            NewBtnTxt = "New Lender"
+            
+       Case enScrCRMProject
+       
+            HeaderText = "CRM - SPVs"
+            TableHeadingText = CRM_PROJECT_TABLE_TITLES
+            TableColWidths = CRM_PROJECT_TABLE_COL_WIDTHS
+            NewBtnTxt = "New Project"
+    End Select
     
     'add main frame
     With MainFrame
@@ -95,19 +139,20 @@ Private Function BuildMainFrame() As Boolean
             .Width = .Parent.Width
             .Height = HEADER_HEIGHT
             .Name = "Main Frame Header"
-            .Text = "CRM - Clients"
+            .Text = HeaderText
             .Style = HEADER_STYLE
             .Visible = True
         End With
 
         With .Table
+            .ColWidths = TableColWidths
             .Left = GENERIC_TABLE_LEFT
             .Top = GENERIC_TABLE_TOP
             .HPad = GENERIC_TABLE_ROWOFFSET
             .VPad = GENERIC_TABLE_COLOFFSET
             .SubTableVOff = 50
             .SubTableHOff = 20
-            .HeadingText = CRM_CLIENT_TABLE_TITLES
+            .HeadingText = TableHeadingText
             .HeadingStyle = GENERIC_TABLE_HEADER
             .HeadingHeight = GENERIC_TABLE_HEADING_HEIGHT
         End With
@@ -124,20 +169,20 @@ Private Function BuildMainFrame() As Boolean
         .Visible = False
     End With
     
-    With BtnNewClient
+    With BtnCRMNewItem
 
         .Height = GENERIC_BUTTON_HEIGHT
-        .Left = CRM_CLIENT_BTN_MAIN_1_LEFT
-        .Top = CRM_CLIENT_BTN_MAIN_1_TOP
+        .Left = CRM_BTN_MAIN_1_LEFT
+        .Top = CRM_BTN_MAIN_1_TOP
         .Width = GENERIC_BUTTON_WIDTH
         .Name = "BtnMain1"
-        .OnAction = "'ModUIButtons.ProcessBtnClicks(" & enBtnNewClient & ")'"
+        .OnAction = "'ModUIButtonHandler.ProcessBtnClicks(""" & ScreenPage & ":" & enBtnCRMNewItem & ":0" & """)'"
         .UnSelectStyle = GENERIC_BUTTON
         .Selected = False
-        .Text = "New Client"
+        .Text = NewBtnTxt
     End With
     
-    ButtonFrame.Buttons.Add BtnNewClient
+    ButtonFrame.Buttons.Add BtnCRMNewItem
     
     BuildMainFrame = True
 
@@ -160,7 +205,7 @@ End Function
 ' RefreshList
 ' Refreshes the list of active workflows
 ' ---------------------------------------------------------------
-Public Function RefreshList(Optional SortBy As String) As Boolean
+Public Function RefreshList(ByVal ScreenPage As enScreenPage, Optional SortBy As String) As Boolean
     Dim NoCols As Integer
     Dim NoRows As Integer
     Dim Workflows As ClsWorkflows
@@ -170,6 +215,8 @@ Public Function RefreshList(Optional SortBy As String) As Boolean
     Dim x As Integer
     Dim AryStyles() As String
     Dim AryOnAction() As String
+    Dim OpenItmBtn As EnumBtnNo
+    Dim ItemIndex As String
     
     Const StrPROCEDURE As String = "RefreshList()"
 
@@ -177,11 +224,30 @@ Public Function RefreshList(Optional SortBy As String) As Boolean
 
     ModLibrary.PerfSettingsOn
 
+    'load page specific data
+    Select Case ScreenPage
+        Case enScrCRMClient
+            OpenItmBtn = enBtnCRMOpenItem
+            ItemIndex = "ClientNo"
+        Case enScrCRMSPV
+            OpenItmBtn = enBtnCRMOpenItem
+            ItemIndex = "SPVNo"
+        Case enScrCRMContact
+            OpenItmBtn = enBtnCRMOpenItem
+            ItemIndex = "ContactNo"
+        Case enScrCRMLender
+            OpenItmBtn = enBtnCRMOpenItem
+            ItemIndex = "LenderNo"
+        Case enScrCRMProject
+            OpenItmBtn = enBtnProjectOpen
+            ItemIndex = "ProjectNo"
+    End Select
+    
     ShtMain.Unprotect PROTECT_KEY
     
     Set Workflows = New ClsWorkflows
     
-    Set RstWorkflowList = GetClientList(StrSortBy)
+    Set RstWorkflowList = GetCRMData(ScreenPage, StrSortBy)
     
     With RstWorkflowList
         If .RecordCount = 0 Then GoTo GracefulExit
@@ -190,7 +256,6 @@ Public Function RefreshList(Optional SortBy As String) As Boolean
     End With
     
     With MainFrame.Table
-        .ColWidths = CRM_CLIENT_TABLE_COL_WIDTHS
         .RstText = RstWorkflowList
         .NoRows = RstWorkflowList.RecordCount
         .StylesColl.Add GENERIC_TABLE
@@ -210,8 +275,8 @@ Public Function RefreshList(Optional SortBy As String) As Boolean
         For x = 0 To NoCols - 1
             .MoveFirst
             For y = 0 To NoRows - 1
-                AryStyles(x, y) = CRM_CLIENT_TABLE_STYLES
-                AryOnAction(x, y) = "'ModUIButtons.ProcessBtnClicks(""" & enBtnOpenCRM & ":" & !ClientNo & """)'"
+                AryStyles(x, y) = CRM_TABLE_STYLES
+                AryOnAction(x, y) = "'ModUIButtonHandler.ProcessBtnClicks(""" & ScreenPage & ":" & OpenItmBtn & ":" & .Fields(ItemIndex) & """)'"
                 .MoveNext
             Next
         Next
@@ -256,10 +321,10 @@ ErrorHandler:
 End Function
 
 ' ===============================================================
-' Method GetClientList
+' Method GetCRMData
 ' Gets data for workflow list
 '---------------------------------------------------------------
-Private Function GetClientList(StrSortBy As String) As Recordset
+Private Function GetCRMData(ByVal ScreenPage As enScreenPage, StrSortBy As String) As Recordset
     Dim RstWorkflow As Recordset
     Dim Workflow As ClsWorkflow
     Dim SQL As String
@@ -267,11 +332,75 @@ Private Function GetClientList(StrSortBy As String) As Recordset
     Dim SQL2 As String
     Dim SQL3 As String
 
-    SQL = "SELECT TblClient.ClientNo, TblClient.Name, TblClient.PhoneNo, TblClient.Url FROM TblClient"
+    Select Case ScreenPage
+        Case enScrCRMClient
+            SQL = "SELECT ClientNo, Name, PhoneNo, Url FROM TblClient"
+        Case enScrCRMSPV
+            SQL = "SELECT SPVNo, Name FROM TblSPV"
+        Case enScrCRMContact
+            SQL = "SELECT ContactNo, ContactName, Position, Phone1 FROM TblContact"
+        Case enScrCRMLender
+            SQL = "SELECT LenderNo, Name, PhoneNo, LenderType, Address FROM TblLender"
+        Case enScrCRMProject
+    
+    End Select
 
     Set RstWorkflow = ModDatabase.SQLQuery(SQL)
     
-    Set GetClientList = RstWorkflow
+    Set GetCRMData = RstWorkflow
     
+End Function
+
+' ===============================================================
+' OpenItem
+' Opens CRM item dependant on page.  New item created if index = 0
+' ---------------------------------------------------------------
+Public Function OpenItem(ScreenPage As enScreenPage, Optional Index As String) As Boolean
+    Dim CRMItem As Object
+    
+    Const StrPROCEDURE As String = "OpenItem()"
+
+    On Error GoTo ErrorHandler
+
+    Select Case ScreenPage
+    
+        Case enScrCRMClient
+            Set CRMItem = New ClsClient
+        Case enScrCRMSPV
+            Set CRMItem = New ClsSPV
+        Case enScrCRMContact
+            Set CRMItem = New ClsContact
+       Case enScrCRMLender
+            Set CRMItem = New ClsLender
+        Case enScrCRMProject
+    End Select
+
+    With CRMItem
+        If Index <> "" Then
+            .DBGet CInt(Index)
+            .DisplayForm
+        Else
+            .DBNew
+        End If
+    End With
+    
+    OpenItem = True
+
+Exit Function
+
+ErrorExit:
+
+    '***CleanUpCode***
+    OpenItem = False
+
+Exit Function
+
+ErrorHandler:
+    If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
+        Stop
+        Resume
+    Else
+        Resume ErrorExit
+    End If
 End Function
 

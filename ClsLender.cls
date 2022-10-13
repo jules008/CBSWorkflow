@@ -2,13 +2,13 @@ VERSION 1.0 CLASS
 BEGIN
   MultiUse = -1  'True
 END
-Attribute VB_Name = "ClsContact"
+Attribute VB_Name = "ClsLender"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 '===============================================================
-' Class ClsContact
+' Class ClsLender
 '---------------------------------------------------------------
 ' Created by Julian Turner
 ' OneSheet Consulting
@@ -16,7 +16,7 @@ Attribute VB_Exposed = False
 '===============================================================
 ' v1.0.0 - Initial Version
 '---------------------------------------------------------------
-' Date - 13 Sep 22
+' Date - 13 Oct 22
 '===============================================================
 ' Methods
 '---------------------------------------------------------------
@@ -24,44 +24,53 @@ Attribute VB_Exposed = False
 ' DBSave - Saves class to Database
 ' DBDelete - Deletes record
 '===============================================================
-' Index - ContactNo
+' Index - LenderNo
 '---------------------------------------------------------------
 Option Explicit
 
-Private pContactNo As Integer
-Private pPosition As String
-Private pContactName As String
+Private pLenderNo As Integer
+Private pName As String
+Private pPhoneNo As String
+Private pLenderType As String
 Private pAddress As String
-Private pPhone1 As String
-Private pPhone2 As String
-Private WithEvents pContactForm As FrmContactForm
-Attribute pContactForm.VB_VarHelpID = -1
+Private pContacts As ClsContacts
+Private WithEvents pLenderForm As FrmLenderForm
+Attribute pLenderForm.VB_VarHelpID = -1
 
 '---------------------------------------------------------------
-Public Property Get ContactNo() As Integer
-    ContactNo = pContactNo
+Public Property Get LenderNo() As Integer
+    LenderNo = pLenderNo
 End Property
 
-Public Property Let ContactNo(ByVal vNewValue As Integer)
-    pContactNo = vNewValue
-End Property
-
-'---------------------------------------------------------------
-Public Property Get Position() As String
-    Position = pPosition
-End Property
-
-Public Property Let Position(ByVal vNewValue As String)
-    pPosition = vNewValue
+Public Property Let LenderNo(ByVal vNewValue As Integer)
+    pLenderNo = vNewValue
 End Property
 
 '---------------------------------------------------------------
-Public Property Get ContactName() As String
-    ContactName = pContactName
+Public Property Get Name() As String
+    Name = pName
 End Property
 
-Public Property Let ContactName(ByVal vNewValue As String)
-    pContactName = vNewValue
+Public Property Let Name(ByVal vNewValue As String)
+    pName = vNewValue
+End Property
+
+'---------------------------------------------------------------
+Public Property Get PhoneNo() As String
+    PhoneNo = pPhoneNo
+End Property
+
+Public Property Let PhoneNo(ByVal vNewValue As String)
+    pPhoneNo = vNewValue
+End Property
+
+'---------------------------------------------------------------
+Public Property Get LenderType() As String
+    LenderType = pLenderType
+End Property
+
+Public Property Let LenderType(ByVal vNewValue As String)
+    pLenderType = vNewValue
 End Property
 
 '---------------------------------------------------------------
@@ -74,21 +83,12 @@ Public Property Let Address(ByVal vNewValue As String)
 End Property
 
 '---------------------------------------------------------------
-Public Property Get Phone1() As String
-    Phone1 = pPhone1
+Public Property Get Contacts() As ClsContacts
+    Set Contacts = pContacts
 End Property
 
-Public Property Let Phone1(ByVal vNewValue As String)
-    pPhone1 = vNewValue
-End Property
-
-'---------------------------------------------------------------
-Public Property Get Phone2() As String
-    Phone2 = pPhone2
-End Property
-
-Public Property Let Phone2(ByVal vNewValue As String)
-    pPhone2 = vNewValue
+Public Property Let Contacts(ByVal vNewValue As ClsContacts)
+    Set pContacts = vNewValue
 End Property
 
 ' ===============================================================
@@ -96,14 +96,12 @@ End Property
 ' displays new SPV form
 ' ---------------------------------------------------------------
 Public Sub DBNew()
-    pContactNo = 0
-    pContactName = ""
     pAddress = ""
-    pPhone1 = ""
-    pPhone2 = ""
-    pPosition = ""
+    pPhoneNo = ""
+    pName = ""
+    pLenderType = ""
     
-    With pContactForm
+    With pLenderForm
         .Tag = "New"
         .ClearForm
         .Show
@@ -115,14 +113,14 @@ End Sub
 ' displays client form
 ' ---------------------------------------------------------------
 Public Sub DisplayForm()
-    With pContactForm
+    With pLenderForm
         .Tag = "Update"
         .TxtAddress = pAddress
-        .TxtContactName = pContactName
-        .TxtContactNo = pContactNo
-        .TxtPhone1 = pPhone1
-        .TxtPhone2 = pPhone2
-        .TxtPosition = pPosition
+        .TxtLenderNo = pLenderNo
+        .TxtName = pName
+        .TxtPhoneNo = pPhoneNo
+        .CmoLenderType = ""
+        .LstContacts = ""
         .Show
     End With
 End Sub
@@ -131,21 +129,21 @@ End Sub
 ' Method DBGet(Key as Integer)
 ' Gets class from Database
 ' ---------------------------------------------------------------
-Public Sub DBGet(ContactNo As Integer)
-    Dim RstContact As Recordset
+Public Sub DBGet(LenderNo As Integer)
+    Dim RstLender As Recordset
 
-    Set RstContact = ModDatabase.SQLQuery("SELECT * FROM TblContact WHERE ContactNo = " & ContactNo)
-    With RstContact
+    Set RstLender = ModDatabase.SQLQuery("SELECT * FROM TblLender WHERE LenderNo = " & LenderNo)
+    With RstLender
         If .RecordCount > 0 Then
-            If Not IsNull(!ContactNo) Then pContactNo = !ContactNo
-            If Not IsNull(!Position) Then pPosition = !Position
-            If Not IsNull(!ContactName) Then pContactName = !ContactName
+            If Not IsNull(!LenderNo) Then pLenderNo = !LenderNo
+            If Not IsNull(!Name) Then pName = !Name
+            If Not IsNull(!PhoneNo) Then pPhoneNo = !PhoneNo
+            If Not IsNull(!LenderType) Then pLenderType = !LenderType
             If Not IsNull(!Address) Then pAddress = !Address
-            If Not IsNull(!Phone1) Then pPhone1 = !Phone1
-            If Not IsNull(!Phone2) Then pPhone2 = !Phone2
+        pContacts.GetCollection
         End If
     End With
-    Set RstContact = Nothing
+    Set RstLender = Nothing
 End Sub
 
 ' ===============================================================
@@ -153,12 +151,12 @@ End Sub
 ' Saves class to Database
 ' ---------------------------------------------------------------
 Public Sub DBSave()
-    Dim RstContact As Recordset
+    Dim RstLender As Recordset
     Dim RstMaxNo As Recordset
     Dim LastNo As Integer
 
-    Set RstContact = ModDatabase.SQLQuery("SELECT * FROM TblContact WHERE ContactNo = " & pContactNo)
-    Set RstMaxNo = ModDatabase.SQLQuery("SELECT MAX(ContactNo) FROM TblContact ")
+    Set RstLender = ModDatabase.SQLQuery("SELECT * FROM TblLender WHERE LenderNo = " & pLenderNo)
+    Set RstMaxNo = ModDatabase.SQLQuery("SELECT MAX(LenderNo) FROM TblLender ")
 
     If RstMaxNo.Fields(0).Value <> 0 Then
         LastNo = RstMaxNo.Fields(0).Value
@@ -166,25 +164,25 @@ Public Sub DBSave()
         LastNo = 0
     End If
 
-    With RstContact
+    With RstLender
         If .RecordCount = 0 Then
             .AddNew
-            pContactNo = LastNo + 1
+            pLenderNo = LastNo + 1
         Else
             .Edit
         End If
 
-        If CStr(pContactNo) = "" Then !ContactNo = Null Else !ContactNo = pContactNo
-        If CStr(pPosition) = "" Then !Position = Null Else !Position = pPosition
-        If CStr(pContactName) = "" Then !ContactName = Null Else !ContactName = pContactName
+        If CStr(pLenderNo) = "" Then !LenderNo = Null Else !LenderNo = pLenderNo
+        If CStr(pName) = "" Then !Name = Null Else !Name = pName
+        If CStr(pPhoneNo) = "" Then !PhoneNo = Null Else !PhoneNo = pPhoneNo
+        If CStr(pLenderType) = "" Then !LenderType = Null Else !LenderType = pLenderType
         If CStr(pAddress) = "" Then !Address = Null Else !Address = pAddress
-        If CStr(pPhone1) = "" Then !Phone1 = Null Else !Phone1 = pPhone1
-        If CStr(pPhone2) = "" Then !Phone2 = Null Else !Phone2 = pPhone2
 
+        pContacts.SaveCollection
         .Update
     End With
 
-    Set RstContact = Nothing
+    Set RstLender = Nothing
     Set RstMaxNo = Nothing
 End Sub
 
@@ -194,20 +192,20 @@ End Sub
 ' ---------------------------------------------------------------
 Public Sub DBDelete(Optional FullDelete As Boolean)
 
-    DB.Execute "DELETE * FROM TblContact WHERE ContactNo = " & pContactNo
+    DB.Execute "DELETE * FROM TblLender WHERE LenderNo = " & pLenderNo
 
 End Sub
+
 ' ===============================================================
 ' Event pContactForm_Update
 ' Event from client form to update Contact
 ' ---------------------------------------------------------------
-Private Sub pContactForm_Update()
-    With pContactForm
+Private Sub pLenderForm_Update()
+    With pLenderForm
         pAddress = .TxtAddress
-        pContactName = .TxtContactName
-        pPhone1 = .TxtPhone1
-        pPhone2 = .TxtPhone2
-        pPosition = .TxtPosition
+        pName = .TxtName
+        pPhoneNo = .TxtPhoneNo
+        pLenderType = .CmoLenderType
     End With
     DBSave
 End Sub
@@ -216,8 +214,8 @@ End Sub
 ' Event pContactForm_CreateNew
 ' Event from SPV form to create new Contact
 ' ---------------------------------------------------------------
-Private Sub pContactForm_CreateNew()
-    With pContactForm
+Private Sub pLenderForm_CreateNew()
+    With pLenderForm
         .Hide
     End With
     DBNew
@@ -227,16 +225,19 @@ End Sub
 ' Event pContactForm_Delete
 ' Deletes Contact
 ' ---------------------------------------------------------------
-Private Sub pContactForm_Delete()
+Private Sub pLenderForm_Delete()
     DBDelete
 End Sub
 
 ' ===============================================================
 Private Sub Class_Initialize()
-    Set pContactForm = New FrmContactForm
+    Set pContacts = New ClsContacts
+    Set pLenderForm = New FrmLenderForm
 End Sub
-
 ' ===============================================================
 Private Sub Class_Terminate()
-    Set pContactForm = Nothing
+    Set pContacts = Nothing
+    Set pLenderForm = Nothing
 End Sub
+' ===============================================================
+

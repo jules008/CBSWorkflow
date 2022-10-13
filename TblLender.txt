@@ -1,0 +1,6 @@
+LenderNo,  dbInteger
+Name,  dbText
+PhoneNo,  dbText
+LenderType,  dbText
+Address,  dbText
+Contacts,  dbText

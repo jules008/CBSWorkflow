@@ -92,9 +92,25 @@ End Property
 ' displays new SPV form
 ' ---------------------------------------------------------------
 Public Sub DBNew()
+    pSPVNo = 0
+    pName = ""
     
     With pSPVForm
         .Tag = "New"
+        .ClearForm
+        .Show
+    End With
+End Sub
+
+' ===============================================================
+' Method DisplayForm
+' displays client form
+' ---------------------------------------------------------------
+Public Sub DisplayForm()
+    With pSPVForm
+        .Tag = "Update"
+        .TxtSPVNo = pSPVNo
+        .TxtName = pName
         .Show
     End With
 End Sub
@@ -178,15 +194,33 @@ Public Sub DBDelete(Optional FullDelete As Boolean)
 End Sub
 
 ' ===============================================================
+' Event pSPVForm_Update
+' Event from client form to update client
+' ---------------------------------------------------------------
+Private Sub pSPVForm_Update()
+    With pSPVForm
+        pName = .TxtName
+    End With
+    DBSave
+End Sub
+
+' ===============================================================
 ' Event pSPVForm_CreateNew
 ' Event from SPV form to create new SPV
 ' ---------------------------------------------------------------
 Private Sub pSPVForm_CreateNew()
     With pSPVForm
-        pName = .TxtName
-'        pSPVNo = .TxtSPVNo
+        .Hide
     End With
-    DBSave
+    DBNew
+End Sub
+
+' ===============================================================
+' Event pSPVForm_Delete
+' Deletes client
+' ---------------------------------------------------------------
+Private Sub pSPVForm_Delete()
+    DBDelete
 End Sub
 
 ' ===============================================================

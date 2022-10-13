@@ -95,16 +95,21 @@ End Property
 ' displays new client form
 ' ---------------------------------------------------------------
 Public Sub DBNew()
+    pClientNo = 0
+    pName = ""
+    pPhoneNo = ""
+    pUrl = ""
     
     With pClientForm
         .Tag = "New"
+        .ClearForm
         .Show
     End With
 End Sub
 
 ' ===============================================================
 ' Method DisplayForm
-' displays new client form
+' displays client form
 ' ---------------------------------------------------------------
 Public Sub DisplayForm()
     With pClientForm
@@ -194,16 +199,27 @@ Public Sub DBDelete(Optional FullDelete As Boolean)
 End Sub
 
 ' ===============================================================
-' Event pClientForm_CreateNew
-' Event from client form to create new client
+' Event pClientForm_Update
+' Event from client form to update client
 ' ---------------------------------------------------------------
-Private Sub pClientForm_CreateNew()
+Private Sub pClientForm_Update()
     With pClientForm
         pName = .TxtName
         pPhoneNo = .TxtPhoneNo
         pUrl = .TxtUrl
     End With
     DBSave
+End Sub
+
+' ===============================================================
+' Event pClientForm_CreateNew
+' Event from client form to create new client
+' ---------------------------------------------------------------
+Private Sub pClientForm_CreateNew()
+    With pClientForm
+        .Hide
+    End With
+    DBNew
 End Sub
 
 ' ===============================================================
