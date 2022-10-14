@@ -291,7 +291,7 @@ Restart:
     
         Case enBtnForAction
 
-            If Not ResetScreen Then Err.Raise HANDLED_ERROR
+            BtnProjectsClick enScrProjForAction
 
         Case enBtnProjectsActive
         
@@ -299,8 +299,7 @@ Restart:
         
         Case enBtnProjectsClosed
         
-            If Not ResetScreen Then Err.Raise HANDLED_ERROR
-            If Not ModUIProjects.BuildScreen("Closed") Then Err.Raise HANDLED_ERROR
+            BtnProjectsClick enScrProjComplete
 
         Case enBtnCRMClient
             

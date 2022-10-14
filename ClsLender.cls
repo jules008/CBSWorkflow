@@ -126,13 +126,18 @@ Public Sub DisplayForm()
 End Sub
 
 ' ===============================================================
-' Method DBGet(Key as Integer)
+' Method DBGet(Key as Variant)
 ' Gets class from Database
 ' ---------------------------------------------------------------
-Public Sub DBGet(LenderNo As Integer)
+Public Sub DBGet(LenderNameOrNo As Variant)
     Dim RstLender As Recordset
 
-    Set RstLender = ModDatabase.SQLQuery("SELECT * FROM TblLender WHERE LenderNo = " & LenderNo)
+    If IsNumeric(LenderNameOrNo) Then
+        Set RstLender = ModDatabase.SQLQuery("SELECT * FROM TblLender WHERE LenderNo = " & LenderNameOrNo)
+    Else
+        Set RstLender = ModDatabase.SQLQuery("SELECT * FROM TblLender WHERE Name = '" & LenderNameOrNo & "'")
+    End If
+    
     With RstLender
         If .RecordCount > 0 Then
             If Not IsNull(!LenderNo) Then pLenderNo = !LenderNo

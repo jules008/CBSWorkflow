@@ -83,6 +83,7 @@ Global STOP_FLAG As Boolean
 ' Global Class Declarations
 ' ---------------------------------------------------------------
 Public Clients As ClsClients
+Public ActiveLender As ClsLender
 Public ActiveWorkFlow As ClsWorkflow
 Public ActiveProject As ClsProject
 Public ActiveClient As ClsClient
@@ -223,7 +224,8 @@ Enum EnumFormValidation
 End Enum
 
 Enum enScreenPage
-    enScrProjActive = 0
+    enScrProjForAction = 0
+    enScrProjActive
     enScrProjComplete
     enScrCRMClient
     enScrCRMSPV

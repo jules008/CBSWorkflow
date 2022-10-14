@@ -35,6 +35,7 @@ Private pClientNo As Integer
 Private pSPVs As ClsSPVs
 Private pContacts As ClsContacts
 Private WithEvents pClientForm As FrmClientForm
+Attribute pClientForm.VB_VarHelpID = -1
 
 '---------------------------------------------------------------
 Public Property Get Name() As String

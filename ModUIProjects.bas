@@ -66,6 +66,12 @@ End Function
 ' Builds main frame at top of screen
 ' ---------------------------------------------------------------
 Private Function BuildMainFrame(ByVal ScreenPage As enScreenPage) As Boolean
+    Dim HeaderText As String
+    Dim TableHeadingText As String
+    Dim TableColWidths As String
+    Dim NewBtnNo As EnumBtnNo
+    Dim NewBtnTxt As String
+    
     Const StrPROCEDURE As String = "BuildMainFrame()"
 
     On Error GoTo ErrorHandler
@@ -77,6 +83,16 @@ Private Function BuildMainFrame(ByVal ScreenPage As enScreenPage) As Boolean
         
     MainScreen.Frames.AddItem MainFrame, "Main Frame"
     MainScreen.Frames.AddItem ButtonFrame, "Button Frame"
+    
+    'load page specific data
+    Select Case ScreenPage
+        Case enScrProjForAction
+            TableHeadingText = PROJ_FOR_ACTION_HEADER_TEXT
+        Case enScrProjActive
+            TableHeadingText = PROJ_ACTIVE_HEADER_TEXT
+        Case enScrProjComplete
+            TableHeadingText = PROJ_CLOSED_HEADER_TEXT
+    End Select
     
     'add main frame
     With MainFrame
@@ -96,7 +112,7 @@ Private Function BuildMainFrame(ByVal ScreenPage As enScreenPage) As Boolean
             .Width = .Parent.Width
             .Height = HEADER_HEIGHT
             .Name = "Main Frame Header"
-            .Text = "Active Projects"
+            .Text = TableHeadingText
             .Style = HEADER_STYLE
             .Visible = True
         End With
@@ -108,7 +124,7 @@ Private Function BuildMainFrame(ByVal ScreenPage As enScreenPage) As Boolean
             .VPad = GENERIC_TABLE_COLOFFSET
             .SubTableVOff = 50
             .SubTableHOff = 20
-            .HeadingText = ACTIVE_TABLE_TITLES
+            .HeadingText = PROJECT_TABLE_TITLES
             .HeadingStyle = GENERIC_TABLE_HEADER
             .HeadingHeight = GENERIC_TABLE_HEADING_HEIGHT
         End With
@@ -128,11 +144,11 @@ Private Function BuildMainFrame(ByVal ScreenPage As enScreenPage) As Boolean
     With BtnProjectNewWF
 
         .Height = GENERIC_BUTTON_HEIGHT
-        .Left = ACTIVE_BTN_MAIN_1_LEFT
-        .Top = ACTIVE_BTN_MAIN_1_TOP
+        .Left = PROJECT_BTN_MAIN_1_LEFT
+        .Top = PROJECT_BTN_MAIN_1_TOP
         .Width = GENERIC_BUTTON_WIDTH
         .Name = "BtnMain1"
-        .OnAction = "'ModUIButtonHandler.ProcessBtnClicks(""" & ScreenPage & ":" & enBtnProjectNew & ": " & """)'"
+        .OnAction = "'ModUIButtonHandler.ProcessBtnClicks(""" & ScreenPage & ":" & enBtnProjectNew & ":0" & """)'"
         .UnSelectStyle = GENERIC_BUTTON
         .Selected = False
         .Text = "New Project Workflow"
@@ -141,11 +157,11 @@ Private Function BuildMainFrame(ByVal ScreenPage As enScreenPage) As Boolean
     With BtnNewLenderWF
 
         .Height = GENERIC_BUTTON_HEIGHT
-        .Left = ACTIVE_BTN_MAIN_2_LEFT
-        .Top = ACTIVE_BTN_MAIN_2_TOP
+        .Left = PROJECT_BTN_MAIN_2_LEFT
+        .Top = PROJECT_BTN_MAIN_2_TOP
         .Width = GENERIC_BUTTON_WIDTH
         .Name = "BtnMain2"
-        .OnAction = "'ModUIButtonHandler.ProcessBtnClicks(" & enBtnLenderNewWF & ")'"
+        .OnAction = "'ModUIButtonHandler.ProcessBtnClicks(""" & ScreenPage & ":" & enBtnLenderNewWF & ":0" & """)'"
         .UnSelectStyle = GENERIC_BUTTON
         .Selected = False
         .Text = "New Lender Workflow"
@@ -196,7 +212,7 @@ Public Function RefreshList(ByVal ScreenPage As enScreenPage, Optional SortBy As
     
     Set Workflows = New ClsWorkflows
     
-    Set RstWorkflowList = GetActiveList(StrSortBy)
+    Set RstWorkflowList = GetActiveList(ScreenPage, StrSortBy)
     
     With RstWorkflowList
         If .RecordCount = 0 Then GoTo GracefulExit
@@ -206,7 +222,7 @@ Public Function RefreshList(ByVal ScreenPage As enScreenPage, Optional SortBy As
     End With
     
     With MainFrame.Table
-        .ColWidths = ACTIVE_TABLE_COL_WIDTHS
+        .ColWidths = PROJECT_TABLE_COL_WIDTHS
         .RstText = RstWorkflowList
         .NoRows = RstWorkflowList.RecordCount
         .StylesColl.Add GENERIC_TABLE
@@ -286,7 +302,7 @@ End Function
 ' Method GetActiveList
 ' Gets data for workflow list
 '---------------------------------------------------------------
-Public Function GetActiveList(StrSortBy As String) As Recordset
+Public Function GetActiveList(ScreenPage As enScreenPage, StrSortBy As String) As Recordset
     Dim RstWorkflow As Recordset
     Dim Workflow As ClsWorkflow
     Dim SQL As String
@@ -294,11 +310,21 @@ Public Function GetActiveList(StrSortBy As String) As Recordset
     Dim SQL2 As String
     Dim SQL3 As String
 
+    Select Case ScreenPage
+        Case enScrProjForAction
+            SQL = "SELECT TblProject.ProjectNo, TblClient.Name, TblSPV.Name, TblCBSUser.UserName, TblWorkflow.CurrentStep, TblStepTemplate.StepName, TblWorkflow.Status, TblWorkflow.RAG " _
+                    & "FROM ((((TblProject LEFT JOIN TblSPV ON TblProject.SPVNo = TblSPV.SPVNo) LEFT JOIN TblClient ON TblSPV.ClientNo = TblClient.ClientNo) LEFT JOIN TblCBSUser ON TblProject.CaseManager = TblCBSUser.CBSUserNo) LEFT JOIN TblWorkflow ON TblProject.ProjectWFNo = TblWorkflow.WorkflowNo) LEFT JOIN TblStepTemplate ON TblWorkflow.CurrentStep = TblStepTemplate.StepNo " _
+                    & "WHERE (((TblWorkflow.RAG)='en1Red') AND ((TblWorkflow.WorkflowType)='enProject')) OR (((TblWorkflow.RAG)='en2Amber') AND ((TblWorkflow.WorkflowType)='enProject')) OR (((TblWorkflow.Status)='enActionReqd') AND ((TblWorkflow.RAG)='en3Green') AND ((TblWorkflow.WorkflowType)='enProject'))"
+        Case enScrProjActive
     SQL = "SELECT TblProject.ProjectNo, TblClient.Name, TblSPV.Name, TblCBSUser.UserName, TblWorkflow.CurrentStep, TblStepTemplate.StepName, TblWorkflow.Status, TblWorkflow.RAG " _
             & "FROM ((((TblProject LEFT JOIN TblSPV ON TblProject.SPVNo = TblSPV.SPVNo) LEFT JOIN TblClient ON TblSPV.ClientNo = TblClient.ClientNo) LEFT JOIN TblCBSUser ON " _
             & "TblProject.CaseManager = TblCBSUser.CBSUserNo) LEFT JOIN TblWorkflow ON TblProject.ProjectWFNo = TblWorkflow.WorkflowNo) LEFT JOIN TblStepTemplate ON " _
             & "TblWorkflow.CurrentStep = TblStepTemplate.StepNo WHERE (((TblWorkflow.WorkflowType)='enProject'))"
-
+        Case enScrProjComplete
+            SQL = "SELECT TblProject.ProjectNo, TblClient.Name, TblSPV.Name, TblCBSUser.UserName, TblWorkflow.CurrentStep, TblStepTemplate.StepName, TblWorkflow.Status, TblWorkflow.RAG " _
+                    & "FROM ((((TblProject LEFT JOIN TblSPV ON TblProject.SPVNo = TblSPV.SPVNo) LEFT JOIN TblClient ON TblSPV.ClientNo = TblClient.ClientNo) LEFT JOIN TblCBSUser ON TblProject.CaseManager = TblCBSUser.CBSUserNo) LEFT JOIN TblWorkflow ON TblProject.ProjectWFNo = TblWorkflow.WorkflowNo) LEFT JOIN TblStepTemplate ON TblWorkflow.CurrentStep = TblStepTemplate.StepNo " _
+                    & "WHERE (((TblWorkflow.Status)='enClosed') AND ((TblWorkflow.WorkflowType)='enProject'))"
+    End Select
                 
     Set RstWorkflow = ModDatabase.SQLQuery(SQL)
     
@@ -326,7 +352,7 @@ Public Function OpenItem(ByVal ScreenPage As enScreenPage, ByVal Index As String
     Set ActiveSPV = ActiveProject.Parent
     Set ActiveClient = ActiveProject.Parent.Parent
     
-    FrmProject.ShowForm
+    FrmWFProject.ShowForm
     
     If Not ResetScreen Then Err.Raise HANDLED_ERROR
     If Not ModUIProjects.BuildScreen(ScreenPage) Then Err.Raise HANDLED_ERROR

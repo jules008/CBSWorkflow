@@ -48,11 +48,11 @@ Restart:
     
         Case enBtnProjectNew
             
-            BtnProjectNewWFClick
+            If Not BtnProjectNewWFClick(ScreenPage) Then Err.Raise HANDLED_ERROR
         
         Case enBtnLenderNewWF
         
-            If Not ResetScreen Then Err.Raise HANDLED_ERROR
+            If Not BtnLenderNewWFClick(ScreenPage) Then Err.Raise HANDLED_ERROR
 
         Case enBtnProjectOpen
 

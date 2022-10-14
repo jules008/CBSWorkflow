@@ -23,6 +23,7 @@ Option Explicit
 Private pDeleted As Date
 Private pWorkflowNo As Integer
 Private pWorkflowType As enWorkflowType
+Private pLender As ClsLender
 Private pName As String
 Private pMember As String
 Private pRAG As enRAG
@@ -61,6 +62,15 @@ End Property
 
 Public Property Let WorkflowType(ByVal vNewValue As enWorkflowType)
     pWorkflowType = vNewValue
+End Property
+
+'---------------------------------------------------------------
+Public Property Get Lender() As ClsLender
+    Set Lender = pLender
+End Property
+
+Public Property Let Lender(ByRef vNewValue As ClsLender)
+    Set pLender = vNewValue
 End Property
 
 '---------------------------------------------------------------
@@ -202,6 +212,7 @@ Public Sub DBGet(WorkflowNo As String)
             If Not IsNull(!RAG) Then pRAG = enRAGVal(!RAG)
             If Not IsNull(!Member) Then pMember = !Member
             
+            pLender.DBGet !LenderNo
             pSteps.DeleteCollection
             pSteps.GetCollection
         End If
@@ -244,6 +255,8 @@ Public Sub DBSave()
         !Name = pName
         !Status = enStatusStr(Status)
         !RAG = enRAGStr(RAG)
+        !LenderNo = pLender.LenderNo
+        
         If Not Parent Is Nothing Then !ProjectNo = Parent.ProjectNo
         .Update
                     
@@ -403,6 +416,7 @@ Private Sub Class_Initialize()
     Set pSteps = New ClsSteps
     Set pActiveStep = New ClsStep
     Set pFrmInputBox = New FrmInputBox
+    Set pLender = New ClsLender
     pActiveStep.Initialize Me
     pSteps.Initialize Me
 End Sub
@@ -415,11 +429,13 @@ Public Sub Terminate()
     Set pSteps = Nothing
     Set pActiveStep = Nothing
     Set pFrmInputBox = Nothing
+    Set pLender = Nothing
 End Sub
 '---------------------------------------------------------------
 Private Sub Class_Terminate()
     Set pSteps = Nothing
     Set pActiveStep = Nothing
     Set pFrmInputBox = Nothing
+    Set pLender = Nothing
 End Sub
 '---------------------------------------------------------------

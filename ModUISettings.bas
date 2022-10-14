@@ -76,37 +76,35 @@ Public Const HEADER_ICON_TOP As Integer = 2
 Public Const HEADER_ICON_RIGHT As Integer = 10
 
 ' ---------------------------------------------------------------
-' For Action Screen
+' Generic Project Screen Settings
 ' ---------------------------------------------------------------
-Public Const FOR_ACTION_CELL_NOCOLS As Integer = 5
-Public Const FOR_ACTION_CELL_COL_WIDTHS As String = "100:200:200:290:100"
-Public Const FOR_ACTION_CELL_ROW_HEIGHTS As String = "50:50"
-Public Const FOR_ACTION_CELL_TITLES As String = "Workflow No:Name:Step No:Step Name:Status"
-Public Const FOR_ACTION_MAX_LINES As Integer = 40
+Public Const PROJECT_TABLE_COL_WIDTHS As String = "50:100:100:100:50:200:100"
+Public Const PROJECT_CELL_ROW_HEIGHTS As String = "50:50"
+Public Const PROJECT_TABLE_STYLES As String = "GENERIC_TABLE"
+Public Const PROJECT_TABLE_TITLES As String = "Project No:Client Name:SPV Name:Case Manager:Step No:Step Name:Status"
+Public Const PROJECT_MAX_LINES As Integer = 150
+Public Const PROJECT_BTN_MAIN_1_LEFT As Integer = 30
+Public Const PROJECT_BTN_MAIN_1_TOP As Integer = 20
+Public Const PROJECT_BTN_MAIN_2_LEFT As Integer = 155
+Public Const PROJECT_BTN_MAIN_2_TOP As Integer = 20
 
 ' ---------------------------------------------------------------
-' Active Screen
+' Project For Action Screen Settings
 ' ---------------------------------------------------------------
-Public Const ACTIVE_TABLE_COL_WIDTHS As String = "50:100:100:100:50:200:100"
-Public Const ACTIVE_CELL_ROW_HEIGHTS As String = "50:50"
-Public Const ACTIVE_TABLE_STYLES As String = "GENERIC_TABLE"
-Public Const ACTIVE_TABLE_TITLES As String = "Project No:Client Name:SPV Name:Case Manager:Step No:Step Name:Status"
-Public Const ACTIVE_MAX_LINES As Integer = 150
-Public Const ACTIVE_BTN_MAIN_1_LEFT As Integer = 30
-Public Const ACTIVE_BTN_MAIN_1_TOP As Integer = 20
-Public Const ACTIVE_BTN_MAIN_2_LEFT As Integer = 155
-Public Const ACTIVE_BTN_MAIN_2_TOP As Integer = 20
+Public Const PROJ_FOR_ACTION_HEADER_TEXT As String = "Project For Action"
 
 ' ---------------------------------------------------------------
-' Closed Screen
+' Project Active Screen Settings
 ' ---------------------------------------------------------------
-Public Const Closed_CELL_NOCOLS As Integer = 5
-Public Const Closed_CELL_COL_WIDTHS As String = "100:300:200:290:100"
-Public Const Closed_CELL_TITLES As String = "Workflow No:Name:Step No:Step Name:Status"
-Public Const Closed_MAX_LINES As Integer = 100
+Public Const PROJ_ACTIVE_HEADER_TEXT As String = "Active Projects"
 
 ' ---------------------------------------------------------------
-' CRM Screen
+' Project Closed Screen Settings
+' ---------------------------------------------------------------
+Public Const PROJ_CLOSED_HEADER_TEXT As String = "Closed Projects"
+
+' ---------------------------------------------------------------
+' Generic CRM Screen Settings
 ' ---------------------------------------------------------------
 Public Const CRM_BTN_MAIN_1_LEFT As Integer = 155
 Public Const CRM_BTN_MAIN_1_TOP As Integer = 20

@@ -9,3 +9,4 @@ Status,  dbText
 RAG,  dbText
 Deleted,  dbText
 DDate,  dbDate
+LenderNo,  dbLong

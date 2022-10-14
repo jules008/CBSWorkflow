@@ -17,10 +17,15 @@ Private Const StrMODULE As String = "ModUIButtonScripts"
 
 ' ===============================================================
 ' BtnProjectNewWFClick
+' Generates new project workflow
 ' ---------------------------------------------------------------
-Public Sub BtnProjectNewWFClick()
+Public Function BtnProjectNewWFClick(ScreenPage As enScreenPage) As Boolean
     Dim Picker As ClsFrmPicker
     
+    Const StrPROCEDURE As String = "BtnProjectNewWFClick()"
+
+    On Error GoTo ErrorHandler
+
     Set ActiveClient = New ClsClient
     Set ActiveSPV = New ClsSPV
     Set ActiveWorkFlow = New ClsWorkflow
@@ -36,8 +41,8 @@ Public Sub BtnProjectNewWFClick()
         .ClearForm
         .Show = True
         If .CreateNew Then
-            ActiveUser.DBNew
-            .SelectedItem = ActiveUser.UserName
+            ActiveClient.DBNew
+            .SelectedItem = ActiveClient.Name
         End If
     
     End With
@@ -98,7 +103,7 @@ Public Sub BtnProjectNewWFClick()
     ActiveProject.ProjectWorkflow = ActiveWorkFlow
     Debug.Assert ActiveProject.ProjectWorkflow.Steps.Count > 0
                 
-    FrmProject.ShowForm
+    FrmWFProject.ShowForm
     
     Debug.Assert Not ActiveClient Is Nothing
     Debug.Assert ActiveWorkFlow.Steps.Count > 0
@@ -112,8 +117,131 @@ Public Sub BtnProjectNewWFClick()
     Set ActiveClient = Nothing
     Set ActiveUser = Nothing
     
-'    If Not ModUIProjects.BuildScreen(ScreenPage) Then Err.Raise HANDLED_ERROR
-End Sub
+    If Not ModUIProjects.BuildScreen(ScreenPage) Then Err.Raise HANDLED_ERROR
+
+    BtnProjectNewWFClick = True
+
+Exit Function
+
+ErrorExit:
+
+    Set ActiveWorkFlow = Nothing
+    Set ActiveSPV = Nothing
+    Set ActiveProject = Nothing
+    Set Picker = Nothing
+    Set ActiveClient = Nothing
+    Set ActiveUser = Nothing
+    
+    BtnProjectNewWFClick = False
+
+Exit Function
+
+ErrorHandler:
+    If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
+        Stop
+        Resume
+    Else
+        Resume ErrorExit
+    End If
+End Function
+
+' ===============================================================
+' BtnLenderNewWFClick
+' Generates new lender workflow
+' ---------------------------------------------------------------
+Public Function BtnLenderNewWFClick(ScreenPage As enScreenPage) As Boolean
+    Dim Picker As ClsFrmPicker
+    Dim SQL As String
+    
+    Const StrPROCEDURE As String = "BtnLenderNewWFClick()"
+
+    On Error GoTo ErrorHandler
+    
+    Set ActiveClient = New ClsClient
+    Set ActiveProject = New ClsProject
+    Set ActiveSPV = New ClsSPV
+    Set ActiveWorkFlow = New ClsWorkflow
+    Set ActiveProject = New ClsProject
+    Set ActiveLender = New ClsLender
+    
+    Set Picker = New ClsFrmPicker
+    With Picker
+        .Title = "Select Project"
+        .Instructions = "Select the Project from the list that you would like to add a Lender Workflow to"
+        .Data = ModDatabase.SQLQuery("SELECT ProjectNo from TblProject")
+        .ClearForm
+        .Show = True
+    End With
+    
+    ActiveProject.DBGet Picker.SelectedItem
+
+    Set Picker = New ClsFrmPicker
+    With Picker
+        .Title = "Select Lender"
+        .Instructions = "Select the Lender from the list.  Select New if the Lender you require is not listed"
+        .Data = ModDatabase.SQLQuery("SELECT Name from TblLender")
+        .ClearForm
+        .Show = True
+        If .CreateNew Then
+            ActiveLender.DBNew
+            .SelectedItem = ActiveLender.Name
+        End If
+    End With
+    
+    ActiveLender.DBGet Picker.SelectedItem
+    
+    Set ActiveWorkFlow = New ClsWorkflow
+    
+    With ActiveWorkFlow
+        .Name = "Senior"
+        .WorkflowType = enLender
+        .Lender = ActiveLender
+        .DBSave
+    End With
+    
+    With ActiveProject
+        .Workflows.Add ActiveWorkFlow
+        .DBSave
+    End With
+    
+    If Not FrmWFLender.ShowForm Then Err.Raise HANDLED_ERROR
+    If Not ResetScreen Then Err.Raise HANDLED_ERROR
+    If Not ModUIProjects.BuildScreen(ScreenPage) Then Err.Raise HANDLED_ERROR
+    
+    Set ActiveWorkFlow = Nothing
+    Set ActiveSPV = Nothing
+    Set ActiveProject = Nothing
+    Set ActiveProject = Nothing
+    Set Picker = Nothing
+    Set ActiveLender = Nothing
+    Set ActiveClient = Nothing
+    
+    BtnLenderNewWFClick = True
+
+Exit Function
+
+ErrorExit:
+
+    Set ActiveWorkFlow = Nothing
+    Set ActiveSPV = Nothing
+    Set ActiveProject = Nothing
+    Set ActiveProject = Nothing
+    Set Picker = Nothing
+    Set ActiveLender = Nothing
+    Set ActiveClient = Nothing
+    
+    BtnLenderNewWFClick = False
+
+Exit Function
+
+ErrorHandler:
+    If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
+        Stop
+        Resume
+    Else
+        Resume ErrorExit
+    End If
+End Function
 
 ' ===============================================================
 ' BtnProjectOpenWFClick
