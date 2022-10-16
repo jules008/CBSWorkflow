@@ -50,6 +50,9 @@ Private pWait As Boolean
 'Private pEmail As ClsEmail
 'Private pAltEmail As ClsEmail
 Private pUniqueID As Integer
+Private pStepHelp As FrmStepHelp
+Private pStepHelpTitle As String
+Private pStepHelpBody As String
 Private pParent As ClsWorkflow
 
 '---------------------------------------------------------------
@@ -393,6 +396,13 @@ Public Sub DBGet(WorkflowNo As Integer, StepNo As String)
             If Not IsNull(!DataFormat) Then pDataFormat = !DataFormat
             If Not IsNull(!DataDest) Then pDataDest = !DataDest
             If Not IsNull(!UniqueID) Then pUniqueID = !UniqueID
+            If Not IsNull(!HelpText) Then
+                Dim HelpText() As String
+                HelpText = Split(!HelpText, ":")
+                pStepHelpTitle = HelpText(0)
+                pStepHelpBody = HelpText(1)
+            End If
+            
 '            If Not IsNull(!Email) And !Email <> 0 Then pEmail.DBGet !Email
 '            If Not IsNull(!AltEmail) And !AltEmail <> 0 Then pAltEmail.DBGet !AltEmail
         End If
@@ -428,6 +438,12 @@ Public Sub DBGetTemplate(StepNo As String)
             If Not IsNull(!WFName) Then pWFName = !WFName
             If Not IsNull(!UniqueID) Then pUniqueID = !UniqueID
             If Not IsNull(!Wait) Then pWait = !Wait
+            If Not IsNull(!HelpText) Then
+                Dim HelpText() As String
+                HelpText = Split(!HelpText, ":")
+                pStepHelpTitle = HelpText(0)
+                pStepHelpBody = HelpText(1)
+            End If
 '            If Not IsNull(!Email) And !Email <> 0 Then pEmail.DBGet !Email
 '            If Not IsNull(!AltEmail) And !AltEmail <> 0 Then pAltEmail.DBGet !AltEmail
             
@@ -506,6 +522,7 @@ Public Sub DBSave(Optional StepIndex As String)
 '        !AltEmail = pAltEmail.EmailNo
         !Wait = pWait
         !WorkflowNo = Parent.WorkflowNo
+        !HelpText = pStepHelpTitle & ":" & pStepHelpBody
         .Update
 
     End With
@@ -587,11 +604,24 @@ Public Sub Reset()
 End Sub
 
 ' ===============================================================
+' Method DisplayForm
+' displays client form
+' ---------------------------------------------------------------
+Public Sub DisplayForm()
+    With pStepHelp
+        .TxtTitle = pStepHelpTitle
+        .xTxtHelpText = pStepHelpBody
+        .Show
+    End With
+End Sub
+
+' ===============================================================
 Public Sub Initialize(obj As ClsWorkflow)
     Set Me.Parent = obj
 End Sub
     
 Private Sub Class_Initialize()
+    Set pStepHelp = New FrmStepHelp
 '    Set pEmail = New ClsEmail
 '    Set pAltEmail = New ClsEmail
 End Sub
@@ -601,11 +631,13 @@ Public Sub Terminate()
 '    pAltEmail.Terminate
 
     Set pParent = Nothing
+    Set pStepHelp = Nothing
 '    Set pEmail = Nothing
 '    Set pAltEmail = Nothing
 End Sub
 '---------------------------------------------------------------
 Private Sub Class_Terminate()
+    Set pStepHelp = Nothing
 '    Set pEmail = Nothing
 '    Set pAltEmail = Nothing
 End Sub

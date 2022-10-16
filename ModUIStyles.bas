@@ -226,8 +226,8 @@ Public Function BuildScreenStyles() As Boolean
     With SUB_TABLE_HEADER
         .Name = "GENERIC_TABLE_HEADER"
         .BorderWidth = GENERIC_TABLE_HEADER_BORDER_WIDTH
-        .Fill1 = GENERIC_TABLE_HEADER_FILL_1
-        .Fill2 = GENERIC_TABLE_HEADER_FILL_2
+        .Fill1 = SUB_TABLE_HEADER_FILL_1
+        .Fill2 = SUB_TABLE_HEADER_FILL_2
         .Shadow = GENERIC_TABLE_HEADER_SHADOW
         .FontStyle = GENERIC_TABLE_HEADER_FONT_STYLE
         .FontSize = GENERIC_TABLE_HEADER_FONT_SIZE

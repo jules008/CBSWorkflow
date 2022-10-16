@@ -1,6 +1,6 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FrmWFProject 
-   ClientHeight    =   9150.001
+   ClientHeight    =   9345.001
    ClientLeft      =   120
    ClientTop       =   465
    ClientWidth     =   15960
@@ -208,6 +208,19 @@ ErrorHandler:
 End Function
 
 ' ===============================================================
+' BtnChat_Click
+' ---------------------------------------------------------------
+Private Sub BtnChat_Click()
+    Dim Chatroom As ClsChatRoom
+    
+    Set Chatroom = New ClsChatRoom
+    
+    Chatroom.DisplayForm ActiveProject.ProjectNo
+    
+    Set Chatroom = Nothing
+End Sub
+
+' ===============================================================
 ' BtnClose_Click
 ' ---------------------------------------------------------------
 Private Sub BtnClose_Click()
@@ -244,6 +257,15 @@ Private Sub BtnComplete_Click()
         End With
     End With
     
+End Sub
+
+' ===============================================================
+' BtnHelp_Click
+' ---------------------------------------------------------------
+Private Sub BtnHelp_Click()
+    With ActiveProject.ProjectWorkflow.ActiveStep
+        .DisplayForm
+    End With
 End Sub
 
 ' ===============================================================

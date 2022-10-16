@@ -81,8 +81,11 @@ Private Function BuildMainFrame(ByVal ScreenPage As enScreenPage) As Boolean
     Set ButtonFrame = New ClsUIFrame
     Set BtnProjectNewWF = New ClsUIButton
     Set BtnNewLenderWF = New ClsUIButton
-    Set SubTable = New ClsUITable
-    Set MainFrame.Table.SubTable = New ClsUITable
+    
+    With MainFrame.Table
+        If Not .SubTable Is Nothing Then .SubTable.Terminate
+        Set .SubTable = New ClsUITable
+    End With
         
     MainScreen.Frames.AddItem MainFrame, "Main Frame"
     MainScreen.Frames.AddItem ButtonFrame, "Button Frame"
@@ -126,17 +129,12 @@ Private Function BuildMainFrame(ByVal ScreenPage As enScreenPage) As Boolean
             .HPad = GENERIC_TABLE_ROWOFFSET
             .VPad = GENERIC_TABLE_COLOFFSET
             .SubTableVOff = 50
-            .SubTableHOff = 20
+            .SubTableHOff = 10
             .HeadingText = PROJECT_TABLE_TITLES
             .HeadingStyle = GENERIC_TABLE_HEADER
             .HeadingHeight = GENERIC_TABLE_HEADING_HEIGHT
         End With
         
-        With .Table.SubTable
-            .HeadingText = PROJECT_SUB_TABLE_TITLES
-            .HeadingStyle = SUB_TABLE_HEADER
-            .HeadingHeight = GENERIC_TABLE_HEADING_HEIGHT
-        End With
     End With
     
     With ButtonFrame
@@ -178,6 +176,8 @@ Private Function BuildMainFrame(ByVal ScreenPage As enScreenPage) As Boolean
     
     ButtonFrame.Buttons.Add BtnProjectNewWF
     ButtonFrame.Buttons.Add BtnNewLenderWF
+    
+    MainScreen.ReOrder
     
     BuildMainFrame = True
 
@@ -231,6 +231,7 @@ Public Function RefreshList(ByVal ScreenPage As enScreenPage, Optional SortBy As
     End With
     
     With MainFrame.Table
+        .Name = "Table"
         .ColWidths = PROJECT_TABLE_COL_WIDTHS
         .RstText = RstWorkflowList
         .NoRows = RstWorkflowList.RecordCount
@@ -242,7 +243,12 @@ Public Function RefreshList(ByVal ScreenPage As enScreenPage, Optional SortBy As
         .RowHeight = GENERIC_TABLE_ROW_HEIGHT
     End With
     
-    With MainFrame.Table.SubTable
+    With MainFrame
+        With .Table.SubTable
+            .HeadingText = PROJECT_SUB_TABLE_TITLES
+            .HeadingStyle = SUB_TABLE_HEADER
+            .HeadingHeight = GENERIC_TABLE_HEADING_HEIGHT
+            .Name = "SubTable"
         .ColWidths = PROJECT_SUB_TABLE_COL_WIDTHS
         .StylesColl.Add GENERIC_TABLE
         .StylesColl.Add SUB_TABLE_HEADER
@@ -250,6 +256,7 @@ Public Function RefreshList(ByVal ScreenPage As enScreenPage, Optional SortBy As
         .StylesColl.Add AMBER_CELL
         .StylesColl.Add GREEN_CELL
         .RowHeight = GENERIC_TABLE_ROW_HEIGHT
+    End With
     End With
     
     NoRows = RstWorkflowList.RecordCount
@@ -273,7 +280,7 @@ Public Function RefreshList(ByVal ScreenPage As enScreenPage, Optional SortBy As
             AryStyles(x, y) = "GENERIC_TABLE"
                 End If
                 
-                If x = 1 Then
+                If x = 0 Then
                     AryOnAction(x, y) = "'ModUIProjects.SplitScreen(""" & y + 1 & ":" & !ProjectNo & """)'"
                 Else
                 AryOnAction(x, y) = "'ModUIButtonHandler.ProcessBtnClicks(""" & ScreenPage & ":" & enBtnProjectOpen & ":" & !ProjectNo & """)'"
@@ -281,20 +288,6 @@ Public Function RefreshList(ByVal ScreenPage As enScreenPage, Optional SortBy As
                 .MoveNext
         Next
     Next
-    End With
-    
-    If SplitRow = 0 Then
-        
-    Else
-    
-    End If
-    
-        If SplitRow <> RowNo Then
-            SplitRow = RowNo
-        Else
-            .BuildTable 0
-            SplitRow = 0
-        End If
     End With
     
     With MainFrame.Table
@@ -339,7 +332,8 @@ End Function
 ' SplitScreen
 ' Splits the screen and inserts the lender workflows
 ' ---------------------------------------------------------------
-Private Function SplitScreen(RowInfo As String) As Boolean
+Private Sub SplitScreen(RowInfo As String)
+    Dim ErrNo As Integer
     Dim RstWorkflows As Recordset
     Dim SQL As String
     Dim AryRowInfo() As String
@@ -356,6 +350,10 @@ Private Function SplitScreen(RowInfo As String) As Boolean
 
     On Error GoTo ErrorHandler
     
+Restart:
+
+    If MainScreen Is Nothing Then Err.Raise SYSTEM_RESTART
+    
     AryRowInfo = Split(RowInfo, ":")
     
     RowNo = CInt(AryRowInfo(0))
@@ -365,9 +363,16 @@ Private Function SplitScreen(RowInfo As String) As Boolean
     Debug.Assert RowNo > 0
     Debug.Assert ProjectNo > 0
     
+    If SplitRow = RowNo Then
+        MainFrame.Table.BuildTable 0
+        
+        SplitRow = 0
+        MainScreen.ReOrder
+    Else
     
     SQL = "SELECT TblWorkflow.WorkflowNo, TblLender.Name, TblWorkflow.CurrentStep, TblStepTemplate.StepName, TblWorkflow.Status " _
-            & "FROM TblStepTemplate INNER JOIN (TblWorkflow INNER JOIN TblLender ON TblWorkflow.LenderNo = TblLender.LenderNo) ON TblStepTemplate.StepNo = TblWorkflow.CurrentStep"
+                & "FROM TblStepTemplate RIGHT JOIN (TblWorkflow LEFT JOIN TblLender ON TblWorkflow.LenderNo = TblLender.LenderNo) ON TblStepTemplate.StepNo = TblWorkflow.CurrentStep " _
+                & "WHERE (((TblWorkflow.ProjectNo)= " & ProjectNo & "))"
 
     Set RstWorkflows = ModDatabase.SQLQuery(SQL)
     
@@ -400,36 +405,47 @@ Private Function SplitScreen(RowInfo As String) As Boolean
                     AryStyles(x, y) = "GENERIC_TABLE"
                 End If
                 
-                If x = 1 Then
-                    AryOnAction(x, y) = "'ModUIProjects.SplitScreen(" & y & ")'"
-                Else
                     AryOnAction(x, y) = "'ModUIButtonHandler.ProcessBtnClicks(""" & ScreenPage & ":" & enBtnProjectOpen & ":" & ProjectNo & """)'"
-                End If
                 .MoveNext
             Next
         Next
     End With
     
+        With MainFrame.Table.SubTable
+            .Styles = AryStyles
+            .OnAction = AryOnAction
+        End With
     
-    SplitScreen = True
+        SplitRow = RowNo
+        MainFrame.Table.BuildTable RowNo, 100
+        MainScreen.ReOrder
+    End If
+    
+GracefulExit:
 
-Exit Function
+
+Exit Sub
 
 ErrorExit:
 
     '***CleanUpCode***
-    SplitScreen = False
 
-Exit Function
+Exit Sub
 
 ErrorHandler:
-    If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
+    If Err.Number >= 2000 And Err.Number <= 2500 Then
+        ErrNo = Err.Number
+        CustomErrorHandler (Err.Number)
+        If ErrNo = SYSTEM_RESTART Then Resume Restart Else Resume GracefulExit
+    End If
+
+    If CentralErrorHandler(StrMODULE, StrPROCEDURE, , True) Then
         Stop
         Resume
     Else
         Resume ErrorExit
     End If
-End Function
+End Sub
 
 ' ===============================================================
 ' Method GetActiveList

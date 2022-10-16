@@ -26,6 +26,7 @@ Option Explicit
 
 Private pCells As ClsUICells
 Private pSubTable As ClsUITable
+Private pName As String
 Private pTop As Integer
 Private pLeft As Integer
 Private pHeight As Integer
@@ -67,6 +68,15 @@ Public Property Set SubTable(ByVal vNewValue As ClsUITable)
 End Property
 
 '---------------------------------------------------------------
+Public Property Get Name() As String
+    Name = pName
+End Property
+
+Public Property Let Name(ByVal vNewValue As String)
+    pName = vNewValue
+End Property
+
+'---------------------------------------------------------------
 Public Property Get Top() As Integer
         Top = pTop
 End Property
@@ -98,7 +108,7 @@ Public Property Get Height() As Integer
     Dim i As Integer
     Dim DefHeight As Integer
     
-    pHeight = (NoRows + 1) * (pHeight + pVPad)
+    pHeight = (NoRows + 1) * (pRowHeight + pVPad)
     
     Height = pHeight
 End Property
@@ -141,10 +151,18 @@ Public Property Let VPad(ByVal vNewValue As Integer)
     pVPad = vNewValue
 End Property
     
+Public Property Get SubTableVOff() As Integer
+    SubTableVOff = pSubTableVOff
+End Property
+    
 Public Property Let SubTableVOff(ByVal vNewValue As Integer)
     pSubTableVOff = vNewValue
 End Property
     
+Public Property Get SubTableHOff() As Integer
+    SubTableHOff = SubTableHOff
+End Property
+
 Public Property Let SubTableHOff(ByVal vNewValue As Integer)
     pSubTableHOff = vNewValue
 End Property
@@ -332,14 +350,14 @@ Public Sub BuildTable(Optional SplitRow As Integer, Optional SplitSize As Intege
             If SplitRow <> 0 Then
                 If y = SplitRow + 1 Then
                     
-                    SplitFrame SplitRow, SplitSize
+                    SplitFrame SplitRow, pSubTable.Height
                         
                     With pSubTable
                         .Top = pTop + RowOffset + pSubTableHOff
                         .Left = Me.Left + pSubTableVOff
                         .BuildSubTable
                     End With
-                    RowOffset = RowOffset + SplitSize
+                    RowOffset = RowOffset + pSubTable.Height + (2 * pSubTableHOff)
                     
                 End If
             End If
@@ -460,6 +478,13 @@ Public Sub BuildSubTable()
 End Sub
 
 ' ===============================================================
+' Method RemoveSubTable
+' Removes the subtable from view
+'---------------------------------------------------------------
+Public Sub RemoveSubTable()
+End Sub
+
+' ===============================================================
 ' Method SplitFrame
 ' Splits the parent frame when the table is split
 '---------------------------------------------------------------
@@ -482,12 +507,14 @@ Private Sub SplitFrame(RowNo As Integer, Optional SplitSize As Integer)
         End With
         
         With MainScreen.Frames("Frame 2")
-            .Top = MainFrame.Top + Frame1Height + SplitSize
+            .Top = MainFrame.Top + Frame1Height + SplitSize + (pSubTableHOff * 2)
             .Left = MainFrame.Left
             .Width = MainFrame.Width
             .Height = Frame2Height
             .Style = MainFrame.Style
             .Visible = True
+            .ZOrder = 2
+
         End With
     Else
         With MainFrame
@@ -496,6 +523,7 @@ Private Sub SplitFrame(RowNo As Integer, Optional SplitSize As Integer)
         If Not MainScreen.Frames("Frame 2") Is Nothing Then
             
             MainScreen.Frames("Frame 2").Terminate
+            MainFrame.Table.SubTable.TableVisible = False
             Set Frame2 = Nothing
         End If
     End If
@@ -518,15 +546,23 @@ Public Sub Terminate()
     Set Me.Parent = Nothing
     pCells.Terminate
     
+    If Not pSubTable Is Nothing Then
+        pSubTable.Terminate
+        Set pSubTable = Nothing
+    End If
+    
     Set pCells = Nothing
-    If Not pSubTable Is Nothing Then Set pSubTable = Nothing
     Set pStylesColl = Nothing
 End Sub
 '---------------------------------------------------------------
 Private Sub Class_Terminate()
     Set pCells = Nothing
-    If Not pSubTable Is Nothing Then Set pSubTable = Nothing
     Set pStylesColl = Nothing
+    
+    If Not pSubTable Is Nothing Then
+        pSubTable.Terminate
+        Set pSubTable = Nothing
+    End If
 End Sub
 ' ===============================================================
 

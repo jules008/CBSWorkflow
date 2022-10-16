@@ -24,3 +24,15 @@ Public Sub TestPicker()
     Set Picker = Nothing
     Set RstData = Nothing
 End Sub
+
+Public Sub TestChat()
+    Dim Chatroom As ClsChatRoom
+    
+    Set Chatroom = New ClsChatRoom
+    
+    Chatroom.DisplayForm 1
+    
+    
+    
+    Set Chatroom = Nothing
+End Sub

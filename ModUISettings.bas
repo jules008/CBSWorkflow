@@ -224,6 +224,12 @@ Public Const GENERIC_TABLE_HEADER_FONT_X_JUST As Integer = xlHAlignCenter
 Public Const GENERIC_TABLE_HEADER_FONT_Y_JUST As Integer = xlVAlignBottom
 
 ' ---------------------------------------------------------------
+' Sub Table Header
+' ---------------------------------------------------------------
+Public Const SUB_TABLE_HEADER_FILL_1 As Long = COL_AQUA
+Public Const SUB_TABLE_HEADER_FILL_2 As Long = COL_AQUA
+
+' ---------------------------------------------------------------
 ' Text Box
 ' ---------------------------------------------------------------
 Public Const TRANSPARENT_TEXT_BOX_BORDER_WIDTH As Single = 0

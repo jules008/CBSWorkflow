@@ -137,6 +137,14 @@ Type TypeAddress
     Country As String
     Postcode As String
 End Type
+
+Type TypeChatEntry
+    ProjectNo As Integer
+    UserName As String
+    EntryDateTime As Date
+    Message As String
+End Type
+
 ' ===============================================================
 ' Enum Declarations
 ' ---------------------------------------------------------------
