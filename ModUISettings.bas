@@ -70,7 +70,6 @@ Public Const LOGO_TOP As Integer = 13
 Public Const LOGO_LEFT As Integer = 5
 Public Const LOGO_WIDTH As Integer = 139
 Public Const LOGO_HEIGHT As Integer = 90
-'
 Public Const HEADER_HEIGHT As Integer = 25
 Public Const HEADER_ICON_TOP As Integer = 2
 Public Const HEADER_ICON_RIGHT As Integer = 10
@@ -87,6 +86,12 @@ Public Const PROJECT_BTN_MAIN_1_LEFT As Integer = 30
 Public Const PROJECT_BTN_MAIN_1_TOP As Integer = 20
 Public Const PROJECT_BTN_MAIN_2_LEFT As Integer = 155
 Public Const PROJECT_BTN_MAIN_2_TOP As Integer = 20
+
+' ---------------------------------------------------------------
+' Project Sub Table Settings
+' ---------------------------------------------------------------
+Public Const PROJECT_SUB_TABLE_COL_WIDTHS As String = "100:200:100:200:100"
+Public Const PROJECT_SUB_TABLE_TITLES As String = "Workflow No:Lender Name:Step No:Step Name:Status"
 
 ' ---------------------------------------------------------------
 ' Project For Action Screen Settings
@@ -165,6 +170,7 @@ Public GREEN_CELL As ClsUIStyle
 Public AMBER_CELL As ClsUIStyle
 Public RED_CELL As ClsUIStyle
 Public GENERIC_TABLE_HEADER As ClsUIStyle
+Public SUB_TABLE_HEADER As ClsUIStyle
 
 ' ---------------------------------------------------------------
 ' New Order Workflow

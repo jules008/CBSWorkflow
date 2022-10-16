@@ -90,6 +90,7 @@ Public ActiveClient As ClsClient
 Public ActiveSPV As ClsSPV
 Public ActiveUser As ClsCBSUser
 Public CTimer As ClsCodeTimer
+Public SubTable As ClsUITable
 
 ' ===============================================================
 ' Global UI Class Declarations

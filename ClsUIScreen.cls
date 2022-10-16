@@ -94,7 +94,7 @@ Public Property Get Frames() As ClsUIFrames
     Set Frames = pFrames
 End Property
 
-Public Property Let Frames(ByVal vNewValue As ClsUIFrames)
+Public Property Let Frames(ByRef vNewValue As ClsUIFrames)
     Set pFrames = vNewValue
 End Property
 '

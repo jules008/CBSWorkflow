@@ -240,7 +240,7 @@ Public Function ResetScreen() As Boolean
         
     For Each Frame In MainScreen.Frames
         If Frame.Name <> "MenuBar" Then
-            MainScreen.Frames.RemoveItem Frame.Name
+            MainScreen.Frames.RemoveItem Frame
             Frame.Terminate
             Set Frame = Nothing
         End If

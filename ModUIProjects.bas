@@ -15,6 +15,7 @@ Option Explicit
 
 Private Const StrMODULE As String = "ModUIProjects"
 Private ScreenPage As String
+Private SplitRow As Integer
 
 ' ===============================================================
 ' BuildScreen
@@ -63,7 +64,7 @@ End Function
 
 ' ===============================================================
 ' BuildMainFrame
-' Builds main frame at top of screen
+' Builds screen components
 ' ---------------------------------------------------------------
 Private Function BuildMainFrame(ByVal ScreenPage As enScreenPage) As Boolean
     Dim HeaderText As String
@@ -80,6 +81,8 @@ Private Function BuildMainFrame(ByVal ScreenPage As enScreenPage) As Boolean
     Set ButtonFrame = New ClsUIFrame
     Set BtnProjectNewWF = New ClsUIButton
     Set BtnNewLenderWF = New ClsUIButton
+    Set SubTable = New ClsUITable
+    Set MainFrame.Table.SubTable = New ClsUITable
         
     MainScreen.Frames.AddItem MainFrame, "Main Frame"
     MainScreen.Frames.AddItem ButtonFrame, "Button Frame"
@@ -126,6 +129,12 @@ Private Function BuildMainFrame(ByVal ScreenPage As enScreenPage) As Boolean
             .SubTableHOff = 20
             .HeadingText = PROJECT_TABLE_TITLES
             .HeadingStyle = GENERIC_TABLE_HEADER
+            .HeadingHeight = GENERIC_TABLE_HEADING_HEIGHT
+        End With
+        
+        With .Table.SubTable
+            .HeadingText = PROJECT_SUB_TABLE_TITLES
+            .HeadingStyle = SUB_TABLE_HEADER
             .HeadingHeight = GENERIC_TABLE_HEADING_HEIGHT
         End With
     End With
@@ -233,6 +242,16 @@ Public Function RefreshList(ByVal ScreenPage As enScreenPage, Optional SortBy As
         .RowHeight = GENERIC_TABLE_ROW_HEIGHT
     End With
     
+    With MainFrame.Table.SubTable
+        .ColWidths = PROJECT_SUB_TABLE_COL_WIDTHS
+        .StylesColl.Add GENERIC_TABLE
+        .StylesColl.Add SUB_TABLE_HEADER
+        .StylesColl.Add RED_CELL
+        .StylesColl.Add AMBER_CELL
+        .StylesColl.Add GREEN_CELL
+        .RowHeight = GENERIC_TABLE_ROW_HEIGHT
+    End With
+    
     NoRows = RstWorkflowList.RecordCount
     NoCols = MainFrame.Table.NoCols
     
@@ -254,16 +273,34 @@ Public Function RefreshList(ByVal ScreenPage As enScreenPage, Optional SortBy As
             AryStyles(x, y) = "GENERIC_TABLE"
                 End If
                 
+                If x = 1 Then
+                    AryOnAction(x, y) = "'ModUIProjects.SplitScreen(""" & y + 1 & ":" & !ProjectNo & """)'"
+                Else
                 AryOnAction(x, y) = "'ModUIButtonHandler.ProcessBtnClicks(""" & ScreenPage & ":" & enBtnProjectOpen & ":" & !ProjectNo & """)'"
+                End If
                 .MoveNext
         Next
     Next
     End With
     
+    If SplitRow = 0 Then
+        
+    Else
+    
+    End If
+    
+        If SplitRow <> RowNo Then
+            SplitRow = RowNo
+        Else
+            .BuildTable 0
+            SplitRow = 0
+        End If
+    End With
+    
     With MainFrame.Table
         .Styles = AryStyles
         .OnAction = AryOnAction
-        .BuildCells
+        .BuildTable
     End With
     
     ModLibrary.PerfSettingsOff
@@ -286,6 +323,102 @@ ErrorExit:
     ModLibrary.PerfSettingsOff
     
     RefreshList = False
+
+Exit Function
+
+ErrorHandler:
+    If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
+        Stop
+        Resume
+    Else
+        Resume ErrorExit
+    End If
+End Function
+
+' ===============================================================
+' SplitScreen
+' Splits the screen and inserts the lender workflows
+' ---------------------------------------------------------------
+Private Function SplitScreen(RowInfo As String) As Boolean
+    Dim RstWorkflows As Recordset
+    Dim SQL As String
+    Dim AryRowInfo() As String
+    Dim AryStyles() As String
+    Dim AryOnAction() As String
+    Dim NoCols As Integer
+    Dim NoRows As Integer
+    Dim y As Integer
+    Dim x As Integer
+    Dim RowNo As Integer
+    Dim ProjectNo As Integer
+    
+    Const StrPROCEDURE As String = "SplitScreen()"
+
+    On Error GoTo ErrorHandler
+    
+    AryRowInfo = Split(RowInfo, ":")
+    
+    RowNo = CInt(AryRowInfo(0))
+    ProjectNo = CInt(AryRowInfo(1))
+    
+    Debug.Assert RowInfo <> ""
+    Debug.Assert RowNo > 0
+    Debug.Assert ProjectNo > 0
+    
+    
+    SQL = "SELECT TblWorkflow.WorkflowNo, TblLender.Name, TblWorkflow.CurrentStep, TblStepTemplate.StepName, TblWorkflow.Status " _
+            & "FROM TblStepTemplate INNER JOIN (TblWorkflow INNER JOIN TblLender ON TblWorkflow.LenderNo = TblLender.LenderNo) ON TblStepTemplate.StepNo = TblWorkflow.CurrentStep"
+
+    Set RstWorkflows = ModDatabase.SQLQuery(SQL)
+    
+    With RstWorkflows
+        .MoveLast
+        .MoveFirst
+        NoRows = .RecordCount
+        NoCols = .Fields.Count
+    End With
+    
+    With MainFrame.Table.SubTable
+        .RstText = RstWorkflows
+        .NoRows = RstWorkflows.RecordCount
+    End With
+    
+    ReDim AryStyles(0 To NoCols - 1, 0 To NoRows - 1)
+    ReDim AryOnAction(0 To NoCols - 1, 0 To NoRows - 1)
+    
+    With RstWorkflows
+    
+        For x = 0 To NoCols - 1
+            .MoveFirst
+            For y = 0 To NoRows - 1
+                
+                If x = 6 Then
+                    If !RAG = "en1Red" Then AryStyles(x, y) = "RED_CELL"
+                    If !RAG = "en2Amber" Then AryStyles(x, y) = "AMBER_CELL"
+                    If !RAG = "en3Green" Then AryStyles(x, y) = "GREEN_CELL"
+                Else
+                    AryStyles(x, y) = "GENERIC_TABLE"
+                End If
+                
+                If x = 1 Then
+                    AryOnAction(x, y) = "'ModUIProjects.SplitScreen(" & y & ")'"
+                Else
+                    AryOnAction(x, y) = "'ModUIButtonHandler.ProcessBtnClicks(""" & ScreenPage & ":" & enBtnProjectOpen & ":" & ProjectNo & """)'"
+                End If
+                .MoveNext
+            Next
+        Next
+    End With
+    
+    
+    SplitScreen = True
+
+Exit Function
+
+ErrorExit:
+
+    '***CleanUpCode***
+    SplitScreen = False
 
 Exit Function
 

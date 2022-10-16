@@ -213,7 +213,7 @@ End Property
 
 '---------------------------------------------------------------
 Public Property Get Style() As ClsUIStyle
-    Style = pStyle
+    Set Style = pStyle
 End Property
 
 Public Property Let Style(vNewValue As ClsUIStyle)
@@ -299,6 +299,8 @@ Public Sub Terminate()
     pTable.Terminate
     pCells.Terminate
     pButtons.Terminate
+    
+    pParent.Frames.RemoveItem Me
     
     Set pParent = Nothing
     pShpFrame.Delete

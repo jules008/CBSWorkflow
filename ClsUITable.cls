@@ -25,6 +25,7 @@ Attribute VB_Exposed = False
 Option Explicit
 
 Private pCells As ClsUICells
+Private pSubTable As ClsUITable
 Private pTop As Integer
 Private pLeft As Integer
 Private pHeight As Integer
@@ -54,6 +55,15 @@ End Property
 
 Public Property Let Cells(ByVal vNewValue As ClsUICells)
     Set pCells = vNewValue
+End Property
+
+'---------------------------------------------------------------
+Public Property Get SubTable() As ClsUITable
+    Set SubTable = pSubTable
+End Property
+
+Public Property Set SubTable(ByVal vNewValue As ClsUITable)
+    Set pSubTable = vNewValue
 End Property
 
 '---------------------------------------------------------------
@@ -283,18 +293,16 @@ Public Sub ReOrder()
 End Sub
 
 ' ===============================================================
-' Method BuildCells
+' Method BuildTable
 ' Builds matrix of cells once dimensions are received.
 '---------------------------------------------------------------
-Public Sub BuildCells(Optional SplitRow As Integer, Optional SplitSize As Integer, Optional SubTable As ClsUITable)
+Public Sub BuildTable(Optional SplitRow As Integer, Optional SplitSize As Integer)
     Dim x, y As Integer
     Dim Cell As ClsUICell
     Dim ColOffset As Integer
     Dim RowOffset As Integer
     
-    Debug.Print "Buildcells"
-       
-    Debug.Assert pNoCols > 0 And pNoRows > 0
+    If SplitRow = 0 Then SplitFrame 0
     
     If pNoCols > 0 And pNoRows > 0 Then
         pCells.DeleteCollection
@@ -324,20 +332,92 @@ Public Sub BuildCells(Optional SplitRow As Integer, Optional SplitSize As Intege
             If SplitRow <> 0 Then
                 If y = SplitRow + 1 Then
                     
-'                    SubTable.Initialize Me.Parent
-                    
-                    With SubTable
+                    SplitFrame SplitRow, SplitSize
                         
+                    With pSubTable
                         .Top = pTop + RowOffset + pSubTableHOff
                         .Left = Me.Left + pSubTableVOff
-                    
-                        .BuildCells
-                        RowOffset = RowOffset + .Height + pVPad + (pSubTableHOff * 2)
-                    
+                        .BuildSubTable
                     End With
+                    RowOffset = RowOffset + SplitSize
                     
                 End If
             End If
+                    
+            For x = 0 To pNoCols - 1
+                Set Cell = New ClsUICell
+                Cell.Name = "Cell - " & x & "-" & y
+                pCells.AddCell Cell, x, y
+                With Cell
+                    .Left = .Parent.Left + ColOffset
+                    .Top = .Parent.Top + RowOffset
+                    .Width = pColWidths(x)
+                    If y = 0 Then
+                        .Text = pHeadingText(x)
+                    Else
+                        'cater for blank columns with no data
+                        If x < pRstText.Fields.Count Then
+                        If Not IsNull(pRstText.Fields(x)) Then .Text = pRstText.Fields(x)
+                        .OnAction = pOnAction(x, y - 1)
+                        End If
+                    End If
+                    
+                    If pStyles(x, y - 1) = "" Then
+                        If pStyles(1, y - 1) = "" Then
+                            .Style = pStylesColl.Find(pStyles(1, 2))
+                        Else
+                            .Style = pStylesColl.Find(pStyles(1, y))
+                End If
+                    Else
+                        .Style = pStylesColl.Find(pStyles(x, y - 1))
+            End If
+            
+                    .Height = pRowHeight
+                End With
+                ColOffset = ColOffset + Cell.Width + HPad
+        Next
+            pRstText.MoveNext
+            ColOffset = 0
+            RowOffset = RowOffset + Cell.Height + VPad
+                    
+    Next
+    End If
+End Sub
+
+' ===============================================================
+' Method BuildSubTable
+' Builds the sub table in the main table split
+'---------------------------------------------------------------
+Public Sub BuildSubTable()
+    Dim x, y As Integer
+    Dim Cell As ClsUICell
+    Dim ColOffset As Integer
+    Dim RowOffset As Integer
+    
+    If pNoCols > 0 And pNoRows > 0 Then
+        pCells.DeleteCollection
+        
+        'heading
+        For x = 0 To pNoCols - 1
+            Set Cell = New ClsUICell
+            Cell.Name = "Cell - " & x & "-" & "0"
+            pCells.AddCell Cell, x, y
+            With Cell
+                .Left = .Parent.Left + ColOffset
+                .Top = .Parent.Top + RowOffset
+                .Width = pColWidths(x)
+                .Text = pHeadingText(x)
+                .OnAction = pOnAction(x, 0)
+                .Style = pHeadingStyle
+                .Height = pHeadingHeight
+            End With
+            ColOffset = ColOffset + Cell.Width + HPad
+        Next
+        ColOffset = 0
+        RowOffset = pHeadingHeight
+        
+        pRstText.MoveFirst
+        For y = 1 To pNoRows
             
             For x = 0 To pNoCols - 1
                 Set Cell = New ClsUICell
@@ -380,6 +460,48 @@ Public Sub BuildCells(Optional SplitRow As Integer, Optional SplitSize As Intege
 End Sub
 
 ' ===============================================================
+' Method SplitFrame
+' Splits the parent frame when the table is split
+'---------------------------------------------------------------
+Private Sub SplitFrame(RowNo As Integer, Optional SplitSize As Integer)
+    Dim Frame1Height As Integer
+    Dim Frame2Height As Integer
+    Dim Frame2 As ClsUIFrame
+    
+    Frame1Height = pParent.Header.Height + ((RowNo + 1) * pRowHeight)
+    Frame2Height = (pNoRows - RowNo) * pRowHeight
+    
+    If RowNo > 0 Then
+        If MainScreen.Frames("Frame 2") Is Nothing Then
+            Set Frame2 = New ClsUIFrame
+            MainScreen.Frames.AddItem Frame2, "Frame 2"
+        End If
+        
+        With MainFrame
+            .Height = Frame1Height
+        End With
+        
+        With MainScreen.Frames("Frame 2")
+            .Top = MainFrame.Top + Frame1Height + SplitSize
+            .Left = MainFrame.Left
+            .Width = MainFrame.Width
+            .Height = Frame2Height
+            .Style = MainFrame.Style
+            .Visible = True
+        End With
+    Else
+        With MainFrame
+            .Height = pParent.Header.Height + ((pNoRows + 1) * pRowHeight)
+        End With
+        If Not MainScreen.Frames("Frame 2") Is Nothing Then
+            
+            MainScreen.Frames("Frame 2").Terminate
+            Set Frame2 = Nothing
+        End If
+    End If
+End Sub
+
+' ===============================================================
 Public Sub Initialize(obj As ClsUIFrame)
     Set Me.Parent = obj
 End Sub
@@ -397,11 +519,13 @@ Public Sub Terminate()
     pCells.Terminate
     
     Set pCells = Nothing
+    If Not pSubTable Is Nothing Then Set pSubTable = Nothing
     Set pStylesColl = Nothing
 End Sub
 '---------------------------------------------------------------
 Private Sub Class_Terminate()
     Set pCells = Nothing
+    If Not pSubTable Is Nothing Then Set pSubTable = Nothing
     Set pStylesColl = Nothing
 End Sub
 ' ===============================================================

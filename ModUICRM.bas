@@ -285,7 +285,7 @@ Public Function RefreshList(ByVal ScreenPage As enScreenPage, Optional SortBy As
     With MainFrame.Table
         .Styles = AryStyles
         .OnAction = AryOnAction
-        .BuildCells
+        .BuildTable
     End With
     
     ModLibrary.PerfSettingsOff

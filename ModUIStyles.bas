@@ -36,6 +36,7 @@ Public Function BuildScreenStyles() As Boolean
     Set AMBER_CELL = New ClsUIStyle
     Set RED_CELL = New ClsUIStyle
     Set GENERIC_TABLE_HEADER = New ClsUIStyle
+    Set SUB_TABLE_HEADER = New ClsUIStyle
 
     With SCREEN_STYLE
         .Name = "SCREEN_STYLE"
@@ -209,6 +210,20 @@ Public Function BuildScreenStyles() As Boolean
     End With
 
     With GENERIC_TABLE_HEADER
+        .Name = "GENERIC_TABLE_HEADER"
+        .BorderWidth = GENERIC_TABLE_HEADER_BORDER_WIDTH
+        .Fill1 = GENERIC_TABLE_HEADER_FILL_1
+        .Fill2 = GENERIC_TABLE_HEADER_FILL_2
+        .Shadow = GENERIC_TABLE_HEADER_SHADOW
+        .FontStyle = GENERIC_TABLE_HEADER_FONT_STYLE
+        .FontSize = GENERIC_TABLE_HEADER_FONT_SIZE
+        .FontBold = GENERIC_TABLE_HEADER_FONT_BOLD
+        .FontColour = GENERIC_TABLE_HEADER_FONT_COLOUR
+        .FontXJust = GENERIC_TABLE_HEADER_FONT_X_JUST
+        .FontVJust = GENERIC_TABLE_HEADER_FONT_Y_JUST
+    End With
+
+    With SUB_TABLE_HEADER
         .Name = "GENERIC_TABLE_HEADER"
         .BorderWidth = GENERIC_TABLE_HEADER_BORDER_WIDTH
         .Fill1 = GENERIC_TABLE_HEADER_FILL_1
