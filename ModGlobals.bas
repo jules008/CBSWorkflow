@@ -21,6 +21,7 @@ Public Const PROJECT_FILE_NAME As String = "CBS Workflow"
 Public Const APP_NAME As String = "CBSWorkflow"
 Public Const DB_FILE_NAME As String = "CBSWorkflowDB"
 Public Const INI_FILE_PATH As String = "\System Files\"
+Public Const PICTURES_PATH As String = "\System Files\Icons\"
 Public Const ERROR_PATH As String = "\System Files\"
 Public Const DEV_FILE_PATH As String = "C:\Users\jules\OneDrive\Documents\Development Areas\CBS Workflow\"
 Public Const TMP_FILES As String = "\System Files\Tmp\"
@@ -35,10 +36,10 @@ Public Const SEND_ERR_MSG As Boolean = False
 Public Const TEST_PREFIX As String = "TEST - "
 Public Const BACKUP_INT As Integer = 5
 Public Const FILE_ERROR_LOG As String = "Error.log"
-Public Const OLD_DB_VER = "V0.0.1"
+Public Const OLD_DB_VER = "V0.00.00"
 Public Const DB_VER = "V0.0.2"
-Public Const VERSION = "V0.0.1"
-Public Const VER_DATE = "16 Aug 22"
+Public Const VERSION = "V0.01.01"
+Public Const VER_DATE = "17 Oct 22"
 ' ===============================================================
 ' Error Constants
 ' ---------------------------------------------------------------

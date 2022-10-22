@@ -42,8 +42,6 @@ Restart:
     
     If UBound(AryBtn) = 1 Then BtnIndex = AryBtn(1)
     
-    ShtMain.Unprotect PROTECT_KEY
-    
     Select Case BtnNo
     
         Case enBtnProjectNew
@@ -67,8 +65,6 @@ Restart:
             BtnCRMOpenItem ScreenPage
             
     End Select
-
-    If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
 
 GracefulExit:
 

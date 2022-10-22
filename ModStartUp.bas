@@ -95,11 +95,7 @@ Public Function Initialize() As Boolean
     
     If Not ModUIMenu.ButtonClickEvent("1") Then Err.Raise HANDLED_ERROR
     
-    ShtMain.Unprotect PROTECT_KEY
-
 '    MenuBar.Menu(1).BadgeText = Workflows.CountForAction
-    
-    If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
     
     FrmStartBanner.Progress "", 7 / 7 * 100
    

@@ -35,7 +35,11 @@ Private pActiveStep As ClsStep
 Private pStatus As enStatus
 Private pFrmInputBox As FrmInputBox
 Private pSteps As ClsSteps
+Private pChatRoom As ClsChatRoom
 Private pParent As ClsProject
+
+Private WithEvents pProjWFForm As FrmWFProject
+Attribute pProjWFForm.VB_VarHelpID = -1
 
 '---------------------------------------------------------------
 Public Property Get Deleted() As Date
@@ -138,7 +142,8 @@ End Property
 
 '---------------------------------------------------------------
 Public Property Get ActiveStep() As ClsStep
-    Set ActiveStep = pSteps(pWorkflowNo & "-" & pCurrentStep)
+    Set pActiveStep = pSteps(pWorkflowNo & "-" & pCurrentStep)
+    Set ActiveStep = pActiveStep
 End Property
 
 Public Property Let ActiveStep(ByRef vNewValue As ClsStep)
@@ -191,6 +196,83 @@ End Property
 Public Property Set Parent(newval As ClsProject)
     Set pParent = newval
 End Property
+
+' ===============================================================
+' Method DBNew
+' displays new workflow form
+' ---------------------------------------------------------------
+Public Sub DBNew()
+    pActiveStep.Start
+    DBSave
+    
+    With pProjWFForm
+        .Tag = "New"
+'        .ClearForm
+        .Show
+    End With
+End Sub
+
+' ===============================================================
+' Method DisplayForm
+' displays client form
+' ---------------------------------------------------------------
+Public Sub DisplayForm()
+    Dim ProgPC As Single
+'    Dim Step As ClsStep
+    Dim TmpWorkflow As ClsWorkflow
+    
+    ProgPC = pSteps.PCClosed
+    
+    With pProjWFForm
+        .Progress ProgPC
+        .TxtClientName = pParent.Client.Name
+        .TxtSPVName = pParent.SPV.Name
+        .TxtProjectNo = pParent.ProjectNo
+        .TxtCaseManager = pParent.CaseManager.UserName
+        .TxtLoanTerm = pParent.LoanTerm
+        .TxtCommision = pParent.CBSComPC
+        .ChkExitFee = pParent.ExitFee
+        .TxtStepName = pActiveStep.StepNo & " - " & pActiveStep.StepName
+        .xTxtAction = pActiveStep.StepAction
+    
+        Select Case pActiveStep.StepType
+            Case enYesNo
+                .TxtDataInput.Visible = False
+                .BtnNo.Visible = True
+                .BtnComplete.Visible = True
+                .BtnComplete.Caption = "Yes"
+            
+            Case enStep
+                .TxtDataInput.Visible = False
+                .BtnNo.Visible = False
+                .BtnComplete.Visible = True
+                .BtnComplete.Caption = "Step Complete"
+            
+            Case enDataInput
+                .TxtDataInput.Visible = True
+                .TxtDataInput.Value = ""
+                .BtnNo.Visible = False
+                .BtnComplete.Visible = True
+                .BtnComplete.Caption = "Step Complete"
+       
+                If pActiveStep.DataFormat = "Date" And .TxtDataInput = "" Then
+                    Set TmpWorkflow = ActiveProject.ProjectWorkflow
+                    .TxtDataInput = Format(FrmCalPicker.ShowForm, "dd mmm yy")
+                    Set ActiveProject.ProjectWorkflow = TmpWorkflow
+                End If
+            
+            Case enAltBranch
+                .TxtDataInput.Visible = False
+                .BtnCopyText.Visible = False
+                .BtnNo.Visible = True
+                .BtnComplete.Visible = True
+                .BtnComplete.Caption = "Yes"
+        End Select
+        .Show
+    End With
+    
+    Set TmpWorkflow = Nothing
+End Sub
 
 ' ===============================================================
 ' Method DBGet
@@ -407,6 +489,85 @@ Public Sub Pause()
 End Sub
 
 ' ===============================================================
+' Event pProjWFForm_ClickNo
+' Event on clicking no button
+' ---------------------------------------------------------------
+Private Sub pProjWFForm_ClickNo()
+    MoveToAltStep
+    With pProjWFForm
+        If pActiveStep.LastStep Then
+            Unload pProjWFForm
+        Else
+            If pActiveStep.Wait Then
+                DBSave
+                .Hide
+            Else
+                DisplayForm
+            End If
+        End If
+    End With
+End Sub
+
+' ===============================================================
+' Event pProjWFForm_CloseForm
+' Event on clicking close workflow
+' ---------------------------------------------------------------
+Private Sub pProjWFForm_CloseForm()
+    DBSave
+    Unload pProjWFForm
+End Sub
+
+' ===============================================================
+' Event pProjWFForm_PrevStep
+' Event on clicking previous step
+' ---------------------------------------------------------------
+Private Sub pProjWFForm_PrevStep()
+    MoveToPrevStep
+    pActiveStep.Start
+    DBSave
+    
+    pProjWFForm.TxtDataInput = ""
+    
+    DisplayForm
+    
+End Sub
+
+' ===============================================================
+' Event pProjWFForm_StepComplete
+' Event on completion of workflow step
+' ---------------------------------------------------------------
+Private Sub pProjWFForm_StepComplete()
+    With pProjWFForm
+        If .TxtDataInput <> "" Then
+            pActiveStep.DataItem = .TxtDataInput
+            .TxtDataInput = ""
+        End If
+        
+        MoveToNextStep
+        
+        If pActiveStep.LastStep Then
+            Unload pProjWFForm
+        Else
+            If pActiveStep.Wait = True Then
+                DBSave
+                pProjWFForm.Hide
+            Else
+                DisplayForm
+'                .Visible = True
+            End If
+        End If
+    End With
+End Sub
+
+' ===============================================================
+' Event pProjWFForm_StartChat
+' Event on completion of workflow step
+' ---------------------------------------------------------------
+Private Sub pProjWFForm_StartChat()
+    pChatRoom.DisplayForm pParent.ProjectNo
+End Sub
+
+' ===============================================================
 Public Sub Initialize(obj As ClsProject)
     Set Me.Parent = obj
 End Sub
@@ -417,6 +578,9 @@ Private Sub Class_Initialize()
     Set pActiveStep = New ClsStep
     Set pFrmInputBox = New FrmInputBox
     Set pLender = New ClsLender
+    Set pProjWFForm = New FrmWFProject
+    Set pChatRoom = New ClsChatRoom
+    
     pActiveStep.Initialize Me
     pSteps.Initialize Me
 End Sub
@@ -430,6 +594,8 @@ Public Sub Terminate()
     Set pActiveStep = Nothing
     Set pFrmInputBox = Nothing
     Set pLender = Nothing
+    Set pProjWFForm = Nothing
+    Set pChatRoom = Nothing
 End Sub
 '---------------------------------------------------------------
 Private Sub Class_Terminate()
@@ -437,5 +603,7 @@ Private Sub Class_Terminate()
     Set pActiveStep = Nothing
     Set pFrmInputBox = Nothing
     Set pLender = Nothing
+    Set pProjWFForm = Nothing
+    Set pChatRoom = Nothing
 End Sub
 '---------------------------------------------------------------

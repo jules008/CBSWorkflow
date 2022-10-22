@@ -47,6 +47,8 @@ Private pHeadingText() As String
 Private pHeadingStyle As ClsUIStyle
 Private pHeadingHeight As Integer
 Private pTableVisible As Boolean
+Private pShpExpand As Shape
+Private pExpandIcon As String
 Private pParent As ClsUIFrame
 
 '---------------------------------------------------------------
@@ -249,6 +251,17 @@ Public Property Let TableVisible(ByVal vNewValue As Boolean)
 End Property
 
 '---------------------------------------------------------------
+Public Property Get ExpandIcon() As String
+    ExpandIcon = pExpandIcon
+End Property
+
+Public Property Let ExpandIcon(ByVal ExpandIcon As String)
+    Set pShpExpand = ShtMain.Shapes.AddPicture(GetDocLocalPath(ThisWorkbook.Path) & PICTURES_PATH & ExpandIcon, msoTrue, msoFalse, 0, 0, 0, 0)
+    pShpExpand.Name = "ExpandIcon"
+    pExpandIcon = ExpandIcon
+End Property
+
+'---------------------------------------------------------------
 Public Property Get RstText() As Recordset
     Set RstText = pRstText
 End Property
@@ -370,6 +383,27 @@ Public Sub BuildTable(Optional SplitRow As Integer, Optional SplitSize As Intege
                     .Left = .Parent.Left + ColOffset
                     .Top = .Parent.Top + RowOffset
                     .Width = pColWidths(x)
+                    
+                    If x = 0 And ExpandIcon <> "" Then
+                        .Badge = pShpExpand.Duplicate
+                        With .Badge
+                            If y = SplitRow Then
+                                .Rotation = 90
+                                .Top = Cell.Top + 3
+                                .Left = Cell.Left + 30
+                                .Height = 13
+                                .Width = 11
+                                .OnAction = pOnAction(x, y - 1)
+                            Else
+                                .Top = Cell.Top + 3
+                                .Left = Cell.Left + 20
+                                .Height = 13
+                                .Width = 11
+                                .OnAction = pOnAction(x, y - 1)
+                            End If
+                        End With
+                    End If
+                    
                     If y = 0 Then
                         .Text = pHeadingText(x)
                     Else
@@ -412,6 +446,7 @@ Public Sub BuildSubTable()
     Dim ColOffset As Integer
     Dim RowOffset As Integer
     
+    If RstText.RecordCount > 0 Then
     If pNoCols > 0 And pNoRows > 0 Then
         pCells.DeleteCollection
         
@@ -474,6 +509,7 @@ Public Sub BuildSubTable()
             RowOffset = RowOffset + Cell.Height + VPad
                     
     Next
+        End If
     End If
 End Sub
 

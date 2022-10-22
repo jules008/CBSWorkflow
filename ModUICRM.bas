@@ -30,14 +30,10 @@ Public Function BuildScreen(ByVal ScrnPage As enScreenPage) As Boolean
     
     ScreenPage = ScrnPage
     
-    ShtMain.Unprotect PROTECT_KEY
-    
     If Not BuildMainFrame(ScreenPage) Then Err.Raise HANDLED_ERROR
     If Not RefreshList(ScreenPage) Then Err.Raise HANDLED_ERROR
     
     MainScreen.ReOrder
-    
-    If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
     
     ModLibrary.PerfSettingsOff
                     
@@ -115,7 +111,7 @@ Private Function BuildMainFrame(ByVal ScreenPage As enScreenPage) As Boolean
             
        Case enScrCRMProject
        
-            HeaderText = "CRM - SPVs"
+            HeaderText = "CRM - Projects"
             TableHeadingText = CRM_PROJECT_TABLE_TITLES
             TableColWidths = CRM_PROJECT_TABLE_COL_WIDTHS
             NewBtnTxt = "New Project"
@@ -239,11 +235,9 @@ Public Function RefreshList(ByVal ScreenPage As enScreenPage, Optional SortBy As
             OpenItmBtn = enBtnCRMOpenItem
             ItemIndex = "LenderNo"
         Case enScrCRMProject
-            OpenItmBtn = enBtnProjectOpen
+            OpenItmBtn = enBtnCRMOpenItem
             ItemIndex = "ProjectNo"
     End Select
-    
-    ShtMain.Unprotect PROTECT_KEY
     
     Set Workflows = New ClsWorkflows
     
@@ -339,9 +333,11 @@ Private Function GetCRMData(ByVal ScreenPage As enScreenPage, StrSortBy As Strin
             SQL = "SELECT SPVNo, Name FROM TblSPV"
         Case enScrCRMContact
             SQL = "SELECT ContactNo, ContactName, Position, Phone1 FROM TblContact"
+        Case enScrCRMProject
+            SQL = "SELECT TblProject.ProjectNo, TblClient.Name, TblSPV.Name, TblCBSUser.UserName " _
+                    & "FROM ((TblProject LEFT JOIN TblClient ON TblProject.ClientNo = TblClient.ClientNo) LEFT JOIN TblSPV ON TblProject.SPVNo = TblSPV.SPVNo) LEFT JOIN TblCBSUser ON TblProject.CaseManager = TblCBSUser.CBSUserNo"
         Case enScrCRMLender
             SQL = "SELECT LenderNo, Name, PhoneNo, LenderType, Address FROM TblLender"
-        Case enScrCRMProject
     
     End Select
 
@@ -373,6 +369,7 @@ Public Function OpenItem(ScreenPage As enScreenPage, Optional Index As String) A
        Case enScrCRMLender
             Set CRMItem = New ClsLender
         Case enScrCRMProject
+            Set CRMItem = New ClsProject
     End Select
 
     With CRMItem

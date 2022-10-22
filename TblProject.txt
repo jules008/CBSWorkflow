@@ -1,5 +1,6 @@
 ProjectNo,  dbInteger
 SPVNo,  dbLong
+ClientNo,  dbLong
 CaseManager,  dbLong
 LoanTerm,  dbText
 CBSComPC,  dbSingle

@@ -133,8 +133,6 @@ Public Property Let BadgeText(ByVal vNewValue As String)
     
     If CInt(pBadgeText) > 99 Then pBadgeText = "99"
     
-    ShtMain.Unprotect PROTECT_KEY
-    
     pBadge.TextFrame.Characters.Caption = pBadgeText
 End Property
 

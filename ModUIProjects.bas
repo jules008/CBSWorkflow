@@ -31,14 +31,10 @@ Public Function BuildScreen(ScrnPage As enScreenPage) As Boolean
     
     ScreenPage = ScrnPage
     
-    ShtMain.Unprotect PROTECT_KEY
-    
     If Not BuildMainFrame(ScreenPage) Then Err.Raise HANDLED_ERROR
     If Not RefreshList(ScreenPage) Then Err.Raise HANDLED_ERROR
     
     MainScreen.ReOrder
-    
-    If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
     
     ModLibrary.PerfSettingsOff
                     
@@ -133,6 +129,7 @@ Private Function BuildMainFrame(ByVal ScreenPage As enScreenPage) As Boolean
             .HeadingText = PROJECT_TABLE_TITLES
             .HeadingStyle = GENERIC_TABLE_HEADER
             .HeadingHeight = GENERIC_TABLE_HEADING_HEIGHT
+            .ExpandIcon = GENERIC_TABLE_EXPAND_ICON
         End With
         
     End With
@@ -217,8 +214,6 @@ Public Function RefreshList(ByVal ScreenPage As enScreenPage, Optional SortBy As
 
     ModLibrary.PerfSettingsOn
 
-    ShtMain.Unprotect PROTECT_KEY
-    
     Set Workflows = New ClsWorkflows
     
     Set RstWorkflowList = GetActiveList(ScreenPage, StrSortBy)
@@ -243,8 +238,7 @@ Public Function RefreshList(ByVal ScreenPage As enScreenPage, Optional SortBy As
         .RowHeight = GENERIC_TABLE_ROW_HEIGHT
     End With
     
-    With MainFrame
-        With .Table.SubTable
+    With MainFrame.Table.SubTable
             .HeadingText = PROJECT_SUB_TABLE_TITLES
             .HeadingStyle = SUB_TABLE_HEADER
             .HeadingHeight = GENERIC_TABLE_HEADING_HEIGHT
@@ -256,7 +250,6 @@ Public Function RefreshList(ByVal ScreenPage As enScreenPage, Optional SortBy As
         .StylesColl.Add AMBER_CELL
         .StylesColl.Add GREEN_CELL
         .RowHeight = GENERIC_TABLE_ROW_HEIGHT
-    End With
     End With
     
     NoRows = RstWorkflowList.RecordCount
@@ -272,7 +265,7 @@ Public Function RefreshList(ByVal ScreenPage As enScreenPage, Optional SortBy As
             .MoveFirst
             For y = 0 To NoRows - 1
                 
-                If x = 6 Then
+                If x = 7 Then
                     If !RAG = "en1Red" Then AryStyles(x, y) = "RED_CELL"
                     If !RAG = "en2Amber" Then AryStyles(x, y) = "AMBER_CELL"
                     If !RAG = "en3Green" Then AryStyles(x, y) = "GREEN_CELL"
@@ -372,10 +365,11 @@ Restart:
     
     SQL = "SELECT TblWorkflow.WorkflowNo, TblLender.Name, TblWorkflow.CurrentStep, TblStepTemplate.StepName, TblWorkflow.Status " _
                 & "FROM TblStepTemplate RIGHT JOIN (TblWorkflow LEFT JOIN TblLender ON TblWorkflow.LenderNo = TblLender.LenderNo) ON TblStepTemplate.StepNo = TblWorkflow.CurrentStep " _
-                & "WHERE (((TblWorkflow.ProjectNo)= " & ProjectNo & "))"
+                    & "WHERE (((TblWorkflow.ProjectNo)= " & ProjectNo & "AND TblWorkflow.WorkflowType = 'enLender'))"
 
     Set RstWorkflows = ModDatabase.SQLQuery(SQL)
     
+        If RstWorkflows.RecordCount > 0 Then
     With RstWorkflows
         .MoveLast
         .MoveFirst
@@ -419,6 +413,9 @@ Restart:
         SplitRow = RowNo
         MainFrame.Table.BuildTable RowNo, 100
         MainScreen.ReOrder
+        Else
+            MainFrame.Table.BuildTable 0
+        End If
     End If
     
 GracefulExit:
@@ -461,16 +458,16 @@ Public Function GetActiveList(ScreenPage As enScreenPage, StrSortBy As String) A
 
     Select Case ScreenPage
         Case enScrProjForAction
-            SQL = "SELECT TblProject.ProjectNo, TblClient.Name, TblSPV.Name, TblCBSUser.UserName, TblWorkflow.CurrentStep, TblStepTemplate.StepName, TblWorkflow.Status, TblWorkflow.RAG " _
+            SQL = "SELECT Null as Expand, TblProject.ProjectNo, TblClient.Name, TblSPV.Name, TblCBSUser.UserName, TblWorkflow.CurrentStep, TblStepTemplate.StepName, TblWorkflow.Status, TblWorkflow.RAG " _
                     & "FROM ((((TblProject LEFT JOIN TblSPV ON TblProject.SPVNo = TblSPV.SPVNo) LEFT JOIN TblClient ON TblSPV.ClientNo = TblClient.ClientNo) LEFT JOIN TblCBSUser ON TblProject.CaseManager = TblCBSUser.CBSUserNo) LEFT JOIN TblWorkflow ON TblProject.ProjectWFNo = TblWorkflow.WorkflowNo) LEFT JOIN TblStepTemplate ON TblWorkflow.CurrentStep = TblStepTemplate.StepNo " _
                     & "WHERE (((TblWorkflow.RAG)='en1Red') AND ((TblWorkflow.WorkflowType)='enProject')) OR (((TblWorkflow.RAG)='en2Amber') AND ((TblWorkflow.WorkflowType)='enProject')) OR (((TblWorkflow.Status)='enActionReqd') AND ((TblWorkflow.RAG)='en3Green') AND ((TblWorkflow.WorkflowType)='enProject'))"
         Case enScrProjActive
-    SQL = "SELECT TblProject.ProjectNo, TblClient.Name, TblSPV.Name, TblCBSUser.UserName, TblWorkflow.CurrentStep, TblStepTemplate.StepName, TblWorkflow.Status, TblWorkflow.RAG " _
+            SQL = "SELECT Null as Expand, TblProject.ProjectNo, TblClient.Name, TblSPV.Name, TblCBSUser.UserName, TblWorkflow.CurrentStep, TblStepTemplate.StepName, TblWorkflow.Status, TblWorkflow.RAG " _
             & "FROM ((((TblProject LEFT JOIN TblSPV ON TblProject.SPVNo = TblSPV.SPVNo) LEFT JOIN TblClient ON TblSPV.ClientNo = TblClient.ClientNo) LEFT JOIN TblCBSUser ON " _
             & "TblProject.CaseManager = TblCBSUser.CBSUserNo) LEFT JOIN TblWorkflow ON TblProject.ProjectWFNo = TblWorkflow.WorkflowNo) LEFT JOIN TblStepTemplate ON " _
             & "TblWorkflow.CurrentStep = TblStepTemplate.StepNo WHERE (((TblWorkflow.WorkflowType)='enProject'))"
         Case enScrProjComplete
-            SQL = "SELECT TblProject.ProjectNo, TblClient.Name, TblSPV.Name, TblCBSUser.UserName, TblWorkflow.CurrentStep, TblStepTemplate.StepName, TblWorkflow.Status, TblWorkflow.RAG " _
+            SQL = "SELECT Null as Expand, TblProject.ProjectNo, TblClient.Name, TblSPV.Name, TblCBSUser.UserName, TblWorkflow.CurrentStep, TblStepTemplate.StepName, TblWorkflow.Status, TblWorkflow.RAG " _
                     & "FROM ((((TblProject LEFT JOIN TblSPV ON TblProject.SPVNo = TblSPV.SPVNo) LEFT JOIN TblClient ON TblSPV.ClientNo = TblClient.ClientNo) LEFT JOIN TblCBSUser ON TblProject.CaseManager = TblCBSUser.CBSUserNo) LEFT JOIN TblWorkflow ON TblProject.ProjectWFNo = TblWorkflow.WorkflowNo) LEFT JOIN TblStepTemplate ON TblWorkflow.CurrentStep = TblStepTemplate.StepNo " _
                     & "WHERE (((TblWorkflow.Status)='enClosed') AND ((TblWorkflow.WorkflowType)='enProject'))"
     End Select
@@ -493,24 +490,17 @@ Public Function OpenItem(ByVal ScreenPage As enScreenPage, ByVal Index As String
     On Error GoTo ErrorHandler
 
     Set ActiveProject = New ClsProject
-    Set ActiveSPV = New ClsSPV
-    Set ActiveClient = New ClsClient
     
-    ActiveProject.DBGet CInt(Index)
-    
-    Set ActiveSPV = ActiveProject.Parent
-    Set ActiveClient = ActiveProject.Parent.Parent
-    
-    FrmWFProject.ShowForm
+    With ActiveProject
+        .DBGet CInt(Index)
+        .ProjectWorkflow.DisplayForm
+    End With
     
     If Not ResetScreen Then Err.Raise HANDLED_ERROR
     If Not ModUIProjects.BuildScreen(ScreenPage) Then Err.Raise HANDLED_ERROR
     
-    If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
-    
     Set ActiveProject = Nothing
-    Set ActiveSPV = Nothing
-    Set ActiveClient = Nothing
+    
     OpenItem = True
 
 Exit Function

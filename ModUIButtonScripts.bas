@@ -103,7 +103,7 @@ Public Function BtnProjectNewWFClick(ScreenPage As enScreenPage) As Boolean
     ActiveProject.ProjectWorkflow = ActiveWorkFlow
     Debug.Assert ActiveProject.ProjectWorkflow.Steps.Count > 0
                 
-    FrmWFProject.ShowForm
+    ActiveWorkFlow.DBNew
     
     Debug.Assert Not ActiveClient Is Nothing
     Debug.Assert ActiveWorkFlow.Steps.Count > 0

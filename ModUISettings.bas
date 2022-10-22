@@ -24,7 +24,7 @@ Public Const SCREEN_HEIGHT As Integer = 2000
 Public Const SCREEN_WIDTH As Integer = 1825
 Public Const MAIN_FRAME_TOP As Integer = 90
 Public Const MAIN_FRAME_LEFT As Integer = 170
-Public Const MAIN_FRAME_WIDTH As Integer = 700
+Public Const MAIN_FRAME_WIDTH As Integer = 750
 Public Const MAIN_FRAME_HEIGHT As Integer = 360
 
 ' ---------------------------------------------------------------
@@ -51,7 +51,7 @@ Public Const GENERIC_TABLE_TOP As Integer = 25
 Public Const GENERIC_TABLE_ROWOFFSET As Integer = 0
 Public Const GENERIC_TABLE_COLOFFSET As Integer = 0
 Public Const GENERIC_TABLE_HEADING_HEIGHT As Integer = 20
-
+Public Const GENERIC_TABLE_EXPAND_ICON As String = "Expand.png"
 ' ---------------------------------------------------------------
 ' Menu Bar
 ' ---------------------------------------------------------------
@@ -66,6 +66,7 @@ Public Const BUTTON_WIDTH As Integer = 150
 Public Const BUTTON_COUNT As Integer = 21
 Public Const BUTTON_TEXT = "For Action:Projects:Active:Closed:CRM:Clients:SPVs:Contacts:Projects:Lenders:Dashboard:Reports:Admin:Users:Email Templates:Documents:Workflows:Workflow Types:Lists:Roles:Exit"
 Public Const BUTTON_INDEX = "1:2:2.1:2.2:3:3.1:3.2:3.3:3.4:3.5:4:5:6:6.1:6.2:6.3:6.4:6.5:6.6:6.7:7"
+Public Const LOGO_FILE As String = "Logo.jpg"
 Public Const LOGO_TOP As Integer = 13
 Public Const LOGO_LEFT As Integer = 5
 Public Const LOGO_WIDTH As Integer = 139
@@ -77,10 +78,10 @@ Public Const HEADER_ICON_RIGHT As Integer = 10
 ' ---------------------------------------------------------------
 ' Generic Project Screen Settings
 ' ---------------------------------------------------------------
-Public Const PROJECT_TABLE_COL_WIDTHS As String = "50:100:100:100:50:200:100"
+Public Const PROJECT_TABLE_COL_WIDTHS As String = "50:50:100:100:100:50:200:100"
 Public Const PROJECT_CELL_ROW_HEIGHTS As String = "50:50"
 Public Const PROJECT_TABLE_STYLES As String = "GENERIC_TABLE"
-Public Const PROJECT_TABLE_TITLES As String = "Project No:Client Name:SPV Name:Case Manager:Step No:Step Name:Status"
+Public Const PROJECT_TABLE_TITLES As String = "Expand:Project No:Client Name:SPV Name:Case Manager:Step No:Step Name:Status"
 Public Const PROJECT_MAX_LINES As Integer = 150
 Public Const PROJECT_BTN_MAIN_1_LEFT As Integer = 30
 Public Const PROJECT_BTN_MAIN_1_TOP As Integer = 20
@@ -140,8 +141,8 @@ Public Const CRM_CONTACT_MAX_LINES As Integer = 150
 ' ---------------------------------------------------------------
 ' CRM Projects Screen
 ' ---------------------------------------------------------------
-Public Const CRM_PROJECT_TABLE_COL_WIDTHS As String = "100:250:200:150"
-Public Const CRM_PROJECT_TABLE_TITLES As String = "Project No:Client Name:Case Manager"
+Public Const CRM_PROJECT_TABLE_COL_WIDTHS As String = "100:250:200:200"
+Public Const CRM_PROJECT_TABLE_TITLES As String = "Project No:Client Name:SPV:Case Manager"
 Public Const CRM_PROJECT_MAX_LINES As Integer = 150
 
 ' ---------------------------------------------------------------

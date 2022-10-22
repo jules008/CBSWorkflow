@@ -130,12 +130,6 @@ End Property
 
 Public Property Let Badge(ByVal vNewValue As Shape)
     Set pBadge = vNewValue
-    With pBadge
-        .Top = Top + 1
-        .Left = Left + 1
-        .Height = 15
-        .Width = 18
-    End With
 End Property
 
 '---------------------------------------------------------------

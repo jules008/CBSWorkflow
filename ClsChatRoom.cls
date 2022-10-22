@@ -36,11 +36,37 @@ Option Explicit
 Private pChatRoom As Collection
 Private WithEvents pChatRoomForm As FrmChatRoom
 Attribute pChatRoomForm.VB_VarHelpID = -1
+Private WithEvents pWFProjectForm As FrmWFProject
+Attribute pWFProjectForm.VB_VarHelpID = -1
 
 Public Function NewEnum() As IUnknown
 Attribute NewEnum.VB_UserMemId = -4
     Set NewEnum = pChatRoom.[_NewEnum]
 End Function
+
+' ===============================================================
+' Method DisplayForm
+' displays client form
+' ---------------------------------------------------------------
+Public Sub DisplayForm(ProjectNo As Integer)
+    Dim ChatEntry As ClsChatEntry
+    
+    GetCollection ProjectNo
+    
+    With pChatRoomForm
+        .ClearForm
+        Sin 0
+        For Each ChatEntry In pChatRoom
+            .xTxtAllMessages = .xTxtAllMessages & ChatEntry.EntryDateTime _
+                               & " " & ChatEntry.UserName _
+                               & " said """ & ChatEntry.Message & """" _
+                               & vbCrLf
+            Debug.Print .xTxtAllMessages
+        Next
+        .ProjectNo = ProjectNo
+        .Show
+    End With
+End Sub
 
 ' ===============================================================
 ' Method Add
@@ -95,13 +121,17 @@ Private Sub GetCollection(ProjectNo As Integer)
 End Sub
 
 ' ===============================================================
-' Method DisplayForm
+' Method pWFProjectForm_StartChat
 ' displays client form
 ' ---------------------------------------------------------------
-Public Sub DisplayForm(ProjectNo As Integer)
+Private Sub pWFProjectForm_StartChat()
     Dim ChatEntry As ClsChatEntry
+    Dim ProjectNo As Integer
+    
+    ProjectNo = pWFProjectForm.TxtProjectNo
     
     GetCollection ProjectNo
+    Debug.Assert ProjectNo > 0
     
     With pChatRoomForm
         .ClearForm
@@ -172,11 +202,14 @@ End Sub
 Private Sub Class_Initialize()
     Set pChatRoom = New Collection
     Set pChatRoomForm = New FrmChatRoom
+    Set pWFProjectForm = New FrmWFProject
 End Sub
 ' ===============================================================
 Private Sub Class_Terminate()
     Set pChatRoom = Nothing
     Set pChatRoomForm = Nothing
+    Set pWFProjectForm = Nothing
+
 End Sub
 ' ===============================================================
 
