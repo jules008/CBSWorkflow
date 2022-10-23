@@ -460,16 +460,15 @@ Public Function GetActiveList(ScreenPage As enScreenPage, StrSortBy As String) A
         Case enScrProjForAction
             SQL = "SELECT Null as Expand, TblProject.ProjectNo, TblClient.Name, TblSPV.Name, TblCBSUser.UserName, TblWorkflow.CurrentStep, TblStepTemplate.StepName, TblWorkflow.Status, TblWorkflow.RAG " _
                     & "FROM ((((TblProject LEFT JOIN TblSPV ON TblProject.SPVNo = TblSPV.SPVNo) LEFT JOIN TblClient ON TblSPV.ClientNo = TblClient.ClientNo) LEFT JOIN TblCBSUser ON TblProject.CaseManager = TblCBSUser.CBSUserNo) LEFT JOIN TblWorkflow ON TblProject.ProjectWFNo = TblWorkflow.WorkflowNo) LEFT JOIN TblStepTemplate ON TblWorkflow.CurrentStep = TblStepTemplate.StepNo " _
-                    & "WHERE (((TblWorkflow.RAG)='en1Red') AND ((TblWorkflow.WorkflowType)='enProject')) OR (((TblWorkflow.RAG)='en2Amber') AND ((TblWorkflow.WorkflowType)='enProject')) OR (((TblWorkflow.Status)='enActionReqd') AND ((TblWorkflow.RAG)='en3Green') AND ((TblWorkflow.WorkflowType)='enProject'))"
+                    & "WHERE (((TblWorkflow.RAG)='en1Red') AND ((TblWorkflow.WorkflowType)='enProject')) OR (((TblWorkflow.RAG)='en2Amber') AND ((TblWorkflow.WorkflowType)='enProject')) OR (((TblWorkflow.Status)='Action Req.') AND ((TblWorkflow.RAG)='en3Green') AND ((TblWorkflow.WorkflowType)='enProject'))"
         Case enScrProjActive
-            SQL = "SELECT Null as Expand, TblProject.ProjectNo, TblClient.Name, TblSPV.Name, TblCBSUser.UserName, TblWorkflow.CurrentStep, TblStepTemplate.StepName, TblWorkflow.Status, TblWorkflow.RAG " _
-            & "FROM ((((TblProject LEFT JOIN TblSPV ON TblProject.SPVNo = TblSPV.SPVNo) LEFT JOIN TblClient ON TblSPV.ClientNo = TblClient.ClientNo) LEFT JOIN TblCBSUser ON " _
-            & "TblProject.CaseManager = TblCBSUser.CBSUserNo) LEFT JOIN TblWorkflow ON TblProject.ProjectWFNo = TblWorkflow.WorkflowNo) LEFT JOIN TblStepTemplate ON " _
-            & "TblWorkflow.CurrentStep = TblStepTemplate.StepNo WHERE (((TblWorkflow.WorkflowType)='enProject'))"
+            SQL = "SELECT Null AS Expand, TblProject.ProjectNo, TblClient.Name, TblSPV.Name, TblCBSUser.UserName, TblWorkflow.CurrentStep, TblStepTemplate.StepName, TblWorkflow.Status, TblWorkflow.RAG " _
+                    & "FROM ((((TblProject LEFT JOIN TblSPV ON TblProject.SPVNo = TblSPV.SPVNo) LEFT JOIN TblClient ON TblSPV.ClientNo = TblClient.ClientNo) LEFT JOIN TblWorkflow ON TblProject.ProjectWFNo = TblWorkflow.WorkflowNo) LEFT JOIN TblCBSUser ON TblProject.CaseManager = TblCBSUser.CBSUserNo) LEFT JOIN TblStepTemplate ON TblWorkflow.CurrentStep = TblStepTemplate.StepNo " _
+                    & "WHERE (((TblWorkflow.Status)<>'Complete') AND ((TblWorkflow.WorkflowType)='enProject'))"
         Case enScrProjComplete
-            SQL = "SELECT Null as Expand, TblProject.ProjectNo, TblClient.Name, TblSPV.Name, TblCBSUser.UserName, TblWorkflow.CurrentStep, TblStepTemplate.StepName, TblWorkflow.Status, TblWorkflow.RAG " _
-                    & "FROM ((((TblProject LEFT JOIN TblSPV ON TblProject.SPVNo = TblSPV.SPVNo) LEFT JOIN TblClient ON TblSPV.ClientNo = TblClient.ClientNo) LEFT JOIN TblCBSUser ON TblProject.CaseManager = TblCBSUser.CBSUserNo) LEFT JOIN TblWorkflow ON TblProject.ProjectWFNo = TblWorkflow.WorkflowNo) LEFT JOIN TblStepTemplate ON TblWorkflow.CurrentStep = TblStepTemplate.StepNo " _
-                    & "WHERE (((TblWorkflow.Status)='enClosed') AND ((TblWorkflow.WorkflowType)='enProject'))"
+            SQL = "SELECT Null AS Expand, TblProject.ProjectNo, TblClient.Name, TblSPV.Name, TblCBSUser.UserName, TblWorkflow.CurrentStep, TblStepTemplate.StepName, TblWorkflow.Status, TblWorkflow.RAG " _
+                    & "FROM ((((TblProject LEFT JOIN TblSPV ON TblProject.SPVNo = TblSPV.SPVNo) LEFT JOIN TblClient ON TblSPV.ClientNo = TblClient.ClientNo) LEFT JOIN TblWorkflow ON TblProject.ProjectWFNo = TblWorkflow.WorkflowNo) LEFT JOIN TblCBSUser ON TblProject.CaseManager = TblCBSUser.CBSUserNo) LEFT JOIN TblStepTemplate ON TblWorkflow.CurrentStep = TblStepTemplate.StepNo " _
+                    & "WHERE (((TblWorkflow.Status)='Complete') AND ((TblWorkflow.WorkflowType)='enProject'))"
     End Select
                 
     Set RstWorkflow = ModDatabase.SQLQuery(SQL)
@@ -495,9 +494,6 @@ Public Function OpenItem(ByVal ScreenPage As enScreenPage, ByVal Index As String
         .DBGet CInt(Index)
         .ProjectWorkflow.DisplayForm
     End With
-    
-    If Not ResetScreen Then Err.Raise HANDLED_ERROR
-    If Not ModUIProjects.BuildScreen(ScreenPage) Then Err.Raise HANDLED_ERROR
     
     Set ActiveProject = Nothing
     

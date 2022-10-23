@@ -87,7 +87,7 @@ Private Function PopulateForm() As Boolean
 
     On Error GoTo ErrorHandler
     
-    ProgPC = ActiveWorkFlow.Steps.PCClosed
+    ProgPC = ActiveWorkFlow.Steps.PCComplete
     Progress ProgPC
     
     With ActiveLender

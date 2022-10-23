@@ -22,7 +22,7 @@ Attribute VB_Exposed = False
 Option Explicit
 Private pSteps As Collection
 Private pStart As String
-Private pPCClosed As Single
+Private pPCComplete As Single
 Private pParent As ClsWorkflow
 
 '---------------------------------------------------------------
@@ -35,18 +35,18 @@ Public Property Set Parent(obj As ClsWorkflow)
 End Property
 
 '---------------------------------------------------------------
-Public Property Get PCClosed() As String
+Public Property Get PCComplete() As String
     Dim Step As ClsStep
-    Dim Closed As Integer
+    Dim Complete As Integer
     
-    Closed = 0
+    Complete = 0
     For Each Step In pSteps
-        If Step.Status = enClosed Then Closed = Closed + 1
+        If Step.Status = "Complete" Then Complete = Complete + 1
     Next
     
-    pPCClosed = Closed / pSteps.Count * 100
+    pPCComplete = Complete / pSteps.Count * 100
     
-    PCClosed = pPCClosed
+    PCComplete = pPCComplete
 End Property
 
 '---------------------------------------------------------------
@@ -77,7 +77,7 @@ Attribute FindItem.VB_UserMemId = 0
     If FindItem Is Nothing Then
         Set FindItem = pSteps.Item(CStr(Parent.WorkflowNo & "-" & StepIndex))
     End If
-    
+    Debug.Assert Not FindItem Is Nothing
 End Function
 
 ' ===============================================================
@@ -262,7 +262,7 @@ Public Sub UpdateSteps()
              & "  WHERE" _
              & "    TblStep.UniqueID = TblStepTemplate.UniqueID"
     
-    SQL = "SELECT WorkflowNo FROM TblWorkflow WHERE Status <> 'enClosed'"
+    SQL = "SELECT WorkflowNo FROM TblWorkflow WHERE Status <> 'Complete'"
     Set RstWFs = DB.OpenRecordset(SQL)
     
     With RstWFs
@@ -270,9 +270,9 @@ Public Sub UpdateSteps()
         
             'cycle through WF Nos
             WFNo = !WorkflowNo
-            Debug.Print WFNo
+            'Debug.Print WFNo
             'get cert type
-            SQL = "SELECT Name FROM TblWorkflow WHERE WorkflowNo = " & WFNo & " AND Status <> 'enClosed'"
+            SQL = "SELECT Name FROM TblWorkflow WHERE WorkflowNo = " & WFNo & " AND Status <> 'Complete'"
             
             Set RstDoDCert = DB.OpenRecordset(SQL)
             
@@ -293,7 +293,7 @@ Public Sub UpdateSteps()
                         
                         With RstTest
                             If RstTest.RecordCount = 0 Then
-                                Debug.Print "Workflow " & WFNo & " Step No " & StepNo & " is missing"
+                                'Debug.Print "Workflow " & WFNo & " Step No " & StepNo & " is missing"
                                 .AddNew
                                 !Wait = RstSteps!Wait
                                 !StepType = RstSteps!StepType
@@ -311,7 +311,7 @@ Public Sub UpdateSteps()
                                 !Email = RstSteps!Email
                                 !AltEmail = RstSteps!AltEmail
                                 !WorkflowNo = WFNo
-                                !Status = "enNotStarted"
+                                !Status = "Not Started"
                                 !CopyText = RstSteps!CopyText
                                 !CopyTextName = RstSteps!CopyTextName
                                 !UniqueID = RstSteps!UniqueID
@@ -324,11 +324,14 @@ Public Sub UpdateSteps()
                                 
                                 If RstNextRec.RecordCount = 0 Then Err.Raise HANDLED_ERROR, , "Error loading WF " & WFNo
                                 
-                                'if the next record has been started, set record to be Closed
+                                'if the next record has been started, set record to be Complete
                                 If RstNextRec!StartTime <> 0 And Not IsNull(RstNextRec!StartTime) Then
                                     !StartTime = RstNextRec!StartTime
                                     !EndTime = RstNextRec!StartTime
-                                    !Status = "enClosed"
+                                    !Status = "Complete"
+                                    
+                Debug.Assert Not IsNull(!Status)
+                Debug.Print !ProjectNo; !Status
                                 End If
                                 
                                 .Update

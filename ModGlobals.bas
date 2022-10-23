@@ -196,13 +196,6 @@ Enum EnumBtnNo
     enBtnCRMNewItem
 End Enum
 
-Enum enStatus           'Status
-    enNotStarted = 1    'Not Started
-    enActionReqd        'Action Req'd
-    enWaiting           'Waiting
-    enClosed          'Closed
-End Enum                '
-
 Enum enFormValidation
     enFormOK = 2
     enValidationError = 1

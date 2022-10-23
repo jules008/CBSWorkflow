@@ -45,7 +45,7 @@ Private pDataItem As Variant
 Private pDataFormat As String
 Private pDataDest As String
 Private pWFName As String
-Private pStatus As enStatus
+Private pStatus As String
 Private pWait As Boolean
 'Private pEmail As ClsEmail
 'Private pAltEmail As ClsEmail
@@ -211,7 +211,7 @@ End Property
 '---------------------------------------------------------------
 Public Property Get TimeToAmber() As Variant
     
-    If pStatus = enClosed Then
+    If pStatus = "Complete" Then
         TimeToAmber = AmberThresh
     ElseIf DateDiff("h", Now, AmberTime) > 0 Then
         pTimeToAmber = DateDiff("h", Now, AmberTime)
@@ -225,7 +225,7 @@ End Property
 '---------------------------------------------------------------
 Public Property Get TimeToRed() As Variant
     
-    If pStatus = enClosed Then
+    If pStatus = "Complete" Then
         TimeToRed = RedThresh
     ElseIf DateDiff("h", Now, RedTime) > 0 Then
         pTimeToRed = DateDiff("h", Now, RedTime)
@@ -313,20 +313,20 @@ Public Property Let WFName(ByVal vNewValue As String)
 End Property
 
 '---------------------------------------------------------------
-Public Property Get Status() As enStatus
+Public Property Get Status() As String
     If pStartTime = 0 Then
-        pStatus = enNotStarted
+        pStatus = "Not Started"
     ElseIf pStartTime <> 0 And pEndTime <> 0 Then
-        pStatus = enClosed
+        pStatus = "Complete"
     ElseIf pWait Then
-        pStatus = enWaiting
+        pStatus = "Waiting"
     Else
-        pStatus = enActionReqd
+        pStatus = "Action Req."
     End If
     Status = pStatus
 End Property
 
-Public Property Let Status(ByVal vNewValue As enStatus)
+Public Property Let Status(ByVal vNewValue As String)
     pStatus = vNewValue
 End Property
 '---------------------------------------------------------------
@@ -389,7 +389,7 @@ Public Sub DBGet(WorkflowNo As Integer, StepNo As String)
             If Not IsNull(!RedThresh) Then pRedThresh = !RedThresh
             If Not IsNull(!AmberThresh) Then pAmberThresh = !AmberThresh
             If Not IsNull(!CopyTextName) Then pCopyTextName = !CopyTextName
-            If Not IsNull(!Status) Then pStatus = enStatusVal(!Status)
+            If Not IsNull(!Status) Then pStatus = !Status
             If Not IsNull(!Wait) Then pWait = !Wait
             If Not IsNull(!CopyText) Then pCopyText = !CopyText
             If Not IsNull(!DataItem) Then pDataItem = !DataItem
@@ -464,10 +464,10 @@ Public Sub Start()
 End Sub
 
 ' ===============================================================
-' Method Closed
-' Closeds the step
+' Method Complete
+' Completes the step
 '---------------------------------------------------------------
-Public Sub Closed()
+Public Sub Complete()
     pEndTime = Now
 End Sub
 
@@ -517,7 +517,9 @@ Public Sub DBSave(Optional StepIndex As String)
         !DataFormat = pDataFormat
         !DataDest = pDataDest
         !UniqueID = pUniqueID
-        !Status = enStatusStr(pStatus)
+        !Status = pStatus
+                Debug.Assert Not IsNull(!Status)
+                Debug.Print "Step "; !Status
 '        !Email = pEmail.EmailNo
 '        !AltEmail = pAltEmail.EmailNo
         !Wait = pWait

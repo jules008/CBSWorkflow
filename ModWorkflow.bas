@@ -291,7 +291,7 @@ Public Function ProcessDataInput() As Boolean
         SQL = "UPDATE Tbl" & Table & " SET " & TblField & " = '" & DataInput & "' WHERE " & IndexNo & " = " & IndexVal
         DB.Execute SQL
         
-        Debug.Print SQL
+        'Debug.Print SQL
         
         Select Case Table
             Case "Workflow"

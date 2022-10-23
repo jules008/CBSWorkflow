@@ -236,6 +236,12 @@ Public Sub DBSave()
         If CStr(pSPV.SPVNo) = "" Then !SPVNo = Null Else !SPVNo = pSPV.SPVNo
         If CStr(pClient.ClientNo) = "" Then !ClientNo = Null Else !ClientNo = pClient.ClientNo
 
+        pSPV.ClientNo = pClient.ClientNo
+
+        pSPV.DBSave
+        pClient.DBSave
+        pCaseManager.DBSave
+        
         pWorkflows.SaveCollection
         pContacts.SaveCollection
         pProjectWorkflow.DBSave
@@ -261,6 +267,10 @@ End Sub
 ' Event from client form to update Contact
 ' ---------------------------------------------------------------
 Private Sub pProjectForm_Update()
+    Set pSPV = New ClsSPV
+    Set pClient = New ClsClient
+    Set pCaseManager = New ClsCBSUser
+    
     With pProjectForm
        pCBSComPC = .TxtCBSComPC
        pLoanTerm = .TxtLoanTerm

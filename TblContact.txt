@@ -1,4 +1,5 @@
 ContactNo,  dbInteger
+Organisation,  dbText
 Position,  dbText
 ContactName,  dbText
 Address,  dbText

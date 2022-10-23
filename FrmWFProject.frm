@@ -1,9 +1,9 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FrmWFProject 
-   ClientHeight    =   9345.001
+   ClientHeight    =   9315.001
    ClientLeft      =   120
    ClientTop       =   465
-   ClientWidth     =   15960
+   ClientWidth     =   15990
    OleObjectBlob   =   "FrmWFProject.frx":0000
    StartUpPosition =   2  'CenterScreen
 End
@@ -108,6 +108,7 @@ Private Sub UserForm_Initialize()
     Me.StartUpPosition = 0
     Me.Left = Application.Left + (0.5 * Application.Width) - (0.5 * Me.Width)
     Me.Top = Application.Top + (0.5 * Application.Height) - (0.5 * Me.Height)
+    LblBar.ZOrder (1)
     
 End Sub
 

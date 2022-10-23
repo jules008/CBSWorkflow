@@ -61,7 +61,6 @@ Public Sub DisplayForm(ProjectNo As Integer)
                                & " " & ChatEntry.UserName _
                                & " said """ & ChatEntry.Message & """" _
                                & vbCrLf
-            Debug.Print .xTxtAllMessages
         Next
         .ProjectNo = ProjectNo
         .Show
@@ -141,7 +140,6 @@ Private Sub pWFProjectForm_StartChat()
                                & " " & ChatEntry.UserName _
                                & " said """ & ChatEntry.Message & """" _
                                & vbCrLf
-            Debug.Print .xTxtAllMessages
         Next
         .ProjectNo = ProjectNo
         .Show

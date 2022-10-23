@@ -32,7 +32,7 @@ Private pNextStep As String
 Private pPrevStep As String
 Private pAltStep As String
 Private pActiveStep As ClsStep
-Private pStatus As enStatus
+Private pStatus As String
 Private pFrmInputBox As FrmInputBox
 Private pSteps As ClsSteps
 Private pChatRoom As ClsChatRoom
@@ -152,26 +152,26 @@ Public Property Let ActiveStep(ByRef vNewValue As ClsStep)
 End Property
 
 '---------------------------------------------------------------
-Public Property Get Status() As enStatus
+Public Property Get Status() As String
     Dim Step As ClsStep
-    Dim Closedd As Integer
+    Dim Completed As Integer
     Dim NotStarted As Integer
     Dim i As Integer
 
     For i = 1 To pSteps.Count
         Set Step = pSteps(i)
-        If Step.Status = enClosed Then Closedd = Closedd + 1
-        If Step.Status = enNotStarted Then NotStarted = NotStarted + 1
+        If Step.Status = "Complete" Then Completed = Completed + 1
+        If Step.Status = "Not Started" Then NotStarted = NotStarted + 1
     Next
 
     If NotStarted = pSteps.Count Then
-        pStatus = enNotStarted
-    ElseIf Closedd = pSteps.Count Then
-        pStatus = enClosed
-    ElseIf ActiveStep.Status = enWaiting Then
-        pStatus = enWaiting
+        pStatus = "Not Started"
+    ElseIf Completed = pSteps.Count Then
+        pStatus = "Complete"
+    ElseIf ActiveStep.Status = "Waiting" Then
+        pStatus = "Waiting"
     Else
-        pStatus = enActionReqd
+        pStatus = "Action Req."
     End If
     
     Status = pStatus
@@ -221,7 +221,7 @@ Public Sub DisplayForm()
 '    Dim Step As ClsStep
     Dim TmpWorkflow As ClsWorkflow
     
-    ProgPC = pSteps.PCClosed
+    ProgPC = pSteps.PCComplete
     
     With pProjWFForm
         .Progress ProgPC
@@ -232,7 +232,7 @@ Public Sub DisplayForm()
         .TxtLoanTerm = pParent.LoanTerm
         .TxtCommision = pParent.CBSComPC
         .ChkExitFee = pParent.ExitFee
-        .TxtStepName = pActiveStep.StepNo & " - " & pActiveStep.StepName
+        .TxtStepName = ActiveStep.StepNo & " - " & pActiveStep.StepName
         .xTxtAction = pActiveStep.StepAction
     
         Select Case pActiveStep.StepType
@@ -268,7 +268,7 @@ Public Sub DisplayForm()
                 .BtnComplete.Visible = True
                 .BtnComplete.Caption = "Yes"
         End Select
-        .Show
+        If Not .Visible Then .Show
     End With
     
     Set TmpWorkflow = Nothing
@@ -290,7 +290,7 @@ Public Sub DBGet(WorkflowNo As String)
             If Not IsNull(!WorkflowType) Then pWorkflowType = enWorkflowTypeVal(!WorkflowType)
             If Not IsNull(!CurrentStep) Then pCurrentStep = !CurrentStep
             If Not IsNull(!Name) Then pName = !Name
-            If Not IsNull(!Status) Then pStatus = enStatusVal(!Status)
+            If Not IsNull(!Status) Then pStatus = !Status
             If Not IsNull(!RAG) Then pRAG = enRAGVal(!RAG)
             If Not IsNull(!Member) Then pMember = !Member
             
@@ -335,7 +335,7 @@ Public Sub DBSave()
         !WorkflowNo = pWorkflowNo
         !WorkflowType = enWorkflowTypeStr(pWorkflowType)
         !Name = pName
-        !Status = enStatusStr(Status)
+        !Status = Status
         !RAG = enRAGStr(RAG)
         !LenderNo = pLender.LenderNo
         
@@ -405,7 +405,7 @@ End Sub
 ' ---------------------------------------------------------------
 Public Sub MoveToAltStep()
     With ActiveStep
-        .Closed
+        .Complete
         .DBSave
     End With
     
@@ -419,12 +419,12 @@ End Sub
 
 ' ===============================================================
 ' Method MoveToNextStep
-' Closeds current step and starts the next
+' Completes current step and starts the next
 ' ---------------------------------------------------------------
 Public Sub MoveToNextStep()
     
         With ActiveStep
-            .Closed
+        .Complete
             .DBSave
         End With
         
@@ -435,6 +435,11 @@ Public Sub MoveToNextStep()
                 .Start
                 .DBSave
             End With
+    Else
+        With ActiveStep
+            .Complete
+            .DBSave
+        End With
     End If
 End Sub
 

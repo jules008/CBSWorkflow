@@ -184,7 +184,7 @@ Public Sub ButtonClick(BtnName As String)
             If .Name = pUIMenu(BtnName).Name Then
                 .Selected = True
                 
-                Debug.Print .OnAction
+                'Debug.Print .OnAction
                 'if it isn't a main menu button, show sub menu group
                 Dim i As Integer
                 i = 1

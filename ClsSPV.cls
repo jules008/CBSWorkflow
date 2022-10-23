@@ -47,6 +47,15 @@ Public Property Let SPVNo(ByVal vNewValue As Integer)
 End Property
 
 '---------------------------------------------------------------
+Public Property Get ClientNo() As Integer
+    ClientNo = pClientNo
+End Property
+
+Public Property Let ClientNo(ByVal ClientNo As Integer)
+    pClientNo = ClientNo
+End Property
+
+'---------------------------------------------------------------
 Public Property Get Name() As String
     Name = pName
 End Property
@@ -162,15 +171,12 @@ Public Sub DBSave()
 
         If CStr(pSPVNo) = "" Then !SPVNo = Null Else !SPVNo = pSPVNo
         If CStr(pName) = "" Then !Name = Null Else !Name = pName
-        If CStr(pParent.ClientNo) = "" Then !ClientNo = Null Else !ClientNo = pParent.ClientNo
-
-        If Not pParent Is Nothing Then !ClientNo = pParent.ClientNo
+        If CStr(pClientNo) = "" Then !ClientNo = Null Else !ClientNo = pClientNo
         
-        Debug.Assert !ClientNo <> ""
+        .Update
         
         pContacts.SaveCollection
         pProjects.SaveCollection
-        .Update
     End With
 
     Set RstSPV = Nothing

@@ -70,7 +70,7 @@ Public Function EnumBtnNoVal(EnumValue As String) As EnumBtnNo
             EnumBtnNoVal = 1
         Case "enBtnProjectsActive"
             EnumBtnNoVal = 2
-        Case "enBtnProjectsClosed"
+        Case "enBtnProjectsComplete"
             EnumBtnNoVal = 2
         Case "enBtnCRMClient"
             EnumBtnNoVal = 3
@@ -108,23 +108,6 @@ Public Function EnumBtnNoVal(EnumValue As String) As EnumBtnNo
             EnumBtnNoVal = 9
         Case "BtnProjectOpenWF"
             EnumBtnNoVal = 1
-    End Select
-End Function
-
-' ===============================================================
-' enStatusVal
-' Returns integer value from Enum string
-' ---------------------------------------------------------------
-Public Function enStatusVal(EnumValue As String) As enStatus
-    Select Case EnumValue
-        Case "enNotStarted"
-            enStatusVal = 1
-        Case "enActionReqd"
-            enStatusVal = 2
-        Case "enWaiting"
-            enStatusVal = 3
-        Case "enClosed"
-            enStatusVal = 4
     End Select
 End Function
 
@@ -270,7 +253,7 @@ Public Function EnumBtnNoStr(EnumValue As EnumBtnNo) As String
         Case 2
             EnumBtnNoStr = "enBtnProjectsActive"
         Case 2
-            EnumBtnNoStr = "enBtnProjectsClosed"
+            EnumBtnNoStr = "enBtnProjectsComplete"
         Case 3
             EnumBtnNoStr = "enBtnCRMClient"
         Case 3
@@ -307,23 +290,6 @@ Public Function EnumBtnNoStr(EnumValue As EnumBtnNo) As String
             EnumBtnNoStr = "enBtnExit"
         Case 1
             EnumBtnNoStr = "BtnProjectOpenWF"
-    End Select
-End Function
-
-' ===============================================================
-' enStatusStr
-' Returns enum string from Enum integer value
-' ---------------------------------------------------------------
-Public Function enStatusStr(EnumValue As enStatus) As String
-    Select Case EnumValue
-        Case 1
-            enStatusStr = "enNotStarted"
-        Case 2
-            enStatusStr = "enActionReqd"
-        Case 3
-            enStatusStr = "enWaiting"
-        Case 4
-            enStatusStr = "enClosed"
     End Select
 End Function
 
@@ -414,23 +380,6 @@ Public Function enScreenPageStr(EnumValue As enScreenPage) As String
             enScreenPageStr = "enScrProjComplete"
         Case 2
             enScreenPageStr = ""
-    End Select
-End Function
-
-' ===============================================================
-' enStatusDisp
-' Returns display string from Enum integer value
-' ---------------------------------------------------------------
-Public Function enStatusDisp(EnumValue As enStatus) As String
-    Select Case EnumValue
-        Case enNotStarted
-            enStatusDisp = "Not Started"
-        Case enActionReqd
-            enStatusDisp = "Action Req'd"
-        Case enWaiting
-            enStatusDisp = "Waiting"
-        Case enClosed
-            enStatusDisp = "Closed"
     End Select
 End Function
 
