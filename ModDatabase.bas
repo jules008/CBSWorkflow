@@ -41,6 +41,7 @@ Restart:
     
         Set RstResults = DB.OpenRecordset(SQL, dbOpenDynaset)
         Set SQLQuery = RstResults
+        Debug.Print SQL
     
     Set RstResults = Nothing
     

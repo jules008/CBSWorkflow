@@ -29,6 +29,7 @@ Attribute VB_Exposed = False
 Option Explicit
 
 Private pProjectNo As Integer
+Private pProjectName As String
 Private pCaseManager As ClsCBSUser
 Private pLoanTerm As String
 Private pProjectWorkflow As ClsWorkflow
@@ -180,7 +181,7 @@ End Sub
 ' Method DBGet(Key as Integer)
 ' Gets class from Database
 ' ---------------------------------------------------------------
-Public Sub DBGet(ProjectNo As Integer)
+Public Sub DBGet(ByVal ProjectNo As Integer)
     Dim RstProject As Recordset
 
     Set RstProject = ModDatabase.SQLQuery("SELECT * FROM TblProject WHERE ProjectNo = " & ProjectNo)
@@ -194,7 +195,7 @@ Public Sub DBGet(ProjectNo As Integer)
             pSPV.DBGet !SPVNo
             pClient.DBGet !ClientNo
         pCaseManager.DBGet !CaseManager
-        pContacts.GetCollection
+            pContacts.GetCollection "Project", pProjectName
         pProjectWorkflow.DBGet !ProjectWFNo
         End If
     End With

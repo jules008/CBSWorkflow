@@ -234,6 +234,10 @@ Public Sub DisplayForm()
         .ChkExitFee = pParent.ExitFee
         .TxtStepName = ActiveStep.StepNo & " - " & pActiveStep.StepName
         .xTxtAction = pActiveStep.StepAction
+        .TxtClientContactName = Parent.Client.Contacts.PrimaryContact.ContactName
+        .TxtClientContactPhone = Parent.Client.Contacts.PrimaryContact.Phone1
+        .TxtSPVContactName = Parent.SPV.Contacts.PrimaryContact.ContactName
+        .TxtSPVContactPhone = Parent.SPV.Contacts.PrimaryContact.Phone1
     
         Select Case pActiveStep.StepType
             Case enYesNo

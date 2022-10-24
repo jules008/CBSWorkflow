@@ -34,6 +34,9 @@ Private pContactName As String
 Private pAddress As String
 Private pPhone1 As String
 Private pPhone2 As String
+Private pContactType As String
+Private pOrganisation As String
+Private pPrimaryContact As Boolean
 Private WithEvents pContactForm As FrmContactForm
 Attribute pContactForm.VB_VarHelpID = -1
 
@@ -91,6 +94,15 @@ Public Property Let Phone2(ByVal vNewValue As String)
     pPhone2 = vNewValue
 End Property
 
+'---------------------------------------------------------------
+Public Property Get PrimaryContact() As Boolean
+    PrimaryContact = pPrimaryContact
+End Property
+
+Public Property Let PrimaryContact(ByVal vNewValue As Boolean)
+    pPrimaryContact = vNewValue
+End Property
+
 ' ===============================================================
 ' Method DBNew
 ' displays new SPV form
@@ -98,10 +110,13 @@ End Property
 Public Sub DBNew()
     pContactNo = 0
     pContactName = ""
+    pContactType = 0
+    pOrganisation = ""
     pAddress = ""
     pPhone1 = ""
     pPhone2 = ""
     pPosition = ""
+    pPrimaryContact = False
     
     With pContactForm
         .Tag = "New"
@@ -117,12 +132,15 @@ End Sub
 Public Sub DisplayForm()
     With pContactForm
         .Tag = "Update"
-        .TxtAddress = pAddress
+        .TxtAddress1 = pAddress
         .TxtContactName = pContactName
         .TxtContactNo = pContactNo
+        .CmoContactType = pContactType
+        .CmoOrganisation = pOrganisation
         .TxtPhone1 = pPhone1
         .TxtPhone2 = pPhone2
         .TxtPosition = pPosition
+        .ChkPrimaryContact = pPrimaryContact
         .Show
     End With
 End Sub
@@ -141,8 +159,12 @@ Public Sub DBGet(ContactNo As Integer)
             If Not IsNull(!Position) Then pPosition = !Position
             If Not IsNull(!ContactName) Then pContactName = !ContactName
             If Not IsNull(!Address) Then pAddress = !Address
+            If Not IsNull(!Organisation) Then pOrganisation = !Organisation
+            If Not IsNull(!ContactType) Then pContactType = !ContactType
             If Not IsNull(!Phone1) Then pPhone1 = !Phone1
             If Not IsNull(!Phone2) Then pPhone2 = !Phone2
+            If Not IsNull(!PrimaryContact) Then pPrimaryContact = !PrimaryContact
+            
         End If
     End With
     Set RstContact = Nothing
@@ -155,10 +177,14 @@ End Sub
 Public Sub DBSave()
     Dim RstContact As Recordset
     Dim RstMaxNo As Recordset
+    Dim RstNoCont As Recordset
+    
     Dim LastNo As Integer
 
     Set RstContact = ModDatabase.SQLQuery("SELECT * FROM TblContact WHERE ContactNo = " & pContactNo)
     Set RstMaxNo = ModDatabase.SQLQuery("SELECT MAX(ContactNo) FROM TblContact ")
+    Set RstNoCont = ModDatabase.SQLQuery("SELECT COUNT (ContactNo) FROM TblContact " _
+                                            & "WHERE ContactType = '" & pContactType & "' and Organisation = '" & pOrganisation & "'")
 
     If RstMaxNo.Fields(0).Value <> 0 Then
         LastNo = RstMaxNo.Fields(0).Value
@@ -174,18 +200,28 @@ Public Sub DBSave()
             .Edit
         End If
 
+        'set to primary contact if this is the only contact for the organisation
+        If RstNoCont.Fields(0) = 0 Then pPrimaryContact = True
+        
+        'if it has been flagged as a primary contact, clear all others for that organsiation
+        If pPrimaryContact Then DB.Execute "UPDATE TblContact SET PrimaryContact = False WHERE ContactType = '" & pContactType & "' and Organisation = '" & pOrganisation & "'"
+        
         If CStr(pContactNo) = "" Then !ContactNo = Null Else !ContactNo = pContactNo
         If CStr(pPosition) = "" Then !Position = Null Else !Position = pPosition
         If CStr(pContactName) = "" Then !ContactName = Null Else !ContactName = pContactName
         If CStr(pAddress) = "" Then !Address = Null Else !Address = pAddress
+        If CStr(pContactType) = "" Then !ContactType = Null Else !ContactType = pContactType
+        If CStr(pOrganisation) = "" Then !Organisation = Null Else !Organisation = pOrganisation
         If CStr(pPhone1) = "" Then !Phone1 = Null Else !Phone1 = pPhone1
         If CStr(pPhone2) = "" Then !Phone2 = Null Else !Phone2 = pPhone2
+        If CStr(pPrimaryContact) = "" Then !PrimaryContact = Null Else !PrimaryContact = pPrimaryContact
 
         .Update
     End With
 
     Set RstContact = Nothing
     Set RstMaxNo = Nothing
+    Set RstNoCont = Nothing
 End Sub
 
 ' ===============================================================
@@ -203,13 +239,47 @@ End Sub
 ' ---------------------------------------------------------------
 Private Sub pContactForm_Update()
     With pContactForm
-        pAddress = .TxtAddress
+        pAddress = .TxtAddress1
         pContactName = .TxtContactName
         pPhone1 = .TxtPhone1
         pPhone2 = .TxtPhone2
         pPosition = .TxtPosition
+        pContactType = .CmoContactType
+        pOrganisation = .CmoOrganisation
+        pPrimaryContact = .ChkPrimaryContact
     End With
     DBSave
+    
+    Select Case pContactType
+        Case "Client"
+            Set ActiveClient = New ClsClient
+            With ActiveClient
+                .DBGet pOrganisation
+                .Contacts.Add Me
+                .DBSave
+            End With
+        Case "Lender"
+            Set ActiveLender = New ClsLender
+            With ActiveLender
+                .DBGet pOrganisation
+                .Contacts.Add Me
+                .DBSave
+            End With
+        Case "Project"
+            Set ActiveProject = New ClsProject
+            With ActiveProject
+                .DBGet pOrganisation
+                .Contacts.Add Me
+                .DBSave
+            End With
+        Case "SPV"
+            Set ActiveSPV = New ClsSPV
+            With ActiveSPV
+                .DBGet pOrganisation
+                .Contacts.Add Me
+                .DBSave
+            End With
+    End Select
 End Sub
 
 ' ===============================================================

@@ -134,8 +134,8 @@ Public Const CRM_SPV_MAX_LINES As Integer = 150
 ' ---------------------------------------------------------------
 ' CRM Contact Screen
 ' ---------------------------------------------------------------
-Public Const CRM_CONTACT_TABLE_COL_WIDTHS As String = "100:150:200:200:100"
-Public Const CRM_CONTACT_TABLE_TITLES As String = "Contact No:Contact Name:Organisation:Position:Phone No"
+Public Const CRM_CONTACT_TABLE_COL_WIDTHS As String = "100:150:150:150:100:100"
+Public Const CRM_CONTACT_TABLE_TITLES As String = "Contact No:Contact Name:Contact Type:Organisation:Position:Phone No"
 Public Const CRM_CONTACT_MAX_LINES As Integer = 150
 
 ' ---------------------------------------------------------------

@@ -8,3 +8,4 @@ ExitFee,  dbBoolean
 Workflows,  dbText
 Contacts,  dbText
 ProjectWFNo,  dbLong
+ProjectName,  dbText

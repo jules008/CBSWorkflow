@@ -142,7 +142,7 @@ Public Sub DBGet(ClientNameNo As Variant)
             If Not IsNull(!Url) Then pUrl = !Url
             If Not IsNull(!PhoneNo) Then pPhoneNo = !PhoneNo
             If Not IsNull(!ClientNo) Then pClientNo = !ClientNo
-        pContacts.GetCollection
+        pContacts.GetCollection "Client", pName
         End If
     End With
     Set RstClient = Nothing

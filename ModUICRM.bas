@@ -332,7 +332,8 @@ Private Function GetCRMData(ByVal ScreenPage As enScreenPage, StrSortBy As Strin
         Case enScrCRMSPV
             SQL = "SELECT SPVNo, Name FROM TblSPV"
         Case enScrCRMContact
-            SQL = "SELECT ContactNo, ContactName, Position, Phone1 FROM TblContact"
+            SQL = "SELECT TblContact.ContactNo, TblContact.ContactName, TblContact.ContactType, TblContact.Organisation, TblContact.Position, TblContact.Phone1 " _
+                    & "FROM TblContact"
         Case enScrCRMProject
             SQL = "SELECT TblProject.ProjectNo, TblClient.Name, TblSPV.Name, TblCBSUser.UserName " _
                     & "FROM ((TblProject LEFT JOIN TblClient ON TblProject.ClientNo = TblClient.ClientNo) LEFT JOIN TblSPV ON TblProject.SPVNo = TblSPV.SPVNo) LEFT JOIN TblCBSUser ON TblProject.CaseManager = TblCBSUser.CBSUserNo"

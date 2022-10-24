@@ -145,7 +145,8 @@ Public Sub DBGet(LenderNameOrNo As Variant)
             If Not IsNull(!PhoneNo) Then pPhoneNo = !PhoneNo
             If Not IsNull(!LenderType) Then pLenderType = !LenderType
             If Not IsNull(!Address) Then pAddress = !Address
-        pContacts.GetCollection
+            
+            pContacts.GetCollection "Lender", pName
         End If
     End With
     Set RstLender = Nothing

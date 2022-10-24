@@ -8,7 +8,7 @@ Attribute VB_Name = "ModEnums"
 '===============================================================
 ' v1.0.0 - Initial Version
 '---------------------------------------------------------------
-' Date - 09 Oct 22
+' Date - 24 Oct 22
 '===============================================================
 
 Option Explicit
@@ -61,53 +61,70 @@ Public Function EnumObjTypeVal(EnumValue As String) As EnumObjType
 End Function
 
 ' ===============================================================
+' EnMenuBtnNoVal
+' Returns integer value from Enum string
+' ---------------------------------------------------------------
+Public Function EnMenuBtnNoVal(EnumValue As String) As EnMenuBtnNo
+    Select Case EnumValue
+        Case "enBtnForAction"
+            EnMenuBtnNoVal = 1
+        Case "enBtnProjectsActive"
+            EnMenuBtnNoVal = 2
+        Case "enBtnProjectsClosed"
+            EnMenuBtnNoVal = 2
+        Case "enBtnCRMClient"
+            EnMenuBtnNoVal = 3
+        Case "enBtnCRMSPV"
+            EnMenuBtnNoVal = 3
+        Case "enBtnCRMContacts"
+            EnMenuBtnNoVal = 3
+        Case "enBtnCRMProjects"
+            EnMenuBtnNoVal = 3
+        Case "enBtnCRMLenders"
+            EnMenuBtnNoVal = 3
+        Case "enbtnDashboard"
+            EnMenuBtnNoVal = 4
+        Case "enBtnReports"
+            EnMenuBtnNoVal = 5
+        Case "enBtnAdminUsers"
+            EnMenuBtnNoVal = 6
+        Case "enBtnAdminEmailTs"
+            EnMenuBtnNoVal = 6
+        Case "enBtnAdminDocuments"
+            EnMenuBtnNoVal = 6
+        Case "enBtnAdminWorkflows"
+            EnMenuBtnNoVal = 6
+        Case "enBtnAdminWFTypes"
+            EnMenuBtnNoVal = 6
+        Case "enBtnAdminLists"
+            EnMenuBtnNoVal = 6
+        Case "enBtnAdminRoles"
+            EnMenuBtnNoVal = 6
+        Case "enBtnExit"
+            EnMenuBtnNoVal = 7
+    End Select
+End Function
+
+' ===============================================================
 ' EnumBtnNoVal
 ' Returns integer value from Enum string
 ' ---------------------------------------------------------------
 Public Function EnumBtnNoVal(EnumValue As String) As EnumBtnNo
     Select Case EnumValue
-        Case "enBtnForAction"
-            EnumBtnNoVal = 1
-        Case "enBtnProjectsActive"
-            EnumBtnNoVal = 2
-        Case "enBtnProjectsComplete"
-            EnumBtnNoVal = 2
-        Case "enBtnCRMClient"
-            EnumBtnNoVal = 3
-        Case "enBtnCRMSPV"
-            EnumBtnNoVal = 3
-        Case "enScrCRMContacts"
-            EnumBtnNoVal = 3
-        Case "enScrCRMProjects"
-            EnumBtnNoVal = 3
-        Case "enScrCRMLenders"
-            EnumBtnNoVal = 3
-        Case "enDashboard"
-            EnumBtnNoVal = 4
-        Case "enReports"
-            EnumBtnNoVal = 5
-        Case "enAdminUsers"
-            EnumBtnNoVal = 6
-        Case "enAdminEmailTs"
-            EnumBtnNoVal = 6
-        Case "enAdminDocuments"
-            EnumBtnNoVal = 6
-        Case "enAdminWorkflows"
-            EnumBtnNoVal = 6
-        Case "enAdminWFTypes"
-            EnumBtnNoVal = 6
-        Case "enAdminLists"
-            EnumBtnNoVal = 6
-        Case "enAdminRoles"
-            EnumBtnNoVal = 6
         Case "enBtnProjectNew"
-            EnumBtnNoVal = 7
-        Case "enBtnLenderNewWF"
-            EnumBtnNoVal = 8
-        Case "enBtnExit"
-            EnumBtnNoVal = 9
-        Case "BtnProjectOpenWF"
+            EnumBtnNoVal = 0
+        Case "enBtnProjectOpen"
             EnumBtnNoVal = 1
+        Case "enBtnLenderNewWF"
+            EnumBtnNoVal = 2
+        Case "enBtnCRMOpenItem"
+            EnumBtnNoVal = 3
+        Case "enBtnCRMLenderOpen"
+            EnumBtnNoVal = 4
+        Case "enBtnCRMLenderNew"
+            EnumBtnNoVal = 5
+        Case "enBtnCRMNewItem"
+            EnumBtnNoVal = 6
     End Select
 End Function
 
@@ -192,12 +209,22 @@ End Function
 ' ---------------------------------------------------------------
 Public Function enScreenPageVal(EnumValue As String) As enScreenPage
     Select Case EnumValue
-        Case "enScrProjActive"
+        Case "enScrProjForAction"
             enScreenPageVal = 0
-        Case "enScrProjComplete"
+        Case "enScrProjActive"
             enScreenPageVal = 1
-        Case ""
+        Case "enScrProjComplete"
             enScreenPageVal = 2
+        Case "enScrCRMClient"
+            enScreenPageVal = 3
+        Case "enScrCRMSPV"
+            enScreenPageVal = 4
+        Case "enScrCRMContact"
+            enScreenPageVal = 5
+        Case "enScrCRMProject"
+            enScreenPageVal = 6
+        Case "enScrCRMLender"
+            enScreenPageVal = 7
     End Select
 End Function
 
@@ -243,53 +270,70 @@ Public Function EnumObjTypeStr(EnumValue As EnumObjType) As String
 End Function
 
 ' ===============================================================
+' EnMenuBtnNoStr
+' Returns enum string from Enum integer value
+' ---------------------------------------------------------------
+Public Function EnMenuBtnNoStr(EnumValue As EnMenuBtnNo) As String
+    Select Case EnumValue
+        Case 1
+            EnMenuBtnNoStr = "enBtnForAction"
+        Case 2
+            EnMenuBtnNoStr = "enBtnProjectsActive"
+        Case 2
+            EnMenuBtnNoStr = "enBtnProjectsClosed"
+        Case 3
+            EnMenuBtnNoStr = "enBtnCRMClient"
+        Case 3
+            EnMenuBtnNoStr = "enBtnCRMSPV"
+        Case 3
+            EnMenuBtnNoStr = "enBtnCRMContacts"
+        Case 3
+            EnMenuBtnNoStr = "enBtnCRMProjects"
+        Case 3
+            EnMenuBtnNoStr = "enBtnCRMLenders"
+        Case 4
+            EnMenuBtnNoStr = "enbtnDashboard"
+        Case 5
+            EnMenuBtnNoStr = "enBtnReports"
+        Case 6
+            EnMenuBtnNoStr = "enBtnAdminUsers"
+        Case 6
+            EnMenuBtnNoStr = "enBtnAdminEmailTs"
+        Case 6
+            EnMenuBtnNoStr = "enBtnAdminDocuments"
+        Case 6
+            EnMenuBtnNoStr = "enBtnAdminWorkflows"
+        Case 6
+            EnMenuBtnNoStr = "enBtnAdminWFTypes"
+        Case 6
+            EnMenuBtnNoStr = "enBtnAdminLists"
+        Case 6
+            EnMenuBtnNoStr = "enBtnAdminRoles"
+        Case 7
+            EnMenuBtnNoStr = "enBtnExit"
+    End Select
+End Function
+
+' ===============================================================
 ' EnumBtnNoStr
 ' Returns enum string from Enum integer value
 ' ---------------------------------------------------------------
 Public Function EnumBtnNoStr(EnumValue As EnumBtnNo) As String
     Select Case EnumValue
-        Case 1
-            EnumBtnNoStr = "enBtnForAction"
-        Case 2
-            EnumBtnNoStr = "enBtnProjectsActive"
-        Case 2
-            EnumBtnNoStr = "enBtnProjectsComplete"
-        Case 3
-            EnumBtnNoStr = "enBtnCRMClient"
-        Case 3
-            EnumBtnNoStr = "enBtnCRMSPV"
-        Case 3
-            EnumBtnNoStr = "enScrCRMContacts"
-        Case 3
-            EnumBtnNoStr = "enScrCRMProjects"
-        Case 3
-            EnumBtnNoStr = "enScrCRMLenders"
-        Case 4
-            EnumBtnNoStr = "enDashboard"
-        Case 5
-            EnumBtnNoStr = "enReports"
-        Case 6
-            EnumBtnNoStr = "enAdminUsers"
-        Case 6
-            EnumBtnNoStr = "enAdminEmailTs"
-        Case 6
-            EnumBtnNoStr = "enAdminDocuments"
-        Case 6
-            EnumBtnNoStr = "enAdminWorkflows"
-        Case 6
-            EnumBtnNoStr = "enAdminWFTypes"
-        Case 6
-            EnumBtnNoStr = "enAdminLists"
-        Case 6
-            EnumBtnNoStr = "enAdminRoles"
-        Case 7
+        Case 0
             EnumBtnNoStr = "enBtnProjectNew"
-        Case 8
-            EnumBtnNoStr = "enBtnLenderNewWF"
-        Case 9
-            EnumBtnNoStr = "enBtnExit"
         Case 1
-            EnumBtnNoStr = "BtnProjectOpenWF"
+            EnumBtnNoStr = "enBtnProjectOpen"
+        Case 2
+            EnumBtnNoStr = "enBtnLenderNewWF"
+        Case 3
+            EnumBtnNoStr = "enBtnCRMOpenItem"
+        Case 4
+            EnumBtnNoStr = "enBtnCRMLenderOpen"
+        Case 5
+            EnumBtnNoStr = "enBtnCRMLenderNew"
+        Case 6
+            EnumBtnNoStr = "enBtnCRMNewItem"
     End Select
 End Function
 
@@ -375,11 +419,21 @@ End Function
 Public Function enScreenPageStr(EnumValue As enScreenPage) As String
     Select Case EnumValue
         Case 0
-            enScreenPageStr = "enScrProjActive"
+            enScreenPageStr = "enScrProjForAction"
         Case 1
-            enScreenPageStr = "enScrProjComplete"
+            enScreenPageStr = "enScrProjActive"
         Case 2
-            enScreenPageStr = ""
+            enScreenPageStr = "enScrProjComplete"
+        Case 3
+            enScreenPageStr = "enScrCRMClient"
+        Case 4
+            enScreenPageStr = "enScrCRMSPV"
+        Case 5
+            enScreenPageStr = "enScrCRMContact"
+        Case 6
+            enScreenPageStr = "enScrCRMProject"
+        Case 7
+            enScreenPageStr = "enScrCRMLender"
     End Select
 End Function
 

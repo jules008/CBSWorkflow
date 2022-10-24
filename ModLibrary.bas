@@ -121,30 +121,30 @@ End Sub
 ' RecordsetPrint
 ' sends contents of recordset to debug window
 ' ---------------------------------------------------------------
-Public Sub RecordsetPrint(rst As Recordset)
+Public Sub RecordsetPrint(Rst As Recordset)
     On Error Resume Next
     
     Dim DBString As String
     Dim RSTField As Field
     Dim i As Integer
 
-    ReDim AyFields(rst.Fields.Count)
+    ReDim AyFields(Rst.Fields.Count)
     
-    Debug.Print rst.RecordCount
-    rst.MoveFirst
+    Debug.Print Rst.RecordCount
+    Rst.MoveFirst
     
-    For i = 0 To rst.Fields.Count - 1
-        DBString = DBString & rst.Fields(i).Name & ":" & vbTab
+    For i = 0 To Rst.Fields.Count - 1
+        DBString = DBString & Rst.Fields(i).Name & ":" & vbTab
     Next
     
     Debug.Print DBString
     DBString = ""
     
-    Do Until rst.EOF
-        For i = 0 To rst.Fields.Count - 1
-             DBString = DBString & rst.Fields(i).Value & ":" & vbTab
+    Do Until Rst.EOF
+        For i = 0 To Rst.Fields.Count - 1
+             DBString = DBString & Rst.Fields(i).Value & ":" & vbTab
         Next
-        rst.MoveNext
+        Rst.MoveNext
         Debug.Print DBString
         DBString = ""
     Loop

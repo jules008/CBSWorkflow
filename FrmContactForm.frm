@@ -55,12 +55,15 @@ End Sub
 ' Clears form
 ' ---------------------------------------------------------------
 Public Sub ClearForm()
-    TxtAddress = ""
-    TxtContactNo = ""
+    TxtAddress1 = ""
+    TxtAddress2 = ""
     TxtContactName = ""
+    TxtContactNo = ""
     TxtPhone1 = ""
     TxtPhone2 = ""
     TxtPosition = ""
+    CmoContactType = ""
+    CmoOrganisation = ""
 End Sub
 
 ' ===============================================================
@@ -123,6 +126,89 @@ ErrorHandler:
 End Sub
 
 ' ===============================================================
+' PopulateOrgs
+' popullates organisations after contact type is selected
+' ---------------------------------------------------------------
+Private Function PopulateOrgs(ContactType As String) As Boolean
+    Dim RstSource As Recordset
+    Dim Index As String
+    Dim Table As String
+    Dim Name As String
+    Dim i As Integer
+    
+    Const StrPROCEDURE As String = "populateOrgs()"
+
+    On Error GoTo ErrorHandler
+
+    Select Case ContactType
+        Case "Client"
+            Index = "ClientNo"
+            Table = "TblClient"
+            Name = "Name"
+        Case "Lender"
+            Index = "LenderNo"
+            Table = "TblLender"
+            Name = "Name"
+        Case "SPV"
+            Index = "SPVNo"
+            Table = "TblSPV"
+             Name = "Name"
+       Case "Project"
+            Index = "ProjectNo"
+            Table = "TblProject"
+            Name = "ProjectName"
+    End Select
+        
+    Set RstSource = ModDatabase.SQLQuery("SElECT " & Index & ", " & Name & " FROM " & Table)
+    
+    With RstSource
+        CmoOrganisation.Clear
+        Do While Not .EOF
+            With CmoOrganisation
+                .AddItem
+                If Not IsNull(RstSource.Fields(0)) Then .List(i, 0) = RstSource.Fields(0)
+                If Not IsNull(RstSource.Fields(1)) Then .List(i, 1) = RstSource.Fields(1)
+                i = i + 1
+            End With
+            .MoveNext
+        Loop
+    End With
+    
+    PopulateOrgs = True
+
+Exit Function
+
+ErrorExit:
+
+    '***CleanUpCode***
+    PopulateOrgs = False
+
+Exit Function
+
+ErrorHandler:
+    If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
+        Stop
+        Resume
+    Else
+        Resume ErrorExit
+    End If
+End Function
+
+' ===============================================================
+' TxtContactName_Change
+' ---------------------------------------------------------------
+Private Sub CmoContactType_Change()
+    CmoOrganisation = ""
+    With CmoContactType
+        If .ListIndex = -1 Then
+            CmoOrganisation.Value = "Please select a Contact Type"
+        Else
+            If Not PopulateOrgs(.Value) Then Err.Raise HANDLED_ERROR
+        End If
+    End With
+End Sub
+
+' ===============================================================
 ' TxtContactName_Change
 ' ---------------------------------------------------------------
 Private Sub TxtContactName_Change()
@@ -172,6 +258,23 @@ Private Sub UserForm_Initialize()
         BtnUpdate.Caption = "Create"
     End If
     ClearForm
+    
+    With CmoContactType
+        .Clear
+        .AddItem
+        .List(0, 0) = 0
+        .List(0, 1) = "Lender"
+        .AddItem
+        .List(1, 0) = 1
+        .List(1, 1) = "Project"
+        .AddItem
+        .List(2, 0) = 2
+        .List(2, 1) = "SPV"
+        .AddItem
+        .List(3, 0) = 3
+        .List(3, 1) = "Client"
+    End With
+    CmoOrganisation.ForeColor = COL_DRK_GREY
 End Sub
 
 ' ===============================================================
