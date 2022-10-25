@@ -229,14 +229,24 @@ End Sub
 Public Sub DisplayForm()
     Dim ProgPC As Single
     Dim TmpWorkflow As ClsWorkflow
-    Const ADJUST_1 As Integer = 8
-    Const ADJUST_2 As Integer = 16
+    Dim Adjust1 As Integer
+    Dim Adjust2 As Integer
     
     ProgPC = pSteps.PCComplete
     
     With pProjWFForm
     
+        If .ScreenAdjusted Then
+            Adjust1 = 0
+            Adjust2 = 0
+        Else
+            Adjust1 = 8
+            Adjust2 = 16
+            .ScreenAdjusted = True
+        End If
+        
         If pWorkflowType = enProject Then
+            .TtlTop.Caption = "Project No " & pProjectNo & " Workflow"
             .LblLenderName.Visible = False
             .LblLenderCont.Visible = False
             .LblLenderPhone.Visible = False
@@ -244,18 +254,23 @@ Public Sub DisplayForm()
             .TxtLenderContactPhone.Visible = False
             .TxtLenderName.Visible = False
             .xBtnChat.Visible = True
-            .LblCl.Top = .LblCl.Top - ADJUST_2
-            .LblCont1.Top = .LblCont1.Top - ADJUST_2
-            .LblPhone1.Top = .LblPhone1.Top - ADJUST_2
-            .TxtClientContactName.Top = .TxtClientContactName.Top - ADJUST_2
-            .TxtClientContactPhone.Top = .TxtClientContactPhone.Top - ADJUST_2
-            .TxtClientName.Top = .TxtClientName.Top - ADJUST_2
-            .LblSPV.Top = .LblSPV.Top - ADJUST_1
-            .LblCont2.Top = .LblCont2.Top - ADJUST_1
-            .LblPhone2.Top = .LblPhone2.Top - ADJUST_1
-            .TxtSPVContactName.Top = .TxtSPVContactName.Top - ADJUST_1
-            .TxtSPVContactPhone.Top = .TxtSPVContactPhone.Top - ADJUST_1
-            .TxtSPVName.Top = .TxtSPVName.Top - ADJUST_1
+            .LblCl.Top = .LblCl.Top - Adjust2
+            .LblCont1.Top = .LblCont1.Top - Adjust2
+            .Lblphone1.Top = .Lblphone1.Top - Adjust2
+            .TxtClientContactName.Top = .TxtClientContactName.Top - Adjust2
+            .TxtClientContactPhone.Top = .TxtClientContactPhone.Top - Adjust2
+            .TxtClientName.Top = .TxtClientName.Top - Adjust2
+            .LblSPV.Top = .LblSPV.Top - Adjust1
+            .LblCont2.Top = .LblCont2.Top - Adjust1
+            .LblPhone2.Top = .LblPhone2.Top - Adjust1
+            .TxtSPVContactName.Top = .TxtSPVContactName.Top - Adjust1
+            .TxtSPVContactPhone.Top = .TxtSPVContactPhone.Top - Adjust1
+            .TxtSPVName.Top = .TxtSPVName.Top - Adjust1
+        Else
+            .TtlTop.Caption = "Lender Workflow - Project No" & pProjectNo
+            .TxtLenderName = pLender.Name
+            .TxtLenderContactName = pLender.Contacts.PrimaryContact.ContactName
+            .TxtLenderContactPhone = pLender.Contacts.PrimaryContact.Phone1
         End If
         
         .Progress ProgPC
@@ -625,7 +640,6 @@ Private Sub Class_Initialize()
     Set pLender = New ClsLender
     Set pProjWFForm = New FrmWFProject
     Set pChatRoom = New ClsChatRoom
-    Set pParent = New ClsProject
     
     pActiveStep.Initialize Me
     pSteps.Initialize Me

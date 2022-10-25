@@ -104,7 +104,7 @@ Public Sub GetCollection()
         For i = 1 To .RecordCount
             Set Workflow = New ClsWorkflow
             Workflow.DBGet !WorkflowNo
-                pWorkflows.Add Workflow, Key:=CStr(Workflow.WorkflowNo)
+            Add Workflow
             .MoveNext
         Next
         End If
@@ -164,6 +164,59 @@ Public Sub Destroy(WorkflowNo As Variant)
 
     Set Workflow = Nothing
 End Sub
+
+' ===============================================================
+' Method UpdateRAGs
+' Updates the RAGs for all workflows
+'---------------------------------------------------------------
+Public Sub UpdateRAGs()
+    Dim AmberDate As Date
+    Dim RedDate As Date
+    Dim RstWorkflow As Recordset
+    Dim RAG As String
+    Dim SQL As String
+    
+    Set RstWorkflow = ModDatabase.SQLQuery("SELECT " _
+                                                & "TblWorkflow.WorkflowNo, " _
+                                                & "TblWorkflow.CurrentStep, " _
+                                                & "TblStep.RedThresh, " _
+                                                & "TblStep.AmberThresh, " _
+                                                & "TblStep.StartTime, " _
+                                                & "TblStep.EndTime, " _
+                                                & "TblWorkflow.Status, " _
+                                                & "TblWorkflow.RAG " _
+                                            & "FROM " _
+                                                & "TblWorkflow Inner Join " _
+                                                & "TblStep On TblStep.WorkflowNo = TblWorkflow.WorkflowNo " _
+                                            & "AND TblStep.StepNo = TblWorkflow.CurrentStep " _
+                                            & "WHERE " _
+                                                & "TblWorkflow.Status <> 'enComplete' " _
+                                            & "ORDER BY " _
+                                                & "TblWorkflow.WorkflowNo")
+                            
+    With RstWorkflow
+        Do While Not .EOF
+            If Not IsNull(!StartTime) Then
+                AmberDate = DateAdd("d", !AmberThresh, !StartTime)
+                RedDate = DateAdd("d", !RedThresh, !StartTime)
+                
+                If DateDiff("s", Now, AmberDate) >= 0 Then
+                    RAG = "en3Green"
+                ElseIf DateDiff("d", Now, RedDate) >= 0 Then
+                    RAG = "en2Amber"
+                Else
+                    RAG = "en1Red"
+                End If
+                
+                SQL = "UPDATE TblWorkflow SET RAG = '" & RAG & "' WHERE WorkflowNo = " & !WorkflowNo
+                DB.Execute SQL
+            End If
+            .MoveNext
+        Loop
+    End With
+    Set RstWorkflow = Nothing
+End Sub
+
 ' ===============================================================
 Public Sub Initialize(obj As ClsProject)
     Set Me.Parent = obj

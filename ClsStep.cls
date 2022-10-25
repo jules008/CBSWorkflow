@@ -518,8 +518,6 @@ Public Sub DBSave(Optional StepIndex As String)
         !DataDest = pDataDest
         !UniqueID = pUniqueID
         !Status = pStatus
-                Debug.Assert Not IsNull(!Status)
-                Debug.Print "Step "; !Status
 '        !Email = pEmail.EmailNo
 '        !AltEmail = pAltEmail.EmailNo
         !Wait = pWait

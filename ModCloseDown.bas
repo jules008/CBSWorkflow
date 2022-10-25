@@ -94,6 +94,9 @@ Private Function EndGlobalClasses() As Boolean
 
     On Error GoTo ErrorHandler
 
+    If Not ActiveWorkflows Is Nothing Then ActiveWorkflows.Terminate
+    
+    Set ActiveWorkflows = Nothing
     
     EndGlobalClasses = True
 
@@ -102,7 +105,10 @@ Exit Function
 
 ErrorExit:
 
-    '***CleanUpCode***
+    ActiveWorkflows.Terminate
+    
+    Set ActiveWorkflows = Nothing
+    
     EndGlobalClasses = False
 
 Exit Function

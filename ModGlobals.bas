@@ -84,6 +84,7 @@ Global STOP_FLAG As Boolean
 ' Global Class Declarations
 ' ---------------------------------------------------------------
 Public Clients As ClsClients
+Public ActiveWorkflows As ClsWorkflows
 Public ActiveLender As ClsLender
 Public ActiveWorkFlow As ClsWorkflow
 Public ActiveProject As ClsProject

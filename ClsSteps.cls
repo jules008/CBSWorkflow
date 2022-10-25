@@ -270,7 +270,6 @@ Public Sub UpdateSteps()
         
             'cycle through WF Nos
             WFNo = !WorkflowNo
-            'Debug.Print WFNo
             'get cert type
             SQL = "SELECT Name FROM TblWorkflow WHERE WorkflowNo = " & WFNo & " AND Status <> 'Complete'"
             
@@ -293,7 +292,6 @@ Public Sub UpdateSteps()
                         
                         With RstTest
                             If RstTest.RecordCount = 0 Then
-                                'Debug.Print "Workflow " & WFNo & " Step No " & StepNo & " is missing"
                                 .AddNew
                                 !Wait = RstSteps!Wait
                                 !StepType = RstSteps!StepType
@@ -330,8 +328,6 @@ Public Sub UpdateSteps()
                                     !EndTime = RstNextRec!StartTime
                                     !Status = "Complete"
                                     
-                Debug.Assert Not IsNull(!Status)
-                Debug.Print !ProjectNo; !Status
                                 End If
                                 
                                 .Update

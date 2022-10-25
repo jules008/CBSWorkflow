@@ -200,7 +200,6 @@ End Function
 Public Function RefreshList(ByVal ScreenPage As enScreenPage, Optional SortBy As String) As Boolean
     Dim NoCols As Integer
     Dim NoRows As Integer
-    Dim Workflows As ClsWorkflows
     Dim StrSortBy As String
     Dim RstWorkflowList As Recordset
     Dim y As Integer
@@ -214,8 +213,6 @@ Public Function RefreshList(ByVal ScreenPage As enScreenPage, Optional SortBy As
 
     ModLibrary.PerfSettingsOn
 
-    Set Workflows = New ClsWorkflows
-    
     Set RstWorkflowList = GetActiveList(ScreenPage, StrSortBy)
     
     With RstWorkflowList
@@ -295,17 +292,14 @@ GracefulExit:
     
     RefreshList = True
  
-    Workflows.Terminate
     Set RstWorkflowList = Nothing
-    Set Workflows = Nothing
     
 Exit Function
 
 ErrorExit:
 
-    Workflows.Terminate
     Set RstWorkflowList = Nothing
-    Set Workflows = Nothing
+    
     ModLibrary.PerfSettingsOff
     
     RefreshList = False
@@ -363,9 +357,9 @@ Restart:
         MainScreen.ReOrder
     Else
     
-    SQL = "SELECT TblWorkflow.WorkflowNo, TblLender.Name, TblWorkflow.CurrentStep, TblStepTemplate.StepName, TblWorkflow.Status " _
+    SQL = "SELECT TblWorkflow.WorkflowNo, TblLender.Name, TblWorkflow.CurrentStep, TblStepTemplate.StepName, TblWorkflow.Status, TblWorkflow.RAG " _
                 & "FROM TblStepTemplate RIGHT JOIN (TblWorkflow LEFT JOIN TblLender ON TblWorkflow.LenderNo = TblLender.LenderNo) ON TblStepTemplate.StepNo = TblWorkflow.CurrentStep " _
-                    & "WHERE (((TblWorkflow.ProjectNo)= " & ProjectNo & "AND TblWorkflow.WorkflowType = 'enLender'))"
+            & "WHERE (((TblWorkflow.ProjectNo)= " & ProjectNo & ") AND ((TblWorkflow.WorkflowType)='enLender'))"
 
     Set RstWorkflows = ModDatabase.SQLQuery(SQL)
     
@@ -391,7 +385,7 @@ Restart:
             .MoveFirst
             For y = 0 To NoRows - 1
                 
-                If x = 6 Then
+                If x = 4 Then
                     If !RAG = "en1Red" Then AryStyles(x, y) = "RED_CELL"
                     If !RAG = "en2Amber" Then AryStyles(x, y) = "AMBER_CELL"
                     If !RAG = "en3Green" Then AryStyles(x, y) = "GREEN_CELL"
@@ -523,6 +517,7 @@ End Function
 ' Opens project workflow
 ' ---------------------------------------------------------------
 Public Function OpenLenderWF(ByVal ScreenPage As enScreenPage, ByVal Index As String) As Boolean
+    Dim RstWorkflow As Recordset
     Dim CRMItem As Object
     
     Const StrPROCEDURE As String = "OpenLenderWF()"
@@ -532,19 +527,16 @@ Public Function OpenLenderWF(ByVal ScreenPage As enScreenPage, ByVal Index As St
     Set ActiveWorkFlow = New ClsWorkflow
     Set ActiveProject = New ClsProject
     
-    With ActiveWorkFlow
-        .DBGet Index
-        ActiveProject.DBGet .ProjectNo
-        .Parent = ActiveProject
-    End With
+    Set RstWorkflow = ModDatabase.SQLQuery("SELECT ProjectNo FROM TblWorkflow WHERE WorkflowNo = " & Index)
     
-    
-    With ActiveWorkFlow
-        .DisplayForm
+    With ActiveProject
+        .DBGet RstWorkflow.Fields(0)
+        .Workflows(Index).DisplayForm
     End With
     
     Set ActiveWorkFlow = Nothing
     Set ActiveProject = Nothing
+    Set RstWorkflow = Nothing
     
     OpenLenderWF = True
 
@@ -554,6 +546,7 @@ ErrorExit:
 
     Set ActiveWorkFlow = Nothing
     Set ActiveProject = Nothing
+    Set RstWorkflow = Nothing
     
     OpenLenderWF = False
 

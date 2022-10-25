@@ -32,16 +32,16 @@ Public Function Initialize() As Boolean
     ModLibrary.PerfSettingsOn
     
     ShtMain.Unprotect PROTECT_KEY
-    Terminate
         
     SYSTEM_CLOSING = False
     
-'    Application.DisplayFullScreen = True
     Application.DisplayStatusBar = True
     
     FrmStartBanner.Progress "Reading INI File.....", 1 / 7 * 100
     
     If Not ReadINIFile Then Err.Raise HANDLED_ERROR
+    
+    Terminate
     
     FrmStartBanner.Progress "Connecting to DB.....", 2 / 7 * 100
     
@@ -77,7 +77,6 @@ Public Function Initialize() As Boolean
     
 '    If Not ModSecurity.LogUserOn(UserName) Then Err.Raise HANDLED_ERROR
     
-'    If Not MessageCheck Then Err.Raise HANDLED_ERROR
     
     'build styles
     FrmStartBanner.Progress "Building Styles.....", 5 / 7 * 100
@@ -357,13 +356,17 @@ End Function
 ' Initializes or terminates all global classes
 ' ---------------------------------------------------------------
 Private Function SetGlobalClasses() As Boolean
+'    Dim ActiveWorkflows As ClsWorkflows
+    
     Const StrPROCEDURE As String = "SetGlobalClasses()"
 
     On Error GoTo ErrorHandler
 
+    Set ActiveWorkflows = New ClsWorkflows
     
-    SetGlobalClasses = True
+    ActiveWorkflows.UpdateRAGs
 
+    SetGlobalClasses = True
 
 Exit Function
 

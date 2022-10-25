@@ -34,6 +34,7 @@ Private Declare PtrSafe Function FindWindow Lib "user32" Alias "FindWindowA" (By
 Private Declare PtrSafe Function BringWindowToTop Lib "user32" (ByVal hwnd As LongPtr) As Long
  
 Private FormClosing As Boolean
+Public ScreenAdjusted As Boolean
 
 Public Event StartChat()
 Public Event StepComplete()
