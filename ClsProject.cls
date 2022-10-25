@@ -169,6 +169,8 @@ Public Sub DisplayForm()
         .TxtCBSComPC = pCBSComPC
         .TxtLoanTerm = pLoanTerm
         .TxtProjectNo = pProjectNo
+        .TxtProjectNo = pProjectNo
+        .TxtProjName = pProjectName
         If pCaseManager.CBSUserNo > 0 Then .CmoCaseManager = pCaseManager.CBSUserNo
         If pClient.ClientNo > 0 Then .CmoClientNo = pClient.ClientNo
         If pSPV.SPVNo > 0 Then .CmoSPVNo = pSPV.SPVNo
@@ -191,12 +193,14 @@ Public Sub DBGet(ByVal ProjectNo As Integer)
             If Not IsNull(!LoanTerm) Then pLoanTerm = !LoanTerm
             If Not IsNull(!CBSComPC) Then pCBSComPC = !CBSComPC
             If Not IsNull(!ExitFee) Then pExitFee = !ExitFee
+            If Not IsNull(!ProjectNo) Then pProjectNo = !ProjectNo
             
             pSPV.DBGet !SPVNo
             pClient.DBGet !ClientNo
         pCaseManager.DBGet !CaseManager
             pContacts.GetCollection "Project", pProjectName
         pProjectWorkflow.DBGet !ProjectWFNo
+            pWorkflows.GetCollection
         End If
     End With
     Set RstProject = Nothing
@@ -232,6 +236,7 @@ Public Sub DBSave()
         If CStr(pLoanTerm) = "" Then !LoanTerm = Null Else !LoanTerm = pLoanTerm
         If CStr(pCBSComPC) = "" Then !CBSComPC = Null Else !CBSComPC = pCBSComPC
         If CStr(pExitFee) = "" Then !ExitFee = Null Else !ExitFee = pExitFee
+        If CStr(pProjectNo) = "" Then !ProjectNo = Null Else !ProjectNo = pProjectNo
         If pProjectWorkflow.WorkflowNo <> 0 Then !ProjectWFNo = pProjectWorkflow.WorkflowNo
         If CStr(pCaseManager.CBSUserNo) = "" Then !CaseManager = Null Else !CaseManager = pCaseManager.CBSUserNo
         If CStr(pSPV.SPVNo) = "" Then !SPVNo = Null Else !SPVNo = pSPV.SPVNo

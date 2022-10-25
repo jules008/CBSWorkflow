@@ -189,6 +189,7 @@ End Enum
 Enum EnumBtnNo
     enBtnProjectNew
     enBtnProjectOpen
+    enBtnLenderOpenWF
     enBtnLenderNewWF
     enBtnCRMOpenItem
     enBtnCRMLenderOpen

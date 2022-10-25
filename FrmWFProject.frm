@@ -1,6 +1,6 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FrmWFProject 
-   ClientHeight    =   9315.001
+   ClientHeight    =   9555.001
    ClientLeft      =   120
    ClientTop       =   465
    ClientWidth     =   15990
@@ -92,7 +92,7 @@ End Sub
 Sub Progress(pctCompl As Single)
 
     LblText.Caption = Format(pctCompl, "0") & "%"
-    LblBar.Width = Frame7.Width / 100 * pctCompl
+    xLblBar.Width = Frame7.Width / 100 * pctCompl
     
 End Sub
 
@@ -108,7 +108,7 @@ Private Sub UserForm_Initialize()
     Me.StartUpPosition = 0
     Me.Left = Application.Left + (0.5 * Application.Width) - (0.5 * Me.Width)
     Me.Top = Application.Top + (0.5 * Application.Height) - (0.5 * Me.Height)
-    LblBar.ZOrder (1)
+    xLblBar.ZOrder (1)
     
 End Sub
 

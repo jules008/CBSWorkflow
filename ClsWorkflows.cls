@@ -96,7 +96,7 @@ Public Sub GetCollection()
     Dim Workflow As ClsWorkflow
     Dim i As Integer
     
-    Set RstWorkflow = ModDatabase.SQLQuery("TblWorkflow")
+    Set RstWorkflow = ModDatabase.SQLQuery("SELECT * FROM TblWorkflow WHERE ProjectNo = " & Parent.ProjectNo)
     With RstWorkflow
         If .RecordCount > 0 Then
         .MoveLast

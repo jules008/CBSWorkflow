@@ -66,7 +66,7 @@ Public Function CentralErrorHandler( _
     Print #iFile, Format$(Now(), "mm/dd/yy hh:mm:ss"); LogText
     Close #iFile
             
-    'Debug.Print Format$(Now(), "mm/dd/yy hh:mm:ss"); LogText
+    Debug.Print Format$(Now(), "mm/dd/yy hh:mm:ss"); LogText
     
     If EntryPoint Then
         Debug.Print

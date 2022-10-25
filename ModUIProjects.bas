@@ -399,7 +399,7 @@ Restart:
                     AryStyles(x, y) = "GENERIC_TABLE"
                 End If
                 
-                    AryOnAction(x, y) = "'ModUIButtonHandler.ProcessBtnClicks(""" & ScreenPage & ":" & enBtnProjectOpen & ":" & ProjectNo & """)'"
+                            AryOnAction(x, y) = "'ModUIButtonHandler.ProcessBtnClicks(""" & ScreenPage & ":" & enBtnLenderOpenWF & ":" & !WorkflowNo & """)'"
                 .MoveNext
             Next
         Next
@@ -458,16 +458,16 @@ Public Function GetActiveList(ScreenPage As enScreenPage, StrSortBy As String) A
 
     Select Case ScreenPage
         Case enScrProjForAction
-            SQL = "SELECT Null as Expand, TblProject.ProjectNo, TblClient.Name, TblSPV.Name, TblCBSUser.UserName, TblWorkflow.CurrentStep, TblStepTemplate.StepName, TblWorkflow.Status, TblWorkflow.RAG " _
-                    & "FROM ((((TblProject LEFT JOIN TblSPV ON TblProject.SPVNo = TblSPV.SPVNo) LEFT JOIN TblClient ON TblSPV.ClientNo = TblClient.ClientNo) LEFT JOIN TblCBSUser ON TblProject.CaseManager = TblCBSUser.CBSUserNo) LEFT JOIN TblWorkflow ON TblProject.ProjectWFNo = TblWorkflow.WorkflowNo) LEFT JOIN TblStepTemplate ON TblWorkflow.CurrentStep = TblStepTemplate.StepNo " _
+            SQL = "SELECT Null AS Expand, TblProject.ProjectNo, TblClient.Name, TblSPV.Name, TblCBSUser.UserName, TblWorkflow.CurrentStep, TblStepTemplate.StepName, TblWorkflow.Status, TblWorkflow.RAG " _
+                    & "FROM TblClient RIGHT JOIN ((((TblProject LEFT JOIN TblSPV ON TblProject.SPVNo = TblSPV.SPVNo) LEFT JOIN TblCBSUser ON TblProject.CaseManager = TblCBSUser.CBSUserNo) LEFT JOIN TblWorkflow ON TblProject.ProjectWFNo = TblWorkflow.WorkflowNo) LEFT JOIN TblStepTemplate ON TblWorkflow.CurrentStep = TblStepTemplate.StepNo) ON TblClient.ClientNo = TblProject.ClientNo " _
                     & "WHERE (((TblWorkflow.RAG)='en1Red') AND ((TblWorkflow.WorkflowType)='enProject')) OR (((TblWorkflow.RAG)='en2Amber') AND ((TblWorkflow.WorkflowType)='enProject')) OR (((TblWorkflow.Status)='Action Req.') AND ((TblWorkflow.RAG)='en3Green') AND ((TblWorkflow.WorkflowType)='enProject'))"
         Case enScrProjActive
             SQL = "SELECT Null AS Expand, TblProject.ProjectNo, TblClient.Name, TblSPV.Name, TblCBSUser.UserName, TblWorkflow.CurrentStep, TblStepTemplate.StepName, TblWorkflow.Status, TblWorkflow.RAG " _
-                    & "FROM ((((TblProject LEFT JOIN TblSPV ON TblProject.SPVNo = TblSPV.SPVNo) LEFT JOIN TblClient ON TblSPV.ClientNo = TblClient.ClientNo) LEFT JOIN TblWorkflow ON TblProject.ProjectWFNo = TblWorkflow.WorkflowNo) LEFT JOIN TblCBSUser ON TblProject.CaseManager = TblCBSUser.CBSUserNo) LEFT JOIN TblStepTemplate ON TblWorkflow.CurrentStep = TblStepTemplate.StepNo " _
+                    & "FROM TblClient RIGHT JOIN ((((TblProject LEFT JOIN TblSPV ON TblProject.SPVNo = TblSPV.SPVNo) LEFT JOIN TblWorkflow ON TblProject.ProjectWFNo = TblWorkflow.WorkflowNo) LEFT JOIN TblCBSUser ON TblProject.CaseManager = TblCBSUser.CBSUserNo) LEFT JOIN TblStepTemplate ON TblWorkflow.CurrentStep = TblStepTemplate.StepNo) ON TblClient.ClientNo = TblProject.ClientNo " _
                     & "WHERE (((TblWorkflow.Status)<>'Complete') AND ((TblWorkflow.WorkflowType)='enProject'))"
         Case enScrProjComplete
             SQL = "SELECT Null AS Expand, TblProject.ProjectNo, TblClient.Name, TblSPV.Name, TblCBSUser.UserName, TblWorkflow.CurrentStep, TblStepTemplate.StepName, TblWorkflow.Status, TblWorkflow.RAG " _
-                    & "FROM ((((TblProject LEFT JOIN TblSPV ON TblProject.SPVNo = TblSPV.SPVNo) LEFT JOIN TblClient ON TblSPV.ClientNo = TblClient.ClientNo) LEFT JOIN TblWorkflow ON TblProject.ProjectWFNo = TblWorkflow.WorkflowNo) LEFT JOIN TblCBSUser ON TblProject.CaseManager = TblCBSUser.CBSUserNo) LEFT JOIN TblStepTemplate ON TblWorkflow.CurrentStep = TblStepTemplate.StepNo " _
+                    & "FROM TblClient RIGHT JOIN ((((TblProject LEFT JOIN TblSPV ON TblProject.SPVNo = TblSPV.SPVNo) LEFT JOIN TblWorkflow ON TblProject.ProjectWFNo = TblWorkflow.WorkflowNo) LEFT JOIN TblCBSUser ON TblProject.CaseManager = TblCBSUser.CBSUserNo) LEFT JOIN TblStepTemplate ON TblWorkflow.CurrentStep = TblStepTemplate.StepNo) ON TblClient.ClientNo = TblProject.ClientNo " _
                     & "WHERE (((TblWorkflow.Status)='Complete') AND ((TblWorkflow.WorkflowType)='enProject'))"
     End Select
                 
@@ -478,33 +478,33 @@ Public Function GetActiveList(ScreenPage As enScreenPage, StrSortBy As String) A
 End Function
 
 ' ===============================================================
-' OpenItem
+' OpenProjectWF
 ' Opens project workflow
 ' ---------------------------------------------------------------
-Public Function OpenItem(ByVal ScreenPage As enScreenPage, ByVal Index As String) As Boolean
+Public Function OpenProjectWF(ByVal ScreenPage As enScreenPage, ByVal Index As String) As Boolean
     Dim CRMItem As Object
     
-    Const StrPROCEDURE As String = "OpenItem()"
+    Const StrPROCEDURE As String = "OpenProjectWF()"
 
     On Error GoTo ErrorHandler
 
     Set ActiveProject = New ClsProject
     
     With ActiveProject
-        .DBGet CInt(Index)
+        .DBGet Index
         .ProjectWorkflow.DisplayForm
     End With
     
     Set ActiveProject = Nothing
     
-    OpenItem = True
+    OpenProjectWF = True
 
 Exit Function
 
 ErrorExit:
 
     '***CleanUpCode***
-    OpenItem = False
+    OpenProjectWF = False
 
 Exit Function
 
@@ -516,4 +516,56 @@ ErrorHandler:
         Resume ErrorExit
     End If
 End Function
+
+
+' ===============================================================
+' OpenLenderWF
+' Opens project workflow
+' ---------------------------------------------------------------
+Public Function OpenLenderWF(ByVal ScreenPage As enScreenPage, ByVal Index As String) As Boolean
+    Dim CRMItem As Object
+    
+    Const StrPROCEDURE As String = "OpenLenderWF()"
+
+    On Error GoTo ErrorHandler
+    
+    Set ActiveWorkFlow = New ClsWorkflow
+    Set ActiveProject = New ClsProject
+    
+    With ActiveWorkFlow
+        .DBGet Index
+        ActiveProject.DBGet .ProjectNo
+        .Parent = ActiveProject
+    End With
+    
+    
+    With ActiveWorkFlow
+        .DisplayForm
+    End With
+    
+    Set ActiveWorkFlow = Nothing
+    Set ActiveProject = Nothing
+    
+    OpenLenderWF = True
+
+Exit Function
+
+ErrorExit:
+
+    Set ActiveWorkFlow = Nothing
+    Set ActiveProject = Nothing
+    
+    OpenLenderWF = False
+
+Exit Function
+
+ErrorHandler:
+    If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
+        Stop
+        Resume
+    Else
+        Resume ErrorExit
+    End If
+End Function
+
 

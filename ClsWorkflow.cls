@@ -22,6 +22,7 @@ Attribute VB_Exposed = False
 Option Explicit
 Private pDeleted As Date
 Private pWorkflowNo As Integer
+Private pProjectNo As Integer
 Private pWorkflowType As enWorkflowType
 Private pLender As ClsLender
 Private pName As String
@@ -57,6 +58,15 @@ End Property
 
 Public Property Let WorkflowNo(ByVal vNewValue As Integer)
     pWorkflowNo = vNewValue
+End Property
+
+'---------------------------------------------------------------
+Public Property Get ProjectNo() As Integer
+    ProjectNo = pProjectNo
+End Property
+
+Public Property Let ProjectNo(ByVal vNewValue As Integer)
+    pProjectNo = vNewValue
 End Property
 
 '---------------------------------------------------------------
@@ -218,12 +228,36 @@ End Sub
 ' ---------------------------------------------------------------
 Public Sub DisplayForm()
     Dim ProgPC As Single
-'    Dim Step As ClsStep
     Dim TmpWorkflow As ClsWorkflow
+    Const ADJUST_1 As Integer = 8
+    Const ADJUST_2 As Integer = 16
     
     ProgPC = pSteps.PCComplete
     
     With pProjWFForm
+    
+        If pWorkflowType = enProject Then
+            .LblLenderName.Visible = False
+            .LblLenderCont.Visible = False
+            .LblLenderPhone.Visible = False
+            .TxtLenderContactName.Visible = False
+            .TxtLenderContactPhone.Visible = False
+            .TxtLenderName.Visible = False
+            .xBtnChat.Visible = True
+            .LblCl.Top = .LblCl.Top - ADJUST_2
+            .LblCont1.Top = .LblCont1.Top - ADJUST_2
+            .LblPhone1.Top = .LblPhone1.Top - ADJUST_2
+            .TxtClientContactName.Top = .TxtClientContactName.Top - ADJUST_2
+            .TxtClientContactPhone.Top = .TxtClientContactPhone.Top - ADJUST_2
+            .TxtClientName.Top = .TxtClientName.Top - ADJUST_2
+            .LblSPV.Top = .LblSPV.Top - ADJUST_1
+            .LblCont2.Top = .LblCont2.Top - ADJUST_1
+            .LblPhone2.Top = .LblPhone2.Top - ADJUST_1
+            .TxtSPVContactName.Top = .TxtSPVContactName.Top - ADJUST_1
+            .TxtSPVContactPhone.Top = .TxtSPVContactPhone.Top - ADJUST_1
+            .TxtSPVName.Top = .TxtSPVName.Top - ADJUST_1
+        End If
+        
         .Progress ProgPC
         .TxtClientName = pParent.Client.Name
         .TxtSPVName = pParent.SPV.Name
@@ -286,11 +320,12 @@ Public Sub DBGet(WorkflowNo As String)
     Dim RstWorkflow As Recordset
     Dim IndexNo As Integer
     
-    Set RstWorkflow = ModDatabase.SQLQuery("SELECT * FROM TblWorkflow WHERE WorkflowNo = " & WorkflowNo & " AND Deleted IS NULL")
+    Set RstWorkflow = ModDatabase.SQLQuery("SELECT * FROM TblWorkflow WHERE WorkflowNo = " & WorkflowNo)
     With RstWorkflow
         If .RecordCount > 0 Then
             If Not IsNull(!Deleted) Then pDeleted = !Deleted
             If Not IsNull(!WorkflowNo) Then pWorkflowNo = !WorkflowNo
+            If Not IsNull(!ProjectNo) Then pProjectNo = !ProjectNo
             If Not IsNull(!WorkflowType) Then pWorkflowType = enWorkflowTypeVal(!WorkflowType)
             If Not IsNull(!CurrentStep) Then pCurrentStep = !CurrentStep
             If Not IsNull(!Name) Then pName = !Name
@@ -337,6 +372,7 @@ Public Sub DBSave()
         If CurrentStep = "" Then pCurrentStep = pSteps.Start
         !CurrentStep = pCurrentStep
         !WorkflowNo = pWorkflowNo
+        !ProjectNo = pProjectNo
         !WorkflowType = enWorkflowTypeStr(pWorkflowType)
         !Name = pName
         !Status = Status
@@ -589,6 +625,7 @@ Private Sub Class_Initialize()
     Set pLender = New ClsLender
     Set pProjWFForm = New FrmWFProject
     Set pChatRoom = New ClsChatRoom
+    Set pParent = New ClsProject
     
     pActiveStep.Initialize Me
     pSteps.Initialize Me
@@ -599,6 +636,7 @@ Public Sub Terminate()
     pSteps.Terminate
     pActiveStep.Terminate
     
+    Set pParent = Nothing
     Set pSteps = Nothing
     Set pActiveStep = Nothing
     Set pFrmInputBox = Nothing
@@ -608,6 +646,7 @@ Public Sub Terminate()
 End Sub
 '---------------------------------------------------------------
 Private Sub Class_Terminate()
+    Set pParent = Nothing
     Set pSteps = Nothing
     Set pActiveStep = Nothing
     Set pFrmInputBox = Nothing

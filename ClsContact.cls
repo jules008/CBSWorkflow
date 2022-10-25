@@ -151,8 +151,11 @@ End Sub
 ' ---------------------------------------------------------------
 Public Sub DBGet(ContactNo As Integer)
     Dim RstContact As Recordset
+    Dim RstNoCont As Recordset
 
     Set RstContact = ModDatabase.SQLQuery("SELECT * FROM TblContact WHERE ContactNo = " & ContactNo)
+    Set RstNoCont = ModDatabase.SQLQuery("SELECT COUNT (ContactNo) FROM TblContact " _
+                                            & "WHERE ContactType = '" & pContactType & "' and Organisation = '" & pOrganisation & "'")
     With RstContact
         If .RecordCount > 0 Then
             If Not IsNull(!ContactNo) Then pContactNo = !ContactNo
@@ -164,10 +167,14 @@ Public Sub DBGet(ContactNo As Integer)
             If Not IsNull(!Phone1) Then pPhone1 = !Phone1
             If Not IsNull(!Phone2) Then pPhone2 = !Phone2
             If Not IsNull(!PrimaryContact) Then pPrimaryContact = !PrimaryContact
-            
+            If RstNoCont.Fields(0) = 0 Then
+                pPrimaryContact = True
+                DB.Execute "UPDATE TblContact SET PrimaryContact = TRUE WHERE ContactType = '" & pContactType & "' and Organisation = '" & pOrganisation & "'"
+            End If
         End If
     End With
     Set RstContact = Nothing
+    Set RstNoCont = Nothing
 End Sub
 
 ' ===============================================================

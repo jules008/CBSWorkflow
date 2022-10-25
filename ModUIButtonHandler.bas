@@ -56,6 +56,10 @@ Restart:
 
             BtnProjectOpenWFClick ScreenPage, BtnIndex
             
+        Case enBtnLenderOpenWF
+
+            BtnLenderOpenWFClick ScreenPage, BtnIndex
+
         Case enBtnCRMOpenItem
             
             BtnCRMOpenItem ScreenPage, BtnIndex

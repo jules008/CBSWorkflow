@@ -247,7 +247,16 @@ End Function
 ' BtnProjectOpenWFClick
 ' ---------------------------------------------------------------
 Public Sub BtnProjectOpenWFClick(ByVal ScreenPage As enScreenPage, ByVal Index As String)
-    If Not ModUIProjects.OpenItem(ScreenPage, Index) Then Err.Raise HANDLED_ERROR
+    If Not ModUIProjects.OpenProjectWF(ScreenPage, Index) Then Err.Raise HANDLED_ERROR
+    If Not ResetScreen Then Err.Raise HANDLED_ERROR
+    If Not ModUIProjects.BuildScreen(ScreenPage) Then Err.Raise HANDLED_ERROR
+End Sub
+
+' ===============================================================
+' BtnLenderOpenWFClick
+' ---------------------------------------------------------------
+Public Sub BtnLenderOpenWFClick(ByVal ScreenPage As enScreenPage, ByVal Index As String)
+    If Not ModUIProjects.OpenLenderWF(ScreenPage, Index) Then Err.Raise HANDLED_ERROR
     If Not ResetScreen Then Err.Raise HANDLED_ERROR
     If Not ModUIProjects.BuildScreen(ScreenPage) Then Err.Raise HANDLED_ERROR
 End Sub

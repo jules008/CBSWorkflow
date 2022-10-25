@@ -112,7 +112,7 @@ Public Sub GetCollection(ContactType As String, OrgName As String)
             For i = 1 To .RecordCount
                 Set Contact = New ClsContact
                 Contact.DBGet !ContactNo
-                pContacts.Add Contact, Key:=CStr(Contact.ContactNo)
+                Add Contact
                 .MoveNext
             Next
         End If
