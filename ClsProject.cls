@@ -156,6 +156,7 @@ Public Sub DBNew()
     With pProjectForm
         .Tag = "New"
         .ClearForm
+        .BtnUpdate.Caption = "Create"
         .Show
     End With
 End Sub

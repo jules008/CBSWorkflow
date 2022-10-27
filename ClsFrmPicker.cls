@@ -133,7 +133,7 @@ Private Sub pFormPicker_SearchTextChanged()
     If SearchTxt = "" Then
         Do While Not pData.EOF
             With pFormPicker.LstResults
-                .AddItem pData.Fields(0)
+                If Not IsNull(pData.Fields(0)) Then .AddItem pData.Fields(0)
             End With
             pData.MoveNext
         Loop

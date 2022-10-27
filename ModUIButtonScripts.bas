@@ -204,7 +204,8 @@ Public Function BtnLenderNewWFClick(ScreenPage As enScreenPage) As Boolean
         .DBSave
     End With
     
-    If Not FrmWFLender.ShowForm Then Err.Raise HANDLED_ERROR
+    ActiveWorkFlow.DisplayForm
+    
     If Not ResetScreen Then Err.Raise HANDLED_ERROR
     If Not ModUIProjects.BuildScreen(ScreenPage) Then Err.Raise HANDLED_ERROR
     

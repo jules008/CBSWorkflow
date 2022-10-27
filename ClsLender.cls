@@ -104,6 +104,7 @@ Public Sub DBNew()
     With pLenderForm
         .Tag = "New"
         .ClearForm
+        .BtnUpdate.Caption = "Create"
         .Show
     End With
 End Sub

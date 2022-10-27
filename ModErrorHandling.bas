@@ -52,15 +52,13 @@ Public Function CentralErrorHandler( _
     iFile = FreeFile()
     Open ThisWorkbook.Path & ERROR_PATH & FILE_ERROR_LOG For Append As #iFile
     If Not FirstRunDone Then
-'        Print #iFile,
-'        Print #iFile, "---------------------------------------------------------------------------------------------------------------------------------------"
-'        Print #iFile, "User: " & Application.UserName
-'        Print #iFile, "Member: " & ActiveWorkFlow.Member.UserName
-'        Print #iFile, "Workflow: " & ActiveWorkFlow.WorkflowNo
-'        Print #iFile, "Step: " & ActiveWorkFlow.CurrentStep
-'        Print #iFile, "Course: " & ActiveWorkFlow.DoDCert.CertName
-'        Print #iFile, "Custom Data: " & CustomData
-'        Print #iFile,
+        Print #iFile,
+        Print #iFile, "---------------------------------------------------------------------------------------------------------------------------------------"
+        Print #iFile, "User: " & Application.UserName
+        Print #iFile, "Member: " & ActiveWorkFlow.Name
+        Print #iFile, "Workflow: " & ActiveWorkFlow.WorkflowNo
+        Print #iFile, "Step: " & ActiveWorkFlow.CurrentStep
+        Print #iFile,
         FirstRunDone = True
     End If
     Print #iFile, Format$(Now(), "mm/dd/yy hh:mm:ss"); LogText

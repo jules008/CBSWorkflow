@@ -104,6 +104,7 @@ Public Sub DBNew()
     With pClientForm
         .Tag = "New"
         .ClearForm
+        .BtnUpdate.Caption = "Create"
         .Show
     End With
 End Sub

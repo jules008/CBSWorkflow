@@ -1,6 +1,6 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FrmSPVForm 
-   ClientHeight    =   3120
+   ClientHeight    =   3075
    ClientLeft      =   120
    ClientTop       =   465
    ClientWidth     =   10065
@@ -92,7 +92,7 @@ Restart:
             
         Case Is = enFormOK
             
-            RaiseEvent CreateNew
+            RaiseEvent Update
             Unload Me
     End Select
     

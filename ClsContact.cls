@@ -121,6 +121,7 @@ Public Sub DBNew()
     With pContactForm
         .Tag = "New"
         .ClearForm
+        .BtnUpdate.Caption = "Create"
         .Show
     End With
 End Sub
