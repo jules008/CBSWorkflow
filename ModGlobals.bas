@@ -38,8 +38,8 @@ Public Const BACKUP_INT As Integer = 5
 Public Const FILE_ERROR_LOG As String = "Error.log"
 Public Const OLD_DB_VER = "V0.00.00"
 Public Const DB_VER = "V0.0.2"
-Public Const VERSION = "V0.01.02"
-Public Const VER_DATE = "27 Oct 22"
+Public Const VERSION = "V0.01.03"
+Public Const VER_DATE = "28 Oct 22"
 ' ===============================================================
 ' Error Constants
 ' ---------------------------------------------------------------

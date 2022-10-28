@@ -218,7 +218,7 @@ Public Sub DBNew()
     With pProjWFForm
         .Tag = "New"
 '        .ClearForm
-        .Show
+        DisplayForm
     End With
 End Sub
 

@@ -243,11 +243,11 @@ Public Sub DBSave()
         If CStr(pSPV.SPVNo) = "" Then !SPVNo = Null Else !SPVNo = pSPV.SPVNo
         If CStr(pClient.ClientNo) = "" Then !ClientNo = Null Else !ClientNo = pClient.ClientNo
 
-        pSPV.ClientNo = pClient.ClientNo
+        If pClient.ClientNo <> 0 Then pSPV.ClientNo = pClient.ClientNo
 
-        pSPV.DBSave
-        pClient.DBSave
-        pCaseManager.DBSave
+        If pSPV.SPVNo <> 0 Then pSPV.DBSave
+        If pClient.ClientNo <> 0 Then pClient.DBSave
+        If pCaseManager.CBSUserNo <> 0 Then pCaseManager.DBSave
         
         pWorkflows.SaveCollection
         pContacts.SaveCollection
