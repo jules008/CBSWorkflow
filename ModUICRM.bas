@@ -465,6 +465,10 @@ Public Function CalendlyImport() As Boolean
     Dim ColEmail As Integer
     Dim ColEventType As Integer
     Dim i As Integer
+    Dim FirstName As String
+    Dim LastName As String
+    Dim Email As String
+    Dim RstContacts As Recordset
     
     Const StrPROCEDURE As String = "CalendlyImport()"
 
@@ -479,7 +483,7 @@ Public Function CalendlyImport() As Boolean
         .ButtonName = "Import"
         .InitialFileName = Application.DefaultFilePath
         
-        If .Show <> -1 Then Exit Sub
+        If .Show <> -1 Then Exit Function
         FilePath = .SelectedItems(1)
     End With
 
@@ -495,6 +499,8 @@ Public Function CalendlyImport() As Boolean
     
     If CalendlyFile Is Nothing Then Err.Raise HANDLED_ERROR, , "No Calendly sheet not found"
     
+    Set RstContacts = ModDatabase.SQLQuery("TblContact")
+    
     With calendlySht
         NoRows = .UsedRange.Rows.Count - 1
         
@@ -506,17 +512,38 @@ Public Function CalendlyImport() As Boolean
         ColEventType = .Range("1:1").Find("Event Type Name").Column
         
         Debug.Assert ColFirstName > 0 And ColLastName > 0 And ColEmail > 0 And ColEventType > 0
+        Debug.Print NoRows
         
         For i = 2 To NoRows + 1
-            if .Range.Cells(i,coleventype
+            If Trim(.Cells(i, ColEventType)) = "Funding call with Heather" Then
+                FirstName = Trim(.Cells(i, ColFirstName))
+                LastName = Trim(.Cells(i, ColLastName))
+                Email = Trim(.Cells(i, ColEmail))
+                Debug.Assert FirstName <> ""
+                Debug.Print i, FirstName, LastName, Email
+            End If
+            
+            With RstContacts
+                .MoveFirst
+                .FindFirst ("ContactName = '" & FirstName & " " & LastName & "'")
+                
+                If .NoMatch Then
+                    Debug.Print "no record found"
+                Else
+                    Debug.Print !ContactName
+                End If
         
-        
+            End With
         
         Next
     End With
     
-    CalendlyImport = True
+    CalendlyFile.Close
     
+    
+    
+    CalendlyImport = True
+    Set RstContacts = Nothing
     Set CalendlyFile = Nothing
     Set calendlySht = Nothing
 
@@ -527,6 +554,7 @@ ErrorExit:
     '***CleanUpCode***
     CalendlyImport = False
 
+    Set RstContacts = Nothing
     Set CalendlyFile = Nothing
     Set calendlySht = Nothing
     
