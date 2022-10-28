@@ -287,4 +287,21 @@ Public Sub BtnCRMOpenItem(ByVal ScreenPage As enScreenPage, Optional ByVal Index
     If Not ModUICRM.BuildScreen(ScreenPage) Then Err.Raise HANDLED_ERROR
 End Sub
 
+' ===============================================================
+' BtnCRMContCalImport
+' ---------------------------------------------------------------
+Public Sub BtnCRMContCalImport(ByVal ScreenPage As enScreenPage, Optional ByVal Index As String)
+    If Not ModUICRM.CalendlyImport() Then Err.Raise HANDLED_ERROR
+    If Not ResetScreen Then Err.Raise HANDLED_ERROR
+    If Not ModUICRM.BuildScreen(ScreenPage) Then Err.Raise HANDLED_ERROR
+End Sub
+
+' ===============================================================
+' BtnCRMContShwLeads
+' ---------------------------------------------------------------
+Public Sub BtnCRMContShwLeads(ByVal ScreenPage As enScreenPage, Optional ByVal Index As String)
+    If Not ResetScreen Then Err.Raise HANDLED_ERROR
+    If Not ModUICRM.BuildScreen(ScreenPage, "ContactType:Lead") Then Err.Raise HANDLED_ERROR
+End Sub
+
 

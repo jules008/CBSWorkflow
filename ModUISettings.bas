@@ -31,7 +31,7 @@ Public Const MAIN_FRAME_HEIGHT As Integer = 360
 ' Button Frame
 ' ---------------------------------------------------------------
 Public Const BUTTON_FRAME_TOP As Integer = 5
-Public Const BUTTON_FRAME_LEFT As Integer = 615
+Public Const BUTTON_FRAME_LEFT As Integer = 600
 Public Const BUTTON_FRAME_WIDTH As Integer = 275
 Public Const BUTTON_FRAME_HEIGHT As Integer = 60
 
@@ -83,9 +83,9 @@ Public Const PROJECT_CELL_ROW_HEIGHTS As String = "50:50"
 Public Const PROJECT_TABLE_STYLES As String = "GENERIC_TABLE"
 Public Const PROJECT_TABLE_TITLES As String = "Expand:Project No:Client Name:SPV Name:Case Manager:Step No:Step Name:Status"
 Public Const PROJECT_MAX_LINES As Integer = 150
-Public Const PROJECT_BTN_MAIN_1_LEFT As Integer = 30
+Public Const PROJECT_BTN_MAIN_1_LEFT As Integer = 110
 Public Const PROJECT_BTN_MAIN_1_TOP As Integer = 20
-Public Const PROJECT_BTN_MAIN_2_LEFT As Integer = 155
+Public Const PROJECT_BTN_MAIN_2_LEFT As Integer = 220
 Public Const PROJECT_BTN_MAIN_2_TOP As Integer = 20
 
 ' ---------------------------------------------------------------
@@ -112,15 +112,31 @@ Public Const PROJ_CLOSED_HEADER_TEXT As String = "Closed Projects"
 ' ---------------------------------------------------------------
 ' Generic CRM Screen Settings
 ' ---------------------------------------------------------------
-Public Const CRM_BTN_MAIN_1_LEFT As Integer = 155
-Public Const CRM_BTN_MAIN_1_TOP As Integer = 20
 Public Const CRM_CELL_ROW_HEIGHTS As String = "50:50"
 Public Const CRM_TABLE_STYLES As String = "GENERIC_TABLE"
 
 ' ---------------------------------------------------------------
+' CRM Screen Btn 1 Settings
+' ---------------------------------------------------------------
+Public Const CRM_BTN_MAIN_1_LEFT As Integer = 220
+Public Const CRM_BTN_MAIN_1_TOP As Integer = 20
+
+' ---------------------------------------------------------------
+' CRM Screen Btn 2 Settings
+' ---------------------------------------------------------------
+Public Const CRM_BTN_MAIN_2_LEFT As Integer = 110
+Public Const CRM_BTN_MAIN_2_TOP As Integer = 20
+
+' ---------------------------------------------------------------
+' CRM Screen Btn 3 Settings
+' ---------------------------------------------------------------
+Public Const CRM_BTN_MAIN_3_LEFT As Integer = 0
+Public Const CRM_BTN_MAIN_3_TOP As Integer = 20
+
+' ---------------------------------------------------------------
 ' CRM Clients Screen
 ' ---------------------------------------------------------------
-Public Const CRM_CLIENT_TABLE_COL_WIDTHS As String = "100:250:150:200"
+Public Const CRM_CLIENT_TABLE_COL_WIDTHS As String = "100:250:150:250"
 Public Const CRM_CLIENT_TABLE_TITLES As String = "Client No:Client Name:Phone No:Url"
 Public Const CRM_CLIENT_MAX_LINES As Integer = 150
 
@@ -148,7 +164,7 @@ Public Const CRM_PROJECT_MAX_LINES As Integer = 150
 ' ---------------------------------------------------------------
 ' CRM Lenders Screen
 ' ---------------------------------------------------------------
-Public Const CRM_LENDER_TABLE_COL_WIDTHS As String = "100:200:100:100:200"
+Public Const CRM_LENDER_TABLE_COL_WIDTHS As String = "100:200:100:100:250"
 Public Const CRM_LENDER_TABLE_TITLES As String = "Lender No:Name:Phone No:Lender Type:Address"
 Public Const CRM_LENDER_MAX_LINES As Integer = 150
 

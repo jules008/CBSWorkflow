@@ -157,8 +157,13 @@ Private Function PopulateOrgs(ContactType As String) As Boolean
             Index = "ProjectNo"
             Table = "TblProject"
             Name = "ProjectName"
+       Case "Lead"
+            Index = "ProjectNo"
+            Table = "TblProject"
+            Name = "ProjectName"
     End Select
         
+    If ContactType <> "Lead" Then
     Set RstSource = ModDatabase.SQLQuery("SElECT " & Index & ", " & Name & " FROM " & Table)
     
     With RstSource
@@ -173,6 +178,13 @@ Private Function PopulateOrgs(ContactType As String) As Boolean
             .MoveNext
         Loop
     End With
+    Else
+        CmoOrganisation.Clear
+        With CmoOrganisation
+            .AddItem
+            .List(0, 1) = "None"
+        End With
+    End If
     
     PopulateOrgs = True
 
@@ -273,6 +285,9 @@ Private Sub UserForm_Initialize()
         .AddItem
         .List(3, 0) = 3
         .List(3, 1) = "Client"
+        .AddItem
+        .List(3, 0) = 4
+        .List(3, 1) = "Lead"
     End With
     CmoOrganisation.ForeColor = COL_DRK_GREY
 End Sub

@@ -68,6 +68,14 @@ Restart:
             
             BtnCRMOpenItem ScreenPage
             
+        Case enBtnCRMContCalImport
+            
+            BtnCRMContCalImport ScreenPage
+            
+        Case enBtnCRMContShwLeads
+            
+            BtnCRMContShwLeads ScreenPage
+            
     End Select
 
 GracefulExit:

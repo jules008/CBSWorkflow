@@ -20,7 +20,7 @@ Private ScreenPage As String
 ' BuildScreen
 ' Builds the display using shapes
 ' ---------------------------------------------------------------
-Public Function BuildScreen(ByVal ScrnPage As enScreenPage) As Boolean
+Public Function BuildScreen(ByVal ScrnPage As enScreenPage, Optional Filter As String) As Boolean
     
     Const StrPROCEDURE As String = "BuildScreen()"
 
@@ -31,7 +31,7 @@ Public Function BuildScreen(ByVal ScrnPage As enScreenPage) As Boolean
     ScreenPage = ScrnPage
     
     If Not BuildMainFrame(ScreenPage) Then Err.Raise HANDLED_ERROR
-    If Not RefreshList(ScreenPage) Then Err.Raise HANDLED_ERROR
+    If Not RefreshList(ScreenPage, , Filter) Then Err.Raise HANDLED_ERROR
     
     MainScreen.ReOrder
     
@@ -67,6 +67,8 @@ Private Function BuildMainFrame(ByVal ScreenPage As enScreenPage) As Boolean
     Dim TableColWidths As String
     Dim NewBtnNo As EnumBtnNo
     Dim NewBtnTxt As String
+    Dim LeadBtnVisible As Boolean
+    Dim CalImpBtnVisible As Boolean
     
     Const StrPROCEDURE As String = "BuildMainFrame()"
 
@@ -75,6 +77,8 @@ Private Function BuildMainFrame(ByVal ScreenPage As enScreenPage) As Boolean
     Set MainFrame = New ClsUIFrame
     Set ButtonFrame = New ClsUIFrame
     Set BtnCRMNewItem = New ClsUIButton
+    Set BtnCRMContCalImp = New ClsUIButton
+    Set BtnCRMContShwLead = New ClsUIButton
         
     MainScreen.Frames.AddItem MainFrame, "Main Frame"
     MainScreen.Frames.AddItem ButtonFrame, "Button Frame"
@@ -101,6 +105,8 @@ Private Function BuildMainFrame(ByVal ScreenPage As enScreenPage) As Boolean
             TableHeadingText = CRM_CONTACT_TABLE_TITLES
             TableColWidths = CRM_CONTACT_TABLE_COL_WIDTHS
             NewBtnTxt = "New Contact"
+            LeadBtnVisible = True
+            CalImpBtnVisible = True
             
         Case enScrCRMLender
         
@@ -178,7 +184,37 @@ Private Function BuildMainFrame(ByVal ScreenPage As enScreenPage) As Boolean
         .Text = NewBtnTxt
     End With
     
+    With BtnCRMContCalImp
+
+        .Height = GENERIC_BUTTON_HEIGHT
+        .Left = CRM_BTN_MAIN_2_LEFT
+        .Top = CRM_BTN_MAIN_2_TOP
+        .Width = GENERIC_BUTTON_WIDTH
+        .Name = "BtnMain2"
+        .OnAction = "'ModUIButtonHandler.ProcessBtnClicks(""" & ScreenPage & ":" & enBtnCRMContCalImport & ":0" & """)'"
+        .UnSelectStyle = GENERIC_BUTTON
+        .Selected = False
+        .Text = "Calendly File Import"
+        .Visible = CalImpBtnVisible
+    End With
+    
+    With BtnCRMContShwLead
+
+        .Height = GENERIC_BUTTON_HEIGHT
+        .Left = CRM_BTN_MAIN_3_LEFT
+        .Top = CRM_BTN_MAIN_3_TOP
+        .Width = GENERIC_BUTTON_WIDTH
+        .Name = "BtnMain3"
+        .OnAction = "'ModUIButtonHandler.ProcessBtnClicks(""" & ScreenPage & ":" & enBtnCRMContShwLeads & ":0" & """)'"
+        .UnSelectStyle = GENERIC_BUTTON
+        .Selected = False
+        .Text = "Show Only Leads"
+        .Visible = LeadBtnVisible
+    End With
+    
     ButtonFrame.Buttons.Add BtnCRMNewItem
+    ButtonFrame.Buttons.Add BtnCRMContCalImp
+    ButtonFrame.Buttons.Add BtnCRMContShwLead
     
     BuildMainFrame = True
 
@@ -201,7 +237,7 @@ End Function
 ' RefreshList
 ' Refreshes the list of active workflows
 ' ---------------------------------------------------------------
-Public Function RefreshList(ByVal ScreenPage As enScreenPage, Optional SortBy As String) As Boolean
+Public Function RefreshList(ByVal ScreenPage As enScreenPage, Optional SortBy As String, Optional Filter As String) As Boolean
     Dim NoCols As Integer
     Dim NoRows As Integer
     Dim Workflows As ClsWorkflows
@@ -241,7 +277,7 @@ Public Function RefreshList(ByVal ScreenPage As enScreenPage, Optional SortBy As
     
     Set Workflows = New ClsWorkflows
     
-    Set RstWorkflowList = GetCRMData(ScreenPage, StrSortBy)
+    Set RstWorkflowList = GetCRMData(ScreenPage, StrSortBy, Filter)
     
     With RstWorkflowList
         If .RecordCount = 0 Then GoTo GracefulExit
@@ -318,14 +354,23 @@ End Function
 ' Method GetCRMData
 ' Gets data for workflow list
 '---------------------------------------------------------------
-Private Function GetCRMData(ByVal ScreenPage As enScreenPage, StrSortBy As String) As Recordset
+Private Function GetCRMData(ByVal ScreenPage As enScreenPage, StrSortBy As String, Optional Filter As String) As Recordset
+    Dim AryBtn() As String
     Dim RstWorkflow As Recordset
     Dim Workflow As ClsWorkflow
+    Dim FilterCol As String
+    Dim FilterStr As String
     Dim SQL As String
     Dim SQL1 As String
     Dim SQL2 As String
     Dim SQL3 As String
 
+    If Filter <> "" Then
+        AryBtn = Split(Filter, ":")
+        FilterCol = AryBtn(0)
+        FilterStr = AryBtn(1)
+    End If
+    
     Select Case ScreenPage
         Case enScrCRMClient
             SQL = "SELECT ClientNo, Name, PhoneNo, Url FROM TblClient"
@@ -334,6 +379,9 @@ Private Function GetCRMData(ByVal ScreenPage As enScreenPage, StrSortBy As Strin
         Case enScrCRMContact
             SQL = "SELECT TblContact.ContactNo, TblContact.ContactName, TblContact.ContactType, TblContact.Organisation, TblContact.Position, TblContact.Phone1 " _
                     & "FROM TblContact"
+            If Filter <> "" Then
+                SQL = SQL & " WHERE " & FilterCol & " = '" & FilterStr & "'"
+            End If
         Case enScrCRMProject
             SQL = "SELECT TblProject.ProjectNo, TblClient.Name, TblSPV.Name, TblCBSUser.UserName " _
                     & "FROM ((TblProject LEFT JOIN TblClient ON TblProject.ClientNo = TblClient.ClientNo) LEFT JOIN TblSPV ON TblProject.SPVNo = TblSPV.SPVNo) LEFT JOIN TblCBSUser ON TblProject.CaseManager = TblCBSUser.CBSUserNo"
@@ -402,3 +450,93 @@ ErrorHandler:
     End If
 End Function
 
+' ===============================================================
+' CalendlyImport
+' Imports Calendly CSV File
+' ---------------------------------------------------------------
+Public Function CalendlyImport() As Boolean
+    Dim Fldr As FileDialog
+    Dim FilePath As String
+    Dim NoRows As Integer
+    Dim CalendlyFile As Workbook
+    Dim calendlySht As Worksheet
+    Dim ColFirstName As Integer
+    Dim ColLastName As Integer
+    Dim ColEmail As Integer
+    Dim ColEventType As Integer
+    Dim i As Integer
+    
+    Const StrPROCEDURE As String = "CalendlyImport()"
+
+    On Error GoTo ErrorHandler
+
+    Set Fldr = Application.FileDialog(msoFileDialogFilePicker)
+    With Fldr
+        .Title = "Select the Calendly Import File"
+        .Filters.Clear
+        .Filters.Add "CSV Files", "*.csv", 1
+        .AllowMultiSelect = False
+        .ButtonName = "Import"
+        .InitialFileName = Application.DefaultFilePath
+        
+        If .Show <> -1 Then Exit Sub
+        FilePath = .SelectedItems(1)
+    End With
+
+    Set CalendlyFile = Workbooks.Open(FilePath)
+    
+    Debug.Assert Not CalendlyFile Is Nothing
+    
+    If CalendlyFile Is Nothing Then Err.Raise HANDLED_ERROR, , "No Calendly file not found"
+    
+    Set calendlySht = CalendlyFile.Worksheets(1)
+    
+    Debug.Assert Not calendlySht Is Nothing
+    
+    If CalendlyFile Is Nothing Then Err.Raise HANDLED_ERROR, , "No Calendly sheet not found"
+    
+    With calendlySht
+        NoRows = .UsedRange.Rows.Count - 1
+        
+        Debug.Assert NoRows > 0
+        
+        ColFirstName = .Range("1:1").Find("Invitee First Name").Column
+        ColLastName = .Range("1:1").Find("Invitee Last Name").Column
+        ColEmail = .Range("1:1").Find("Invitee Email").Column
+        ColEventType = .Range("1:1").Find("Event Type Name").Column
+        
+        Debug.Assert ColFirstName > 0 And ColLastName > 0 And ColEmail > 0 And ColEventType > 0
+        
+        For i = 2 To NoRows + 1
+            if .Range.Cells(i,coleventype
+        
+        
+        
+        Next
+    End With
+    
+    CalendlyImport = True
+    
+    Set CalendlyFile = Nothing
+    Set calendlySht = Nothing
+
+Exit Function
+
+ErrorExit:
+
+    '***CleanUpCode***
+    CalendlyImport = False
+
+    Set CalendlyFile = Nothing
+    Set calendlySht = Nothing
+    
+Exit Function
+
+ErrorHandler:
+    If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
+        Stop
+        Resume
+    Else
+        Resume ErrorExit
+    End If
+End Function
