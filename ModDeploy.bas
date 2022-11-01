@@ -34,7 +34,7 @@ Public Function UpdateDBScript() As Boolean
     If Not UpdateDBScriptUndo Then Err.Raise HANDLED_ERROR
     
     If DB Is Nothing Then
-        Set DB = OpenDatabase(ThisWorkbook.Path & INI_FILE_PATH & DB_FILE_NAME & ".accdb")
+        Set DB = OpenDatabase(GetDocLocalPath(ThisWorkbook.Path) & INI_FILE_PATH & DB_FILE_NAME & ".accdb")
     End If
     
     Set RstTable = DB.OpenRecordset("TblDBVersion", dbOpenDynaset)
@@ -47,6 +47,17 @@ Public Function UpdateDBScript() As Boolean
         Exit Function
     End If
             
+    
+    ' ========================================================================================
+    ' Database commands
+    ' ----------------------------------------------------------------------------------------
+    DB.Execute "ALTER TABLE TblContact ADD COLUMN EmailAddress Text"
+'    DB.Execute "DELETE * FROM TblStep"
+    
+'    UpdateTable
+    
+    ' ========================================================================================
+        
     'update DB Version
     With RstTable
         .Edit
@@ -55,20 +66,9 @@ Public Function UpdateDBScript() As Boolean
         .Update
     End With
     
-    Set RstTable = Nothing
-    
-    ' ========================================================================================
-    ' Database commands
-    ' ----------------------------------------------------------------------------------------
-    DB.Execute "DELETE * FROM TblWorkflow"
-    DB.Execute "DELETE * FROM TblStep"
-    
-    UpdateTable
-    
-    ' ========================================================================================
-        
         MsgBox "Database successfully updated to Version " & DB_VER, vbOKOnly + vbInformation
     
+    Set RstTable = Nothing
     DB.Close
     
     Set DB = Nothing
@@ -87,11 +87,12 @@ ErrorExit:
     Set RstTable = Nothing
     UpdateDBScript = False
     Stop
+    Resume
 Exit Function
 
 ErrorHandler:   If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
         Stop
-        Resume
+    If DEBUG_MODE Then Resume
     Else
         Resume ErrorExit
     End If
@@ -110,7 +111,7 @@ Public Function UpdateDBScriptUndo() As Boolean
     On Error GoTo ErrorHandler
     
     If DB Is Nothing Then
-        Set DB = OpenDatabase(ThisWorkbook.Path & INI_FILE_PATH & DB_FILE_NAME & ".accdb")
+        Set DB = OpenDatabase(GetDocLocalPath(ThisWorkbook.Path) & INI_FILE_PATH & DB_FILE_NAME & ".accdb")
     End If
     
     Set RstTable = DB.OpenRecordset("TblDBVersion", dbOpenDynaset)
@@ -130,7 +131,7 @@ Public Function UpdateDBScriptUndo() As Boolean
     ' ========================================================================================
     ' Database commands
     ' ----------------------------------------------------------------------------------------
-   
+    DB.Execute "ALTER TABLE TblContact DROP COLUMN EmailAddress"
     ' ========================================================================================
     
     DB.Close
@@ -150,6 +151,7 @@ ErrorExit:
     Set RstTable = Nothing
     UpdateDBScriptUndo = False
     Stop
+    If DEBUG_MODE Then Resume
 Exit Function
 
 ErrorHandler:   If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then

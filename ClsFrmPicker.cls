@@ -145,7 +145,7 @@ Private Sub pFormPicker_SearchTextChanged()
         Do While Not pData.EOF
             If InStr(UCase(pData.Fields(0)), UCase(SearchTxt)) Then
                 With pFormPicker.LstResults
-                    If Not IsNull(pData.Fields(0)) Then .AddItem pData.Fields(0)
+                    .AddItem pData.Fields(0)
                 End With
             End If
             pData.MoveNext

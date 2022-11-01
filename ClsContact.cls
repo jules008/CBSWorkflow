@@ -37,6 +37,7 @@ Private pPhone2 As String
 Private pContactType As String
 Private pOrganisation As String
 Private pPrimaryContact As Boolean
+Private pEmailAddress As String
 Private WithEvents pContactForm As FrmContactForm
 Attribute pContactForm.VB_VarHelpID = -1
 
@@ -103,6 +104,15 @@ Public Property Let PrimaryContact(ByVal vNewValue As Boolean)
     pPrimaryContact = vNewValue
 End Property
 
+'---------------------------------------------------------------
+Public Property Get EmailAddress() As String
+    EmailAddress = pEmailAddress
+End Property
+
+Public Property Let EmailAddress(ByVal vNewValue As String)
+    pEmailAddress = vNewValue
+End Property
+
 ' ===============================================================
 ' Method DBNew
 ' displays new SPV form
@@ -116,6 +126,7 @@ Public Sub DBNew()
     pPhone1 = ""
     pPhone2 = ""
     pPosition = ""
+    pEmailAddress = ""
     pPrimaryContact = False
     
     With pContactForm
@@ -141,6 +152,7 @@ Public Sub DisplayForm()
         .TxtPhone1 = pPhone1
         .TxtPhone2 = pPhone2
         .TxtPosition = pPosition
+        .TxtEmailAdd = pEmailAddress
         .ChkPrimaryContact = pPrimaryContact
         .Show
     End With
@@ -168,6 +180,7 @@ Public Sub DBGet(ContactNo As Integer)
             If Not IsNull(!Phone1) Then pPhone1 = !Phone1
             If Not IsNull(!Phone2) Then pPhone2 = !Phone2
             If Not IsNull(!PrimaryContact) Then pPrimaryContact = !PrimaryContact
+            If Not IsNull(!EmailAddress) Then pEmailAddress = !EmailAddress
             If RstNoCont.Fields(0) = 0 Then
                 pPrimaryContact = True
                 DB.Execute "UPDATE TblContact SET PrimaryContact = TRUE WHERE ContactType = '" & pContactType & "' and Organisation = '" & pOrganisation & "'"
@@ -223,6 +236,7 @@ Public Sub DBSave()
         If CStr(pPhone1) = "" Then !Phone1 = Null Else !Phone1 = pPhone1
         If CStr(pPhone2) = "" Then !Phone2 = Null Else !Phone2 = pPhone2
         If CStr(pPrimaryContact) = "" Then !PrimaryContact = Null Else !PrimaryContact = pPrimaryContact
+        If CStr(pEmailAddress) = "" Then !EmailAddress = Null Else !EmailAddress = pEmailAddress
 
         .Update
     End With
@@ -254,6 +268,7 @@ Private Sub pContactForm_Update()
         pPosition = .TxtPosition
         pContactType = .CmoContactType
         pOrganisation = .CmoOrganisation
+        pEmailAddress = .TxtEmailAdd
         pPrimaryContact = .ChkPrimaryContact
     End With
     DBSave

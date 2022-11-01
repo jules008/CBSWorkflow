@@ -170,7 +170,6 @@ Public Sub DisplayForm()
         .TxtCBSComPC = pCBSComPC
         .TxtLoanTerm = pLoanTerm
         .TxtProjectNo = pProjectNo
-        .TxtProjectNo = pProjectNo
         .TxtProjName = pProjectName
         If pCaseManager.CBSUserNo > 0 Then .CmoCaseManager = pCaseManager.CBSUserNo
         If pClient.ClientNo > 0 Then .CmoClientNo = pClient.ClientNo
@@ -195,6 +194,7 @@ Public Sub DBGet(ByVal ProjectNo As Integer)
             If Not IsNull(!CBSComPC) Then pCBSComPC = !CBSComPC
             If Not IsNull(!ExitFee) Then pExitFee = !ExitFee
             If Not IsNull(!ProjectNo) Then pProjectNo = !ProjectNo
+            If Not IsNull(!ProjectName) Then pProjectName = !ProjectName
             
             pSPV.DBGet !SPVNo
             pClient.DBGet !ClientNo
@@ -238,16 +238,17 @@ Public Sub DBSave()
         If CStr(pCBSComPC) = "" Then !CBSComPC = Null Else !CBSComPC = pCBSComPC
         If CStr(pExitFee) = "" Then !ExitFee = Null Else !ExitFee = pExitFee
         If CStr(pProjectNo) = "" Then !ProjectNo = Null Else !ProjectNo = pProjectNo
+        If CStr(pProjectName) = "" Then !ProjectName = Null Else !ProjectName = pProjectName
         If pProjectWorkflow.WorkflowNo <> 0 Then !ProjectWFNo = pProjectWorkflow.WorkflowNo
         If CStr(pCaseManager.CBSUserNo) = "" Then !CaseManager = Null Else !CaseManager = pCaseManager.CBSUserNo
         If CStr(pSPV.SPVNo) = "" Then !SPVNo = Null Else !SPVNo = pSPV.SPVNo
         If CStr(pClient.ClientNo) = "" Then !ClientNo = Null Else !ClientNo = pClient.ClientNo
 
-        If pClient.ClientNo <> 0 Then pSPV.ClientNo = pClient.ClientNo
+        pSPV.ClientNo = pClient.ClientNo
 
-        If pSPV.SPVNo <> 0 Then pSPV.DBSave
-        If pClient.ClientNo <> 0 Then pClient.DBSave
-        If pCaseManager.CBSUserNo <> 0 Then pCaseManager.DBSave
+        pSPV.DBSave
+        pClient.DBSave
+        pCaseManager.DBSave
         
         pWorkflows.SaveCollection
         pContacts.SaveCollection
@@ -285,6 +286,7 @@ Private Sub pProjectForm_Update()
        pSPV.DBGet .CmoSPVNo.List(.CmoSPVNo - 1, 0)
        pCaseManager.DBGet .CmoCaseManager.List(.CmoCaseManager - 1, 0)
        pExitFee = .ChkExitFee
+       pProjectName = .TxtProjName
     End With
     DBSave
 End Sub
@@ -322,6 +324,11 @@ Private Sub Class_Initialize()
     Set pProjectForm = New FrmProjectForm
     Set pSPV = New ClsSPV
     Set pClient = New ClsClient
+    
+    With pProjectWorkflow
+        .Name = "Project"
+        .WorkflowType = enProject
+    End With
     
     Set pParent = New ClsSPV
 

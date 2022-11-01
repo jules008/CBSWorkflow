@@ -7,3 +7,4 @@ Address,  dbText
 Phone1,  dbText
 Phone2,  dbText
 PrimaryContact,  dbBoolean
+EmailAddress,  dbText

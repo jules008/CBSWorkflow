@@ -21,7 +21,6 @@ Private Const StrMODULE As String = "ModUIButtonScripts"
 ' ---------------------------------------------------------------
 Public Function BtnProjectNewWFClick(ScreenPage As enScreenPage) As Boolean
     Dim Picker As ClsFrmPicker
-    Dim ErrNo As Integer
     
     Const StrPROCEDURE As String = "BtnProjectNewWFClick()"
 
@@ -48,7 +47,6 @@ Public Function BtnProjectNewWFClick(ScreenPage As enScreenPage) As Boolean
     
     End With
     
-    If Picker.SelectedItem = "" Then Err.Raise GRACEFUL_EXIT, , "No selection made"
     ActiveClient.DBGet Picker.SelectedItem
     
     Set Picker = New ClsFrmPicker
@@ -65,7 +63,6 @@ Public Function BtnProjectNewWFClick(ScreenPage As enScreenPage) As Boolean
         End If
     End With
     
-    If Picker.SelectedItem = "" Then Err.Raise GRACEFUL_EXIT, , "No selection made"
     ActiveSPV.DBGet Picker.SelectedItem
     ActiveClient.SPVs.Add ActiveSPV
     
@@ -83,32 +80,35 @@ Public Function BtnProjectNewWFClick(ScreenPage As enScreenPage) As Boolean
         End If
     End With
     
-    If Picker.SelectedItem = "" Then Err.Raise GRACEFUL_EXIT, , "No selection made"
     ActiveUser.DBGet Picker.SelectedItem
     
     With ActiveProject
         .ProjectWorkflow.Name = "Project"
         .CaseManager = ActiveUser
-        .SPV = ActiveSPV
-        .Client = ActiveClient
         .DBSave
     End With
+    
+    ActiveSPV.Projects.Add ActiveProject
+    
+    Debug.Assert ActiveClient.SPVs.Count > 0
     
     ActiveClient.DBSave
                 
-    With ActiveProject.ProjectWorkflow
+    With ActiveWorkFlow
         .Name = "Project"
         .WorkflowType = enProject
         .DBSave
-        .DBNew
     End With
     
+    ActiveProject.ProjectWorkflow = ActiveWorkFlow
     Debug.Assert ActiveProject.ProjectWorkflow.Steps.Count > 0
                 
-    If Not ResetScreen Then Err.Raise HANDLED_ERROR
-    If Not ModUIProjects.BuildScreen(ScreenPage) Then Err.Raise HANDLED_ERROR
+    ActiveWorkFlow.DBNew
+    
+    Debug.Assert Not ActiveClient Is Nothing
+    Debug.Assert ActiveWorkFlow.Steps.Count > 0
 
-GracefulExit:
+    If Not ResetScreen Then Err.Raise HANDLED_ERROR
     
     Set ActiveWorkFlow = Nothing
     Set ActiveSPV = Nothing
@@ -117,6 +117,7 @@ GracefulExit:
     Set ActiveClient = Nothing
     Set ActiveUser = Nothing
     
+    If Not ModUIProjects.BuildScreen(ScreenPage) Then Err.Raise HANDLED_ERROR
 
     BtnProjectNewWFClick = True
 
@@ -136,12 +137,6 @@ ErrorExit:
 Exit Function
 
 ErrorHandler:
-    If Err.Number >= 2000 And Err.Number <= 2500 Then
-        ErrNo = Err.Number
-        CustomErrorHandler (Err.Number)
-        Resume GracefulExit
-    End If
-    
     If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
         Stop
         Resume
@@ -157,7 +152,6 @@ End Function
 Public Function BtnLenderNewWFClick(ScreenPage As enScreenPage) As Boolean
     Dim Picker As ClsFrmPicker
     Dim SQL As String
-    Dim ErrNo As Integer
     
     Const StrPROCEDURE As String = "BtnLenderNewWFClick()"
 
@@ -179,7 +173,6 @@ Public Function BtnLenderNewWFClick(ScreenPage As enScreenPage) As Boolean
         .Show = True
     End With
     
-    If Picker.SelectedItem = "" Then Err.Raise GRACEFUL_EXIT, , "No selection made"
     ActiveProject.DBGet Picker.SelectedItem
 
     Set Picker = New ClsFrmPicker
@@ -195,7 +188,6 @@ Public Function BtnLenderNewWFClick(ScreenPage As enScreenPage) As Boolean
         End If
     End With
     
-    If Picker.SelectedItem = "" Then Err.Raise GRACEFUL_EXIT, , "No selection made"
     ActiveLender.DBGet Picker.SelectedItem
     
     Set ActiveWorkFlow = New ClsWorkflow
@@ -212,13 +204,10 @@ Public Function BtnLenderNewWFClick(ScreenPage As enScreenPage) As Boolean
         .DBSave
     End With
     
-    If Picker.SelectedItem = "" Then Err.Raise GRACEFUL_EXIT, , "No selection made"
     ActiveWorkFlow.DisplayForm
     
     If Not ResetScreen Then Err.Raise HANDLED_ERROR
     If Not ModUIProjects.BuildScreen(ScreenPage) Then Err.Raise HANDLED_ERROR
-    
-GracefulExit:
     
     Set ActiveWorkFlow = Nothing
     Set ActiveSPV = Nothing
@@ -247,12 +236,6 @@ ErrorExit:
 Exit Function
 
 ErrorHandler:
-    If Err.Number >= 2000 And Err.Number <= 2500 Then
-        ErrNo = Err.Number
-        CustomErrorHandler (Err.Number)
-        Resume GracefulExit
-    End If
-    
     If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
         Stop
         Resume
@@ -302,6 +285,23 @@ Public Sub BtnCRMOpenItem(ByVal ScreenPage As enScreenPage, Optional ByVal Index
     If Not ModUICRM.OpenItem(ScreenPage, Index) Then Err.Raise HANDLED_ERROR
     If Not ResetScreen Then Err.Raise HANDLED_ERROR
     If Not ModUICRM.BuildScreen(ScreenPage) Then Err.Raise HANDLED_ERROR
+End Sub
+
+' ===============================================================
+' BtnCRMContCalImport
+' ---------------------------------------------------------------
+Public Sub BtnCRMContCalImport(ByVal ScreenPage As enScreenPage, Optional ByVal Index As String)
+    If Not ModUICRM.CalendlyImport() Then Err.Raise HANDLED_ERROR
+    If Not ResetScreen Then Err.Raise HANDLED_ERROR
+    If Not ModUICRM.BuildScreen(ScreenPage) Then Err.Raise HANDLED_ERROR
+End Sub
+
+' ===============================================================
+' BtnCRMContShwLeads
+' ---------------------------------------------------------------
+Public Sub BtnCRMContShwLeads(ByVal ScreenPage As enScreenPage, Optional ByVal Index As String)
+    If Not ResetScreen Then Err.Raise HANDLED_ERROR
+    If Not ModUICRM.BuildScreen(ScreenPage, "ContactType:Lead") Then Err.Raise HANDLED_ERROR
 End Sub
 
 

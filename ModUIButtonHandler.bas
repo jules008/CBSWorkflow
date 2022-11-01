@@ -36,11 +36,17 @@ Restart:
     If MainScreen Is Nothing Then Err.Raise SYSTEM_RESTART
 
     AryBtn = Split(ButtonNo, ":")
-    ScreenPage = AryBtn(0)
-    BtnNo = CInt(AryBtn(1))
-    BtnIndex = CInt(AryBtn(2))
+    If UBound(AryBtn) > 0 Then ScreenPage = AryBtn(0)
     
-    If UBound(AryBtn) = 1 Then BtnIndex = AryBtn(1)
+    If UBound(AryBtn) = 1 Then
+        If Not IsNull(BtnIndex) Then BtnIndex = AryBtn(1)
+    Else
+        If Not IsNull(AryBtn(1)) Then BtnNo = CInt(AryBtn(1))
+    End If
+    
+    If UBound(AryBtn) = 2 Then
+        If Not IsNull(CInt(AryBtn(2))) Then BtnIndex = CInt(AryBtn(2))
+    End If
     
     Select Case BtnNo
     
@@ -67,6 +73,14 @@ Restart:
         Case enBtnCRMNewItem
             
             BtnCRMOpenItem ScreenPage
+            
+        Case enBtnCRMContCalImport
+            
+            BtnCRMContCalImport ScreenPage
+            
+        Case enBtnCRMContShwLeads
+            
+            BtnCRMContShwLeads ScreenPage
             
     End Select
 

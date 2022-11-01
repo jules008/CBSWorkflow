@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FrmContactForm 
    Caption         =   "Contact"
-   ClientHeight    =   4740
+   ClientHeight    =   5115
    ClientLeft      =   120
    ClientTop       =   465
-   ClientWidth     =   11925
+   ClientWidth     =   11640
    OleObjectBlob   =   "FrmContactForm.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -157,8 +157,13 @@ Private Function PopulateOrgs(ContactType As String) As Boolean
             Index = "ProjectNo"
             Table = "TblProject"
             Name = "ProjectName"
+       Case "Lead"
+            Index = "ProjectNo"
+            Table = "TblProject"
+            Name = "ProjectName"
     End Select
         
+    If ContactType <> "Lead" Then
     Set RstSource = ModDatabase.SQLQuery("SElECT " & Index & ", " & Name & " FROM " & Table)
     
     With RstSource
@@ -173,6 +178,13 @@ Private Function PopulateOrgs(ContactType As String) As Boolean
             .MoveNext
         Loop
     End With
+    Else
+        CmoOrganisation.Clear
+        With CmoOrganisation
+            .AddItem
+            .List(0, 1) = "None"
+        End With
+    End If
     
     PopulateOrgs = True
 
@@ -273,6 +285,9 @@ Private Sub UserForm_Initialize()
         .AddItem
         .List(3, 0) = 3
         .List(3, 1) = "Client"
+        .AddItem
+        .List(3, 0) = 4
+        .List(3, 1) = "Lead"
     End With
     CmoOrganisation.ForeColor = COL_DRK_GREY
 End Sub
