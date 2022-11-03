@@ -47,6 +47,11 @@ Public Function BtnProjectNewWFClick(ScreenPage As enScreenPage) As Boolean
     
     End With
     
+    If Picker.SelectedItem = "" Then
+        MsgBox "No selection made, please try again", vbExclamation + vbOKOnly, APP_NAME
+        GoTo GracefullExit
+    End If
+    
     ActiveClient.DBGet Picker.SelectedItem
     
     Set Picker = New ClsFrmPicker
@@ -63,6 +68,11 @@ Public Function BtnProjectNewWFClick(ScreenPage As enScreenPage) As Boolean
         End If
     End With
     
+    If Picker.SelectedItem = "" Then
+        MsgBox "No selection made, please try again", vbExclamation + vbOKOnly, APP_NAME
+        GoTo GracefullExit
+    End If
+   
     ActiveSPV.DBGet Picker.SelectedItem
     ActiveClient.SPVs.Add ActiveSPV
     
@@ -79,6 +89,11 @@ Public Function BtnProjectNewWFClick(ScreenPage As enScreenPage) As Boolean
             .SelectedItem = ActiveSPV.Name
         End If
     End With
+    
+    If Picker.SelectedItem = "" Then
+        MsgBox "No selection made, please try again", vbExclamation + vbOKOnly, APP_NAME
+        GoTo GracefullExit
+    End If
     
     ActiveUser.DBGet Picker.SelectedItem
     
@@ -109,6 +124,8 @@ Public Function BtnProjectNewWFClick(ScreenPage As enScreenPage) As Boolean
     Debug.Assert ActiveWorkFlow.Steps.Count > 0
 
     If Not ResetScreen Then Err.Raise HANDLED_ERROR
+    
+GracefullExit:
     
     Set ActiveWorkFlow = Nothing
     Set ActiveSPV = Nothing
@@ -173,6 +190,11 @@ Public Function BtnLenderNewWFClick(ScreenPage As enScreenPage) As Boolean
         .Show = True
     End With
     
+    If Picker.SelectedItem = "" Then
+        MsgBox "No selection made, please try again", vbExclamation + vbOKOnly, APP_NAME
+        GoTo GracefullExit
+    End If
+    
     ActiveProject.DBGet Picker.SelectedItem
 
     Set Picker = New ClsFrmPicker
@@ -187,6 +209,11 @@ Public Function BtnLenderNewWFClick(ScreenPage As enScreenPage) As Boolean
             .SelectedItem = ActiveLender.Name
         End If
     End With
+    
+    If Picker.SelectedItem = "" Then
+        MsgBox "No selection made, please try again", vbExclamation + vbOKOnly, APP_NAME
+        GoTo GracefullExit
+    End If
     
     ActiveLender.DBGet Picker.SelectedItem
     
@@ -209,6 +236,8 @@ Public Function BtnLenderNewWFClick(ScreenPage As enScreenPage) As Boolean
     If Not ResetScreen Then Err.Raise HANDLED_ERROR
     If Not ModUIProjects.BuildScreen(ScreenPage) Then Err.Raise HANDLED_ERROR
     
+GracefullExit:
+
     Set ActiveWorkFlow = Nothing
     Set ActiveSPV = Nothing
     Set ActiveProject = Nothing

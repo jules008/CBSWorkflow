@@ -136,16 +136,33 @@ End Sub
 ' Initialises form controls
 ' ---------------------------------------------------------------
 Private Sub UserForm_Initialize()
+    Dim RstSource As Recordset
+    Dim i As Integer
     
     Me.StartUpPosition = 0
     Me.Left = Application.Left + (0.5 * Application.Width) - (0.5 * Me.Width)
     Me.Top = Application.Top + (0.5 * Application.Height) - (0.5 * Me.Height)
+    
+    Set RstSource = ModDatabase.SQLQuery("TblLenderType")
+    
+    i = 0
+    With CmoLenderType
+        .Clear
+        Do While Not RstSource.EOF
+            .AddItem
+            If Not IsNull(RstSource!TypeNo) Then .List(i, 0) = RstSource!TypeNo
+            If Not IsNull(RstSource!LenderType) Then .List(i, 1) = RstSource!LenderType
+            RstSource.MoveNext
+            i = i + 1
+        Loop
+    End With
     
     If Me.Tag = "New" Then
         BtnNew.Visible = False
         BtnUpdate.Caption = "Create"
     End If
     ClearForm
+    Set RstSource = Nothing
 End Sub
 
 ' ===============================================================

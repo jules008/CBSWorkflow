@@ -47,6 +47,8 @@ Private Sub BtnDelete_Click()
     Response = MsgBox("Are you sure you want to delete the Contact from the database?", vbYesNo + vbExclamation, APP_NAME)
     
     If Response = 6 Then
+        RaiseEvent Delete
+        Unload Me
     End If
 End Sub
 
@@ -156,7 +158,7 @@ Private Function PopulateOrgs(ContactType As String) As Boolean
        Case "Project"
             Index = "ProjectNo"
             Table = "TblProject"
-            Name = "ProjectName"
+            Name = "ProjectNo"
        Case "Lead"
             Index = "ProjectNo"
             Table = "TblProject"
@@ -213,9 +215,17 @@ Private Sub CmoContactType_Change()
     CmoOrganisation = ""
     With CmoContactType
         If .ListIndex = -1 Then
+            CmoOrganisation.Enabled = False
             CmoOrganisation.Value = "Please select a Contact Type"
         Else
+            CmoOrganisation.Enabled = True
             If Not PopulateOrgs(.Value) Then Err.Raise HANDLED_ERROR
+        End If
+        
+        If .Value = "Project" Then
+            LblOrganisation.Caption = "Select Project"
+        Else
+            LblOrganisation.Caption = "Organisation"
         End If
     End With
 End Sub
@@ -286,10 +296,10 @@ Private Sub UserForm_Initialize()
         .List(3, 0) = 3
         .List(3, 1) = "Client"
         .AddItem
-        .List(3, 0) = 4
-        .List(3, 1) = "Lead"
+        .List(4, 0) = 4
+        .List(4, 1) = "Lead"
     End With
-    CmoOrganisation.ForeColor = COL_DRK_GREY
+    CmoOrganisation.Enabled = False
 End Sub
 
 ' ===============================================================

@@ -183,7 +183,7 @@ End Sub
 ' Method DBGet(Key as Integer)
 ' Gets class from Database
 ' ---------------------------------------------------------------
-Public Sub DBGet(ByVal ProjectNo As Integer)
+Public Sub DBGet(ByVal ProjectNo As Variant)
     Dim RstProject As Recordset
 
     Set RstProject = ModDatabase.SQLQuery("SELECT * FROM TblProject WHERE ProjectNo = " & ProjectNo)
@@ -233,6 +233,14 @@ Public Sub DBSave()
             .Edit
         End If
 
+        pSPV.DBSave
+        pClient.DBSave
+        pCaseManager.DBSave
+        
+        pWorkflows.SaveCollection
+        pContacts.SaveCollection
+        pProjectWorkflow.DBSave
+        
         If CStr(pProjectNo) = "" Then !ProjectNo = Null Else !ProjectNo = pProjectNo
         If CStr(pLoanTerm) = "" Then !LoanTerm = Null Else !LoanTerm = pLoanTerm
         If CStr(pCBSComPC) = "" Then !CBSComPC = Null Else !CBSComPC = pCBSComPC
@@ -246,13 +254,6 @@ Public Sub DBSave()
 
         pSPV.ClientNo = pClient.ClientNo
 
-        pSPV.DBSave
-        pClient.DBSave
-        pCaseManager.DBSave
-        
-        pWorkflows.SaveCollection
-        pContacts.SaveCollection
-        pProjectWorkflow.DBSave
         .Update
     End With
 

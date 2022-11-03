@@ -17,6 +17,27 @@ Dim OldTables() As String
 
 Private Const StrMODULE As String = "ModDeploy"
 
+Public Sub QueryTest()
+    Set DB = OpenDatabase(GetDocLocalPath(ThisWorkbook.Path) & INI_FILE_PATH & DB_FILE_NAME & ".accdb")
+    
+    'Update commands
+    DB.Execute "CREATE TABLE TblLenderType"
+    DB.Execute "ALTER TABLE TblLenderType ADD COLUMN TypeNo Int"
+    DB.Execute "ALTER TABLE TblLenderType ADD COLUMN LenderType Char (80)"
+    DB.Execute "INSERT INTO TblLenderType VALUES (1,'1st charge/senior lender')"
+    DB.Execute "INSERT INTO TblLenderType VALUES (2,'2nd charge/mezzanine lender')"
+    DB.Execute "INSERT INTO TblLenderType VALUES (3,'Equity lender')"
+    DB.Execute "INSERT INTO TblLenderType VALUES (4,'SDLT lender')"
+    DB.Execute "INSERT INTO TblLenderType VALUES (5,'VAT lender')"
+    
+    Stop
+    
+    'undo commands
+    DB.Execute "DROP Table TblLenderType"
+
+    Set DB = Nothing
+End Sub
+
 ' ===============================================================
 ' UpdateDBScript
 ' Script to update DB
@@ -51,7 +72,16 @@ Public Function UpdateDBScript() As Boolean
     ' ========================================================================================
     ' Database commands
     ' ----------------------------------------------------------------------------------------
-    DB.Execute "ALTER TABLE TblContact ADD COLUMN EmailAddress Text"
+    
+    DB.Execute "CREATE TABLE TblLenderType"
+    DB.Execute "ALTER TABLE TblLenderType ADD COLUMN TypeNo Int"
+    DB.Execute "ALTER TABLE TblLenderType ADD COLUMN LenderType Char (80)"
+    DB.Execute "INSERT INTO TblLenderType VALUES (1,'1st charge/senior lender')"
+    DB.Execute "INSERT INTO TblLenderType VALUES (2,'2nd charge/mezzanine lender')"
+    DB.Execute "INSERT INTO TblLenderType VALUES (3,'Equity lender')"
+    DB.Execute "INSERT INTO TblLenderType VALUES (4,'SDLT lender')"
+    DB.Execute "INSERT INTO TblLenderType VALUES (5,'VAT lender')"
+    
 '    DB.Execute "DELETE * FROM TblStep"
     
 '    UpdateTable
@@ -81,7 +111,8 @@ ErrorExit:
    
     Debug.Print "There was an error with the database update.  Error " & Err.Number & ", " & Err.Description, vbCritical, APP_NAME
     If Not UpdateDBScriptUndo Then Err.Raise HANDLED_ERROR
-    MsgBox "Database changes have been reversed.  Please restore previous version of FIRES", vbCritical, APP_NAME
+    
+    If Not DEV_MODE Then MsgBox "Database changes have been reversed.  Please restore previous version of FIRES", vbCritical, APP_NAME
     
     Set DB = Nothing
     Set RstTable = Nothing
@@ -128,10 +159,11 @@ Public Function UpdateDBScriptUndo() As Boolean
         .Update
     End With
     
+    On Error Resume Next
     ' ========================================================================================
     ' Database commands
     ' ----------------------------------------------------------------------------------------
-    DB.Execute "ALTER TABLE TblContact DROP COLUMN EmailAddress"
+    DB.Execute "DROP Table TblLenderType"
     ' ========================================================================================
     
     DB.Close
@@ -143,8 +175,6 @@ Exit Function
 
 ErrorExit:
 
-    MsgBox "There was an error with the database update.  Error " & Err.Number & ", " & Err.Description, vbCritical, APP_NAME
-    UpdateDBScriptUndo
     MsgBox "Database changes have been reversed.  Please restore previous version of FIRES", vbCritical, APP_NAME
     
     Set DB = Nothing

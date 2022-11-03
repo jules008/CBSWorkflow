@@ -189,8 +189,8 @@ Private Sub UserForm_Initialize()
         .Clear
         Do While Not RstSource.EOF
             .AddItem
-            .List(i, 0) = RstSource!CBSUserNo
-            .List(i, 1) = RstSource!UserName
+            If Not IsNull(RstSource!CBSUserNo) Then .List(i, 0) = RstSource!CBSUserNo
+            If Not IsNull(RstSource!UserName) Then .List(i, 1) = RstSource!UserName
             RstSource.MoveNext
             i = i + 1
         Loop
@@ -217,8 +217,8 @@ Private Sub UserForm_Initialize()
         .Clear
         Do While Not RstSource.EOF
             .AddItem
-            .List(i, 0) = RstSource!ClientNo
-            .List(i, 1) = RstSource!Name
+            If Not IsNull(RstSource!ClientNo) Then .List(i, 0) = RstSource!ClientNo
+            If Not IsNull(RstSource!Name) Then .List(i, 1) = RstSource!Name
             RstSource.MoveNext
             i = i + 1
         Loop
