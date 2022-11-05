@@ -61,6 +61,7 @@ Public Sub ClearForm()
     TxtAddress1 = ""
     TxtAddress2 = ""
     TxtContactName = ""
+    TxtEmailAdd = ""
     TxtContactNo = ""
     TxtPhone1 = ""
     TxtPhone2 = ""

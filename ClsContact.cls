@@ -261,15 +261,15 @@ End Sub
 ' ---------------------------------------------------------------
 Private Sub pContactForm_Update()
     With pContactForm
-        pAddress = .TxtAddress1
-        pContactName = .TxtContactName
-        pPhone1 = .TxtPhone1
-        pPhone2 = .TxtPhone2
-        pPosition = .TxtPosition
-        pContactType = .CmoContactType
-        pOrganisation = .CmoOrganisation
-        pEmailAddress = .TxtEmailAdd
-        pPrimaryContact = .ChkPrimaryContact
+        pAddress = CleanString(.TxtAddress1)
+        pContactName = CleanString(.TxtContactName)
+        pPhone1 = CleanString(.TxtPhone1)
+        pPhone2 = CleanString(.TxtPhone2)
+        pPosition = CleanString(.TxtPosition)
+        pContactType = CleanString(.CmoContactType)
+        pOrganisation = CleanString(.CmoOrganisation)
+        pEmailAddress = CleanString(.TxtEmailAdd)
+        pPrimaryContact = CleanString(.ChkPrimaryContact)
     End With
     DBSave
     

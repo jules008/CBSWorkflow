@@ -70,7 +70,10 @@ Public Function BtnProjectNewWFClick(ScreenPage As enScreenPage) As Boolean
         GoTo GracefullExit
     End If
     
-    ActiveClient.DBGet Picker.SelectedItem
+    With ActiveClient
+        .DBGet Picker.SelectedItem
+        .DBSave
+    End With
     
     'Get SPV
     Set Picker = New ClsFrmPicker
@@ -92,8 +95,10 @@ Public Function BtnProjectNewWFClick(ScreenPage As enScreenPage) As Boolean
         GoTo GracefullExit
     End If
    
-    ActiveSPV.DBGet Picker.SelectedItem
-    ActiveClient.SPVs.Add ActiveSPV
+    With ActiveSPV
+        .DBGet Picker.SelectedItem
+        .DBSave
+    End With
     
     'get Case Manager
     Set Picker = New ClsFrmPicker
@@ -115,36 +120,33 @@ Public Function BtnProjectNewWFClick(ScreenPage As enScreenPage) As Boolean
         GoTo GracefullExit
     End If
     
-    ActiveUser.DBGet Picker.SelectedItem
+    With ActiveUser
+        .DBGet Picker.SelectedItem
+        .DBSave
+    End With
+    
+    ActiveClient.SPVs.Add ActiveSPV
     
     With ActiveProject
         .ProjectWorkflow.Name = "Project"
         .CaseManager = ActiveUser
         .ProjectName = ProjectName
+        .Client = ActiveClient
+        .SPV = ActiveSPV
         .DBSave
     End With
     
-    ActiveSPV.Projects.Add ActiveProject
-    
-    Debug.Assert ActiveClient.SPVs.Count > 0
-    
-    ActiveClient.DBSave
-                
-    With ActiveWorkFlow
+    With ActiveProject.ProjectWorkflow
         .Name = "Project"
         .WorkflowType = enProject
+        .ActiveStep.Start
         .DBSave
+        .DisplayForm
+    
     End With
-    
-    ActiveProject.ProjectWorkflow = ActiveWorkFlow
-    Debug.Assert ActiveProject.ProjectWorkflow.Steps.Count > 0
-                
-    ActiveWorkFlow.DBNew
-    
-    Debug.Assert Not ActiveClient Is Nothing
-    Debug.Assert ActiveWorkFlow.Steps.Count > 0
 
     If Not ResetScreen Then Err.Raise HANDLED_ERROR
+    If Not ModUIProjects.BuildScreen(ScreenPage) Then Err.Raise HANDLED_ERROR
     
 GracefullExit:
     
@@ -156,8 +158,6 @@ GracefullExit:
     Set ActiveUser = Nothing
     Set InputBox = Nothing
     
-    If Not ModUIProjects.BuildScreen(ScreenPage) Then Err.Raise HANDLED_ERROR
-
     BtnProjectNewWFClick = True
 
 Exit Function
@@ -204,11 +204,12 @@ Public Function BtnLenderNewWFClick(ScreenPage As enScreenPage) As Boolean
     Set ActiveProject = New ClsProject
     Set ActiveLender = New ClsLender
     
+    'Get Project
     Set Picker = New ClsFrmPicker
     With Picker
         .Title = "Select Project"
         .Instructions = "Select the Project from the list that you would like to add a Lender Workflow to"
-        .Data = ModDatabase.SQLQuery("SELECT ProjectNo from TblProject")
+        .Data = ModDatabase.SQLQuery("SELECT ProjectName from TblProject")
         .ClearForm
         .Show = True
     End With
@@ -218,8 +219,12 @@ Public Function BtnLenderNewWFClick(ScreenPage As enScreenPage) As Boolean
         GoTo GracefullExit
     End If
     
-    ActiveProject.DBGet Picker.SelectedItem
+    With ActiveProject
+        .DBGet Picker.SelectedItem
+        .DBSave
+    End With
 
+    'get lender
     Set Picker = New ClsFrmPicker
     With Picker
         .Title = "Select Lender"
@@ -238,7 +243,10 @@ Public Function BtnLenderNewWFClick(ScreenPage As enScreenPage) As Boolean
         GoTo GracefullExit
     End If
     
-    ActiveLender.DBGet Picker.SelectedItem
+    With ActiveLender
+        .DBGet Picker.SelectedItem
+        .DBSave
+    End With
     
     Set ActiveWorkFlow = New ClsWorkflow
     

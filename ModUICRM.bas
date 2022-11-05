@@ -528,6 +528,7 @@ Public Function CalendlyImport() As Boolean
             End If
             
             With RstContacts
+                If .RecordCount > 0 Then
                 .MoveFirst
                 .FindFirst ("ContactName = '" & FirstName & " " & LastName & "'")
                 
@@ -544,6 +545,7 @@ Public Function CalendlyImport() As Boolean
                         Import = True
                     Else
                         Import = False
+                        End If
                     End If
                 End If
                 

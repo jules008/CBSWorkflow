@@ -246,7 +246,7 @@ Public Sub DisplayForm()
         End If
         
         If pWorkflowType = enProject Then
-            .TtlTop.Caption = "Project No " & pProjectNo & " Workflow"
+            .TtlTop.Caption = "Project No " & Parent.ProjectNo & " Workflow"
             .LblLenderName.Visible = False
             .LblLenderCont.Visible = False
             .LblLenderPhone.Visible = False
