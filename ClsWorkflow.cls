@@ -385,14 +385,14 @@ Public Sub DBSave()
         If pSteps.Count = 0 Then pSteps.GetCollection
                 
         If CurrentStep = "" Then pCurrentStep = pSteps.Start
-        !CurrentStep = pCurrentStep
-        !WorkflowNo = pWorkflowNo
-        !ProjectNo = pProjectNo
-        !WorkflowType = enWorkflowTypeStr(pWorkflowType)
-        !Name = pName
-        !Status = Status
-        !RAG = enRAGStr(RAG)
-        !LenderNo = pLender.LenderNo
+        !CurrentStep = CleanSQLText(pCurrentStep, True)
+        !WorkflowNo = CleanSQLText(pWorkflowNo, True)
+        !ProjectNo = CleanSQLText(pProjectNo, True)
+        !WorkflowType = CleanSQLText(enWorkflowTypeStr(pWorkflowType), True)
+        !Name = CleanSQLText(pName, True)
+        !Status = CleanSQLText(Status, True)
+        !RAG = CleanSQLText(enRAGStr(RAG), True)
+        !LenderNo = CleanSQLText(pLender.LenderNo, True)
         
         If Not Parent Is Nothing Then !ProjectNo = Parent.ProjectNo
         .Update
@@ -525,16 +525,16 @@ End Sub
 ' ---------------------------------------------------------------
 Public Sub Pause()
     Dim PauseDays As Integer
+    Dim InputForm As ClsInputBox
     
-    Load pFrmInputBox
+    Set InputForm = New ClsInputBox
     
-    With pFrmInputBox
-        .Caption = "Pause Workflow"
-        .LblMessage = "How many days would you like to pause the workflow for?"
-        .TxtInput = ""
+    With InputForm
+        .Title = "Pause Workflow"
+        .Instructions = "How many days would you like to pause the workflow for?"
+        .ClearForm
         .Show
-            
-        PauseDays = .TxtInput
+        PauseDays = .ReturnValue
     End With
     
     Unload pFrmInputBox
@@ -546,6 +546,8 @@ Public Sub Pause()
             .DBSave
         End With
     End If
+    
+    Set InputForm = Nothing
 End Sub
 
 ' ===============================================================

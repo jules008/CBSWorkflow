@@ -143,7 +143,7 @@ Public Sub DBGet(ClientNameNo As Variant)
             If Not IsNull(!Url) Then pUrl = !Url
             If Not IsNull(!PhoneNo) Then pPhoneNo = !PhoneNo
             If Not IsNull(!ClientNo) Then pClientNo = !ClientNo
-        pContacts.GetCollection "Client", pName
+        pContacts.GetCollection "Client", CleanSQLText(pName)
         End If
     End With
     Set RstClient = Nothing
@@ -175,10 +175,10 @@ Public Sub DBSave()
             .Edit
         End If
 
-        If CStr(pName) = "" Then !Name = Null Else !Name = pName
-        If CStr(pUrl) = "" Then !Url = Null Else !Url = pUrl
-        If CStr(pPhoneNo) = "" Then !PhoneNo = Null Else !PhoneNo = pPhoneNo
-        If CStr(pClientNo) = "" Then !ClientNo = Null Else !ClientNo = pClientNo
+        !Name = CleanSQLText(pName, True)
+        !Url = CleanSQLText(pUrl, True)
+        !PhoneNo = CleanSQLText(pPhoneNo, True)
+        !ClientNo = CleanSQLText(pClientNo, True)
 
         pSPVs.SaveCollection
         pContacts.SaveCollection

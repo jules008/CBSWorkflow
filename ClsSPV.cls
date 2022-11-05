@@ -138,7 +138,7 @@ Public Sub DBGet(SPVNameOrNo As Variant)
             If Not IsNull(!Name) Then pName = !Name
             If Not IsNull(!ClientNo) Then pClientNo = !ClientNo
             
-            pContacts.GetCollection "SPV", pName
+            pContacts.GetCollection "SPV", CleanSQLText(pName)
         End If
     End With
     Set RstSPV = Nothing
@@ -170,9 +170,9 @@ Public Sub DBSave()
             .Edit
         End If
 
-        If CStr(pSPVNo) = "" Then !SPVNo = Null Else !SPVNo = pSPVNo
-        If CStr(pName) = "" Then !Name = Null Else !Name = pName
-        If CStr(pClientNo) = "" Then !ClientNo = Null Else !ClientNo = pClientNo
+        !SPVNo = CleanSQLText(pSPVNo, True)
+        !Name = CleanSQLText(pName, True)
+        !ClientNo = CleanSQLText(pClientNo, True)
         
         .Update
         

@@ -8,7 +8,7 @@ Attribute VB_Name = "ModLibrary"
 '===============================================================
 ' v1.0.0 - Initial Version
 '---------------------------------------------------------------
-' Date - 23 Jul 22
+' Date - 04 Nov 22
 '===============================================================
 
 Option Explicit
@@ -529,3 +529,31 @@ Function CleanString(strSource As String) As String
     CleanString = strResult
 End Function
 
+' ===============================================================
+' CleanSQLText
+' ensures text is ready for entering into database with SQL
+' ---------------------------------------------------------------
+Public Function CleanSQLText(TextInput As Variant, Optional ReturnNULL As Boolean) As Variant
+    Dim FindNo As Integer
+    Dim i As Integer
+    
+    If VarType(TextInput) = vbString Then
+        If TextInput = "" And ReturnNULL Then
+            CleanSQLText = Null
+        Else
+            Do
+                If i = 10000 Then Exit Do
+                FindNo = InStr(1, TextInput, "''")
+                Debug.Print FindNo, TextInput
+                TextInput = Replace(TextInput, "''", "'")
+                i = i + 1
+            Loop While FindNo <> 0
+            
+            CleanSQLText = Replace(TextInput, "'", "''")
+        End If
+    Else
+        CleanSQLText = TextInput
+        Exit Function
+    End If
+    
+End Function

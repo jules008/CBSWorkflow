@@ -133,10 +133,10 @@ Public Sub DBSave()
             .Edit
         End If
 
-        If CStr(pCBSUserNo) = "" Then !CBSUserNo = Null Else !CBSUserNo = pCBSUserNo
-        If CStr(pUserName) = "" Then !UserName = Null Else !UserName = pUserName
-        If CStr(pPosition) = "" Then !Position = Null Else !Position = pPosition
-        If CStr(pPhoneNo) = "" Then !PhoneNo = Null Else !PhoneNo = pPhoneNo
+        !CBSUserNo = CleanSQLText(pCBSUserNo, True)
+        !UserName = CleanSQLText(pUserName, True)
+        !Position = CleanSQLText(pPosition, True)
+        !PhoneNo = CleanSQLText(pPhoneNo, True)
 
         .Update
     End With

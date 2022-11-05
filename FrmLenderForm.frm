@@ -13,6 +13,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
 '===============================================================
 ' Module FrmLenderForm
 ' Admin form for Lenders
@@ -125,6 +126,13 @@ ErrorHandler:
 End Sub
 
 ' ===============================================================
+' CmoLenderType_Change
+' ---------------------------------------------------------------
+Private Sub CmoLenderType_Change()
+    CmoLenderType.BackColor = COL_WHITE
+End Sub
+
+' ===============================================================
 ' TxtName_Change
 ' ---------------------------------------------------------------
 Private Sub TxtName_Change()
@@ -182,6 +190,13 @@ Private Function ValidateForm() As enFormValidation
         End If
     End With
                      
+    With CmoLenderType
+      If .ListIndex = -1 Then
+        .BackColor = COL_AMBER
+        ValidateForm = enValidationError
+      End If
+    End With
+    
     If ValidateForm = enValidationError Then
         Err.Raise FORM_INPUT_EMPTY
     Else

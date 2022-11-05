@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FrmInputBox 
    Caption         =   "Enter Time"
-   ClientHeight    =   2685
+   ClientHeight    =   2715
    ClientLeft      =   120
    ClientTop       =   465
-   ClientWidth     =   4395
+   ClientWidth     =   4530
    OleObjectBlob   =   "FrmInputBox.frx":0000
    StartUpPosition =   2  'CenterScreen
 End
@@ -34,12 +34,11 @@ Private Const StrMODULE As String = "FrmInputBox"
 
 Option Explicit
 
-Public ReturnValue As String
-
+Public Event EnterValue()
 
 Private Sub BtnEnter_Click()
-    ReturnValue = TxtInput
-    Hide
+    RaiseEvent EnterValue
+    Unload Me
 End Sub
 
 Private Sub UserForm_Initialize()

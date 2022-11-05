@@ -163,6 +163,13 @@ Private Function ValidateForm() As enFormValidation
             ValidateForm = enValidationError
         End If
     End With
+           
+    With TxtPosition
+        If .Value = "" Then
+            .BackColor = COL_AMBER
+            ValidateForm = enValidationError
+        End If
+    End With
                      
     If ValidateForm = enValidationError Then
         Err.Raise FORM_INPUT_EMPTY

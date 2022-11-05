@@ -165,6 +165,13 @@ Private Sub TxtLoanTerm_Change()
 End Sub
 
 ' ===============================================================
+' TxtProjName_Change
+' ---------------------------------------------------------------
+Private Sub TxtProjName_Change()
+    TxtProjName.BackColor = COL_WHITE
+End Sub
+
+' ===============================================================
 ' UserForm_Initialize
 ' Initialises form controls
 ' ---------------------------------------------------------------
@@ -244,15 +251,22 @@ Private Function ValidateForm() As enFormValidation
 
     On Error GoTo ErrorHandler
            
+    With TxtProjName
+        If CleanString(.Value) = "" Then
+            .BackColor = COL_AMBER
+            ValidateForm = enValidationError
+        End If
+    End With
+    
     With TxtCBSComPC
-        If .Value = "" Then
+        If .Value = "" Or Not IsNumeric(.Value) Then
             .BackColor = COL_AMBER
             ValidateForm = enValidationError
         End If
     End With
            
     With TxtLoanTerm
-        If .Value = "" Then
+        If .Value = "" Or Not IsNumeric(.Value) Then
             .BackColor = COL_AMBER
             ValidateForm = enValidationError
         End If

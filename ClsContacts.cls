@@ -100,11 +100,14 @@ Public Sub GetCollection(ContactType As String, OrgName As String)
     Dim RstContact As Recordset
     Dim Contact As ClsContact
     Dim i As Integer
+    Dim SQL As String
 
     RemoveCollection
     
-    Set RstContact = ModDatabase.SQLQuery("SELECT ContactNo FROM TblContact WHERE ContactType = '" & ContactType & "'" _
-                                            & "AND Organisation = '" & OrgName & "'")
+    SQL = "SELECT ContactNo FROM TblContact WHERE ContactType = '" & ContactType & "'" _
+                                        & "AND Organisation = '" & OrgName & "'"
+    
+    Set RstContact = ModDatabase.SQLQuery(SQL)
     With RstContact
         If .RecordCount > 0 Then
             .MoveLast

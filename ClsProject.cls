@@ -55,6 +55,15 @@ Public Property Let ProjectNo(ByVal vNewValue As Integer)
 End Property
 
 '---------------------------------------------------------------
+Public Property Get ProjectName() As String
+    ProjectName = pProjectName
+End Property
+
+Public Property Let ProjectName(ByVal ProjectName As String)
+    pProjectName = ProjectName
+End Property
+
+'---------------------------------------------------------------
 Public Property Get CaseManager() As ClsCBSUser
     Set CaseManager = pCaseManager
 End Property
@@ -183,10 +192,15 @@ End Sub
 ' Method DBGet(Key as Integer)
 ' Gets class from Database
 ' ---------------------------------------------------------------
-Public Sub DBGet(ByVal ProjectNo As Variant)
+Public Sub DBGet(ByVal ProjectNameNo As Variant)
     Dim RstProject As Recordset
 
-    Set RstProject = ModDatabase.SQLQuery("SELECT * FROM TblProject WHERE ProjectNo = " & ProjectNo)
+    If IsNumeric(ProjectNameNo) Then
+        Set RstProject = ModDatabase.SQLQuery("SELECT * FROM TblProject WHERE ProjectNo = " & ProjectNameNo)
+    Else
+        Set RstProject = ModDatabase.SQLQuery("SELECT * FROM TblProject WHERE ProjectName = '" & ProjectNameNo & "'")
+    End If
+    
     With RstProject
         If .RecordCount > 0 Then
             If Not IsNull(!ProjectNo) Then pProjectNo = !ProjectNo
@@ -199,7 +213,7 @@ Public Sub DBGet(ByVal ProjectNo As Variant)
             pSPV.DBGet !SPVNo
             pClient.DBGet !ClientNo
         pCaseManager.DBGet !CaseManager
-            pContacts.GetCollection "Project", pProjectName
+            pContacts.GetCollection "Project", CleanSQLText(pProjectName)
         pProjectWorkflow.DBGet !ProjectWFNo
             pWorkflows.GetCollection
         End If
@@ -241,16 +255,16 @@ Public Sub DBSave()
         pContacts.SaveCollection
         pProjectWorkflow.DBSave
         
-        If CStr(pProjectNo) = "" Then !ProjectNo = Null Else !ProjectNo = pProjectNo
-        If CStr(pLoanTerm) = "" Then !LoanTerm = Null Else !LoanTerm = pLoanTerm
-        If CStr(pCBSComPC) = "" Then !CBSComPC = Null Else !CBSComPC = pCBSComPC
-        If CStr(pExitFee) = "" Then !ExitFee = Null Else !ExitFee = pExitFee
-        If CStr(pProjectNo) = "" Then !ProjectNo = Null Else !ProjectNo = pProjectNo
-        If CStr(pProjectName) = "" Then !ProjectName = Null Else !ProjectName = pProjectName
-        If pProjectWorkflow.WorkflowNo <> 0 Then !ProjectWFNo = pProjectWorkflow.WorkflowNo
-        If CStr(pCaseManager.CBSUserNo) = "" Then !CaseManager = Null Else !CaseManager = pCaseManager.CBSUserNo
-        If CStr(pSPV.SPVNo) = "" Then !SPVNo = Null Else !SPVNo = pSPV.SPVNo
-        If CStr(pClient.ClientNo) = "" Then !ClientNo = Null Else !ClientNo = pClient.ClientNo
+        !ProjectNo = CleanSQLText(pProjectNo, True)
+        !LoanTerm = CleanSQLText(pLoanTerm, True)
+        !CBSComPC = CleanSQLText(pCBSComPC, True)
+        !ExitFee = CleanSQLText(pExitFee, True)
+        !ProjectNo = CleanSQLText(pProjectNo, True)
+        !ProjectName = CleanSQLText(pProjectName, True)
+        !ProjectWFNo = CleanSQLText(pProjectWorkflow.WorkflowNo, True)
+        !CaseManager = CleanSQLText(pCaseManager.CBSUserNo, True)
+        !SPVNo = CleanSQLText(pSPV.SPVNo, True)
+        !ClientNo = CleanSQLText(pClient.ClientNo, True)
 
         pSPV.ClientNo = pClient.ClientNo
 

@@ -147,7 +147,7 @@ Public Sub DBGet(LenderNameOrNo As Variant)
             If Not IsNull(!LenderType) Then pLenderType = !LenderType
             If Not IsNull(!Address) Then pAddress = !Address
             
-            pContacts.GetCollection "Lender", pName
+            pContacts.GetCollection "Lender", CleanSQLText(pName)
         End If
     End With
     Set RstLender = Nothing
@@ -179,11 +179,11 @@ Public Sub DBSave()
             .Edit
         End If
 
-        If CStr(pLenderNo) = "" Then !LenderNo = Null Else !LenderNo = pLenderNo
-        If CStr(pName) = "" Then !Name = Null Else !Name = pName
-        If CStr(pPhoneNo) = "" Then !PhoneNo = Null Else !PhoneNo = pPhoneNo
-        If CStr(pLenderType) = "" Then !LenderType = Null Else !LenderType = pLenderType
-        If CStr(pAddress) = "" Then !Address = Null Else !Address = pAddress
+        !LenderNo = CleanSQLText(pLenderNo, True)
+        !Name = CleanSQLText(pName, True)
+        !PhoneNo = CleanSQLText(pPhoneNo, True)
+        !LenderType = CleanSQLText(pLenderType, True)
+        !Address = CleanSQLText(pAddress, True)
 
         pContacts.SaveCollection
         .Update

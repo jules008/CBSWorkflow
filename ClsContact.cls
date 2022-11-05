@@ -227,16 +227,16 @@ Public Sub DBSave()
         'if it has been flagged as a primary contact, clear all others for that organsiation
         If pPrimaryContact Then DB.Execute "UPDATE TblContact SET PrimaryContact = False WHERE ContactType = '" & pContactType & "' and Organisation = '" & pOrganisation & "'"
         
-        If CStr(pContactNo) = "" Then !ContactNo = Null Else !ContactNo = pContactNo
-        If CStr(pPosition) = "" Then !Position = Null Else !Position = pPosition
-        If CStr(pContactName) = "" Then !ContactName = Null Else !ContactName = pContactName
-        If CStr(pAddress) = "" Then !Address = Null Else !Address = pAddress
-        If CStr(pContactType) = "" Then !ContactType = Null Else !ContactType = pContactType
-        If CStr(pOrganisation) = "" Then !Organisation = Null Else !Organisation = pOrganisation
-        If CStr(pPhone1) = "" Then !Phone1 = Null Else !Phone1 = pPhone1
-        If CStr(pPhone2) = "" Then !Phone2 = Null Else !Phone2 = pPhone2
-        If CStr(pPrimaryContact) = "" Then !PrimaryContact = Null Else !PrimaryContact = pPrimaryContact
-        If CStr(pEmailAddress) = "" Then !EmailAddress = Null Else !EmailAddress = pEmailAddress
+        !ContactNo = CleanSQLText(pContactNo, True)
+        !Position = CleanSQLText(pPosition, True)
+        !ContactName = CleanSQLText(pContactName, True)
+        !Address = CleanSQLText(pAddress, True)
+        !ContactType = CleanSQLText(pContactType, True)
+        !Organisation = CleanSQLText(pOrganisation, True)
+        !Phone1 = CleanSQLText(pPhone1, True)
+        !Phone2 = CleanSQLText(pPhone2, True)
+        !PrimaryContact = CleanSQLText(pPrimaryContact, True)
+        !EmailAddress = CleanSQLText(pEmailAddress, True)
 
         .Update
     End With

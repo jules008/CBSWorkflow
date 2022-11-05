@@ -13,6 +13,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
 '===============================================================
 ' Module FrmContactForm
 ' Admin form for members
@@ -158,7 +159,7 @@ Private Function PopulateOrgs(ContactType As String) As Boolean
        Case "Project"
             Index = "ProjectNo"
             Table = "TblProject"
-            Name = "ProjectNo"
+            Name = "ProjectName"
        Case "Lead"
             Index = "ProjectNo"
             Table = "TblProject"
@@ -227,7 +228,15 @@ Private Sub CmoContactType_Change()
         Else
             LblOrganisation.Caption = "Organisation"
         End If
+        .BackColor = COL_WHITE
     End With
+End Sub
+
+' ===============================================================
+' CmoOrganisation_Change
+' ---------------------------------------------------------------
+Private Sub CmoOrganisation_Change()
+    CmoOrganisation.BackColor = COL_WHITE
 End Sub
 
 ' ===============================================================
@@ -242,6 +251,13 @@ End Sub
 ' ---------------------------------------------------------------
 Private Sub TxtContactNo_Change()
     TxtContactNo.BackColor = COL_WHITE
+End Sub
+
+' ===============================================================
+' TxtEmailAdd_Change
+' ---------------------------------------------------------------
+Private Sub TxtEmailAdd_Change()
+    TxtEmailAdd.BackColor = COL_WHITE
 End Sub
 
 ' ===============================================================
@@ -318,7 +334,35 @@ Private Function ValidateForm() As enFormValidation
             ValidateForm = enValidationError
         End If
     End With
-                     
+           
+    With TxtPosition
+        If .Value = "" Then
+            .BackColor = COL_AMBER
+            ValidateForm = enValidationError
+        End If
+    End With
+    
+    With CmoContactType
+        If .ListIndex = -1 Then
+            .BackColor = COL_AMBER
+            ValidateForm = enValidationError
+        End If
+    End With
+    
+    With CmoOrganisation
+        If .ListIndex = -1 Then
+            .BackColor = COL_AMBER
+            ValidateForm = enValidationError
+        End If
+    End With
+    
+    With TxtEmailAdd
+        If .Value <> "" And Not IsValidEmail(.Value) Then
+            .BackColor = COL_AMBER
+            ValidateForm = enValidationError
+        End If
+    End With
+    
     If ValidateForm = enValidationError Then
         Err.Raise FORM_INPUT_EMPTY
     Else

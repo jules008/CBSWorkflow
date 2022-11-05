@@ -201,12 +201,12 @@ Public Sub DBSave()
         Else
             .Edit
         End If
-        !MailTo = pMailTo
-        !CC = pCC
-        !EmailNo = pEmailNo
-        !TemplateName = pTemplateName
-        !Subject = pSubject
-        !Body = pBody
+        !MailTo = CleanSQLText(pMailTo, True)
+        !CC = CleanSQLText(pCC, True)
+        !EmailNo = CleanSQLText(pEmailNo, True)
+        !TemplateName = CleanSQLText(pTemplateName, True)
+        !Subject = CleanSQLText(pSubject, True)
+        !Body = CleanSQLText(pBody, True)
         .Update
 
 '        If Not pAttachment Is Nothing Then pAttachment.DBSave

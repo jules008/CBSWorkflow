@@ -157,8 +157,8 @@ Public Const CRM_CONTACT_MAX_LINES As Integer = 150
 ' ---------------------------------------------------------------
 ' CRM Projects Screen
 ' ---------------------------------------------------------------
-Public Const CRM_PROJECT_TABLE_COL_WIDTHS As String = "100:250:200:200"
-Public Const CRM_PROJECT_TABLE_TITLES As String = "Project No:Client Name:SPV:Case Manager"
+Public Const CRM_PROJECT_TABLE_COL_WIDTHS As String = "100:150:150:150:100:100"
+Public Const CRM_PROJECT_TABLE_TITLES As String = "Project No:Project Name:Client Name:SPV:Case Manager:"
 Public Const CRM_PROJECT_MAX_LINES As Integer = 150
 
 ' ---------------------------------------------------------------

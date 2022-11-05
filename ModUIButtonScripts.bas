@@ -21,6 +21,8 @@ Private Const StrMODULE As String = "ModUIButtonScripts"
 ' ---------------------------------------------------------------
 Public Function BtnProjectNewWFClick(ScreenPage As enScreenPage) As Boolean
     Dim Picker As ClsFrmPicker
+    Dim InputBox As ClsInputBox
+    Dim ProjectName As String
     
     Const StrPROCEDURE As String = "BtnProjectNewWFClick()"
 
@@ -31,7 +33,23 @@ Public Function BtnProjectNewWFClick(ScreenPage As enScreenPage) As Boolean
     Set ActiveWorkFlow = New ClsWorkflow
     Set ActiveProject = New ClsProject
     Set ActiveUser = New ClsCBSUser
+    Set InputBox = New ClsInputBox
     
+    'get project name
+    With InputBox
+        .Title = "Enter Project Name"
+        .Instructions = "Enter a meaningful name for the project"
+        .ClearForm
+        .Show
+        ProjectName = .ReturnValue
+    End With
+    
+    If InputBox.ReturnValue = "" Then
+        MsgBox "A Project Name is needed to continue, please try again", vbExclamation + vbOKOnly, APP_NAME
+        GoTo GracefullExit
+    End If
+    
+    'Get Client
     Set Picker = New ClsFrmPicker
     With Picker
         .Title = "Select Client"
@@ -54,6 +72,7 @@ Public Function BtnProjectNewWFClick(ScreenPage As enScreenPage) As Boolean
     
     ActiveClient.DBGet Picker.SelectedItem
     
+    'Get SPV
     Set Picker = New ClsFrmPicker
     With Picker
         .Title = "Select SPV"
@@ -76,6 +95,7 @@ Public Function BtnProjectNewWFClick(ScreenPage As enScreenPage) As Boolean
     ActiveSPV.DBGet Picker.SelectedItem
     ActiveClient.SPVs.Add ActiveSPV
     
+    'get Case Manager
     Set Picker = New ClsFrmPicker
     With Picker
         .Title = "Select Case Manager"
@@ -100,6 +120,7 @@ Public Function BtnProjectNewWFClick(ScreenPage As enScreenPage) As Boolean
     With ActiveProject
         .ProjectWorkflow.Name = "Project"
         .CaseManager = ActiveUser
+        .ProjectName = ProjectName
         .DBSave
     End With
     
@@ -133,6 +154,7 @@ GracefullExit:
     Set Picker = Nothing
     Set ActiveClient = Nothing
     Set ActiveUser = Nothing
+    Set InputBox = Nothing
     
     If Not ModUIProjects.BuildScreen(ScreenPage) Then Err.Raise HANDLED_ERROR
 
@@ -148,6 +170,7 @@ ErrorExit:
     Set Picker = Nothing
     Set ActiveClient = Nothing
     Set ActiveUser = Nothing
+    Set InputBox = Nothing
     
     BtnProjectNewWFClick = False
 
