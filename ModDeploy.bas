@@ -21,20 +21,12 @@ Public Sub QueryTest()
     Set DB = OpenDatabase(GetDocLocalPath(ThisWorkbook.Path) & INI_FILE_PATH & DB_FILE_NAME & ".accdb")
     
     'Update commands
-    DB.Execute "CREATE TABLE TblLenderType"
-    DB.Execute "ALTER TABLE TblLenderType ADD COLUMN TypeNo Int"
-    DB.Execute "ALTER TABLE TblLenderType ADD COLUMN LenderType Char (80)"
-    DB.Execute "INSERT INTO TblLenderType VALUES (1,'1st charge/senior lender')"
-    DB.Execute "INSERT INTO TblLenderType VALUES (2,'2nd charge/mezzanine lender')"
-    DB.Execute "INSERT INTO TblLenderType VALUES (3,'Equity lender')"
-    DB.Execute "INSERT INTO TblLenderType VALUES (4,'SDLT lender')"
-    DB.Execute "INSERT INTO TblLenderType VALUES (5,'VAT lender')"
-    
+    DB.Execute "UPDATE TblStepTemplate SET Email = 1 Where StepNo = '1.03'"
+    DB.Execute "CREATE TABLE TblEmail (EmailNo  INTEGER CONSTRAINT MyConstraint PRIMARY KEY,  TemplateName  Char, MailTo Char, CC Char, Subject Char, Body Memo, DateSent Date, Attachment Long)"
     Stop
     
     'undo commands
-    DB.Execute "DROP Table TblLenderType"
-
+    DB.Execute "DROP TABLE TblEmail"
     Set DB = Nothing
 End Sub
 

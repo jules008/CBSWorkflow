@@ -336,13 +336,6 @@ Private Function ValidateForm() As enFormValidation
         End If
     End With
            
-    With TxtPosition
-        If .Value = "" Then
-            .BackColor = COL_AMBER
-            ValidateForm = enValidationError
-        End If
-    End With
-    
     With CmoContactType
         If .ListIndex = -1 Then
             .BackColor = COL_AMBER
@@ -352,13 +345,6 @@ Private Function ValidateForm() As enFormValidation
     
     With CmoOrganisation
         If .ListIndex = -1 Then
-            .BackColor = COL_AMBER
-            ValidateForm = enValidationError
-        End If
-    End With
-    
-    With TxtEmailAdd
-        If .Value <> "" And Not IsValidEmail(.Value) Then
             .BackColor = COL_AMBER
             ValidateForm = enValidationError
         End If
