@@ -27,6 +27,14 @@ Private Function KeyWords(Keyword As String, ByRef Workflow As ClsWorkflow) As S
     On Error GoTo ErrorHandler
 
     Select Case Keyword
+        Case "<ClientEmail>"
+            KeyWords = Workflow.Parent.Client.Contacts.PrimaryContact.EmailAddress
+            
+        Case "<CurrentUserName>"
+            KeyWords = Application.UserName
+        
+        Case "<ClientName>"
+            KeyWords = Workflow.Parent.Client.Contacts.PrimaryContact.ContactName
 '        Case "<MemberName>"
 '            KeyWords = Workflow.Member.DisplayName
 '

@@ -365,7 +365,7 @@ Public Sub DBSave()
     Dim RstMaxNo As Recordset
     Dim LastNo As Integer
 
-    Set RstWorkflow = ModDatabase.SQLQuery("SELECT * FROM TblWorkflow WHERE WorkflowNo = " & pWorkflowNo & " AND Deleted IS NULL")
+    Set RstWorkflow = ModDatabase.SQLQuery("SELECT * FROM TblWorkflow WHERE WorkflowNo = " & pWorkflowNo)
     Set RstMaxNo = ModDatabase.SQLQuery("SELECT MAX(WorkflowNo) FROM TblWorkflow ")
 
     If RstMaxNo.Fields(0).Value <> 0 Then
@@ -413,7 +413,7 @@ Public Sub DBDelete(Optional FullDelete As Boolean)
     Dim RstWorkflow As Recordset
     Dim i As Integer
 
-    Set RstWorkflow = ModDatabase.SQLQuery("SELECT * FROM TblWorkflow WHERE WorkflowNo = " & pWorkflowNo & " AND Deleted IS NULL")
+    Set RstWorkflow = ModDatabase.SQLQuery("SELECT * FROM TblWorkflow WHERE WorkflowNo = " & pWorkflowNo)
     With RstWorkflow
         For i = .RecordCount To 1 Step -1
             If FullDelete Then
@@ -459,6 +459,7 @@ End Sub
 ' Clear current step and moves to Alt step
 ' ---------------------------------------------------------------
 Public Sub MoveToAltStep()
+    FrmWFProject.Hide
     With ActiveStep
         .Complete
         .DBSave

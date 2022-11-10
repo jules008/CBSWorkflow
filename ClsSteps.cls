@@ -142,7 +142,6 @@ Public Sub GetCollection()
     Dim i As Integer
 
     Set RstStep = ModDatabase.SQLQuery("SELECT * FROM TblStep WHERE WorkflowNo = " & Parent.WorkflowNo _
-                                        & " AND Deleted IS NULL" _
                                         & " ORDER BY StepNo")
     
     If RstStep.RecordCount = 0 Then

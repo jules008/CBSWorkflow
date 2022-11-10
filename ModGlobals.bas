@@ -93,6 +93,7 @@ Public ActiveSPV As ClsSPV
 Public ActiveUser As ClsCBSUser
 Public CTimer As ClsCodeTimer
 Public SubTable As ClsUITable
+Public MailSystem As ClsMailSystem
 
 ' ===============================================================
 ' Global UI Class Declarations

@@ -62,14 +62,7 @@ End Property
 
 '---------------------------------------------------------------
 Public Property Get Subject() As String
-    Dim WorkflowNo As Integer
-    Dim StepNo As String
-    
-'    WorkflowNo = Parent.Parent.WorkflowNo
-'    StepNo = Parent.Parent.CurrentStep
-    
-    Subject = "||" & WorkflowNo & ":" & StepNo & "|| - " & pSubject
-    
+    Subject = pSubject
 End Property
 '---------------------------------------------------------------
 Public Property Get SubjectText() As String
@@ -152,10 +145,9 @@ End Property
 Public Sub DBGet(EmailNo As Integer)
     Dim RstEmail As Recordset
 
-    Set RstEmail = ModDatabase.SQLQuery("SELECT * FROM TblEmail WHERE EmailNo = " & EmailNo & " AND Deleted IS NULL")
+    Set RstEmail = ModDatabase.SQLQuery("SELECT * FROM TblEmail WHERE EmailNo = " & EmailNo)
     With RstEmail
         If .RecordCount > 0 Then
-            If Not IsNull(!Deleted) Then pDeleted = !Deleted
             If Not IsNull(!EmailNo) Then pEmailNo = !EmailNo
             If Not IsNull(!TemplateName) Then pTemplateName = !TemplateName
             If Not IsNull(!Subject) Then pSubject = !Subject
@@ -185,7 +177,7 @@ Public Sub DBSave()
     Dim RstMaxNo As Recordset
     Dim LastNo As Integer
 
-    Set RstEmail = ModDatabase.SQLQuery("SELECT * FROM TblEmail WHERE EmailNo = " & pEmailNo & " AND Deleted IS NULL")
+    Set RstEmail = ModDatabase.SQLQuery("SELECT * FROM TblEmail WHERE EmailNo = " & pEmailNo)
     Set RstMaxNo = ModDatabase.SQLQuery("SELECT MAX(EmailNo) FROM TblEmail ")
 
     If RstMaxNo.Fields(0).Value <> 0 Then
@@ -224,7 +216,7 @@ Public Sub DBDelete(Optional FullDelete As Boolean)
     Dim RstEmail As Recordset
     Dim i As Integer
 
-    Set RstEmail = ModDatabase.SQLQuery("SELECT * FROM TblEmail WHERE EmailNo = " & pEmailNo & " AND Deleted IS NULL")
+    Set RstEmail = ModDatabase.SQLQuery("SELECT * FROM TblEmail WHERE EmailNo = " & pEmailNo)
     With RstEmail
         For i = .RecordCount To 1 Step -1
             If FullDelete Then
@@ -246,9 +238,11 @@ End Sub
 ' builds and displays email via mailsystem class
 '---------------------------------------------------------------
 Public Sub Display()
-'    MailSystem.CreateNewEmail
+    If MailSystem Is Nothing Then MailSystem = New ClsMailSystem
     
-'    FrmWorkflow.Hide
+    FormsLoaded
+    
+    MailSystem.CreateNewEmail
     
     Me.ProgressBar.Show
     
@@ -260,13 +254,13 @@ Public Sub Display()
     
     Me.ProgressBar.Progress "Generating Email....", 4 / 7 * 100
     
-'    With MailSystem.MailItem
-'
-'        .To = ModWorkflow.ReplaceKeyWords(pMailTo, Parent.Parent)
-'        .CC = ModWorkflow.ReplaceKeyWords(pCC, Parent.Parent)
-'        .Body = ModWorkflow.ReplaceKeyWords(pBody, Parent.Parent)
-'        .Subject = ModWorkflow.ReplaceKeyWords(Subject, Parent.Parent)
-'
+    With MailSystem.MailItem
+
+        .To = ModWorkflow.ReplaceKeyWords(pMailTo, Parent.Parent)
+        .CC = ModWorkflow.ReplaceKeyWords(pCC, Parent.Parent)
+        .Body = ModWorkflow.ReplaceKeyWords(pBody, Parent.Parent)
+        .Subject = ModWorkflow.ReplaceKeyWords(Subject, Parent.Parent)
+
 '        If Not pAttachment Is Nothing Then
 '
 '            Me.ProgressBar.Progress "Creating Attachment....", 2 / 7 * 100
@@ -281,11 +275,9 @@ Public Sub Display()
         
         pProgressBar.Hide
         
-'        .Display
+        .Display
         
-'        FrmWorkflow.Refresh
-        
-'    End With
+    End With
 End Sub
 
 ' ===============================================================
@@ -293,16 +285,16 @@ End Sub
 ' builds and displays email via mailsystem class
 '---------------------------------------------------------------
 Public Sub Send()
-'    MailSystem.CreateNewEmail
+    MailSystem.CreateNewEmail
     
-'    With MailSystem.MailItem
-'        .To = ModWorkflow.ReplaceKeyWords(pMailTo, Parent.Parent)
-'        .CC = ModWorkflow.ReplaceKeyWords(pCC, Parent.Parent)
-'        .Body = ModWorkflow.ReplaceKeyWords(pBody, Parent.Parent)
-'        .Subject = ModWorkflow.ReplaceKeyWords(Subject, Parent.Parent)
-''        .Attachments.Add GetDocLocalPath(ThisWorkbook.Path) & TMP_FILES & pAttachment.Name
-'        .Send
-'    End With
+    With MailSystem.MailItem
+        .To = ModWorkflow.ReplaceKeyWords(pMailTo, Parent.Parent)
+        .CC = ModWorkflow.ReplaceKeyWords(pCC, Parent.Parent)
+        .Body = ModWorkflow.ReplaceKeyWords(pBody, Parent.Parent)
+        .Subject = ModWorkflow.ReplaceKeyWords(Subject, Parent.Parent)
+'        .Attachments.Add GetDocLocalPath(ThisWorkbook.Path) & TMP_FILES & pAttachment.Name
+        .Send
+    End With
 End Sub
 
 ' ===============================================================

@@ -18,15 +18,27 @@ Dim OldTables() As String
 Private Const StrMODULE As String = "ModDeploy"
 
 Public Sub QueryTest()
-    Set DB = OpenDatabase(GetDocLocalPath(ThisWorkbook.Path) & INI_FILE_PATH & DB_FILE_NAME & ".accdb")
+    Dim Message As String
     
-    'Update commands
-    DB.Execute "UPDATE TblStepTemplate SET Email = 1 Where StepNo = '1.03'"
-    DB.Execute "CREATE TABLE TblEmail (EmailNo  INTEGER CONSTRAINT MyConstraint PRIMARY KEY,  TemplateName  Char, MailTo Char, CC Char, Subject Char, Body Memo, DateSent Date, Attachment Long)"
-    Stop
+    Set DB = OpenDatabase(GetDocLocalPath(ThisWorkbook.Path) & INI_FILE_PATH & DB_FILE_NAME & ".accdb")
     
     'undo commands
     DB.Execute "DROP TABLE TblEmail"
+    
+    Stop
+    
+    Message = "<ClientName>, " & vbCr _
+                & "Do not forget to return the Fact Find document to us so that we can progress your application. " & vbCr _
+                & "Kind Regards, " & vbCr _
+                & "<CurrentUserName>" & vbCr _
+                & "CBS Capital"
+    
+    'Update commands
+    DB.Execute "UPDATE TblStepTemplate SET Email = 1 Where StepNo = '1.03'"
+    DB.Execute "UPDATE TblStep SET Email = 1 Where StepNo = '1.03'"
+    DB.Execute "CREATE TABLE TblEmail (EmailNo  INTEGER CONSTRAINT MyConstraint PRIMARY KEY,  TemplateName  Char, MailTo Char, CC Char, Subject Char, Body Memo, DateSent Date, Attachment Long)"
+    DB.Execute "INSERT INTO TblEmail (EmailNo, TemplateName, MailTo, CC, Subject, Body) VALUES (1,'Chase Fact Find', '<ClientEmail>', '<SeniorManager>', 'Fact Find Reminder', '" & Message & "')"
+    
     Set DB = Nothing
 End Sub
 
@@ -64,15 +76,18 @@ Public Function UpdateDBScript() As Boolean
     ' ========================================================================================
     ' Database commands
     ' ----------------------------------------------------------------------------------------
+    Dim Message As String
+    Message = "<ClientName>, " & vbCr _
+                & "Do not forget to return the Fact Find document to us so that we can progress your application. " & vbCr _
+                & "Kind Regards, " & vbCr _
+                & "<CurrentUserName>" & vbCr _
+                & "CBS Capital"
     
-    DB.Execute "CREATE TABLE TblLenderType"
-    DB.Execute "ALTER TABLE TblLenderType ADD COLUMN TypeNo Int"
-    DB.Execute "ALTER TABLE TblLenderType ADD COLUMN LenderType Char (80)"
-    DB.Execute "INSERT INTO TblLenderType VALUES (1,'1st charge/senior lender')"
-    DB.Execute "INSERT INTO TblLenderType VALUES (2,'2nd charge/mezzanine lender')"
-    DB.Execute "INSERT INTO TblLenderType VALUES (3,'Equity lender')"
-    DB.Execute "INSERT INTO TblLenderType VALUES (4,'SDLT lender')"
-    DB.Execute "INSERT INTO TblLenderType VALUES (5,'VAT lender')"
+    'Update commands
+    DB.Execute "UPDATE TblStepTemplate SET Email = 1 Where StepNo = '1.03'"
+    DB.Execute "UPDATE TblStep SET Email = 1 Where StepNo = '1.03'"
+    DB.Execute "CREATE TABLE TblEmail (EmailNo  INTEGER CONSTRAINT MyConstraint PRIMARY KEY,  TemplateName  Char, MailTo Char, CC Char, Subject Char, Body Memo, DateSent Date, Attachment Long)"
+    DB.Execute "INSERT INTO TblEmail (EmailNo, TemplateName, MailTo, CC, Subject, Body) VALUES (1,'Chase Fact Find', '<ClientEmail>', '<SeniorManager>', 'Fact Find Reminder', '" & Message & "')"
     
 '    DB.Execute "DELETE * FROM TblStep"
     
@@ -155,7 +170,7 @@ Public Function UpdateDBScriptUndo() As Boolean
     ' ========================================================================================
     ' Database commands
     ' ----------------------------------------------------------------------------------------
-    DB.Execute "DROP Table TblLenderType"
+    DB.Execute "DROP TABLE TblEmail"
     ' ========================================================================================
     
     DB.Close

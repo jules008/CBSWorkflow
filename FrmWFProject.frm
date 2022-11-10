@@ -76,6 +76,7 @@ End Sub
 ' BtnNo_Click
 ' ---------------------------------------------------------------
 Private Sub BtnNo_Click()
+    Me.Hide
     RaiseEvent ClickNo
 End Sub
 

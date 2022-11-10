@@ -47,8 +47,8 @@ Private pDataDest As String
 Private pWFName As String
 Private pStatus As String
 Private pWait As Boolean
-'Private pEmail As ClsEmail
-'Private pAltEmail As ClsEmail
+Private pEmail As ClsEmail
+Private pAltEmail As ClsEmail
 Private pUniqueID As Integer
 Private pStepHelp As FrmStepHelp
 Private pStepHelpTitle As String
@@ -403,8 +403,8 @@ Public Sub DBGet(WorkflowNo As Integer, StepNo As String)
                 pStepHelpBody = HelpText(1)
             End If
             
-'            If Not IsNull(!Email) And !Email <> 0 Then pEmail.DBGet !Email
-'            If Not IsNull(!AltEmail) And !AltEmail <> 0 Then pAltEmail.DBGet !AltEmail
+            If Not IsNull(!Email) And !Email <> 0 Then pEmail.DBGet !Email
+            If Not IsNull(!AltEmail) And !AltEmail <> 0 Then pAltEmail.DBGet !AltEmail
         End If
     End With
 Set RstStep = Nothing
@@ -444,8 +444,8 @@ Public Sub DBGetTemplate(StepNo As String)
                 pStepHelpTitle = HelpText(0)
                 pStepHelpBody = HelpText(1)
             End If
-'            If Not IsNull(!Email) And !Email <> 0 Then pEmail.DBGet !Email
-'            If Not IsNull(!AltEmail) And !AltEmail <> 0 Then pAltEmail.DBGet !AltEmail
+            If Not IsNull(!Email) And !Email <> 0 Then pEmail.DBGet !Email
+            If Not IsNull(!AltEmail) And !AltEmail <> 0 Then pAltEmail.DBGet !AltEmail
             
         End If
     End With
@@ -460,7 +460,8 @@ Public Sub Start()
     
     pStartTime = Now
     DBSave
-'    If pEmail.EmailNo <> 0 Then pEmail.Display
+    If pEmail.EmailNo <> 0 Then pEmail.Display
+    
 End Sub
 
 ' ===============================================================
@@ -482,7 +483,7 @@ Public Sub DBSave(Optional StepIndex As String)
 
     If StepIndex = "" Then StepIndex = pStepIndex
     
-    Set RstStep = ModDatabase.SQLQuery("SELECT * FROM TblStep WHERE StepIndex = " & StepIndex & " AND Deleted IS NULL")
+    Set RstStep = ModDatabase.SQLQuery("SELECT * FROM TblStep WHERE StepIndex = " & StepIndex)
     Set RstMaxNo = ModDatabase.SQLQuery("SELECT MAX(StepIndex) FROM TblStep ")
 
     If RstMaxNo.Fields(0).Value <> 0 Then
@@ -518,8 +519,8 @@ Public Sub DBSave(Optional StepIndex As String)
         !DataDest = pDataDest
         !UniqueID = pUniqueID
         !Status = pStatus
-'        !Email = pEmail.EmailNo
-'        !AltEmail = pAltEmail.EmailNo
+        !Email = pEmail.EmailNo
+        !AltEmail = pAltEmail.EmailNo
         !Wait = pWait
         !WorkflowNo = Parent.WorkflowNo
         !HelpText = pStepHelpTitle & ":" & pStepHelpBody
@@ -577,7 +578,7 @@ Public Sub DBDelete(Optional FullDelete As Boolean)
     Dim RstStep As Recordset
     Dim i As Integer
 
-    Set RstStep = ModDatabase.SQLQuery("SELECT * FROM TblStep WHERE StepNo = " & pStepNo & " AND Deleted IS NULL")
+    Set RstStep = ModDatabase.SQLQuery("SELECT * FROM TblStep WHERE StepNo = " & pStepNo)
     With RstStep
         For i = .RecordCount To 1 Step -1
             If FullDelete Then
@@ -622,24 +623,27 @@ End Sub
     
 Private Sub Class_Initialize()
     Set pStepHelp = New FrmStepHelp
-'    Set pEmail = New ClsEmail
-'    Set pAltEmail = New ClsEmail
+    Set pEmail = New ClsEmail
+    Set pAltEmail = New ClsEmail
+    
+    pEmail.Initialize Me
+    pAltEmail.Initialize Me
 End Sub
 ' ===============================================================
 Public Sub Terminate()
-'    pEmail.Terminate
-'    pAltEmail.Terminate
+    pEmail.Terminate
+    pAltEmail.Terminate
 
     Set pParent = Nothing
     Set pStepHelp = Nothing
-'    Set pEmail = Nothing
-'    Set pAltEmail = Nothing
+    Set pEmail = Nothing
+    Set pAltEmail = Nothing
 End Sub
 '---------------------------------------------------------------
 Private Sub Class_Terminate()
     Set pStepHelp = Nothing
-'    Set pEmail = Nothing
-'    Set pAltEmail = Nothing
+    Set pEmail = Nothing
+    Set pAltEmail = Nothing
 End Sub
 
 '---------------------------------------------------------------

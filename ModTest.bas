@@ -26,3 +26,10 @@ Public Sub TestPicker()
 End Sub
 
     
+Public Function FormsLoaded()
+    Dim Frm As UserForm
+    For i = 0 To UserForms.Count - 1
+        Debug.Print "Userform " & UserForms(i).Name & " is loaded", UserForms(i).Visible
+    Next i
+    Debug.Print "Total - " & i
+End Function

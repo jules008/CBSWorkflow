@@ -356,14 +356,13 @@ End Function
 ' Initializes or terminates all global classes
 ' ---------------------------------------------------------------
 Private Function SetGlobalClasses() As Boolean
-'    Dim ActiveWorkflows As ClsWorkflows
     
     Const StrPROCEDURE As String = "SetGlobalClasses()"
 
     On Error GoTo ErrorHandler
 
     Set ActiveWorkflows = New ClsWorkflows
-    
+    Set MailSystem = New ClsMailSystem
     ActiveWorkflows.UpdateRAGs
 
     SetGlobalClasses = True
