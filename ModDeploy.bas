@@ -19,26 +19,28 @@ Private Const StrMODULE As String = "ModDeploy"
 
 Public Sub QueryTest()
     Dim Message As String
+    Dim RstUpdate As Recordset
+    Dim i As Integer
     
     Set DB = OpenDatabase(GetDocLocalPath(ThisWorkbook.Path) & INI_FILE_PATH & DB_FILE_NAME & ".accdb")
+    Set RstUpdate = ModDatabase.SQLQuery("SELECT * FROM TblProject Where ProjectName IS NULL OR ProjectName =''")
     
     'undo commands
-    DB.Execute "DROP TABLE TblEmail"
+    
     
     Stop
     
-    Message = "<ClientName>, " & vbCr _
-                & "Do not forget to return the Fact Find document to us so that we can progress your application. " & vbCr _
-                & "Kind Regards, " & vbCr _
-                & "<CurrentUserName>" & vbCr _
-                & "CBS Capital"
-    
     'Update commands
-    DB.Execute "UPDATE TblStepTemplate SET Email = 1 Where StepNo = '1.03'"
-    DB.Execute "UPDATE TblStep SET Email = 1 Where StepNo = '1.03'"
-    DB.Execute "CREATE TABLE TblEmail (EmailNo  INTEGER CONSTRAINT MyConstraint PRIMARY KEY,  TemplateName  Char, MailTo Char, CC Char, Subject Char, Body Memo, DateSent Date, Attachment Long)"
-    DB.Execute "INSERT INTO TblEmail (EmailNo, TemplateName, MailTo, CC, Subject, Body) VALUES (1,'Chase Fact Find', '<ClientEmail>', '<SeniorManager>', 'Fact Find Reminder', '" & Message & "')"
-    
+    With RstUpdate
+        Do While Not .EOF
+            .Edit
+            !ProjectName = "Project " & i
+            i = i + 1
+            .Update
+            .MoveNext
+        Loop
+    End With
+    Set RstUpdate = Nothing
     Set DB = Nothing
 End Sub
 
@@ -47,6 +49,13 @@ End Sub
 ' Script to update DB
 ' ---------------------------------------------------------------
 Public Function UpdateDBScript() As Boolean
+    Dim Message As String
+    Dim RstUpdate As Recordset
+    Dim i As Integer
+    
+    Set DB = OpenDatabase(GetDocLocalPath(ThisWorkbook.Path) & INI_FILE_PATH & DB_FILE_NAME & ".accdb")
+    Set RstUpdate = ModDatabase.SQLQuery("SELECT * FROM TblProject Where ProjectName IS NULL OR ProjectName =''")
+    
     Const StrPROCEDURE As String = "UpdateDBScript()"
     
     Dim RstTable As Recordset
@@ -76,18 +85,15 @@ Public Function UpdateDBScript() As Boolean
     ' ========================================================================================
     ' Database commands
     ' ----------------------------------------------------------------------------------------
-    Dim Message As String
-    Message = "<ClientName>, " & vbCr _
-                & "Do not forget to return the Fact Find document to us so that we can progress your application. " & vbCr _
-                & "Kind Regards, " & vbCr _
-                & "<CurrentUserName>" & vbCr _
-                & "CBS Capital"
-    
-    'Update commands
-    DB.Execute "UPDATE TblStepTemplate SET Email = 1 Where StepNo = '1.03'"
-    DB.Execute "UPDATE TblStep SET Email = 1 Where StepNo = '1.03'"
-    DB.Execute "CREATE TABLE TblEmail (EmailNo  INTEGER CONSTRAINT MyConstraint PRIMARY KEY,  TemplateName  Char, MailTo Char, CC Char, Subject Char, Body Memo, DateSent Date, Attachment Long)"
-    DB.Execute "INSERT INTO TblEmail (EmailNo, TemplateName, MailTo, CC, Subject, Body) VALUES (1,'Chase Fact Find', '<ClientEmail>', '<SeniorManager>', 'Fact Find Reminder', '" & Message & "')"
+    With RstUpdate
+        Do While Not .EOF
+            .Edit
+            !ProjectName = "Project " & i
+            i = i + 1
+            .Update
+            .MoveNext
+        Loop
+    End With
     
 '    DB.Execute "DELETE * FROM TblStep"
     
@@ -170,7 +176,7 @@ Public Function UpdateDBScriptUndo() As Boolean
     ' ========================================================================================
     ' Database commands
     ' ----------------------------------------------------------------------------------------
-    DB.Execute "DROP TABLE TblEmail"
+    
     ' ========================================================================================
     
     DB.Close

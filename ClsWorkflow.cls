@@ -459,7 +459,6 @@ End Sub
 ' Clear current step and moves to Alt step
 ' ---------------------------------------------------------------
 Public Sub MoveToAltStep()
-    FrmWFProject.Hide
     With ActiveStep
         .Complete
         .DBSave
@@ -556,6 +555,7 @@ End Sub
 ' Event on clicking no button
 ' ---------------------------------------------------------------
 Private Sub pProjWFForm_ClickNo()
+    pProjWFForm.Hide
     MoveToAltStep
     With pProjWFForm
         If pActiveStep.LastStep Then
@@ -585,6 +585,7 @@ End Sub
 ' Event on clicking previous step
 ' ---------------------------------------------------------------
 Private Sub pProjWFForm_PrevStep()
+    pProjWFForm.Hide
     MoveToPrevStep
     pActiveStep.Start
     DBSave
@@ -600,6 +601,7 @@ End Sub
 ' Event on completion of workflow step
 ' ---------------------------------------------------------------
 Private Sub pProjWFForm_StepComplete()
+    pProjWFForm.Hide
     With pProjWFForm
         If .TxtDataInput <> "" Then
             pActiveStep.DataItem = .TxtDataInput

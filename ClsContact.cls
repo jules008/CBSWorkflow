@@ -268,7 +268,7 @@ Private Sub pContactForm_Update()
         pPosition = CleanString(.TxtPosition)
         pContactType = CleanString(.CmoContactType)
         pOrganisation = CleanString(.CmoOrganisation)
-        pEmailAddress = CleanString(.TxtEmailAdd)
+        pEmailAddress = Trim(.TxtEmailAdd)
         pPrimaryContact = CleanString(.ChkPrimaryContact)
     End With
     DBSave

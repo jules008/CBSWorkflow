@@ -212,6 +212,10 @@ Public Function BtnLenderNewWFClick(ScreenPage As enScreenPage) As Boolean
         .Data = ModDatabase.SQLQuery("SELECT ProjectName from TblProject")
         .ClearForm
         .Show = True
+        If .CreateNew Then
+            ActiveProject.DBNew
+            .SelectedItem = ActiveProject.ProjectName
+        End If
     End With
     
     If Picker.SelectedItem = "" Then

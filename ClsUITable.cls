@@ -361,9 +361,14 @@ Public Sub BuildTable(Optional SplitRow As Integer, Optional SplitSize As Intege
         For y = 1 To pNoRows
             
             If SplitRow <> 0 Then
-                If y = SplitRow + 1 Then
                     
+                'check if either it is a split row, or if it is the last row
+                If y = SplitRow + 1 Then
                     SplitFrame SplitRow, pSubTable.Height
+                End If
+                
+                If y = SplitRow + 1 Or _
+                    (y = pNoRows And y = SplitRow) Then
                         
                     With pSubTable
                         .Top = pTop + RowOffset + pSubTableHOff

@@ -343,13 +343,6 @@ Private Function ValidateForm() As enFormValidation
         End If
     End With
     
-    With CmoOrganisation
-        If .ListIndex = -1 Then
-            .BackColor = COL_AMBER
-            ValidateForm = enValidationError
-        End If
-    End With
-    
     If ValidateForm = enValidationError Then
         Err.Raise FORM_INPUT_EMPTY
     Else
