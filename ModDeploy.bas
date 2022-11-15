@@ -23,7 +23,6 @@ Public Sub QueryTest()
     Dim i As Integer
     
     Set DB = OpenDatabase(GetDocLocalPath(ThisWorkbook.Path) & INI_FILE_PATH & DB_FILE_NAME & ".accdb")
-    Set RstUpdate = ModDatabase.SQLQuery("SELECT * FROM TblProject Where ProjectName IS NULL OR ProjectName =''")
     
     'undo commands
     
@@ -31,15 +30,9 @@ Public Sub QueryTest()
     Stop
     
     'Update commands
-    With RstUpdate
-        Do While Not .EOF
-            .Edit
-            !ProjectName = "Project " & i
-            i = i + 1
-            .Update
-            .MoveNext
-        Loop
-    End With
+    DB.Execute "UPDATE TblStepTemplate SET AltStep = '1.04' WHERE StepNo = '1.02'"
+    DB.Execute "UPDATE TblStep SET AltStep = '1.04' WHERE StepNo = '1.02'"
+    
     Set RstUpdate = Nothing
     Set DB = Nothing
 End Sub
@@ -85,15 +78,10 @@ Public Function UpdateDBScript() As Boolean
     ' ========================================================================================
     ' Database commands
     ' ----------------------------------------------------------------------------------------
-    With RstUpdate
-        Do While Not .EOF
-            .Edit
-            !ProjectName = "Project " & i
-            i = i + 1
-            .Update
-            .MoveNext
-        Loop
-    End With
+    DB.Execute "UPDATE TblStepTemplate SET NextStep = '1.04' WHERE StepNo = '1.02'"
+    DB.Execute "UPDATE TblStepTemplate SET AltStep = '1.03' WHERE StepNo = '1.02'"
+    DB.Execute "UPDATE TblStep SET NextStep = '1.04' WHERE StepNo = '1.02'"
+    DB.Execute "UPDATE TblStep SET AltStep = '1.03' WHERE StepNo = '1.02'"
     
 '    DB.Execute "DELETE * FROM TblStep"
     
