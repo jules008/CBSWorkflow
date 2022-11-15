@@ -36,10 +36,10 @@ Public Const SEND_ERR_MSG As Boolean = False
 Public Const TEST_PREFIX As String = "TEST - "
 Public Const BACKUP_INT As Integer = 5
 Public Const FILE_ERROR_LOG As String = "Error.log"
-Public Const OLD_DB_VER = "V0.01.03"
-Public Const DB_VER = "V0.01.04"
-Public Const VERSION = "V0.01.05"
-Public Const VER_DATE = "11 Nov 22"
+Public Const OLD_DB_VER = "V0.01.04"
+Public Const DB_VER = "V0.01.05"
+Public Const VERSION = "V0.01.06" 'Branch ToDo List
+Public Const VER_DATE = "14 Nov 22"
 ' ===============================================================
 ' Error Constants
 ' ---------------------------------------------------------------
@@ -107,6 +107,7 @@ Public BtnNewLenderWF As ClsUIButton
 Public BtnCRMNewItem As ClsUIButton
 Public BtnCRMContCalImp As ClsUIButton
 Public BtnCRMContShwLead As ClsUIButton
+Public BtnCommsToDo As ClsUIButton
 Public Logo As ClsUIDashObj
 
 ' ===============================================================
@@ -201,6 +202,7 @@ Enum EnumBtnNo
     enBtnCRMNewItem
     enBtnCRMContCalImport
     enBtnCRMContShwLeads
+    enBtnCommsToDo
 End Enum
 
 Enum enFormValidation

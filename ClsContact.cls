@@ -38,6 +38,10 @@ Private pContactType As String
 Private pOrganisation As String
 Private pPrimaryContact As Boolean
 Private pEmailAddress As String
+Private pOptOut As Boolean
+Private pLastComm As Date
+Private pComFrq As Integer
+
 Private WithEvents pContactForm As FrmContactForm
 Attribute pContactForm.VB_VarHelpID = -1
 
@@ -104,15 +108,6 @@ Public Property Let PrimaryContact(ByVal vNewValue As Boolean)
     pPrimaryContact = vNewValue
 End Property
 
-'---------------------------------------------------------------
-Public Property Get EmailAddress() As String
-    EmailAddress = pEmailAddress
-End Property
-
-Public Property Let EmailAddress(ByVal vNewValue As String)
-    pEmailAddress = vNewValue
-End Property
-
 ' ===============================================================
 ' Method DBNew
 ' displays new SPV form
@@ -128,6 +123,9 @@ Public Sub DBNew()
     pPosition = ""
     pEmailAddress = ""
     pPrimaryContact = False
+    pOptOut = False
+    pLastComm = ""
+    pComFrq = 7
     
     With pContactForm
         .Tag = "New"
@@ -154,6 +152,9 @@ Public Sub DisplayForm()
         .TxtPosition = pPosition
         .TxtEmailAdd = pEmailAddress
         .ChkPrimaryContact = pPrimaryContact
+        .ChkOptOut = pOptOut
+        .CmoCommFreq = pComFrq
+        If pLastComm = 0 Then .TxtLastComm = "" Else .TxtLastComm = pLastComm
         .Show
     End With
 End Sub
@@ -181,6 +182,9 @@ Public Sub DBGet(ContactNo As Integer)
             If Not IsNull(!Phone2) Then pPhone2 = !Phone2
             If Not IsNull(!PrimaryContact) Then pPrimaryContact = !PrimaryContact
             If Not IsNull(!EmailAddress) Then pEmailAddress = !EmailAddress
+            If Not IsNull(!OptOut) Then pOptOut = !OptOut
+            If Not IsNull(!ComFrq) Then pComFrq = !ComFrq
+            If Not IsNull(!LastComm) Then pLastComm = !LastComm
             If RstNoCont.Fields(0) = 0 Then
                 pPrimaryContact = True
                 DB.Execute "UPDATE TblContact SET PrimaryContact = TRUE WHERE ContactType = '" & pContactType & "' and Organisation = '" & pOrganisation & "'"
@@ -236,7 +240,9 @@ Public Sub DBSave()
         !Phone1 = CleanSQLText(pPhone1, True)
         !Phone2 = CleanSQLText(pPhone2, True)
         !PrimaryContact = CleanSQLText(pPrimaryContact, True)
-        !EmailAddress = CleanSQLText(pEmailAddress, True)
+        !OptOut = CleanSQLText(pOptOut, True)
+        !LastComm = CleanSQLText(pLastComm, True)
+        !ComFrq = CleanSQLText(pComFrq, True)
 
         .Update
     End With
@@ -270,6 +276,9 @@ Private Sub pContactForm_Update()
         pOrganisation = CleanString(.CmoOrganisation)
         pEmailAddress = Trim(.TxtEmailAdd)
         pPrimaryContact = CleanString(.ChkPrimaryContact)
+        pOptOut = CleanString(.ChkOptOut)
+        If .TxtLastComm = "" Then pLastComm = 0 Else pLastComm = .TxtLastComm
+        pComFrq = CleanString(.CmoCommFreq)
     End With
     DBSave
     

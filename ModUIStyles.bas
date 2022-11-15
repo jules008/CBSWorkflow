@@ -30,6 +30,8 @@ Public Function BuildScreenStyles() As Boolean
     Set BUTTON_FRAME_STYLE = New ClsUIStyle
     Set BTN_MAIN_STYLE = New ClsUIStyle
     Set GENERIC_BUTTON = New ClsUIStyle
+    Set TODO_BUTTON = New ClsUIStyle
+    Set TODO_BADGE = New ClsUIStyle
     Set HEADER_STYLE = New ClsUIStyle
     Set GENERIC_TABLE = New ClsUIStyle
     Set GREEN_CELL = New ClsUIStyle
@@ -138,6 +140,35 @@ Public Function BuildScreenStyles() As Boolean
         .FontColour = GENERIC_BUTTON_FONT_COLOUR
         .FontXJust = GENERIC_BUTTON_FONT_X_JUST
         .FontVJust = GENERIC_BUTTON_FONT_Y_JUST
+    End With
+
+    With TODO_BUTTON
+        .Name = "TODO_BUTTON"
+        .BorderWidth = TODO_BUTTON_BORDER_WIDTH
+        .Fill1 = TODO_BUTTON_FILL_1
+        .Fill2 = TODO_BUTTON_FILL_2
+        .Shadow = TODO_BUTTON_SHADOW
+        .FontStyle = TODO_BUTTON_FONT_STYLE
+        .FontSize = TODO_BUTTON_FONT_SIZE
+        .FontBold = TODO_BUTTON_FONT_BOLD
+        .FontColour = TODO_BUTTON_FONT_COLOUR
+        .FontXJust = TODO_BUTTON_FONT_X_JUST
+        .FontVJust = TODO_BUTTON_FONT_Y_JUST
+    End With
+
+    With TODO_BADGE
+        .Name = "TODO_BADGE"
+        .BorderWidth = TODO_BADGE_BORDER_WIDTH
+        .BorderColour = TODO_BADGE_BORDER_COLOUR
+        .Fill1 = TODO_BADGE_FILL_1
+        .Fill2 = TODO_BADGE_FILL_2
+        .Shadow = TODO_BADGE_SHADOW
+        .FontStyle = TODO_BADGE_FONT_STYLE
+        .FontSize = TODO_BADGE_FONT_SIZE
+        .FontBold = TODO_BADGE_FONT_BOLD
+        .FontColour = TODO_BADGE_FONT_COLOUR
+        .FontXJust = TODO_BADGE_FONT_X_JUST
+        .FontVJust = TODO_BADGE_FONT_Y_JUST
     End With
 
 '    With TOOL_BUTTON

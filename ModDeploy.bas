@@ -26,20 +26,14 @@ Public Sub QueryTest()
     Set RstUpdate = ModDatabase.SQLQuery("SELECT * FROM TblProject Where ProjectName IS NULL OR ProjectName =''")
     
     'undo commands
-    
+    DB.Execute "ALTER TABLE TblContact DROP COLUMN OptOut, Comfrq, LastComm"
     
     Stop
     
     'Update commands
-    With RstUpdate
-        Do While Not .EOF
-            .Edit
-            !ProjectName = "Project " & i
-            i = i + 1
-            .Update
-            .MoveNext
-        Loop
-    End With
+    DB.Execute "ALTER TABLE TblContact ADD COLUMN OptOut YesNo, ComFrq Int, LastComm Date"
+    
+    
     Set RstUpdate = Nothing
     Set DB = Nothing
 End Sub
@@ -85,16 +79,7 @@ Public Function UpdateDBScript() As Boolean
     ' ========================================================================================
     ' Database commands
     ' ----------------------------------------------------------------------------------------
-    With RstUpdate
-        Do While Not .EOF
-            .Edit
-            !ProjectName = "Project " & i
-            i = i + 1
-            .Update
-            .MoveNext
-        Loop
-    End With
-    
+    DB.Execute "ALTER TABLE TblContact ADD COLUMN OptOut YesNo, ComFrq Int, LastComm Date"
 '    DB.Execute "DELETE * FROM TblStep"
     
 '    UpdateTable
@@ -176,7 +161,7 @@ Public Function UpdateDBScriptUndo() As Boolean
     ' ========================================================================================
     ' Database commands
     ' ----------------------------------------------------------------------------------------
-    
+    DB.Execute "ALTER TABLE TblContact DROP COLUMN OptOut, Comfrq, LastComm"
     ' ========================================================================================
     
     DB.Close

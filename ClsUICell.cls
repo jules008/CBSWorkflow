@@ -179,9 +179,9 @@ Public Property Let Style(vNewValue As ClsUIStyle)
     End With
     
     With pShpCell.Line
-        .ForeColor.RGB = vNewValue.BorderColour
         .Weight = vNewValue.BorderWidth
         If .Weight = 0 Then .Visible = msoFalse Else .Visible = msoCTrue
+        .ForeColor.RGB = vNewValue.BorderColour
     End With
     
     With pShpCell.TextFrame
@@ -222,7 +222,7 @@ Public Sub ReOrder()
     pShpCell.ZOrder msoBringToFront
     If Not pBadge Is Nothing Then pBadge.ZOrder msoBringToFront
     
-    pMenu.ReOrder
+    If Not pMenu Is Nothing Then pMenu.ReOrder
 End Sub
 
 ' ===============================================================

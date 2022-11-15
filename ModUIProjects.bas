@@ -75,6 +75,7 @@ Private Function BuildMainFrame(ByVal ScreenPage As enScreenPage) As Boolean
 
     Set MainFrame = New ClsUIFrame
     Set ButtonFrame = New ClsUIFrame
+    Set BtnCommsToDo = New ClsUIButton
     Set BtnProjectNewWF = New ClsUIButton
     Set BtnNewLenderWF = New ClsUIButton
     
@@ -171,8 +172,39 @@ Private Function BuildMainFrame(ByVal ScreenPage As enScreenPage) As Boolean
         .Text = "New Lender Workflow"
     End With
     
+    With BtnCommsToDo
+
+        .Height = GENERIC_BUTTON_HEIGHT
+        .Left = TODO_BUTTON_LEFT
+        .Top = TODO_BUTTON_TOP
+        .Width = TODO_BUTTON_WIDTH
+        .Name = "BtnMain3"
+        .OnAction = "'ModUIButtonHandler.ProcessBtnClicks(""" & ScreenPage & ":" & enBtnCommsToDo & ":0" & """)'"
+        .UnSelectStyle = TODO_BUTTON
+        .Selected = False
+        .Text = "To Do Items"
+        .Icon = ShtMain.Shapes.AddPicture(GetDocLocalPath(ThisWorkbook.Path) & PICTURES_PATH & TODO_ICON_FILE, msoTrue, msoFalse, 0, 0, 0, 0)
+        With .Icon
+            .Width = TODO_ICON_WIDTH
+            .Height = TODO_ICON_WIDTH
+            .Name = "ToDo Icon"
+        End With
+        .IconTop = TODO_ICON_TOP
+        .IconLeft = TODO_ICON_LEFT
+        .Badge = New ClsUICell
+        With .Badge
+            .Width = TODO_BADGE_WIDTH
+            .Height = TODO_BADGE_WIDTH
+            .Name = "ToDo Badge"
+            .Style = TODO_BADGE
+            .Text = 4
+        End With
+        .BadgeTop = TODO_BADGE_TOP
+        .BadgeLeft = TODO_BADGE_LEFT
+    End With
     ButtonFrame.Buttons.Add BtnProjectNewWF
     ButtonFrame.Buttons.Add BtnNewLenderWF
+    ButtonFrame.Buttons.Add BtnCommsToDo
     
     MainScreen.ReOrder
     

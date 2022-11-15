@@ -107,7 +107,7 @@ Public Sub ReOrder()
     Dim Button As ClsUIButton
     
     For Each Button In pUIButtons
-        Button.ShpButton.ZOrder msoBringToFront
+        Button.ReOrder
     Next
 End Sub
 
@@ -127,6 +127,8 @@ Public Sub Terminate()
     
     For Each Button In pUIButtons
         Button.ShpButton.Delete
+        If Not Button.Badge Is Nothing Then Button.Badge.ShpCell.Delete
+        If Not Button.Icon Is Nothing Then Button.Icon.Delete
     Next
     
     Set Me.Parent = Nothing

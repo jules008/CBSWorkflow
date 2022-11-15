@@ -27,7 +27,7 @@ Private pWidth As Integer
 Private pName As String
 Private pText As String
 Private pIcon As Shape
-Private pBadge As Shape
+Private pBadge As ClsUICell
 Private pBadgeText As String
 Private pButtonLvl As Integer
 Private pButtonIndex As String
@@ -108,12 +108,28 @@ Public Property Let Icon(ByVal vNewValue As Shape)
     Set pIcon = vNewValue
 End Property
 
+Public Property Let IconLeft(ByVal IconLeft As Integer)
+    pIcon.Left = pLeft + IconLeft
+End Property
+
+Public Property Let IconTop(ByVal IconTop As Integer)
+    pIcon.Top = pTop + IconTop
+End Property
+
+Public Property Let BadgeLeft(ByVal BadgeLeft As Integer)
+    pBadge.Left = pLeft + BadgeLeft
+End Property
+
+Public Property Let BadgeTop(ByVal BadgeTop As Integer)
+    pBadge.Top = pTop + BadgeTop
+End Property
+
 '---------------------------------------------------------------
-Public Property Get Badge() As Shape
+Public Property Get Badge() As ClsUICell
     Set Badge = pBadge
 End Property
 
-Public Property Let Badge(ByVal vNewValue As Shape)
+Public Property Let Badge(ByVal vNewValue As ClsUICell)
     Set pBadge = vNewValue
 End Property
 
@@ -216,7 +232,7 @@ Public Property Let Selected(ByVal vNewValue As Boolean)
         .Characters.Font.Color = Style.FontColour
         .Characters.Font.Size = Style.FontSize
         If Style.FontXJust <> 0 Then .HorizontalAlignment = Style.FontXJust
-'        If Style.FontVJust <> 0 Then .VerticalAlignment = Style.FontVJust
+        If Style.FontVJust <> 0 Then .VerticalAlignment = Style.FontVJust
     End With
     
     With pShpButton.Shadow
@@ -257,7 +273,7 @@ End Property
 Public Sub ReOrder()
     pShpButton.ZOrder msoBringToFront
     If Not pIcon Is Nothing Then pIcon.ZOrder msoBringToFront
-    If Not pBadge Is Nothing Then pBadge.ZOrder msoBringToFront
+    If Not pBadge Is Nothing Then pBadge.ReOrder
 End Sub
 
 '---------------------------------------------------------------
