@@ -44,6 +44,8 @@ Private pComFrq As Integer
 
 Private WithEvents pContactForm As FrmContactForm
 Attribute pContactForm.VB_VarHelpID = -1
+Private pCommForm As FrmClientComms
+Attribute pCommForm.VB_VarHelpID = -1
 
 '---------------------------------------------------------------
 Public Property Get ContactNo() As Integer
@@ -160,6 +162,23 @@ Public Sub DisplayForm()
 End Sub
 
 ' ===============================================================
+' Method DisplayCommForm
+' displays client Communication form
+' ---------------------------------------------------------------
+Public Sub DisplayCommForm()
+    Dim RstCommsList As Recordset
+    
+    Set RstCommsList = GetCommsList
+    
+    With pCommForm
+        .AddFields RstCommsList
+        .Show
+    End With
+    
+    Set RstCommsList = Nothing
+End Sub
+
+' ===============================================================
 ' Method DBGet(Key as Integer)
 ' Gets class from Database
 ' ---------------------------------------------------------------
@@ -261,6 +280,24 @@ Public Sub DBDelete(Optional FullDelete As Boolean)
     DB.Execute "DELETE * FROM TblContact WHERE ContactNo = " & pContactNo
 
 End Sub
+
+' ===============================================================
+' Method GetCommsList
+' Gets all contacts that are eligible for communication today
+' ---------------------------------------------------------------
+Private Function GetCommsList() As Recordset
+    Dim RstCommsList As Recordset
+    
+    Set RstCommsList = ModDatabase.SQLQuery("SELECT ContactName, EmailAddress, ContactType, Organisation " _
+                                            & "FROM TblContact " _
+                                            & "WHERE (ContactType='Lead' OR ContactType='Client') AND LastComm<=Date()-[comfrq] AND OptOut=False ")
+    
+    
+    Set GetCommsList = RstCommsList
+    
+    Set RstCommsList = Nothing
+End Function
+
 ' ===============================================================
 ' Event pContactForm_Update
 ' Event from client form to update Contact
@@ -336,9 +373,11 @@ End Sub
 ' ===============================================================
 Private Sub Class_Initialize()
     Set pContactForm = New FrmContactForm
+    Set pCommForm = New FrmClientComms
 End Sub
 
 ' ===============================================================
 Private Sub Class_Terminate()
     Set pContactForm = Nothing
+    Set pCommForm = Nothing
 End Sub

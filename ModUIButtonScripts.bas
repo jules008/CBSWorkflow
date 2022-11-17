@@ -368,4 +368,16 @@ Public Sub BtnCRMContShwLeads(ByVal ScreenPage As enScreenPage, Optional ByVal I
     If Not ModUICRM.BuildScreen(ScreenPage, "ContactType:Lead") Then Err.Raise HANDLED_ERROR
 End Sub
 
+' ===============================================================
+' BtnCommsToDoClick
+' ---------------------------------------------------------------
+Public Sub BtnCommsToDoClick()
+    Dim Contact As New ClsContact
+    
+    Contact.DisplayCommForm
+    
+    Set Contact = Nothing
+End Sub
+
+
 

@@ -256,7 +256,7 @@ Public Sub DisplayForm()
             .xBtnChat.Visible = True
             .LblCl.Top = .LblCl.Top - Adjust2
             .LblCont1.Top = .LblCont1.Top - Adjust2
-            .LblPhone1.Top = .LblPhone1.Top - Adjust2
+            .Lblphone1.Top = .Lblphone1.Top - Adjust2
             .TxtClientContactName.Top = .TxtClientContactName.Top - Adjust2
             .TxtClientContactPhone.Top = .TxtClientContactPhone.Top - Adjust2
             .TxtClientName.Top = .TxtClientName.Top - Adjust2
