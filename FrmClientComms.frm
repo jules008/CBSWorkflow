@@ -4,7 +4,7 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FrmClientComms
    ClientHeight    =   8115
    ClientLeft      =   120
    ClientTop       =   465
-   ClientWidth     =   8220.001
+   ClientWidth     =   9735.001
    OleObjectBlob   =   "FrmClientComms.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -27,18 +27,21 @@ Option Explicit
 
 Private Const StrMODULE As String = "FrmClientComms"
 
+Dim ClsChkBoxes() As New ClsChkBox
+
 ' ---------------------------------------------------------------
 ' AddFields
 ' routine for adding new field
 ' ---------------------------------------------------------------
 Public Sub AddFields(CommsList As Recordset)
     Dim i As Integer
-    Dim ChkBox As MSForms.CheckBox
+    Dim Chkbox As MSForms.CheckBox
     Dim IntExt As String
     Dim OrgStr As String
     
     Debug.Assert CommsList.RecordCount > 0
     
+    i = 1
     With CommsList
         If .RecordCount > 0 Then .MoveFirst
         Do While Not .EOF
@@ -46,9 +49,9 @@ Public Sub AddFields(CommsList As Recordset)
             If !ContactType = "Client" Then IntExt = "Internal" Else IntExt = "External"
             If Not IsNull(!Organisation) Then OrgStr = " at " & !Organisation Else OrgStr = ""
             
-            Set ChkBox = FrmBoxes.Controls.Add("Forms.CheckBox.1")
+            Set Chkbox = FrmBoxes.Controls.Add("Forms.CheckBox.1")
             
-            With ChkBox
+            With Chkbox
                 .Name = "ChkBox" & i
                 .Top = (i * 15) + 10
                 .Caption = "Send " & IntExt & " Communication to " & CommsList!ContactName & OrgStr
@@ -61,6 +64,8 @@ Public Sub AddFields(CommsList As Recordset)
                 .SpecialEffect = fmSpecialEffectFlat
                 .Visible = True
             End With
+            ReDim Preserve ClsChkBoxes(1 To i)
+            Set ClsChkBoxes(i).Chkbox = Chkbox
                     
             i = i + 1
             DoEvents
@@ -93,3 +98,13 @@ Private Sub ChkSelectAll_Click()
     Next
 End Sub
 
+' ---------------------------------------------------------------
+' UserForm_Terminate
+' ---------------------------------------------------------------
+Private Sub UserForm_Terminate()
+    Dim Chkbox As Variant
+    
+    For Each Chkbox In ClsChkBoxes
+        Set Chkbox = Nothing
+    Next
+End Sub

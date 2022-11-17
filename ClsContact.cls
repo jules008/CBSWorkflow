@@ -110,6 +110,15 @@ Public Property Let PrimaryContact(ByVal vNewValue As Boolean)
     pPrimaryContact = vNewValue
 End Property
 
+'---------------------------------------------------------------
+Public Property Get EmailAddress() As String
+    EmailAddress = pEmailAddress
+End Property
+
+Public Property Let EmailAddress(ByVal vNewValue As String)
+    pEmailAddress = vNewValue
+End Property
+
 ' ===============================================================
 ' Method DBNew
 ' displays new SPV form

@@ -149,7 +149,7 @@ Public Property Let BadgeText(ByVal vNewValue As String)
     
     If CInt(pBadgeText) > 99 Then pBadgeText = "99"
     
-    pBadge.TextFrame.Characters.Caption = pBadgeText
+    pBadge.Text = pBadgeText
 End Property
 
 '---------------------------------------------------------------
