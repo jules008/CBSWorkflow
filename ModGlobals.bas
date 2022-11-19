@@ -37,9 +37,9 @@ Public Const TEST_PREFIX As String = "TEST - "
 Public Const BACKUP_INT As Integer = 5
 Public Const FILE_ERROR_LOG As String = "Error.log"
 Public Const OLD_DB_VER = "V0.01.04"
-Public Const DB_VER = "V0.01.05"    'Branch BugFix
+Public Const DB_VER = "V0.01.05"    'Branch UserLevel
 Public Const VERSION = "V0.01.05"
-Public Const VER_DATE = "15 Nov 22"
+Public Const VER_DATE = "19 Nov 22"
 ' ===============================================================
 ' Error Constants
 ' ---------------------------------------------------------------
