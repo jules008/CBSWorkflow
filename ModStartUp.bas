@@ -363,6 +363,7 @@ Private Function SetGlobalClasses() As Boolean
 
     Set ActiveWorkflows = New ClsWorkflows
     Set MailSystem = New ClsMailSystem
+    Set MailInbox = New ClsMailInbox
     ActiveWorkflows.UpdateRAGs
 
     SetGlobalClasses = True
