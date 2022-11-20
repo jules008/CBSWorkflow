@@ -293,6 +293,7 @@ Public Sub DBSave()
         !OptOut = CleanSQLText(pOptOut, True)
         !LastComm = CleanSQLText(pLastComm, True)
         !ComFrq = CleanSQLText(pComFrq, True)
+        !EmailAddress = CleanSQLText(pEmailAddress, True)
 
         .Update
     End With
