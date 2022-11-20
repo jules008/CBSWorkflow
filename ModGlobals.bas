@@ -94,6 +94,7 @@ Public ActiveUser As ClsCBSUser
 Public CTimer As ClsCodeTimer
 Public SubTable As ClsUITable
 Public MailSystem As ClsMailSystem
+Public CurrentUser As ClsCBSUser
 
 ' ===============================================================
 ' Global UI Class Declarations
@@ -181,7 +182,7 @@ Enum EnMenuBtnNo
     enbtnDashboard = 4
     enBtnReports = 5
     enBtnAdminUsers = 61
-    enBtnAdminEmailTs = 62
+    enBtnAdminEmails = 62
     enBtnAdminDocuments = 63
     enBtnAdminWorkflows = 64
     enBtnAdminWFTypes = 65
@@ -223,8 +224,9 @@ Enum enStepType         'Step Type
 End Enum                '
 
 Enum EnUserLvl          'User Level
-    enBasic             'Basic
     enAdmin             'Admin
+    enSenMgr            'Senior Manager
+    enCaseMgr           'Case Manager
 End Enum                '
  
 Enum EnumFormValidation

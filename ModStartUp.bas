@@ -61,7 +61,7 @@ Public Function Initialize() As Boolean
     
     If Now - ModDatabase.GetBackUpDate > BACKUP_INT Then
     
-        FrmStartBanner.Progress "Backing Up Database.....", 3.5 / 7 * 100
+        FrmStartBanner.Progress "Backing Up Database.....", 3.75 / 7 * 100
         
         ModDatabase.BackupFiles
         DB.Execute "UPDATE TblDBVersion SET lastbackup = now"
@@ -69,13 +69,13 @@ Public Function Initialize() As Boolean
     
     If Not SetGlobalClasses Then Err.Raise HANDLED_ERROR
     
-'    FrmStartBanner.Progress "Logging User On.....", 4 / 7 * 100
+    FrmStartBanner.Progress "Logging User On.....", 4 / 7 * 100
 
     UserName = GetUserName
     
     If UserName = "Error" Then Err.Raise HANDLED_ERROR
     
-'    If Not ModSecurity.LogUserOn(UserName) Then Err.Raise HANDLED_ERROR
+    If Not ModSecurity.LogUserOn(UserName) Then Err.Raise HANDLED_ERROR
     
     
     'build styles
@@ -361,6 +361,7 @@ Private Function SetGlobalClasses() As Boolean
 
     On Error GoTo ErrorHandler
 
+    Set CurrentUser = New ClsCBSUser
     Set ActiveWorkflows = New ClsWorkflows
     Set MailSystem = New ClsMailSystem
     ActiveWorkflows.UpdateRAGs

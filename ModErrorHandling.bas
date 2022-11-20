@@ -127,7 +127,8 @@ Public Function CustomErrorHandler(ErrorCode As Long, Optional Message As String
             End If
             
         Case ACCESS_DENIED
-            Application.StatusBar = "Administrators Only"
+            MsgBox "You do not have the correct access rights to carry out this action.  Please contact an Administrator for access", vbOKOnly + vbExclamation
+            Application.StatusBar = "Access Denied"
             Sleep 2000
             Application.StatusBar = ""
         

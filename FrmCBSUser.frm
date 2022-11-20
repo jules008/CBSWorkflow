@@ -26,12 +26,14 @@ Option Explicit
 
 Private Const StrMODULE As String = "FrmCBSUser"
 Public Event CreateNew()
+Public Event Update()
+Public Event Delete()
 
 '===============================================================
 ' BtnClose_Click
 '---------------------------------------------------------------
 Private Sub BtnClose_Click()
-    Unload Me
+    Me.Hide
 End Sub
 
 ' ===============================================================
@@ -44,7 +46,17 @@ Private Sub BtnDelete_Click()
     Response = MsgBox("Are you sure you want to delete the CBS User from the database?", vbYesNo + vbExclamation, APP_NAME)
     
     If Response = 6 Then
+        RaiseEvent Delete
+        Me.Hide
     End If
+End Sub
+
+' ===============================================================
+' BtnNew_Click
+' Creates new Contact
+' ---------------------------------------------------------------
+Private Sub BtnNew_Click()
+    RaiseEvent CreateNew
 End Sub
 
 ' ===============================================================
@@ -56,6 +68,7 @@ Private Sub ClearForm()
     TxtPhoneNo = ""
     TxtPosition = ""
     TxtUserName = ""
+    CmoUserLvl = ""
 End Sub
 
 ' ===============================================================
@@ -82,8 +95,8 @@ Restart:
             
         Case Is = enFormOK
             
-            RaiseEvent CreateNew
-            Unload Me
+            RaiseEvent Update
+            Me.Hide
     End Select
     
 GracefulExit:
@@ -113,21 +126,28 @@ End Sub
 ' TxtCBSUserNo_Change
 ' ---------------------------------------------------------------
 Private Sub TxtCBSUserNo_Change()
-    TxtCBSUserNo.BackColor = COL_OFF_WHITE
+    TxtCBSUserNo.BackColor = COL_WHITE
 End Sub
 
 ' ===============================================================
 ' TxtPosition_Change
 ' ---------------------------------------------------------------
 Private Sub TxtPosition_Change()
-    TxtPosition.BackColor = COL_OFF_WHITE
+    TxtPosition.BackColor = COL_WHITE
 End Sub
 
 ' ===============================================================
 ' TxtUserName_Change
 ' ---------------------------------------------------------------
 Private Sub TxtUserName_Change()
-    TxtUserName.BackColor = COL_OFF_WHITE
+    TxtUserName.BackColor = COL_WHITE
+End Sub
+
+' ===============================================================
+' CmoUserLvl_Change
+' ---------------------------------------------------------------
+Private Sub CmoUserLvl_Change()
+    CmoUserLvl.BackColor = COL_WHITE
 End Sub
 
 ' ===============================================================
@@ -144,6 +164,13 @@ Private Sub UserForm_Initialize()
         BtnNew.Visible = False
         BtnUpdate.Caption = "Create"
     End If
+    
+    With CmoUserLvl
+        .Clear
+        .AddItem "Admin"
+        .AddItem "Senior Manager"
+        .AddItem "Case Manager"
+    End With
     ClearForm
 End Sub
 
@@ -169,6 +196,13 @@ Private Function ValidateForm() As enFormValidation
             .BackColor = COL_AMBER
             ValidateForm = enValidationError
         End If
+    End With
+           
+    With CmoUserLvl
+      If .ListIndex = -1 Then
+        .BackColor = COL_AMBER
+        ValidateForm = enValidationError
+      End If
     End With
                      
     If ValidateForm = enValidationError Then
