@@ -8,7 +8,7 @@ Attribute VB_Name = "ModEnums"
 '===============================================================
 ' v1.0.0 - Initial Version
 '---------------------------------------------------------------
-' Date - 24 Oct 22
+' Date - 20 Nov 22
 '===============================================================
 
 Option Explicit
@@ -88,7 +88,7 @@ Public Function EnMenuBtnNoVal(EnumValue As String) As EnMenuBtnNo
             EnMenuBtnNoVal = 5
         Case "enBtnAdminUsers"
             EnMenuBtnNoVal = 6
-        Case "enBtnAdminEmailTs"
+        Case "enBtnAdminEmails"
             EnMenuBtnNoVal = 6
         Case "enBtnAdminDocuments"
             EnMenuBtnNoVal = 6
@@ -115,16 +115,22 @@ Public Function EnumBtnNoVal(EnumValue As String) As EnumBtnNo
             EnumBtnNoVal = 0
         Case "enBtnProjectOpen"
             EnumBtnNoVal = 1
-        Case "enBtnLenderNewWF"
+        Case "enBtnLenderOpenWF"
             EnumBtnNoVal = 2
-        Case "enBtnCRMOpenItem"
+        Case "enBtnLenderNewWF"
             EnumBtnNoVal = 3
-        Case "enBtnCRMLenderOpen"
+        Case "enBtnCRMOpenItem"
             EnumBtnNoVal = 4
-        Case "enBtnCRMLenderNew"
+        Case "enBtnCRMLenderOpen"
             EnumBtnNoVal = 5
-        Case "enBtnCRMNewItem"
+        Case "enBtnCRMLenderNew"
             EnumBtnNoVal = 6
+        Case "enBtnCRMNewItem"
+            EnumBtnNoVal = 7
+        Case "enBtnCRMContCalImport"
+            EnumBtnNoVal = 8
+        Case "enBtnCRMContShwLeads"
+            EnumBtnNoVal = 9
     End Select
 End Function
 
@@ -181,10 +187,12 @@ End Function
 ' ---------------------------------------------------------------
 Public Function EnUserLvlVal(EnumValue As String) As EnUserLvl
     Select Case EnumValue
-        Case "enBasic"
-            EnUserLvlVal = 0
         Case "enAdmin"
+            EnUserLvlVal = 0
+        Case "enSenMgr"
             EnUserLvlVal = 1
+        Case "enCaseMgr"
+            EnUserLvlVal = 2
     End Select
 End Function
 
@@ -298,7 +306,7 @@ Public Function EnMenuBtnNoStr(EnumValue As EnMenuBtnNo) As String
         Case 6
             EnMenuBtnNoStr = "enBtnAdminUsers"
         Case 6
-            EnMenuBtnNoStr = "enBtnAdminEmailTs"
+            EnMenuBtnNoStr = "enBtnAdminEmails"
         Case 6
             EnMenuBtnNoStr = "enBtnAdminDocuments"
         Case 6
@@ -325,15 +333,21 @@ Public Function EnumBtnNoStr(EnumValue As EnumBtnNo) As String
         Case 1
             EnumBtnNoStr = "enBtnProjectOpen"
         Case 2
-            EnumBtnNoStr = "enBtnLenderNewWF"
+            EnumBtnNoStr = "enBtnLenderOpenWF"
         Case 3
-            EnumBtnNoStr = "enBtnCRMOpenItem"
+            EnumBtnNoStr = "enBtnLenderNewWF"
         Case 4
-            EnumBtnNoStr = "enBtnCRMLenderOpen"
+            EnumBtnNoStr = "enBtnCRMOpenItem"
         Case 5
-            EnumBtnNoStr = "enBtnCRMLenderNew"
+            EnumBtnNoStr = "enBtnCRMLenderOpen"
         Case 6
+            EnumBtnNoStr = "enBtnCRMLenderNew"
+        Case 7
             EnumBtnNoStr = "enBtnCRMNewItem"
+        Case 8
+            EnumBtnNoStr = "enBtnCRMContCalImport"
+        Case 9
+            EnumBtnNoStr = "enBtnCRMContShwLeads"
     End Select
 End Function
 
@@ -391,9 +405,11 @@ End Function
 Public Function EnUserLvlStr(EnumValue As EnUserLvl) As String
     Select Case EnumValue
         Case 0
-            EnUserLvlStr = "enBasic"
-        Case 1
             EnUserLvlStr = "enAdmin"
+        Case 1
+            EnUserLvlStr = "enSenMgr"
+        Case 2
+            EnUserLvlStr = "enCaseMgr"
     End Select
 End Function
 
@@ -475,10 +491,12 @@ End Function
 ' ---------------------------------------------------------------
 Public Function EnUserLvlDisp(EnumValue As EnUserLvl) As String
     Select Case EnumValue
-        Case enBasic
-            EnUserLvlDisp = "Basic"
         Case enAdmin
             EnUserLvlDisp = "Admin"
+        Case enSenMgr
+            EnUserLvlDisp = "Senior Manager"
+        Case enCaseMgr
+            EnUserLvlDisp = "Case Manager"
     End Select
 End Function
 

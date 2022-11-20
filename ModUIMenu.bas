@@ -293,23 +293,17 @@ Restart:
 
             BtnProjectsClick enScrProjForAction
 
-        ''    If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
-
         Case enBtnProjectsActive
         
             ShtMain.Unprotect PROTECT_KEY
         
             BtnProjectsClick enScrProjActive
         
-        ''    If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
-
         Case enBtnProjectsClosed
         
             ShtMain.Unprotect PROTECT_KEY
             
             BtnProjectsClick enScrProjComplete
-
-        ''    If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
 
         Case enBtnCRMClient
             
@@ -317,15 +311,11 @@ Restart:
             
             BtnCRMClick enScrCRMClient
         
-        ''    If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
-
         Case enBtnCRMSPV
         
             ShtMain.Unprotect PROTECT_KEY
             
             BtnCRMClick enScrCRMSPV
-
-        ''    If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
 
         Case enBtnCRMContacts
         
@@ -333,31 +323,23 @@ Restart:
             
             BtnCRMClick enScrCRMContact
             
-        ''    If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
-
         Case enBtnCRMProjects
         
             ShtMain.Unprotect PROTECT_KEY
             
             BtnCRMClick enScrCRMProject
             
-        ''    If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
-
         Case enBtnCRMLenders
         
             ShtMain.Unprotect PROTECT_KEY
             
             BtnCRMClick enScrCRMLender
             
-        ''    If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
-
         Case enbtnDashboard
         
             ShtMain.Unprotect PROTECT_KEY
 
             If Not ResetScreen Then Err.Raise HANDLED_ERROR
-
-        ''    If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
 
         Case enBtnReports
         
@@ -365,23 +347,17 @@ Restart:
 
             If Not ResetScreen Then Err.Raise HANDLED_ERROR
 
-        ''    If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
-
         Case enBtnAdminUsers
         
             ShtMain.Unprotect PROTECT_KEY
 
-            If Not ResetScreen Then Err.Raise HANDLED_ERROR
+            BtnAdminUsersClick
 
-        ''    If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
-
-        Case enBtnAdminEmailTs
+        Case enBtnAdminEmails
         
             ShtMain.Unprotect PROTECT_KEY
 
             If Not ResetScreen Then Err.Raise HANDLED_ERROR
-
-        ''    If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
 
         Case enBtnAdminDocuments
         
@@ -389,15 +365,11 @@ Restart:
 
             If Not ResetScreen Then Err.Raise HANDLED_ERROR
 
-        ''    If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
-
         Case enBtnAdminWorkflows
         
             ShtMain.Unprotect PROTECT_KEY
 
             If Not ResetScreen Then Err.Raise HANDLED_ERROR
-
-        ''    If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
 
         Case enBtnAdminWFTypes
         
@@ -407,24 +379,17 @@ Restart:
             If Not ResetScreen Then Err.Raise HANDLED_ERROR
             If Not ModUIProjects.BuildScreen("Closed") Then Err.Raise HANDLED_ERROR
 
-        ''    If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
-
         Case enBtnAdminLists
         
             ShtMain.Unprotect PROTECT_KEY
 
             If Not ResetScreen Then Err.Raise HANDLED_ERROR
 
-        ''    If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
-
         Case enBtnAdminRoles
         
             ShtMain.Unprotect PROTECT_KEY
 
             If Not ResetScreen Then Err.Raise HANDLED_ERROR
-
-        ''    If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
-
             
     End Select
 

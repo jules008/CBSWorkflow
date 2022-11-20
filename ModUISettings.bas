@@ -31,8 +31,8 @@ Public Const MAIN_FRAME_HEIGHT As Integer = 360
 ' Button Frame
 ' ---------------------------------------------------------------
 Public Const BUTTON_FRAME_TOP As Integer = 5
-Public Const BUTTON_FRAME_LEFT As Integer = 600
-Public Const BUTTON_FRAME_WIDTH As Integer = 275
+Public Const BUTTON_FRAME_LEFT As Integer = 0
+Public Const BUTTON_FRAME_WIDTH As Integer = 800
 Public Const BUTTON_FRAME_HEIGHT As Integer = 60
 
 ' ---------------------------------------------------------------
@@ -40,6 +40,22 @@ Public Const BUTTON_FRAME_HEIGHT As Integer = 60
 ' ---------------------------------------------------------------
 Public Const GENERIC_BUTTON_WIDTH As Integer = 100
 Public Const GENERIC_BUTTON_HEIGHT As Integer = 40
+
+' ---------------------------------------------------------------
+' ToDo Button
+' ---------------------------------------------------------------
+Public Const TODO_BUTTON_WIDTH As Integer = 140
+Public Const TODO_BUTTON_LEFT As Integer = 170
+Public Const TODO_BUTTON_TOP As Integer = 25
+Public Const TODO_ICON_FILE As String = "ToDo.png"
+Public Const TODO_ICON_WIDTH As String = 18
+Public Const TODO_ICON_TOP As String = 15
+Public Const TODO_ICON_LEFT As String = 5
+Public Const TODO_BADGE_FILE As String = "ToDo.png"
+Public Const TODO_BADGE_WIDTH As String = 25
+Public Const TODO_BADGE_HEIGHT As String = 18
+Public Const TODO_BADGE_TOP As String = 16
+Public Const TODO_BADGE_LEFT As String = 107
 
 ' ---------------------------------------------------------------
 ' Generic Table Settings
@@ -83,9 +99,9 @@ Public Const PROJECT_CELL_ROW_HEIGHTS As String = "50:50"
 Public Const PROJECT_TABLE_STYLES As String = "GENERIC_TABLE"
 Public Const PROJECT_TABLE_TITLES As String = "Expand:Project No:Client Name:SPV Name:Case Manager:Step No:Step Name:Status"
 Public Const PROJECT_MAX_LINES As Integer = 150
-Public Const PROJECT_BTN_MAIN_1_LEFT As Integer = 110
+Public Const PROJECT_BTN_MAIN_1_LEFT As Integer = 710
 Public Const PROJECT_BTN_MAIN_1_TOP As Integer = 20
-Public Const PROJECT_BTN_MAIN_2_LEFT As Integer = 220
+Public Const PROJECT_BTN_MAIN_2_LEFT As Integer = 820
 Public Const PROJECT_BTN_MAIN_2_TOP As Integer = 20
 
 ' ---------------------------------------------------------------
@@ -118,19 +134,19 @@ Public Const CRM_TABLE_STYLES As String = "GENERIC_TABLE"
 ' ---------------------------------------------------------------
 ' CRM Screen Btn 1 Settings
 ' ---------------------------------------------------------------
-Public Const CRM_BTN_MAIN_1_LEFT As Integer = 220
+Public Const CRM_BTN_MAIN_1_LEFT As Integer = 820
 Public Const CRM_BTN_MAIN_1_TOP As Integer = 20
 
 ' ---------------------------------------------------------------
 ' CRM Screen Btn 2 Settings
 ' ---------------------------------------------------------------
-Public Const CRM_BTN_MAIN_2_LEFT As Integer = 110
+Public Const CRM_BTN_MAIN_2_LEFT As Integer = 710
 Public Const CRM_BTN_MAIN_2_TOP As Integer = 20
 
 ' ---------------------------------------------------------------
 ' CRM Screen Btn 3 Settings
 ' ---------------------------------------------------------------
-Public Const CRM_BTN_MAIN_3_LEFT As Integer = 0
+Public Const CRM_BTN_MAIN_3_LEFT As Integer = 600
 Public Const CRM_BTN_MAIN_3_TOP As Integer = 20
 
 ' ---------------------------------------------------------------
@@ -182,6 +198,8 @@ Public BUTTON_FRAME_STYLE As ClsUIStyle
 Public HEADER_STYLE As ClsUIStyle
 Public BTN_MAIN_STYLE As ClsUIStyle
 Public GENERIC_BUTTON As ClsUIStyle
+Public TODO_BUTTON As ClsUIStyle
+Public TODO_BADGE As ClsUIStyle
 Public GENERIC_TABLE As ClsUIStyle
 Public GREEN_CELL As ClsUIStyle
 Public AMBER_CELL As ClsUIStyle
@@ -211,6 +229,35 @@ Public Const GENERIC_BUTTON_FONT_COLOUR As Long = COL_WHITE
 Public Const GENERIC_BUTTON_FONT_BOLD As Boolean = False
 Public Const GENERIC_BUTTON_FONT_X_JUST As Integer = xlHAlignCenter
 Public Const GENERIC_BUTTON_FONT_Y_JUST As Integer = xlVAlignCenter
+
+' ---------------------------------------------------------------
+' Todo Button
+' ---------------------------------------------------------------
+Public Const TODO_BUTTON_BORDER_WIDTH As Single = 0
+Public Const TODO_BUTTON_FILL_1 As Long = COL_AQUA
+Public Const TODO_BUTTON_FILL_2 As Long = COL_AQUA
+Public Const TODO_BUTTON_SHADOW As Long = msoShadow21
+Public Const TODO_BUTTON_FONT_STYLE As String = "Eras Medium ITC"
+Public Const TODO_BUTTON_FONT_SIZE As Integer = 12
+Public Const TODO_BUTTON_FONT_COLOUR As Long = COL_WHITE
+Public Const TODO_BUTTON_FONT_BOLD As Boolean = False
+Public Const TODO_BUTTON_FONT_X_JUST As Integer = xlHAlignCenter
+Public Const TODO_BUTTON_FONT_Y_JUST As Integer = xlVAlignCenter
+
+' ---------------------------------------------------------------
+' Todo Badge
+' ---------------------------------------------------------------
+Public Const TODO_BADGE_BORDER_WIDTH As Single = 1
+Public Const TODO_BADGE_BORDER_COLOUR As Long = COL_WHITE
+Public Const TODO_BADGE_FILL_1 As Long = COL_AQUA
+Public Const TODO_BADGE_FILL_2 As Long = COL_AQUA
+Public Const TODO_BADGE_SHADOW As Long = 0
+Public Const TODO_BADGE_FONT_STYLE As String = "Eras Medium ITC"
+Public Const TODO_BADGE_FONT_SIZE As Integer = 12
+Public Const TODO_BADGE_FONT_COLOUR As Long = COL_WHITE
+Public Const TODO_BADGE_FONT_BOLD As Boolean = False
+Public Const TODO_BADGE_FONT_X_JUST As Integer = xlHAlignRight
+Public Const TODO_BADGE_FONT_Y_JUST As Integer = xlVAlignCenter
 
 ' ---------------------------------------------------------------
 ' Cells

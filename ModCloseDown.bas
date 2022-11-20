@@ -96,6 +96,7 @@ Private Function EndGlobalClasses() As Boolean
 
     If Not ActiveWorkflows Is Nothing Then ActiveWorkflows.Terminate
     
+    Set MailInbox = Nothing
     Set ActiveWorkflows = Nothing
     
     EndGlobalClasses = True

@@ -25,14 +25,21 @@ Public Sub QueryTest()
     Set DB = OpenDatabase(GetDocLocalPath(ThisWorkbook.Path) & INI_FILE_PATH & DB_FILE_NAME & ".accdb")
     
     'undo commands
+<<<<<<< HEAD
     DB.Execute "ALTER TABLE TblCBSUser DROP COLUMN UserLvl)"
+=======
+    DB.Execute "ALTER TABLE TblContact DROP COLUMN OptOut, Comfrq, LastComm"
+>>>>>>> ToDoList
     
     Stop
     
     'Update commands
-    DB.Execute "UPDATE TblStepTemplate SET AltStep = '1.04' WHERE StepNo = '1.02'"
-    DB.Execute "UPDATE TblStep SET AltStep = '1.04' WHERE StepNo = '1.02'"
+<<<<<<< HEAD
     DB.Execute "ALTER TABLE TblCBSUser ADD COLUMN UserLvl text (20)"
+=======
+    DB.Execute "ALTER TABLE TblContact ADD COLUMN OptOut YesNo, ComFrq Int, LastComm Date"
+    
+>>>>>>> ToDoList
     
     Set RstUpdate = Nothing
     Set DB = Nothing
@@ -79,13 +86,13 @@ Public Function UpdateDBScript() As Boolean
     ' ========================================================================================
     ' Database commands
     ' ----------------------------------------------------------------------------------------
-    DB.Execute "UPDATE TblStepTemplate SET NextStep = '1.04' WHERE StepNo = '1.02'"
-    DB.Execute "UPDATE TblStepTemplate SET AltStep = '1.03' WHERE StepNo = '1.02'"
-    DB.Execute "UPDATE TblStep SET NextStep = '1.04' WHERE StepNo = '1.02'"
-    DB.Execute "UPDATE TblStep SET AltStep = '1.03' WHERE StepNo = '1.02'"
+<<<<<<< HEAD
     
     'Userlevel changes
     DB.Execute "ALTER TABLE TblCBSUser ADD COLUMN UserLvl text (20)"
+=======
+    DB.Execute "ALTER TABLE TblContact ADD COLUMN OptOut YesNo, ComFrq Int, LastComm Date"
+>>>>>>> ToDoList
 '    DB.Execute "DELETE * FROM TblStep"
     
 '    UpdateTable
@@ -167,8 +174,12 @@ Public Function UpdateDBScriptUndo() As Boolean
     ' ========================================================================================
     ' Database commands
     ' ----------------------------------------------------------------------------------------
+<<<<<<< HEAD
     'user level changes
     DB.Execute "ALTER TABLE TblCBSUser DROP COLUMN UserLvl)"
+=======
+    DB.Execute "ALTER TABLE TblContact DROP COLUMN OptOut, Comfrq, LastComm"
+>>>>>>> ToDoList
     ' ========================================================================================
     
     DB.Close

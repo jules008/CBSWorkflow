@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FrmContactForm 
    Caption         =   "Contact"
-   ClientHeight    =   5115
+   ClientHeight    =   6375
    ClientLeft      =   120
    ClientTop       =   465
-   ClientWidth     =   11640
+   ClientWidth     =   11955
    OleObjectBlob   =   "FrmContactForm.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -45,11 +45,22 @@ End Sub
 Private Sub BtnDelete_Click()
     Dim Response As Integer
     
+    On Error GoTo ErrorHandler
+    
+    If CurrentUser.UserLvl <> "Admin" Then Err.Raise ACCESS_DENIED
+    
     Response = MsgBox("Are you sure you want to delete the Contact from the database?", vbYesNo + vbExclamation, APP_NAME)
     
     If Response = 6 Then
         RaiseEvent Delete
         Unload Me
+    End If
+    
+ErrorHandler:
+    Dim ErrNo As Integer
+    If Err.Number >= 2000 And Err.Number <= 2500 Then
+        ErrNo = Err.Number
+        CustomErrorHandler (Err.Number)
     End If
 End Sub
 
@@ -66,8 +77,11 @@ Public Sub ClearForm()
     TxtPhone1 = ""
     TxtPhone2 = ""
     TxtPosition = ""
+    TxtLastComm = ""
+    CmoCommFreq = ""
     CmoContactType = ""
     CmoOrganisation = ""
+    ChkOptOut = False
 End Sub
 
 ' ===============================================================
@@ -182,12 +196,14 @@ Private Function PopulateOrgs(ContactType As String) As Boolean
             .MoveNext
         Loop
     End With
+        ChkOptOut.Enabled = False
     Else
         CmoOrganisation.Clear
         With CmoOrganisation
             .AddItem
             .List(0, 1) = "None"
         End With
+        ChkOptOut.Enabled = True
     End If
     
     PopulateOrgs = True
@@ -211,7 +227,34 @@ ErrorHandler:
 End Function
 
 ' ===============================================================
-' TxtContactName_Change
+' xBtnSent_Click
+' ---------------------------------------------------------------
+Private Sub xBtnSent_Click()
+    TxtLastComm = Format(Now, "dd mmm yy")
+End Sub
+
+' ===============================================================
+' ChkOptOut_Click
+' ---------------------------------------------------------------
+Private Sub ChkOptOut_Click()
+    If ChkOptOut Then
+        TxtLastComm.Enabled = False
+        CmoCommFreq.Enabled = False
+    Else
+        TxtLastComm.Enabled = True
+        CmoCommFreq.Enabled = True
+    End If
+End Sub
+
+' ===============================================================
+' CmoCommFreq_Change
+' ---------------------------------------------------------------
+Private Sub CmoCommFreq_Change()
+    CmoCommFreq.BackColor = COL_WHITE
+End Sub
+
+' ===============================================================
+' CmoContactType_Change
 ' ---------------------------------------------------------------
 Private Sub CmoContactType_Change()
     CmoOrganisation = ""
@@ -229,6 +272,24 @@ Private Sub CmoContactType_Change()
         Else
             LblOrganisation.Caption = "Organisation"
         End If
+        
+        If .Value = "Client" Then
+            ChkOptOut.Enabled = True
+            TxtLastComm.Enabled = True
+            CmoCommFreq.Enabled = True
+            xBtnSent.Enabled = True
+        ElseIf .Value = "Lead" Then
+            ChkOptOut.Enabled = False
+            TxtLastComm.Enabled = True
+            CmoCommFreq.Enabled = True
+            xBtnSent.Enabled = True
+        Else
+            ChkOptOut.Enabled = False
+            TxtLastComm.Enabled = False
+            CmoCommFreq.Enabled = False
+            xBtnSent.Enabled = False
+        End If
+        
         .BackColor = COL_WHITE
     End With
 End Sub
@@ -259,6 +320,13 @@ End Sub
 ' ---------------------------------------------------------------
 Private Sub TxtEmailAdd_Change()
     TxtEmailAdd.BackColor = COL_WHITE
+End Sub
+
+' ===============================================================
+' TxtLastComm_Change
+' ---------------------------------------------------------------
+Private Sub TxtLastComm_Change()
+    TxtLastComm.BackColor = COL_WHITE
 End Sub
 
 ' ===============================================================
@@ -316,6 +384,17 @@ Private Sub UserForm_Initialize()
         .List(4, 0) = 4
         .List(4, 1) = "Lead"
     End With
+    
+    Dim i As Integer
+    
+    With CmoCommFreq
+        .Clear
+        For i = 0 To 31
+            .AddItem i
+            i = i + 1
+        Next
+    End With
+    
     CmoOrganisation.Enabled = False
 End Sub
 
@@ -342,6 +421,24 @@ Private Function ValidateForm() As enFormValidation
             ValidateForm = enValidationError
         End If
     End With
+    
+    With CmoOrganisation
+        If .ListIndex = -1 Then
+            .BackColor = COL_AMBER
+            ValidateForm = enValidationError
+        End If
+    End With
+    
+    If TxtEmailAdd <> "" Then
+        If Not ChkOptOut Then
+            With CmoCommFreq
+                If .ListIndex = -1 Then
+                    .BackColor = COL_AMBER
+                    ValidateForm = enValidationError
+                End If
+            End With
+        End If
+    End If
     
     If ValidateForm = enValidationError Then
         Err.Raise FORM_INPUT_EMPTY

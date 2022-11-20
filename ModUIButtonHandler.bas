@@ -82,6 +82,9 @@ Restart:
             
             BtnCRMContShwLeads ScreenPage
             
+        Case enBtnCommsToDo
+        
+            BtnCommsToDoClick
     End Select
 
 GracefulExit:

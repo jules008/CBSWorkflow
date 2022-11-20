@@ -10,3 +10,4 @@ RAG,  dbText
 Deleted,  dbText
 DDate,  dbDate
 LenderNo,  dbLong
+Progress,  dbLong

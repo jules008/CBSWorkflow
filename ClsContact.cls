@@ -38,8 +38,14 @@ Private pContactType As String
 Private pOrganisation As String
 Private pPrimaryContact As Boolean
 Private pEmailAddress As String
+Private pOptOut As Boolean
+Private pLastComm As Date
+Private pComFrq As Integer
+
 Private WithEvents pContactForm As FrmContactForm
 Attribute pContactForm.VB_VarHelpID = -1
+Private WithEvents pCommForm As FrmClientComms
+Attribute pCommForm.VB_VarHelpID = -1
 
 '---------------------------------------------------------------
 Public Property Get ContactNo() As Integer
@@ -96,6 +102,15 @@ Public Property Let Phone2(ByVal vNewValue As String)
 End Property
 
 '---------------------------------------------------------------
+Public Property Get LastComm() As Date
+    LastComm = pLastComm
+End Property
+
+Public Property Let LastComm(ByVal vNewValue As Date)
+    pLastComm = vNewValue
+End Property
+
+'---------------------------------------------------------------
 Public Property Get PrimaryContact() As Boolean
     PrimaryContact = pPrimaryContact
 End Property
@@ -128,6 +143,9 @@ Public Sub DBNew()
     pPosition = ""
     pEmailAddress = ""
     pPrimaryContact = False
+    pOptOut = False
+    pLastComm = ""
+    pComFrq = 7
     
     With pContactForm
         .Tag = "New"
@@ -154,9 +172,42 @@ Public Sub DisplayForm()
         .TxtPosition = pPosition
         .TxtEmailAdd = pEmailAddress
         .ChkPrimaryContact = pPrimaryContact
+        .ChkOptOut = pOptOut
+        .CmoCommFreq = pComFrq
+        If pLastComm = 0 Then .TxtLastComm = "" Else .TxtLastComm = pLastComm
         .Show
     End With
 End Sub
+
+' ===============================================================
+' Method DisplayCommForm
+' displays client Communication form
+' ---------------------------------------------------------------
+Public Sub DisplayCommForm()
+    Dim RstCommsList As Recordset
+    
+    Set RstCommsList = GetCommsList
+    
+    With pCommForm
+        .AddFields RstCommsList
+        .Show
+    End With
+    
+    Set RstCommsList = Nothing
+End Sub
+
+' ===============================================================
+' Method CommsNo
+' Returns the number of communications for the todo button
+' ---------------------------------------------------------------
+Public Function CommsNo()
+    Dim RstCommsList As Recordset
+    
+    Set RstCommsList = ModDatabase.SQLQuery("SELECT Count(ContactNo)AS [CommsNo] FROM TblContact " _
+                                            & "WHERE (ContactType='Lead' OR ContactType='Client') AND LastComm<=Date()-[comfrq] AND OptOut=False ")
+    
+    CommsNo = RstCommsList!CommsNo
+End Function
 
 ' ===============================================================
 ' Method DBGet(Key as Integer)
@@ -181,6 +232,9 @@ Public Sub DBGet(ContactNo As Integer)
             If Not IsNull(!Phone2) Then pPhone2 = !Phone2
             If Not IsNull(!PrimaryContact) Then pPrimaryContact = !PrimaryContact
             If Not IsNull(!EmailAddress) Then pEmailAddress = !EmailAddress
+            If Not IsNull(!OptOut) Then pOptOut = !OptOut
+            If Not IsNull(!ComFrq) Then pComFrq = !ComFrq
+            If Not IsNull(!LastComm) Then pLastComm = !LastComm
             If RstNoCont.Fields(0) = 0 Then
                 pPrimaryContact = True
                 DB.Execute "UPDATE TblContact SET PrimaryContact = TRUE WHERE ContactType = '" & pContactType & "' and Organisation = '" & pOrganisation & "'"
@@ -236,7 +290,9 @@ Public Sub DBSave()
         !Phone1 = CleanSQLText(pPhone1, True)
         !Phone2 = CleanSQLText(pPhone2, True)
         !PrimaryContact = CleanSQLText(pPrimaryContact, True)
-        !EmailAddress = CleanSQLText(pEmailAddress, True)
+        !OptOut = CleanSQLText(pOptOut, True)
+        !LastComm = CleanSQLText(pLastComm, True)
+        !ComFrq = CleanSQLText(pComFrq, True)
 
         .Update
     End With
@@ -255,6 +311,24 @@ Public Sub DBDelete(Optional FullDelete As Boolean)
     DB.Execute "DELETE * FROM TblContact WHERE ContactNo = " & pContactNo
 
 End Sub
+
+' ===============================================================
+' Method GetCommsList
+' Gets all contacts that are eligible for communication today
+' ---------------------------------------------------------------
+Private Function GetCommsList() As Recordset
+    Dim RstCommsList As Recordset
+    
+    Set RstCommsList = ModDatabase.SQLQuery("SELECT ContactNo, ContactName, EmailAddress, ContactType, Organisation " _
+                                            & "FROM TblContact " _
+                                            & "WHERE (ContactType='Lead' OR ContactType='Client') AND LastComm<=Date()-[comfrq] AND OptOut=False ")
+    
+    
+    Set GetCommsList = RstCommsList
+    
+    Set RstCommsList = Nothing
+End Function
+
 ' ===============================================================
 ' Event pContactForm_Update
 ' Event from client form to update Contact
@@ -270,6 +344,9 @@ Private Sub pContactForm_Update()
         pOrganisation = CleanString(.CmoOrganisation)
         pEmailAddress = Trim(.TxtEmailAdd)
         pPrimaryContact = CleanString(.ChkPrimaryContact)
+        pOptOut = CleanString(.ChkOptOut)
+        If .TxtLastComm = "" Then pLastComm = 0 Else pLastComm = .TxtLastComm
+        pComFrq = CleanString(.CmoCommFreq)
     End With
     DBSave
     
@@ -325,11 +402,21 @@ Private Sub pContactForm_Delete()
 End Sub
 
 ' ===============================================================
+' Event pCommForm_MailSent
+' Marks contact as communication sent
+' ---------------------------------------------------------------
+Private Sub pCommForm_MailSent(ContactNo As Integer)
+    DB.Execute "UPDATE TblContact SET LastComm = Now WHERE ContactNo = " & ContactNo
+End Sub
+
+' ===============================================================
 Private Sub Class_Initialize()
     Set pContactForm = New FrmContactForm
+    Set pCommForm = New FrmClientComms
 End Sub
 
 ' ===============================================================
 Private Sub Class_Terminate()
     Set pContactForm = Nothing
+    Set pCommForm = Nothing
 End Sub

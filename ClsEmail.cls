@@ -240,7 +240,7 @@ End Sub
 Public Sub Display()
     If MailSystem Is Nothing Then MailSystem = New ClsMailSystem
     
-    FormsLoaded
+'    FormsLoaded
     
     MailSystem.CreateNewEmail
     
