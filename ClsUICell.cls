@@ -219,7 +219,7 @@ End Property
 '---------------------------------------------------------------
 Public Sub ReOrder()
     
-'    pShpCell.ZOrder msoBringToFront
+    pShpCell.ZOrder msoBringToFront
     If Not pBadge Is Nothing Then pBadge.ZOrder msoBringToFront
     
     If Not pMenu Is Nothing Then pMenu.ReOrder
