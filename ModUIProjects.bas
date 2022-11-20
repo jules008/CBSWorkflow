@@ -298,7 +298,7 @@ Public Function RefreshList(ByVal ScreenPage As enScreenPage, Optional SortBy As
             .MoveFirst
             For y = 0 To NoRows - 1
                 
-                If x = 7 Then
+                If x = 8 Then
                     If !RAG = "en1Red" Then AryStyles(x, y) = "RED_CELL"
                     If !RAG = "en2Amber" Then AryStyles(x, y) = "AMBER_CELL"
                     If !RAG = "en3Green" Then AryStyles(x, y) = "GREEN_CELL"
@@ -382,10 +382,6 @@ Restart:
     RowNo = CInt(AryRowInfo(0))
     ProjectNo = CInt(AryRowInfo(1))
     
-    Debug.Assert RowInfo <> ""
-    Debug.Assert RowNo > 0
-    Debug.Assert ProjectNo > 0
-    
     If SplitRow = RowNo Then
         MainFrame.Table.BuildTable 0
         
@@ -393,7 +389,7 @@ Restart:
         MainScreen.ReOrder
     Else
     
-    SQL = "SELECT TblWorkflow.WorkflowNo, TblLender.Name, TblWorkflow.CurrentStep, TblStepTemplate.StepName, TblWorkflow.Status, TblWorkflow.RAG " _
+    SQL = "SELECT TblWorkflow.WorkflowNo, TblLender.Name, TblWorkflow.CurrentStep, TblStepTemplate.StepName, TblWorkflow.Progress & '%',TblWorkflow.Status, TblWorkflow.RAG " _
                 & "FROM TblStepTemplate RIGHT JOIN (TblWorkflow LEFT JOIN TblLender ON TblWorkflow.LenderNo = TblLender.LenderNo) ON TblStepTemplate.StepNo = TblWorkflow.CurrentStep " _
             & "WHERE (((TblWorkflow.ProjectNo)= " & ProjectNo & ") AND ((TblWorkflow.WorkflowType)='enLender'))"
 
@@ -421,7 +417,7 @@ Restart:
             .MoveFirst
             For y = 0 To NoRows - 1
                 
-                If x = 4 Then
+                If x = 5 Then
                     If !RAG = "en1Red" Then AryStyles(x, y) = "RED_CELL"
                     If !RAG = "en2Amber" Then AryStyles(x, y) = "AMBER_CELL"
                     If !RAG = "en3Green" Then AryStyles(x, y) = "GREEN_CELL"
@@ -488,15 +484,15 @@ Public Function GetActiveList(ScreenPage As enScreenPage, StrSortBy As String) A
 
     Select Case ScreenPage
         Case enScrProjForAction
-            SQL = "SELECT Null AS Expand, TblProject.ProjectNo, TblClient.Name, TblSPV.Name, TblCBSUser.UserName, TblWorkflow.CurrentStep, TblStepTemplate.StepName, TblWorkflow.Status, TblWorkflow.RAG " _
+            SQL = "SELECT Null AS Expand, TblProject.ProjectNo, TblClient.Name, TblSPV.Name, TblCBSUser.UserName, TblWorkflow.CurrentStep, TblStepTemplate.StepName, TblWorkflow.Progress & '%', TblWorkflow.Status, TblWorkflow.RAG " _
                     & "FROM TblClient RIGHT JOIN ((((TblProject LEFT JOIN TblSPV ON TblProject.SPVNo = TblSPV.SPVNo) LEFT JOIN TblCBSUser ON TblProject.CaseManager = TblCBSUser.CBSUserNo) LEFT JOIN TblWorkflow ON TblProject.ProjectWFNo = TblWorkflow.WorkflowNo) LEFT JOIN TblStepTemplate ON TblWorkflow.CurrentStep = TblStepTemplate.StepNo) ON TblClient.ClientNo = TblProject.ClientNo " _
                     & "WHERE (((TblWorkflow.RAG)='en1Red') AND ((TblWorkflow.WorkflowType)='enProject')) OR (((TblWorkflow.RAG)='en2Amber') AND ((TblWorkflow.WorkflowType)='enProject')) OR (((TblWorkflow.Status)='Action Req.') AND ((TblWorkflow.RAG)='en3Green') AND ((TblWorkflow.WorkflowType)='enProject'))"
         Case enScrProjActive
-            SQL = "SELECT Null AS Expand, TblProject.ProjectNo, TblClient.Name, TblSPV.Name, TblCBSUser.UserName, TblWorkflow.CurrentStep, TblStepTemplate.StepName, TblWorkflow.Status, TblWorkflow.RAG " _
+            SQL = "SELECT Null AS Expand, TblProject.ProjectNo, TblClient.Name, TblSPV.Name, TblCBSUser.UserName, TblWorkflow.CurrentStep, TblStepTemplate.StepName, TblWorkflow.Progress & '%', TblWorkflow.Status, TblWorkflow.RAG " _
                     & "FROM TblClient RIGHT JOIN ((((TblProject LEFT JOIN TblSPV ON TblProject.SPVNo = TblSPV.SPVNo) LEFT JOIN TblWorkflow ON TblProject.ProjectWFNo = TblWorkflow.WorkflowNo) LEFT JOIN TblCBSUser ON TblProject.CaseManager = TblCBSUser.CBSUserNo) LEFT JOIN TblStepTemplate ON TblWorkflow.CurrentStep = TblStepTemplate.StepNo) ON TblClient.ClientNo = TblProject.ClientNo " _
                     & "WHERE (((TblWorkflow.Status)<>'Complete') AND ((TblWorkflow.WorkflowType)='enProject'))"
         Case enScrProjComplete
-            SQL = "SELECT Null AS Expand, TblProject.ProjectNo, TblClient.Name, TblSPV.Name, TblCBSUser.UserName, TblWorkflow.CurrentStep, TblStepTemplate.StepName, TblWorkflow.Status, TblWorkflow.RAG " _
+            SQL = "SELECT Null AS Expand, TblProject.ProjectNo, TblClient.Name, TblSPV.Name, TblCBSUser.UserName, TblWorkflow.CurrentStep, TblStepTemplate.StepName, TblWorkflow.Progress & '%', TblWorkflow.Status, TblWorkflow.RAG " _
                     & "FROM TblClient RIGHT JOIN ((((TblProject LEFT JOIN TblSPV ON TblProject.SPVNo = TblSPV.SPVNo) LEFT JOIN TblWorkflow ON TblProject.ProjectWFNo = TblWorkflow.WorkflowNo) LEFT JOIN TblCBSUser ON TblProject.CaseManager = TblCBSUser.CBSUserNo) LEFT JOIN TblStepTemplate ON TblWorkflow.CurrentStep = TblStepTemplate.StepNo) ON TblClient.ClientNo = TblProject.ClientNo " _
                     & "WHERE (((TblWorkflow.Status)='Complete') AND ((TblWorkflow.WorkflowType)='enProject'))"
     End Select

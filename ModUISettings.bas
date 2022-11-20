@@ -24,15 +24,15 @@ Public Const SCREEN_HEIGHT As Integer = 2000
 Public Const SCREEN_WIDTH As Integer = 1825
 Public Const MAIN_FRAME_TOP As Integer = 90
 Public Const MAIN_FRAME_LEFT As Integer = 170
-Public Const MAIN_FRAME_WIDTH As Integer = 750
+Public Const MAIN_FRAME_WIDTH As Integer = 900
 Public Const MAIN_FRAME_HEIGHT As Integer = 360
 
 ' ---------------------------------------------------------------
 ' Button Frame
 ' ---------------------------------------------------------------
 Public Const BUTTON_FRAME_TOP As Integer = 5
-Public Const BUTTON_FRAME_LEFT As Integer = 0
-Public Const BUTTON_FRAME_WIDTH As Integer = 800
+Public Const BUTTON_FRAME_LEFT As Integer = 170
+Public Const BUTTON_FRAME_WIDTH As Integer = 900
 Public Const BUTTON_FRAME_HEIGHT As Integer = 60
 
 ' ---------------------------------------------------------------
@@ -61,7 +61,7 @@ Public Const TODO_BADGE_LEFT As String = 107
 ' Generic Table Settings
 ' ---------------------------------------------------------------
 Public Const GENERIC_TABLE_ROW_HEIGHT As Integer = 20
-Public Const GENERIC_TABLE_WIDTH As Integer = 550
+Public Const GENERIC_TABLE_WIDTH As Integer = 900
 Public Const GENERIC_TABLE_LEFT As Integer = 0
 Public Const GENERIC_TABLE_TOP As Integer = 25
 Public Const GENERIC_TABLE_ROWOFFSET As Integer = 0
@@ -94,21 +94,21 @@ Public Const HEADER_ICON_RIGHT As Integer = 10
 ' ---------------------------------------------------------------
 ' Generic Project Screen Settings
 ' ---------------------------------------------------------------
-Public Const PROJECT_TABLE_COL_WIDTHS As String = "50:50:100:100:100:50:200:100"
+Public Const PROJECT_TABLE_COL_WIDTHS As String = "50:50:100:100:100:50:200:150:100"
 Public Const PROJECT_CELL_ROW_HEIGHTS As String = "50:50"
 Public Const PROJECT_TABLE_STYLES As String = "GENERIC_TABLE"
-Public Const PROJECT_TABLE_TITLES As String = "Expand:Project No:Client Name:SPV Name:Case Manager:Step No:Step Name:Status"
+Public Const PROJECT_TABLE_TITLES As String = "Expand:Project No:Client Name:SPV Name:Case Manager:Step No:Step Name:Progress:Status"
 Public Const PROJECT_MAX_LINES As Integer = 150
-Public Const PROJECT_BTN_MAIN_1_LEFT As Integer = 710
+Public Const PROJECT_BTN_MAIN_1_LEFT As Integer = 690
 Public Const PROJECT_BTN_MAIN_1_TOP As Integer = 20
-Public Const PROJECT_BTN_MAIN_2_LEFT As Integer = 820
+Public Const PROJECT_BTN_MAIN_2_LEFT As Integer = 800
 Public Const PROJECT_BTN_MAIN_2_TOP As Integer = 20
 
 ' ---------------------------------------------------------------
 ' Project Sub Table Settings
 ' ---------------------------------------------------------------
-Public Const PROJECT_SUB_TABLE_COL_WIDTHS As String = "100:200:100:200:100"
-Public Const PROJECT_SUB_TABLE_TITLES As String = "Workflow No:Lender Name:Step No:Step Name:Status"
+Public Const PROJECT_SUB_TABLE_COL_WIDTHS As String = "100:200:100:200:150:100"
+Public Const PROJECT_SUB_TABLE_TITLES As String = "Workflow No:Lender Name:Step No:Step Name:Progress:Status"
 
 ' ---------------------------------------------------------------
 ' Project For Action Screen Settings
@@ -134,19 +134,19 @@ Public Const CRM_TABLE_STYLES As String = "GENERIC_TABLE"
 ' ---------------------------------------------------------------
 ' CRM Screen Btn 1 Settings
 ' ---------------------------------------------------------------
-Public Const CRM_BTN_MAIN_1_LEFT As Integer = 820
+Public Const CRM_BTN_MAIN_1_LEFT As Integer = 220
 Public Const CRM_BTN_MAIN_1_TOP As Integer = 20
 
 ' ---------------------------------------------------------------
 ' CRM Screen Btn 2 Settings
 ' ---------------------------------------------------------------
-Public Const CRM_BTN_MAIN_2_LEFT As Integer = 710
+Public Const CRM_BTN_MAIN_2_LEFT As Integer = 110
 Public Const CRM_BTN_MAIN_2_TOP As Integer = 20
 
 ' ---------------------------------------------------------------
 ' CRM Screen Btn 3 Settings
 ' ---------------------------------------------------------------
-Public Const CRM_BTN_MAIN_3_LEFT As Integer = 600
+Public Const CRM_BTN_MAIN_3_LEFT As Integer = 0
 Public Const CRM_BTN_MAIN_3_TOP As Integer = 20
 
 ' ---------------------------------------------------------------

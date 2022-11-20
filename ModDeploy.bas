@@ -26,6 +26,7 @@ Public Sub QueryTest()
     Set RstUpdate = ModDatabase.SQLQuery("SELECT * FROM TblProject Where ProjectName IS NULL OR ProjectName =''")
     
     'undo commands
+    DB.Execute "ALTER TABLE TblWorkflow DROP COLUMN Progress"
     DB.Execute "ALTER TABLE TblCBSUser DROP COLUMN UserLvl)"
     DB.Execute "ALTER TABLE TblContact DROP COLUMN OptOut, Comfrq, LastComm"
     
@@ -36,6 +37,34 @@ Public Sub QueryTest()
     DB.Execute "UPDATE TblStepTemplate SET AltStep = '1.04' WHERE StepNo = '1.02'"
     DB.Execute "UPDATE TblStep SET AltStep = '1.04' WHERE StepNo = '1.02'"
     DB.Execute "ALTER TABLE TblCBSUser ADD COLUMN UserLvl text (20)"
+
+    'Bugfix
+    DB.Execute "UPDATE TblStepTemplate SET NextStep = '1.04' WHERE StepNo = '1.02'"
+    DB.Execute "UPDATE TblStepTemplate SET AltStep = '1.03' WHERE StepNo = '1.02'"
+    DB.Execute "UPDATE TblStep SET NextStep = '1.04' WHERE StepNo = '1.02'"
+    DB.Execute "UPDATE TblStep SET AltStep = '1.03' WHERE StepNo = '1.02'"
+    
+    'Progress Bars
+    DB.Execute "ALTER TABLE TblWorkflow ADD COLUMN Progress integer"
+    Dim Workflow As ClsWorkflow
+    
+    Set RstUpdate = ModDatabase.SQLQuery("TblWorkflow")
+        
+    Set Workflow = New ClsWorkflow
+    With RstUpdate
+        Do While Not .EOF
+            Set Workflow = New ClsWorkflow
+            Workflow.DBGet !WorkflowNo
+            Workflow.DBSave
+            Set Workflow = Nothing
+            .MoveNext
+            DoEvents
+            'Debug.Print !WorkflowNo
+        Loop
+    End With
+    
+    Set Workflow = Nothing
+    Set RstUpdate = Nothing
     
     Set RstUpdate = Nothing
     Set DB = Nothing
@@ -90,6 +119,24 @@ Public Function UpdateDBScript() As Boolean
     
     'Userlevel changes
     DB.Execute "ALTER TABLE TblCBSUser ADD COLUMN UserLvl text (20)"
+    'Progress Bars
+    DB.Execute "ALTER TABLE TblWorkflow ADD COLUMN Progress integer"
+    Dim Workflow As ClsWorkflow
+
+    Set RstUpdate = ModDatabase.SQLQuery("TblWorkflow")
+        
+    With Workflow
+        Do While Not RstTable.EOF
+            Set Workflow = New ClsWorkflow
+            .DBGet RstUpdate!WorkflowNo
+            .DBSave
+            RstTable.MoveNext
+            Set Workflow = Nothing
+        Loop
+    End With
+    
+    Set Workflow = Nothing
+    Set RstUpdate = Nothing
 '    DB.Execute "DELETE * FROM TblStep"
     
 '    UpdateTable
@@ -171,6 +218,7 @@ Public Function UpdateDBScriptUndo() As Boolean
     ' ========================================================================================
     ' Database commands
     ' ----------------------------------------------------------------------------------------
+    DB.Execute "ALTER TABLE TblWorkflow DROP COLUMN Progress"
     DB.Execute "ALTER TABLE TblContact DROP COLUMN OptOut, Comfrq, LastComm"
     'user level changes
     DB.Execute "ALTER TABLE TblCBSUser DROP COLUMN UserLvl)"

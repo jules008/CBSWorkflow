@@ -37,6 +37,7 @@ Private pStatus As String
 Private pFrmInputBox As FrmInputBox
 Private pSteps As ClsSteps
 Private pChatRoom As ClsChatRoom
+Private pProgress As Single
 Private pParent As ClsProject
 
 Private WithEvents pProjWFForm As FrmWFProject
@@ -207,6 +208,11 @@ Public Property Set Parent(newval As ClsProject)
     Set pParent = newval
 End Property
 
+'---------------------------------------------------------------
+Public Property Get Progress() As Single
+    Progress = pProgress
+End Property
+
 ' ===============================================================
 ' Method DBNew
 ' displays new workflow form
@@ -347,6 +353,7 @@ Public Sub DBGet(WorkflowNo As String)
             If Not IsNull(!Status) Then pStatus = !Status
             If Not IsNull(!RAG) Then pRAG = enRAGVal(!RAG)
             If Not IsNull(!Member) Then pMember = !Member
+            If Not IsNull(!Progress) Then pProgress = !Progress
             
             pLender.DBGet !LenderNo
             pSteps.DeleteCollection
@@ -397,6 +404,7 @@ Public Sub DBSave()
         If Not Parent Is Nothing Then !ProjectNo = Parent.ProjectNo
         .Update
                     
+        UpdateProgress
         Steps.SaveCollection
         
     End With
@@ -548,6 +556,57 @@ Public Sub Pause()
     End If
     
     Set InputForm = Nothing
+End Sub
+
+' ===============================================================
+' Method UpdateProgress
+' Calculates progress of workflow, including lender workflows if it is type project
+' ---------------------------------------------------------------
+Private Sub UpdateProgress()
+    Dim RstProject As Recordset
+    Dim RstLenders As Recordset
+    Dim Progress As Single
+    Dim i As Integer
+    
+    If !WorkflowType = "enLender" Then
+        Set RstProgress = ModDatabase.SQLQuery("SELECT WorkflowNo, WorkflowType, Progress FROM TblWorkflow WHERE ProjectNo = " & pProjectNo)
+        With RstProgress
+            .Edit
+            !Progress = pSteps.PCComplete
+            .Update
+        End With
+    Else
+        Set RstProgress = ModDatabase.SQLQuery("SELECT WorkflowNo, WorkflowType, Progress FROM TblWorkflow WHERE ProjectNo = " & "pProjectNo AND WorkflowType = 'enLender'")
+        With RstProgress
+            If .RecordCount = 0 Then
+                .Edit
+                !Progress = pSteps.PCComplete
+                .Update
+            Else
+            Do While Not .EOF
+                    .Edit
+                    If IsNull(!Progress) Then
+                        Progress = Progress + 0
+                    Else
+                    Progress = Progress + !Progress
+                End If
+                i = i + 1
+                    DoEvents
+                    Debug.Print "Project No "; pProjectNo, "Workflow No "; !WorkflowNo
+                .MoveNext
+            Loop
+                                
+                .Update
+            End If
+            If Progress = 0 Then
+                UpdateProgress = 0
+            Else
+                UpdateProgress = Progress / i
+            End If
+        End With
+    End If
+    
+    Set RstProgress = Nothing
 End Sub
 
 ' ===============================================================
