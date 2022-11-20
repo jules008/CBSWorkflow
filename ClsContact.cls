@@ -144,7 +144,7 @@ Public Sub DBNew()
     pEmailAddress = ""
     pPrimaryContact = False
     pOptOut = False
-    pLastComm = ""
+    pLastComm = 0
     pComFrq = 7
     
     With pContactForm

@@ -22,6 +22,8 @@ Public Sub QueryTest()
     Dim RstUpdate As Recordset
     Dim i As Integer
     
+    On Error Resume Next
+    
     Set DB = OpenDatabase(GetDocLocalPath(ThisWorkbook.Path) & INI_FILE_PATH & DB_FILE_NAME & ".accdb")
     Set RstUpdate = ModDatabase.SQLQuery("SELECT * FROM TblProject Where ProjectName IS NULL OR ProjectName =''")
     
@@ -31,6 +33,8 @@ Public Sub QueryTest()
     DB.Execute "ALTER TABLE TblContact DROP COLUMN OptOut, Comfrq, LastComm"
     
     Stop
+    
+    On Error GoTo 0
     
     'Update commands
     DB.Execute "ALTER TABLE TblContact ADD COLUMN OptOut YesNo, ComFrq Int, LastComm Date"
@@ -48,20 +52,20 @@ Public Sub QueryTest()
     DB.Execute "ALTER TABLE TblWorkflow ADD COLUMN Progress integer"
     Dim Workflow As ClsWorkflow
     
-    Set RstUpdate = ModDatabase.SQLQuery("TblWorkflow")
-        
-    Set Workflow = New ClsWorkflow
-    With RstUpdate
-        Do While Not .EOF
-            Set Workflow = New ClsWorkflow
-            Workflow.DBGet !WorkflowNo
-            Workflow.DBSave
-            Set Workflow = Nothing
-            .MoveNext
-            DoEvents
-            'Debug.Print !WorkflowNo
-        Loop
-    End With
+'    Set RstUpdate = ModDatabase.SQLQuery("TblWorkflow")
+'
+'    Set Workflow = New ClsWorkflow
+'    With RstUpdate
+'        Do While Not .EOF
+'            Set Workflow = New ClsWorkflow
+'            Workflow.DBGet !WorkflowNo
+'            Workflow.DBSave
+'            Set Workflow = Nothing
+'            .MoveNext
+'            DoEvents
+'            'Debug.Print !WorkflowNo
+'        Loop
+'    End With
     
     Set Workflow = Nothing
     Set RstUpdate = Nothing
@@ -121,22 +125,22 @@ Public Function UpdateDBScript() As Boolean
     DB.Execute "ALTER TABLE TblCBSUser ADD COLUMN UserLvl text (20)"
     'Progress Bars
     DB.Execute "ALTER TABLE TblWorkflow ADD COLUMN Progress integer"
-    Dim Workflow As ClsWorkflow
-
-    Set RstUpdate = ModDatabase.SQLQuery("TblWorkflow")
-        
-    With Workflow
-        Do While Not RstTable.EOF
-            Set Workflow = New ClsWorkflow
-            .DBGet RstUpdate!WorkflowNo
-            .DBSave
-            RstTable.MoveNext
-            Set Workflow = Nothing
-        Loop
-    End With
-    
-    Set Workflow = Nothing
-    Set RstUpdate = Nothing
+'    Dim Workflow As ClsWorkflow
+'
+'    Set RstUpdate = ModDatabase.SQLQuery("TblWorkflow")
+'
+'    With Workflow
+'        Do While Not RstTable.EOF
+'            Set Workflow = New ClsWorkflow
+'            .DBGet RstUpdate!WorkflowNo
+'            .DBSave
+'            RstTable.MoveNext
+'            Set Workflow = Nothing
+'        Loop
+'    End With
+'
+'    Set Workflow = Nothing
+'    Set RstUpdate = Nothing
 '    DB.Execute "DELETE * FROM TblStep"
     
 '    UpdateTable

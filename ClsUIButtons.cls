@@ -108,6 +108,8 @@ Public Sub ReOrder()
     
     For Each Button In pUIButtons
         Button.ReOrder
+        If Not Button.Badge Is Nothing Then Button.Badge.ShpCell.Delete
+        If Not Button.Icon Is Nothing Then Button.Icon.Delete
     Next
 End Sub
 

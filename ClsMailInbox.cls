@@ -18,6 +18,7 @@ Option Explicit
 Private WithEvents InboxItems As Outlook.Items
 Attribute InboxItems.VB_VarHelpID = -1
 Private WithEvents OutlookApp As Outlook.Application
+Attribute OutlookApp.VB_VarHelpID = -1
 Private ObjectNS As Outlook.Namespace
 Private FldrInbox As Outlook.Folder
 

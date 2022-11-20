@@ -89,8 +89,18 @@ End Sub
 ' Creates new Contact
 ' ---------------------------------------------------------------
 Private Sub BtnNew_Click()
+    On Error GoTo ErrorHandler
+
+    If CurrentUser.UserLvl <> "Admin" Or CurrentUser.UserLvl <> "Case Manager" Then Err.Raise ACCESS_DENIED
+
     RaiseEvent CreateNew
-End Sub
+ErrorHandler:
+    Dim ErrNo As Integer
+    If Err.Number >= 2000 And Err.Number <= 2500 Then
+        ErrNo = Err.Number
+        CustomErrorHandler (Err.Number)
+    End If
+ End Sub
 
 ' ===============================================================
 ' BtnUpdate_Click
@@ -106,6 +116,7 @@ Private Sub BtnUpdate_Click()
 Restart:
 
     If MainScreen Is Nothing Then Err.Raise SYSTEM_RESTART
+    If CurrentUser.UserLvl <> "Admin" Then Err.Raise ACCESS_DENIED
     
     Select Case ValidateForm
 

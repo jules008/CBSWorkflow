@@ -45,7 +45,7 @@ Public Const GENERIC_BUTTON_HEIGHT As Integer = 40
 ' ToDo Button
 ' ---------------------------------------------------------------
 Public Const TODO_BUTTON_WIDTH As Integer = 140
-Public Const TODO_BUTTON_LEFT As Integer = 170
+Public Const TODO_BUTTON_LEFT As Integer = 0
 Public Const TODO_BUTTON_TOP As Integer = 25
 Public Const TODO_ICON_FILE As String = "ToDo.png"
 Public Const TODO_ICON_WIDTH As String = 18
