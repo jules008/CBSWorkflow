@@ -375,3 +375,15 @@ Public Sub BtnAdminUsersClick(Optional ByVal ScreenPage As enScreenPage, Optiona
     CurrentUser.DisplayForm
 End Sub
 
+' ===============================================================
+' BtnCommsToDoClick
+' ---------------------------------------------------------------
+Public Sub BtnCommsToDoClick()
+    Dim Contact As New ClsContact
+    
+    Contact.DisplayCommForm
+    ButtonFrame.Buttons("BtnMain3").Badge.Text = Contact.CommsNo
+    Set Contact = Nothing
+End Sub
+
+

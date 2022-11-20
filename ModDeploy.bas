@@ -23,13 +23,16 @@ Public Sub QueryTest()
     Dim i As Integer
     
     Set DB = OpenDatabase(GetDocLocalPath(ThisWorkbook.Path) & INI_FILE_PATH & DB_FILE_NAME & ".accdb")
+    Set RstUpdate = ModDatabase.SQLQuery("SELECT * FROM TblProject Where ProjectName IS NULL OR ProjectName =''")
     
     'undo commands
     DB.Execute "ALTER TABLE TblCBSUser DROP COLUMN UserLvl)"
+    DB.Execute "ALTER TABLE TblContact DROP COLUMN OptOut, Comfrq, LastComm"
     
     Stop
     
     'Update commands
+    DB.Execute "ALTER TABLE TblContact ADD COLUMN OptOut YesNo, ComFrq Int, LastComm Date"
     DB.Execute "UPDATE TblStepTemplate SET AltStep = '1.04' WHERE StepNo = '1.02'"
     DB.Execute "UPDATE TblStep SET AltStep = '1.04' WHERE StepNo = '1.02'"
     DB.Execute "ALTER TABLE TblCBSUser ADD COLUMN UserLvl text (20)"
@@ -79,6 +82,7 @@ Public Function UpdateDBScript() As Boolean
     ' ========================================================================================
     ' Database commands
     ' ----------------------------------------------------------------------------------------
+    DB.Execute "ALTER TABLE TblContact ADD COLUMN OptOut YesNo, ComFrq Int, LastComm Date"
     DB.Execute "UPDATE TblStepTemplate SET NextStep = '1.04' WHERE StepNo = '1.02'"
     DB.Execute "UPDATE TblStepTemplate SET AltStep = '1.03' WHERE StepNo = '1.02'"
     DB.Execute "UPDATE TblStep SET NextStep = '1.04' WHERE StepNo = '1.02'"
@@ -167,6 +171,7 @@ Public Function UpdateDBScriptUndo() As Boolean
     ' ========================================================================================
     ' Database commands
     ' ----------------------------------------------------------------------------------------
+    DB.Execute "ALTER TABLE TblContact DROP COLUMN OptOut, Comfrq, LastComm"
     'user level changes
     DB.Execute "ALTER TABLE TblCBSUser DROP COLUMN UserLvl)"
     ' ========================================================================================

@@ -108,6 +108,7 @@ Public BtnNewLenderWF As ClsUIButton
 Public BtnCRMNewItem As ClsUIButton
 Public BtnCRMContCalImp As ClsUIButton
 Public BtnCRMContShwLead As ClsUIButton
+Public BtnCommsToDo As ClsUIButton
 Public Logo As ClsUIDashObj
 
 ' ===============================================================
@@ -202,6 +203,7 @@ Enum EnumBtnNo
     enBtnCRMNewItem
     enBtnCRMContCalImport
     enBtnCRMContShwLeads
+    enBtnCommsToDo
 End Enum
 
 Enum enFormValidation
