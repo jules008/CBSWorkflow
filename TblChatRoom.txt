@@ -1,0 +1,4 @@
+ProjectNo,  dbInteger
+Username,  dbText
+EntryDateTime,  dbDate
+Message,  dbText

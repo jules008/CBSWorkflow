@@ -34,12 +34,21 @@ Attribute VB_Exposed = False
 Option Explicit
 
 Private pContacts As Collection
-
+Private pPrimaryContact As ClsContact
 
 Public Function NewEnum() As IUnknown
 Attribute NewEnum.VB_UserMemId = -4
     Set NewEnum = pContacts.[_NewEnum]
 End Function
+
+'---------------------------------------------------------------
+Public Property Get PrimaryContact() As ClsContact
+    Set PrimaryContact = pPrimaryContact
+End Property
+
+Public Property Let PrimaryContact(ByRef vNewValue As ClsContact)
+    Set pPrimaryContact = vNewValue
+End Property
 
 ' ===============================================================
 ' Method Find
@@ -56,7 +65,15 @@ End Function
 ' Add item to Collection
 ' ---------------------------------------------------------------
 Public Sub Add(Contact As ClsContact)
+    Dim LocContact As ClsContact
+    
+    Set LocContact = Find(CStr(Contact.ContactNo))
+        
+    If Contact.PrimaryContact Then Set pPrimaryContact = Contact
+    
+    If LocContact Is Nothing Then
     pContacts.Add Contact, Key:=CStr(Contact.ContactNo)
+    End If
 End Sub
 
 ' ===============================================================
@@ -79,12 +96,18 @@ End Function
 ' Method GetCollection
 ' Gets all items in collection
 ' ---------------------------------------------------------------
-Public Sub GetCollection()
+Public Sub GetCollection(ContactType As String, OrgName As String)
     Dim RstContact As Recordset
     Dim Contact As ClsContact
     Dim i As Integer
+    Dim SQL As String
 
-    Set RstContact = ModDatabase.SQLQuery("TblContact")
+    RemoveCollection
+    
+    SQL = "SELECT ContactNo FROM TblContact WHERE ContactType = '" & ContactType & "'" _
+                                        & "AND Organisation = '" & OrgName & "'"
+    
+    Set RstContact = ModDatabase.SQLQuery(SQL)
     With RstContact
         If .RecordCount > 0 Then
             .MoveLast
@@ -92,7 +115,7 @@ Public Sub GetCollection()
             For i = 1 To .RecordCount
                 Set Contact = New ClsContact
                 Contact.DBGet !ContactNo
-                pContacts.Add Contact, Key:=CStr(Contact.ContactNo)
+                Add Contact
                 .MoveNext
             Next
         End If
@@ -150,10 +173,11 @@ End Sub
 
 Private Sub Class_Initialize()
     Set pContacts = New Collection
-
+    Set pPrimaryContact = New ClsContact
 End Sub
 ' ===============================================================
 Private Sub Class_Terminate()
     Set pContacts = Nothing
+    Set pPrimaryContact = Nothing
 End Sub
 ' ===============================================================

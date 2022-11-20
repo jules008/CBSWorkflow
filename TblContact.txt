@@ -1,6 +1,10 @@
 ContactNo,  dbInteger
+Organisation,  dbText
+ContactType,  dbText
 Position,  dbText
 ContactName,  dbText
 Address,  dbText
 Phone1,  dbText
 Phone2,  dbText
+PrimaryContact,  dbBoolean
+EmailAddress,  dbText

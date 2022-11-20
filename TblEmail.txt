@@ -1,0 +1,8 @@
+EmailNo,  dbLong
+TemplateName,  dbText
+MailTo,  dbText
+CC,  dbText
+Subject,  dbText
+Body,  dbMemo
+DateSent,  dbDate
+Attachment,  dbLong

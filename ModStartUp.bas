@@ -16,14 +16,14 @@ Option Explicit
 Private Const StrMODULE As String = "ModStartUp"
 
 ' ===============================================================
-' Initialise
+' Initialize
 ' Creates the environment for system start up
 ' ---------------------------------------------------------------
-Public Function Initialise() As Boolean
+Public Function Initialize() As Boolean
     Dim UserName As String
     Dim Response As String
     
-    Const StrPROCEDURE As String = "Initialise()"
+    Const StrPROCEDURE As String = "Initialize()"
 
     On Error GoTo ErrorHandler
     
@@ -32,16 +32,16 @@ Public Function Initialise() As Boolean
     ModLibrary.PerfSettingsOn
     
     ShtMain.Unprotect PROTECT_KEY
-    Terminate
         
     SYSTEM_CLOSING = False
     
-'    Application.DisplayFullScreen = True
     Application.DisplayStatusBar = True
     
     FrmStartBanner.Progress "Reading INI File.....", 1 / 7 * 100
     
     If Not ReadINIFile Then Err.Raise HANDLED_ERROR
+    
+    Terminate
     
     FrmStartBanner.Progress "Connecting to DB.....", 2 / 7 * 100
     
@@ -77,7 +77,6 @@ Public Function Initialise() As Boolean
     
 '    If Not ModSecurity.LogUserOn(UserName) Then Err.Raise HANDLED_ERROR
     
-'    If Not MessageCheck Then Err.Raise HANDLED_ERROR
     
     'build styles
     FrmStartBanner.Progress "Building Styles.....", 5 / 7 * 100
@@ -93,13 +92,9 @@ Public Function Initialise() As Boolean
             
     If Not HideTabs Then Err.Raise HANDLED_ERROR
     
-    If Not ModUIMenu.ProcessBtnPress() Then Err.Raise HANDLED_ERROR
+    If Not ModUIMenu.ButtonClickEvent("1") Then Err.Raise HANDLED_ERROR
     
-    ShtMain.Unprotect PROTECT_KEY
-
 '    MenuBar.Menu(1).BadgeText = Workflows.CountForAction
-    
-    If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
     
     FrmStartBanner.Progress "", 7 / 7 * 100
    
@@ -107,13 +102,13 @@ Public Function Initialise() As Boolean
     
    ModLibrary.PerfSettingsOff
    
-    Initialise = True
+    Initialize = True
 
 Exit Function
 
 ErrorExit:
 
-    Initialise = False
+    Initialize = False
     ModLibrary.PerfSettingsOff
     
 Exit Function
@@ -188,12 +183,15 @@ Public Function ReadINIFile() As Boolean
     Dim DBPath() As String
     Dim SendEmails() As String
     Dim DevMode() As String
+    Dim StopOnStart() As String
+    
     Dim INIFile As Integer
     Dim Line1 As String
     Dim Line2 As String
     Dim Line3 As String
     Dim Line4 As String
     Dim Line5 As String
+    Dim Line6 As String
     
     Const StrPROCEDURE As String = "ReadINIFile()"
 
@@ -212,6 +210,7 @@ Public Function ReadINIFile() As Boolean
     Line Input #INIFile, Line3
     Line Input #INIFile, Line4
     Line Input #INIFile, Line5
+    Line Input #INIFile, Line6
     
     Close #INIFile
     DebugMode = Split(Line1, ":")
@@ -219,18 +218,21 @@ Public Function ReadINIFile() As Boolean
     EnablePrint = Split(Line3, ":")
     DBPath = Split(Line4, ":")
     DevMode = Split(Line5, ":")
+    StopOnStart = Split(Line6, ":")
     
     Line1 = Trim(DebugMode(1))
     Line2 = Trim(SendEmails(1))
     Line3 = Trim(EnablePrint(1))
     Line4 = Trim(DBPath(1))
     Line5 = Trim(DevMode(1))
+    Line6 = Trim(StopOnStart(1))
     
     DEBUG_MODE = CBool(Line1)
     SEND_EMAILS = CBool(Line2)
     ENABLE_PRINT = CBool(Line3)
     DB_PATH = Line4
     DEV_MODE = CBool(Line5)
+    STOP_FLAG = CBool(Line6)
     
     If STOP_FLAG = True Then Stop
     
@@ -351,16 +353,19 @@ End Function
 
 ' ===============================================================
 ' SetGlobalClasses
-' initialises or terminates all global classes
+' Initializes or terminates all global classes
 ' ---------------------------------------------------------------
 Private Function SetGlobalClasses() As Boolean
+    
     Const StrPROCEDURE As String = "SetGlobalClasses()"
 
     On Error GoTo ErrorHandler
 
-    
-    SetGlobalClasses = True
+    Set ActiveWorkflows = New ClsWorkflows
+    Set MailSystem = New ClsMailSystem
+    ActiveWorkflows.UpdateRAGs
 
+    SetGlobalClasses = True
 
 Exit Function
 

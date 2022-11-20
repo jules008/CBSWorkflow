@@ -1,8 +1,8 @@
+StepNo,  dbText
 WorkflowNo,  dbLong
 WFName,  dbText
 Wait,  dbBoolean
 StepType,  dbText
-StepNo,  dbText
 StepIndex,  dbText
 StepName,  dbText
 StartTime,  dbDate
@@ -23,3 +23,4 @@ Status,  dbText
 CopyText,  dbMemo
 CopyTextName,  dbText
 UniqueID,  dbLong
+HelpText,  dbMemo

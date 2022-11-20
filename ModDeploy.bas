@@ -17,11 +17,38 @@ Dim OldTables() As String
 
 Private Const StrMODULE As String = "ModDeploy"
 
+Public Sub QueryTest()
+    Dim Message As String
+    Dim RstUpdate As Recordset
+    Dim i As Integer
+    
+    Set DB = OpenDatabase(GetDocLocalPath(ThisWorkbook.Path) & INI_FILE_PATH & DB_FILE_NAME & ".accdb")
+    
+    'undo commands
+    
+    
+    Stop
+    
+    'Update commands
+    DB.Execute "UPDATE TblStepTemplate SET AltStep = '1.04' WHERE StepNo = '1.02'"
+    DB.Execute "UPDATE TblStep SET AltStep = '1.04' WHERE StepNo = '1.02'"
+    
+    Set RstUpdate = Nothing
+    Set DB = Nothing
+End Sub
+
 ' ===============================================================
 ' UpdateDBScript
 ' Script to update DB
 ' ---------------------------------------------------------------
 Public Function UpdateDBScript() As Boolean
+    Dim Message As String
+    Dim RstUpdate As Recordset
+    Dim i As Integer
+    
+    Set DB = OpenDatabase(GetDocLocalPath(ThisWorkbook.Path) & INI_FILE_PATH & DB_FILE_NAME & ".accdb")
+    Set RstUpdate = ModDatabase.SQLQuery("SELECT * FROM TblProject Where ProjectName IS NULL OR ProjectName =''")
+    
     Const StrPROCEDURE As String = "UpdateDBScript()"
     
     Dim RstTable As Recordset
@@ -34,7 +61,7 @@ Public Function UpdateDBScript() As Boolean
     If Not UpdateDBScriptUndo Then Err.Raise HANDLED_ERROR
     
     If DB Is Nothing Then
-        Set DB = OpenDatabase(ThisWorkbook.Path & INI_FILE_PATH & DB_FILE_NAME & ".accdb")
+        Set DB = OpenDatabase(GetDocLocalPath(ThisWorkbook.Path) & INI_FILE_PATH & DB_FILE_NAME & ".accdb")
     End If
     
     Set RstTable = DB.OpenRecordset("TblDBVersion", dbOpenDynaset)
@@ -47,6 +74,21 @@ Public Function UpdateDBScript() As Boolean
         Exit Function
     End If
             
+    
+    ' ========================================================================================
+    ' Database commands
+    ' ----------------------------------------------------------------------------------------
+    DB.Execute "UPDATE TblStepTemplate SET NextStep = '1.04' WHERE StepNo = '1.02'"
+    DB.Execute "UPDATE TblStepTemplate SET AltStep = '1.03' WHERE StepNo = '1.02'"
+    DB.Execute "UPDATE TblStep SET NextStep = '1.04' WHERE StepNo = '1.02'"
+    DB.Execute "UPDATE TblStep SET AltStep = '1.03' WHERE StepNo = '1.02'"
+    
+'    DB.Execute "DELETE * FROM TblStep"
+    
+'    UpdateTable
+    
+    ' ========================================================================================
+        
     'update DB Version
     With RstTable
         .Edit
@@ -55,20 +97,9 @@ Public Function UpdateDBScript() As Boolean
         .Update
     End With
     
-    Set RstTable = Nothing
-    
-    ' ========================================================================================
-    ' Database commands
-    ' ----------------------------------------------------------------------------------------
-    DB.Execute "DELETE * FROM TblWorkflow"
-    DB.Execute "DELETE * FROM TblStep"
-    
-    UpdateTable
-    
-    ' ========================================================================================
-        
         MsgBox "Database successfully updated to Version " & DB_VER, vbOKOnly + vbInformation
     
+    Set RstTable = Nothing
     DB.Close
     
     Set DB = Nothing
@@ -81,17 +112,19 @@ ErrorExit:
    
     Debug.Print "There was an error with the database update.  Error " & Err.Number & ", " & Err.Description, vbCritical, APP_NAME
     If Not UpdateDBScriptUndo Then Err.Raise HANDLED_ERROR
-    MsgBox "Database changes have been reversed.  Please restore previous version of FIRES", vbCritical, APP_NAME
+    
+    If Not DEV_MODE Then MsgBox "Database changes have been reversed.  Please restore previous version of FIRES", vbCritical, APP_NAME
     
     Set DB = Nothing
     Set RstTable = Nothing
     UpdateDBScript = False
     Stop
+    Resume
 Exit Function
 
 ErrorHandler:   If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
         Stop
-        Resume
+    If DEBUG_MODE Then Resume
     Else
         Resume ErrorExit
     End If
@@ -110,7 +143,7 @@ Public Function UpdateDBScriptUndo() As Boolean
     On Error GoTo ErrorHandler
     
     If DB Is Nothing Then
-        Set DB = OpenDatabase(ThisWorkbook.Path & INI_FILE_PATH & DB_FILE_NAME & ".accdb")
+        Set DB = OpenDatabase(GetDocLocalPath(ThisWorkbook.Path) & INI_FILE_PATH & DB_FILE_NAME & ".accdb")
     End If
     
     Set RstTable = DB.OpenRecordset("TblDBVersion", dbOpenDynaset)
@@ -127,10 +160,11 @@ Public Function UpdateDBScriptUndo() As Boolean
         .Update
     End With
     
+    On Error Resume Next
     ' ========================================================================================
     ' Database commands
     ' ----------------------------------------------------------------------------------------
-   
+    
     ' ========================================================================================
     
     DB.Close
@@ -142,14 +176,13 @@ Exit Function
 
 ErrorExit:
 
-    MsgBox "There was an error with the database update.  Error " & Err.Number & ", " & Err.Description, vbCritical, APP_NAME
-    UpdateDBScriptUndo
     MsgBox "Database changes have been reversed.  Please restore previous version of FIRES", vbCritical, APP_NAME
     
     Set DB = Nothing
     Set RstTable = Nothing
     UpdateDBScriptUndo = False
     Stop
+    If DEBUG_MODE Then Resume
 Exit Function
 
 ErrorHandler:   If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then

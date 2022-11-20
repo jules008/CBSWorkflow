@@ -21,23 +21,25 @@ Public Const PROJECT_FILE_NAME As String = "CBS Workflow"
 Public Const APP_NAME As String = "CBSWorkflow"
 Public Const DB_FILE_NAME As String = "CBSWorkflowDB"
 Public Const INI_FILE_PATH As String = "\System Files\"
+Public Const PICTURES_PATH As String = "\System Files\Icons\"
 Public Const ERROR_PATH As String = "\System Files\"
+Public Const DEV_FILE_PATH As String = "C:\Users\jules\OneDrive\Documents\Development Areas\CBS Workflow\"
 Public Const TMP_FILES As String = "\System Files\Tmp\"
 Public Const BAK_FILES As String = "\System Files\Backups\"
+Public Const DEV_LIB As String = "Library\"
 Public Const TEMPLATE_STORE As String = "\System Files\Templates\"
 Public Const INI_FILE_NAME As String = "System.ini"
 Public Const PROTECT_ON As Boolean = True
 Public Const PROTECT_KEY As String = "03383396"
-Public Const STOP_FLAG As Boolean = False
 Public Const MAINT_MSG As String = ""
 Public Const SEND_ERR_MSG As Boolean = False
 Public Const TEST_PREFIX As String = "TEST - "
 Public Const BACKUP_INT As Integer = 5
 Public Const FILE_ERROR_LOG As String = "Error.log"
-Public Const OLD_DB_VER = "V0.0.1"
-Public Const DB_VER = "V0.0.2"
-Public Const VERSION = "V0.0.1"
-Public Const VER_DATE = "16 Aug 22"
+Public Const OLD_DB_VER = "V0.01.04"
+Public Const DB_VER = "V0.01.05"    'Branch BugFix
+Public Const VERSION = "V0.01.05"
+Public Const VER_DATE = "15 Nov 22"
 ' ===============================================================
 ' Error Constants
 ' ---------------------------------------------------------------
@@ -76,35 +78,50 @@ Global CURRENT_USER As String
 Global MENU_ITEM_SEL As Integer
 Global G_DATE As String
 Global G_FORM As Boolean
+Global STOP_FLAG As Boolean
 
 ' ===============================================================
 ' Global Class Declarations
 ' ---------------------------------------------------------------
+Public Clients As ClsClients
+Public ActiveWorkflows As ClsWorkflows
+Public ActiveLender As ClsLender
 Public ActiveWorkFlow As ClsWorkflow
+Public ActiveProject As ClsProject
+Public ActiveClient As ClsClient
+Public ActiveSPV As ClsSPV
+Public ActiveUser As ClsCBSUser
+Public CTimer As ClsCodeTimer
+Public SubTable As ClsUITable
+Public MailSystem As ClsMailSystem
 
 ' ===============================================================
 ' Global UI Class Declarations
 ' ---------------------------------------------------------------
 Public MainScreen As ClsUIScreen
 Public MenuBar As ClsUIFrame
-Public MenuItem As ClsUIMenuItem
 Public MainFrame As ClsUIFrame
-Public BtnNewWorkflow As ClsUIMenuItem
+Public ButtonFrame As ClsUIFrame
+Public BtnProjectNewWF As ClsUIButton
+Public BtnNewLenderWF As ClsUIButton
+Public BtnCRMNewItem As ClsUIButton
+Public BtnCRMContCalImp As ClsUIButton
+Public BtnCRMContShwLead As ClsUIButton
 Public Logo As ClsUIDashObj
 
 ' ===============================================================
 ' Colours
 ' ---------------------------------------------------------------
-Public Const COLOUR_1 As Long = 9613098     'Aqua
-Public Const COLOUR_2 As Long = 7025624     'Pink
-Public Const COLOUR_3 As Long = 6901523    'Blue
-Public Const COLOUR_4 As Long = 4408131    'Dark Grey
-Public Const COLOUR_5 As Long = &HFFFFFF    'White
-Public Const COLOUR_6 As Long = &H0         'Black
-Public Const COLOUR_7 As Long = &HFFF9FB    'off White
-Public Const COLOUR_8 As Long = 1033457     'Amber
-Public Const COLOUR_9 As Long = 2752442    'Green
-Public Const COLOUR_10 As Long = 4007639    'Red
+Public Const COL_AQUA As Long = 9613098     'Aqua
+Public Const COL_PINK As Long = 7025624     'Pink
+Public Const COL_BLUE As Long = 6901523    'Blue
+Public Const COL_DRK_GREY As Long = 4408131    'Dark Grey
+Public Const COL_WHITE As Long = &HFFFFFF    'White
+Public Const COL_BLACK As Long = &H0         'Black
+Public Const COL_OFF_WHITE As Long = &HFFF9FB    'off White
+Public Const COL_AMBER As Long = 1033457     'Amber
+Public Const COL_GREEN As Long = 2752442    'Green
+Public Const COL_RED As Long = 4007639    'Red
 Public Const COLOUR_11 As Long = &HFFFFFF    'White
 Public Const COLOUR_12 As Long = &HFFFFFF    'White
 Public Const COLOUR_13 As Long = &HFFFFFF    'White
@@ -115,21 +132,6 @@ Public Const COLOUR_16 As Long = &HFFFFFF    'White
 ' ===============================================================
 ' Type Declarations
 ' ---------------------------------------------------------------
-Type TypeStyle
-    ForeColour As Long
-    BorderColour As Long
-    BorderWidth As Single
-    FontStyle As String
-    FontBold As Boolean
-    FontSize As Integer
-    FontColour As Long
-    FontXJust As XlHAlign
-    FontYJust As XlVAlign
-    Fill1 As Long
-    Fill2 As Long
-    Shadow As MsoShadowType
-    TextDir As MsoTextOrientation
-End Type
 
 Type TypeAddress
     HouseNameNo As String
@@ -140,6 +142,14 @@ Type TypeAddress
     Country As String
     Postcode As String
 End Type
+
+Type TypeChatEntry
+    ProjectNo As Integer
+    UserName As String
+    EntryDateTime As Date
+    Message As String
+End Type
+
 ' ===============================================================
 ' Enum Declarations
 ' ---------------------------------------------------------------
@@ -149,26 +159,49 @@ Enum EnumTriState
     xError
 End Enum
 
+Enum enWorkflowType
+    enProject
+    enLender
+End Enum
+
 Enum EnumObjType
     ObjImage = 1
     ObjChart = 2
 End Enum
 
-Enum EnumBtnNo
+Enum EnMenuBtnNo
     enBtnForAction = 1
-    enBtnActive
-    enBtnComplete
-    enBtnExit
-    enBtnSupport
-    enBtnNewWorkflow
+    enBtnProjectsActive = 21
+    enBtnProjectsClosed = 22
+    enBtnCRMClient = 31
+    enBtnCRMSPV = 32
+    enBtnCRMContacts = 33
+    enBtnCRMProjects = 34
+    enBtnCRMLenders = 35
+    enbtnDashboard = 4
+    enBtnReports = 5
+    enBtnAdminUsers = 61
+    enBtnAdminEmailTs = 62
+    enBtnAdminDocuments = 63
+    enBtnAdminWorkflows = 64
+    enBtnAdminWFTypes = 65
+    enBtnAdminLists = 66
+    enBtnAdminRoles = 67
+    enBtnExit = 7
 End Enum
 
-Enum enStatus           'Status
-    enNotStarted = 1    'Not Started
-    enActionReqd        'Action Req'd
-    enWaiting           'Waiting
-    enComplete          'Complete
-End Enum                '
+Enum EnumBtnNo
+    enBtnProjectNew
+    enBtnProjectOpen
+    enBtnLenderOpenWF
+    enBtnLenderNewWF
+    enBtnCRMOpenItem
+    enBtnCRMLenderOpen
+    enBtnCRMLenderNew
+    enBtnCRMNewItem
+    enBtnCRMContCalImport
+    enBtnCRMContShwLeads
+End Enum
 
 Enum enFormValidation
     enFormOK = 2
@@ -200,3 +233,14 @@ Enum EnumFormValidation
     FunctionalError = 0
 End Enum
 
+Enum enScreenPage
+    enScrProjForAction = 0
+    enScrProjActive
+    enScrProjComplete
+    enScrCRMClient
+    enScrCRMSPV
+    enScrCRMContact
+    enScrCRMProject
+    enScrCRMLender
+End Enum
+            '

@@ -8,7 +8,7 @@ Attribute VB_Name = "ModLibrary"
 '===============================================================
 ' v1.0.0 - Initial Version
 '---------------------------------------------------------------
-' Date - 23 Jul 22
+' Date - 04 Nov 22
 '===============================================================
 
 Option Explicit
@@ -121,23 +121,31 @@ End Sub
 ' RecordsetPrint
 ' sends contents of recordset to debug window
 ' ---------------------------------------------------------------
-Public Sub RecordsetPrint(rst As Recordset)
+Public Sub RecordsetPrint(Rst As Recordset)
     On Error Resume Next
     
     Dim DBString As String
     Dim RSTField As Field
     Dim i As Integer
 
-    ReDim AyFields(rst.Fields.Count)
+    ReDim AyFields(Rst.Fields.Count)
     
-    Debug.Print rst.RecordCount
-    rst.MoveFirst
-    Do Until rst.EOF
-        For i = 0 To rst.Fields.Count - 1
-             DBString = DBString & rst.Fields(i).Value & vbTab
+    Debug.Print Rst.RecordCount
+    Rst.MoveFirst
+    
+    For i = 0 To Rst.Fields.Count - 1
+        DBString = DBString & Rst.Fields(i).Name & ":" & vbTab
+    Next
+    
+    Debug.Print DBString
+    DBString = ""
+    
+    Do Until Rst.EOF
+        For i = 0 To Rst.Fields.Count - 1
+             DBString = DBString & Rst.Fields(i).Value & ":" & vbTab
         Next
-        rst.MoveNext
-        Debug.Print DBString & vbCr
+        Rst.MoveNext
+        Debug.Print DBString
         DBString = ""
     Loop
 
@@ -492,7 +500,7 @@ Function IsValidEmail(sEmailAddress As String) As Boolean
     bReturn = False
     
     'Check if Email match regex pattern
-    If oRegEx.test(sEmailAddress) Then
+    If oRegEx.Test(sEmailAddress) Then
         'Debug.Print "Valid Email ('" & sEmailAddress & "')"
         bReturn = True
     Else
@@ -521,3 +529,31 @@ Function CleanString(strSource As String) As String
     CleanString = strResult
 End Function
 
+' ===============================================================
+' CleanSQLText
+' ensures text is ready for entering into database with SQL
+' ---------------------------------------------------------------
+Public Function CleanSQLText(TextInput As Variant, Optional ReturnNULL As Boolean) As Variant
+    Dim FindNo As Integer
+    Dim i As Integer
+    
+    If VarType(TextInput) = vbString Then
+        If TextInput = "" And ReturnNULL Then
+            CleanSQLText = Null
+        Else
+            Do
+                If i = 10000 Then Exit Do
+                FindNo = InStr(1, TextInput, "''")
+                Debug.Print FindNo, TextInput
+                TextInput = Replace(TextInput, "''", "'")
+                i = i + 1
+            Loop While FindNo <> 0
+            
+            CleanSQLText = Replace(TextInput, "'", "''")
+        End If
+    Else
+        CleanSQLText = TextInput
+        Exit Function
+    End If
+    
+End Function

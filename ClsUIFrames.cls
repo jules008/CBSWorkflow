@@ -64,8 +64,9 @@ End Sub
 ' Deletes item from collection
 '---------------------------------------------------------------
 
-Public Sub RemoveItem(Name As Variant)
-    pUIFrames.Remove Name
+Public Sub RemoveItem(Frame As ClsUIFrame)
+    On Error Resume Next
+    pUIFrames.Remove Frame.Name
 End Sub
 
 ' ===============================================================

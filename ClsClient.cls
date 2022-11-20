@@ -34,6 +34,8 @@ Private pPhoneNo As String
 Private pClientNo As Integer
 Private pSPVs As ClsSPVs
 Private pContacts As ClsContacts
+Private WithEvents pClientForm As FrmClientForm
+Attribute pClientForm.VB_VarHelpID = -1
 
 '---------------------------------------------------------------
 Public Property Get Name() As String
@@ -76,7 +78,7 @@ Public Property Get SPVs() As ClsSPVs
     Set SPVs = pSPVs
 End Property
 
-Public Property Let SPVs(ByVal vNewValue As ClsSPVs)
+Public Property Let SPVs(ByRef vNewValue As ClsSPVs)
     Set pSPVs = vNewValue
 End Property
 
@@ -85,26 +87,63 @@ Public Property Get Contacts() As ClsContacts
     Set Contacts = pContacts
 End Property
 
-Public Property Let Contacts(ByVal vNewValue As ClsContacts)
+Public Property Let Contacts(ByRef vNewValue As ClsContacts)
     Set pContacts = vNewValue
 End Property
 
 ' ===============================================================
-' Method DBGet(Key as Integer)
+' Method DBNew
+' displays new client form
+' ---------------------------------------------------------------
+Public Sub DBNew()
+    pClientNo = 0
+    pName = ""
+    pPhoneNo = ""
+    pUrl = ""
+    
+    With pClientForm
+        .Tag = "New"
+        .ClearForm
+        .BtnUpdate.Caption = "Create"
+        .Show
+    End With
+End Sub
+
+' ===============================================================
+' Method DisplayForm
+' displays client form
+' ---------------------------------------------------------------
+Public Sub DisplayForm()
+    With pClientForm
+        .Tag = "Update"
+        .TxtClientNo = pClientNo
+        .TxtName = pName
+        .TxtPhoneNo = pPhoneNo
+        .TxtUrl = pUrl
+        .Show
+    End With
+End Sub
+
+' ===============================================================
+' Method DBGet(Key as variant)
 ' Gets class from Database
 ' ---------------------------------------------------------------
-Public Sub DBGet(ClientNo As Integer)
+Public Sub DBGet(ClientNameNo As Variant)
     Dim RstClient As Recordset
 
-    Set RstClient = ModDatabase.SQLQuery("SELECT * FROM TblClient WHERE ClientNo = " & ClientNo)
+    If IsNumeric(ClientNameNo) Then
+        Set RstClient = ModDatabase.SQLQuery("SELECT * FROM TblClient WHERE ClientNo = " & ClientNameNo)
+    Else
+        Set RstClient = ModDatabase.SQLQuery("SELECT * FROM TblClient WHERE Name = '" & ClientNameNo & "'")
+    End If
+    
     With RstClient
         If .RecordCount > 0 Then
             If Not IsNull(!Name) Then pName = !Name
             If Not IsNull(!Url) Then pUrl = !Url
             If Not IsNull(!PhoneNo) Then pPhoneNo = !PhoneNo
             If Not IsNull(!ClientNo) Then pClientNo = !ClientNo
-        pSPVs.GetCollection
-        pContacts.GetCollection
+        pContacts.GetCollection "Client", CleanSQLText(pName)
         End If
     End With
     Set RstClient = Nothing
@@ -136,10 +175,10 @@ Public Sub DBSave()
             .Edit
         End If
 
-        If CStr(pName) = "" Then !Name = Null Else !Name = pName
-        If CStr(pUrl) = "" Then !Url = Null Else !Url = pUrl
-        If CStr(pPhoneNo) = "" Then !PhoneNo = Null Else !PhoneNo = pPhoneNo
-        If CStr(pClientNo) = "" Then !ClientNo = Null Else !ClientNo = pClientNo
+        !Name = CleanSQLText(pName, True)
+        !Url = CleanSQLText(pUrl, True)
+        !PhoneNo = CleanSQLText(pPhoneNo, True)
+        !ClientNo = CleanSQLText(pClientNo, True)
 
         pSPVs.SaveCollection
         pContacts.SaveCollection
@@ -159,11 +198,44 @@ Public Sub DBDelete(Optional FullDelete As Boolean)
     DB.Execute "DELETE * FROM TblClient WHERE ClientNo = " & pClientNo
 
 End Sub
+
+' ===============================================================
+' Event pClientForm_Update
+' Event from client form to update client
+' ---------------------------------------------------------------
+Private Sub pClientForm_Update()
+    With pClientForm
+        pName = .TxtName
+        pPhoneNo = .TxtPhoneNo
+        pUrl = .TxtUrl
+    End With
+    DBSave
+End Sub
+
+' ===============================================================
+' Event pClientForm_CreateNew
+' Event from client form to create new client
+' ---------------------------------------------------------------
+Private Sub pClientForm_CreateNew()
+    With pClientForm
+        .Hide
+    End With
+    DBNew
+End Sub
+
+' ===============================================================
+' Event pClientForm_Delete
+' Deletes client
+' ---------------------------------------------------------------
+Private Sub pClientForm_Delete()
+    DBDelete
+End Sub
 ' ===============================================================
 
 Private Sub Class_Initialize()
     Set pSPVs = New ClsSPVs
     Set pContacts = New ClsContacts
+    Set pClientForm = New FrmClientForm
 
     pSPVs.Initialize Me
 End Sub
@@ -171,5 +243,6 @@ End Sub
 Private Sub Class_Terminate()
     Set pSPVs = Nothing
     Set pContacts = Nothing
+    Set pClientForm = Nothing
 End Sub
 ' ===============================================================

@@ -65,7 +65,7 @@ End Function
 ' Method Add
 ' Add item to Collection
 ' ---------------------------------------------------------------
-Public Sub Add(Project As ClsProject)
+Public Sub Add(ByRef Project As ClsProject)
     Project.Initialize Me.Parent
     pProjects.Add Project, Key:=CStr(Project.ProjectNo)
 End Sub

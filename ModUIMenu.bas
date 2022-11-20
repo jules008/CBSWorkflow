@@ -92,9 +92,12 @@ End Function
 ' Builds menu on menu bar
 ' ---------------------------------------------------------------
 Private Function BuildMenuBar() As Boolean
-    Dim MenuItemText() As String
-    Dim MenuItemIcon() As String
-    Dim MenuItemBadge() As String
+    Dim ButtonText() As String
+    Dim ButtonIcon() As String
+    Dim ButtonBadge() As String
+    Dim ButtonIndex() As String
+    Dim Button As ClsUIButton
+    Dim ShpLogo As Shape
     Dim i As Integer
     
     Const StrPROCEDURE As String = "BuildMenuBar()"
@@ -102,7 +105,8 @@ Private Function BuildMenuBar() As Boolean
     On Error GoTo ErrorHandler
     
     Set Logo = New ClsUIDashObj
-'    Set BtnSupport = New ClsUIMenuItem
+'    Set BtnSupport = New ClsUIButton
+    Set ShpLogo = ShtMain.Shapes.AddPicture(GetDocLocalPath(ThisWorkbook.Path) & PICTURES_PATH & LOGO_FILE, msoTrue, msoFalse, 0, 0, 0, 0)
     
     MainScreen.Frames.AddItem MenuBar, "MenuBar"
    
@@ -115,6 +119,7 @@ Private Function BuildMenuBar() As Boolean
         .Style = MENUBAR_STYLE
         .Header.Visible = False
         .EnableHeader = False
+        .ZOrder = 0
     End With
 
     'Logo
@@ -122,7 +127,7 @@ Private Function BuildMenuBar() As Boolean
     
     With Logo
         .EnumObjType = ObjImage
-        .ShpDashObj = ShtMain.Shapes("TEMPLATE - Logo").Duplicate
+        .ShpDashObj = ShpLogo
         .Name = "Logo"
         .Visible = True
         .Top = LOGO_TOP
@@ -138,66 +143,30 @@ Private Function BuildMenuBar() As Boolean
     End With
 
     'Menu Items
-    MenuItemText() = Split(MENUITEM_TEXT, ":")
-'    MenuItemIcon() = Split(MENUITEM_ICONS, ":")
-'    MenuItemBadge() = Split(MENUITEM_BADGES, ":")
+    ButtonText() = Split(BUTTON_TEXT, ":")
+    ButtonIndex() = Split(BUTTON_INDEX, ":")
+'    ButtonIcon() = Split(Button_ICONS, ":")
+'    ButtonBadge() = Split(Button_BADGES, ":")
 
-    For i = 0 To MENUITEM_COUNT - 1
+    For i = 0 To BUTTON_COUNT - 1
 
-        Set MenuItem = New ClsUIMenuItem
+        Set Button = New ClsUIButton
     
-        With MenuItem
-            .SelectStyle = MENUITEM_SET_STYLE
-            .UnSelectStyle = MENUITEM_UNSET_STYLE
-            .Height = MENUITEM_HEIGHT
-            .Width = MENUITEM_WIDTH
-            .Text = MenuItemText(i)
-            .Name = "MenuItem - " & .Text
-            .OnAction = "'ModUIMenu.ProcessBtnPress(" & i + 1 & ")'"
-'            .Icon = ShtMain.Shapes(MenuItemIcon(i)).Duplicate
-'            If MenuItemBadge(i) <> "" Then .Badge = ShtMain.Shapes(MenuItemBadge(i)).Duplicate
+        With Button
+            .SelectStyle = BUTTON_SET_STYLE
+            .UnSelectStyle = BUTTON_UNSET_STYLE
+            .Height = BUTTON_HEIGHT
+            .Width = BUTTON_WIDTH
+            .Text = ButtonText(i)
+            .ButtonIndex = ButtonIndex(i)
+            .Name = "Menu Btn - " & .ButtonIndex
+            MenuBar.Menu.AddButton Button
 
-            MenuBar.Menu.AddItem MenuItem
-
-            .Top = MENU_TOP + (i * .Height) - i
-            .Left = .Left
-            .Selected = False
-
-'            With .Icon
-'                .Visible = True
-'                .Name = "Icon - " & MenuItem.Text
-'                .Left = MenuItem.Left + MENUITEM_ICON_LEFT
-'                .Top = MenuItem.Top + MENUITEM_ICON_TOP
-'            End With
-            
-'            If MenuItemBadge(i) <> "" Then
-'                With .Badge
-'                    .Visible = True
-'                    .Name = "Icon - " & MenuItem.Text
-'                    .Left = MenuItem.Left + MENUITEM_BADGE_LEFT
-'                    .Top = MenuItem.Top + MENUITEM_BADGE_TOP
-'                End With
-'                .BadgeText = "0"
-'           End If
         End With
     Next
     
-'    With BtnSupport
-'        .UnSelectStyle = BTN_SUPPORT
-'        .Selected = False
-'        .Height = BTN_SUPPORT_HEIGHT
-'        .Width = BTN_SUPPORT_WIDTH
-'        .Top = BTN_SUPPORT_TOP
-'        .Left = BTN_SUPPORT_LEFT
-'        .Text = "Send Support Message"
-'        .Name = "MenuItem - " & .Text
-'        .OnAction = "'ModUIMenu.ProcessBtnPress(" & i + 1 & ")'"
-'
-'        MenuBar.Menu.AddItem BtnSupport
-'
-'    End With
-    
-    Set MenuItem = Nothing
+    Set Button = Nothing
+    Set ShpLogo = Nothing
 
     BuildMenuBar = True
 
@@ -205,7 +174,8 @@ Exit Function
 
 ErrorExit:
 
-    Set MenuItem = Nothing
+    Set Button = Nothing
+    Set ShpLogo = Nothing
     
     BuildMenuBar = False
 
@@ -220,141 +190,38 @@ ErrorHandler:   If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
 End Function
 
 ' ===============================================================
-' ProcessBtnPress
-' Receives all button presses and processes
+' ButtonClickEvent
+' Handles Button Click Events
 ' ---------------------------------------------------------------
-Public Function ProcessBtnPress(Optional ButtonNo As EnumBtnNo) As Boolean
-    Dim Response As Integer
-    Dim RngMenu
-    Const StrPROCEDURE As String = "ProcessBtnPress()"
+Public Function ButtonClickEvent(ButtonIndex As String) As Boolean
+    
+    Const StrPROCEDURE As String = "ButtonClickEvent()"
 
     On Error GoTo ErrorHandler
     
     If MainScreen Is Nothing Then Err.Raise SYSTEM_RESTART
     
-Restart:
-    Application.StatusBar = ""
-            
-'    If Not ResetScreen Then Err.Raise HANDLED_ERROR
-'    If Not ModUIActive.BuildScreen Then Err.Raise HANDLED_ERROR
-    
-    If ButtonNo = 0 Then
-        If Not ShtMain.[MenuItem] Is Nothing Then
-            ButtonNo = ShtMain.[MenuItem]
-        Else
-            ButtonNo = enBtnActive
-        End If
-    Else
-        If ButtonNo < 4 And ButtonNo = ShtMain.[MenuItem] Then Exit Function
-    End If
-    
-    Select Case ButtonNo
-
-        Case enBtnForAction
-            
-            ShtMain.Unprotect PROTECT_KEY
-            ShtMain.[MenuItem] = 1
-
-            If Not ResetScreen Then Err.Raise HANDLED_ERROR
-            If Not ModUIForAction.BuildScreen Then Err.Raise HANDLED_ERROR
-
-            ShtMain.Unprotect PROTECT_KEY
-
-            With MenuBar
-                .Menu(1).Selected = True
-                .Menu(2).Selected = False
-                .Menu(3).Selected = False
-                .Menu(4).Selected = False
-            End With
-
-            If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
-            
-        Case enBtnActive
-
-            ShtMain.Unprotect PROTECT_KEY
-            ShtMain.[MenuItem] = 2
-
-            If Not ResetScreen Then Err.Raise HANDLED_ERROR
-            If Not ModUIActive.BuildScreen Then Err.Raise HANDLED_ERROR
-
-            ShtMain.Unprotect PROTECT_KEY
-
-            With MenuBar
-                .Menu(1).Selected = False
-                .Menu(2).Selected = True
-                .Menu(3).Selected = False
-                .Menu(4).Selected = False
-            End With
-
-            If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
-
-        Case enBtnComplete
-
-            ShtMain.Unprotect PROTECT_KEY
-            ShtMain.[MenuItem] = 3
-
-            If Not ResetScreen Then Err.Raise HANDLED_ERROR
-            If Not ModUIComplete.BuildScreen Then Err.Raise HANDLED_ERROR
-
-            ShtMain.Unprotect PROTECT_KEY
-
-            With MenuBar
-                .Menu(1).Selected = False
-                .Menu(2).Selected = False
-                .Menu(3).Selected = True
-                .Menu(4).Selected = False
-            End With
-
-            If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
-
-        Case enBtnExit
-
-            Response = MsgBox("Are you sure you want to exit?", vbExclamation + vbYesNo + vbDefaultButton2, APP_NAME)
-
-            If Response = 6 Then
-
-                If Workbooks.Count = 1 Then
-                    With Application
-                        .DisplayAlerts = False
-                        .Quit
-                        .DisplayAlerts = True
-                    End With
-                Else
-                    ThisWorkbook.Close savechanges:=False
-                End If
-            End If
-            
-    End Select
+    MenuBar.Menu.ButtonClick ButtonIndex
         
-        
-GracefulExit:
-    
-    ModLibrary.PerfSettingsOff
-
-    ProcessBtnPress = True
+    ButtonClickEvent = True
 
 Exit Function
 
 ErrorExit:
 
-    Application.DisplayAlerts = True
-
-    ProcessBtnPress = False
+    ButtonClickEvent = False
 
 Exit Function
 
 ErrorHandler:
     
     If Err.Number >= 2000 And Err.Number <= 2500 Then
-        If CustomErrorHandler(Err.Number) = SYSTEM_RESTART Then
-            Resume Restart
-        Else
-            Resume GracefulExit
-        End If
+        CustomErrorHandler Err.Number
+        Resume Next
     End If
     
-    If CentralErrorHandler(StrMODULE, StrPROCEDURE, , True) Then
-       Stop
+    If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
+        Stop
         Resume
     Else
         Resume ErrorExit
@@ -363,29 +230,23 @@ End Function
 
 ' ===============================================================
 ' ResetScreen
-' Functions for graceful close down of system
+' resets to start up screen for transitions between pages
 ' ---------------------------------------------------------------
 Public Function ResetScreen() As Boolean
     Dim Frame As ClsUIFrame
-    Dim UILineItem As ClsUILineitem
-    Dim DashObj As ClsUIDashObj
-    Dim MenuItem As ClsUIMenuItem
     
     Const StrPROCEDURE As String = "ResetScreen()"
 
-'    On Error Resume Next
+    On Error Resume Next
     
-    ShtMain.Unprotect PROTECT_KEY
-        
     For Each Frame In MainScreen.Frames
         If Frame.Name <> "MenuBar" Then
-            MainScreen.Frames.RemoveItem Frame.Name
+            MainScreen.Frames.RemoveItem Frame
             Frame.Terminate
+            Set Frame = Nothing
         End If
     Next
     
-    If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
-        
     ResetScreen = True
         
 Exit Function
@@ -393,7 +254,6 @@ Exit Function
 ErrorExit:
 
     ResetScreen = False
-    If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
 
 Exit Function
 
@@ -407,5 +267,191 @@ ErrorHandler:
     End If
 End Function
 
+' ===============================================================
+' ProcessMenuClicks
+' Processes menu button presses in application
+' ---------------------------------------------------------------
+Public Sub ProcessMenuClicks(ButtonNo As EnMenuBtnNo)
+    Dim ErrNo As Integer
+    Dim AryBtn() As String
+    Dim Picker As ClsFrmPicker
+    Dim BtnNo As EnumBtnNo
+    Dim BtnIndex As Integer
+
+    Const StrPROCEDURE As String = "ProcessMenuClicks()"
+    On Error GoTo ErrorHandler
+
+Restart:
+
+    If MainScreen Is Nothing Then Err.Raise SYSTEM_RESTART
+
+    Select Case ButtonNo
+    
+        Case enBtnForAction
+
+            ShtMain.Unprotect PROTECT_KEY
+
+            BtnProjectsClick enScrProjForAction
+
+        ''    If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
+
+        Case enBtnProjectsActive
+        
+            ShtMain.Unprotect PROTECT_KEY
+        
+            BtnProjectsClick enScrProjActive
+        
+        ''    If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
+
+        Case enBtnProjectsClosed
+        
+            ShtMain.Unprotect PROTECT_KEY
+            
+            BtnProjectsClick enScrProjComplete
+
+        ''    If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
+
+        Case enBtnCRMClient
+            
+            ShtMain.Unprotect PROTECT_KEY
+            
+            BtnCRMClick enScrCRMClient
+        
+        ''    If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
+
+        Case enBtnCRMSPV
+        
+            ShtMain.Unprotect PROTECT_KEY
+            
+            BtnCRMClick enScrCRMSPV
+
+        ''    If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
+
+        Case enBtnCRMContacts
+        
+            ShtMain.Unprotect PROTECT_KEY
+            
+            BtnCRMClick enScrCRMContact
+            
+        ''    If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
+
+        Case enBtnCRMProjects
+        
+            ShtMain.Unprotect PROTECT_KEY
+            
+            BtnCRMClick enScrCRMProject
+            
+        ''    If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
+
+        Case enBtnCRMLenders
+        
+            ShtMain.Unprotect PROTECT_KEY
+            
+            BtnCRMClick enScrCRMLender
+            
+        ''    If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
+
+        Case enbtnDashboard
+        
+            ShtMain.Unprotect PROTECT_KEY
+
+            If Not ResetScreen Then Err.Raise HANDLED_ERROR
+
+        ''    If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
+
+        Case enBtnReports
+        
+            ShtMain.Unprotect PROTECT_KEY
+
+            If Not ResetScreen Then Err.Raise HANDLED_ERROR
+
+        ''    If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
+
+        Case enBtnAdminUsers
+        
+            ShtMain.Unprotect PROTECT_KEY
+
+            If Not ResetScreen Then Err.Raise HANDLED_ERROR
+
+        ''    If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
+
+        Case enBtnAdminEmailTs
+        
+            ShtMain.Unprotect PROTECT_KEY
+
+            If Not ResetScreen Then Err.Raise HANDLED_ERROR
+
+        ''    If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
+
+        Case enBtnAdminDocuments
+        
+            ShtMain.Unprotect PROTECT_KEY
+
+            If Not ResetScreen Then Err.Raise HANDLED_ERROR
+
+        ''    If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
+
+        Case enBtnAdminWorkflows
+        
+            ShtMain.Unprotect PROTECT_KEY
+
+            If Not ResetScreen Then Err.Raise HANDLED_ERROR
+
+        ''    If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
+
+        Case enBtnAdminWFTypes
+        
+            ShtMain.Unprotect PROTECT_KEY
+            ShtMain.[Button] = enBtnProjectsClosed
+
+            If Not ResetScreen Then Err.Raise HANDLED_ERROR
+            If Not ModUIProjects.BuildScreen("Closed") Then Err.Raise HANDLED_ERROR
+
+        ''    If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
+
+        Case enBtnAdminLists
+        
+            ShtMain.Unprotect PROTECT_KEY
+
+            If Not ResetScreen Then Err.Raise HANDLED_ERROR
+
+        ''    If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
+
+        Case enBtnAdminRoles
+        
+            ShtMain.Unprotect PROTECT_KEY
+
+            If Not ResetScreen Then Err.Raise HANDLED_ERROR
+
+        ''    If Not DEV_MODE Then ShtMain.Protect PROTECT_KEY
+
+            
+    End Select
+
+GracefulExit:
+
+
+Exit Sub
+
+ErrorExit:
+
+    '***CleanUpCode***
+
+Exit Sub
+
+ErrorHandler:
+    If Err.Number >= 2000 And Err.Number <= 2500 Then
+        ErrNo = Err.Number
+        CustomErrorHandler (Err.Number)
+        If ErrNo = SYSTEM_RESTART Then Resume Restart Else Resume GracefulExit
+    End If
+
+    If CentralErrorHandler(StrMODULE, StrPROCEDURE, , True) Then
+        Stop
+        Resume
+    Else
+        Resume ErrorExit
+    End If
+End Sub
 
 

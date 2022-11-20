@@ -25,8 +25,7 @@ Private pLeft As Integer
 Private pHeight As Integer
 Private pWidth As Integer
 Private pName As String
-Private pStyle As TypeStyle
-'Private pMenu As ClsUIMenu
+Private pStyle As ClsUIStyle
 Private pShpScreen As Shape
 Private pFrames As ClsUIFrames
 Private pVisible As Boolean
@@ -95,7 +94,7 @@ Public Property Get Frames() As ClsUIFrames
     Set Frames = pFrames
 End Property
 
-Public Property Let Frames(ByVal vNewValue As ClsUIFrames)
+Public Property Let Frames(ByRef vNewValue As ClsUIFrames)
     Set pFrames = vNewValue
 End Property
 '
@@ -109,12 +108,12 @@ End Property
 'End Property
 
 '---------------------------------------------------------------
-Public Property Get Style() As TypeStyle
+Public Property Get Style() As ClsUIStyle
     Style = pStyle
 End Property
 
-Public Property Let Style(vNewValue As TypeStyle)
-    pStyle = vNewValue
+Public Property Let Style(vNewValue As ClsUIStyle)
+    Set pStyle = vNewValue
     
     With pShpScreen.Fill
         .TwoColorGradient msoGradientHorizontal, 1
@@ -134,7 +133,7 @@ Public Property Let Style(vNewValue As TypeStyle)
         .Characters.Font.Color = pStyle.FontColour
         .Characters.Font.Size = pStyle.FontSize
         If pStyle.FontXJust <> 0 Then .HorizontalAlignment = pStyle.FontXJust
-        If pStyle.FontYJust <> 0 Then .VerticalAlignment = pStyle.FontYJust
+        If pStyle.FontVJust <> 0 Then .VerticalAlignment = pStyle.FontVJust
     End With
     
     With pShpScreen.Shadow
@@ -163,11 +162,17 @@ End Property
 '---------------------------------------------------------------
 Public Sub ReOrder()
     Dim Frame As ClsUIFrame
+    Dim i As Integer
     
     pShpScreen.ZOrder msoSendToBack
     
+    For i = 3 To 0 Step -1
     For Each Frame In pFrames
+            If i = Frame.ZOrder Then
+                'Debug.Print Frame.Name, Frame.ZOrder
         Frame.ReOrder
+            End If
+        Next
     Next
         
 End Sub
@@ -175,6 +180,7 @@ End Sub
 ' ===============================================================
 Private Sub Class_Initialize()
     Set pFrames = New ClsUIFrames
+    Set pStyle = New ClsUIStyle
     Set pShpScreen = ShtMain.Shapes.AddShape(msoShapeRectangle, 0, 0, 10, 10)
     
     pFrames.Initialize Me
@@ -187,12 +193,13 @@ Public Sub Terminate()
 
     Set pFrames = Nothing
     Set pShpScreen = Nothing
-
+    Set pStyle = Nothing
 End Sub
 '---------------------------------------------------------------
 Private Sub Class_Terminate()
     Set pFrames = Nothing
     Set pShpScreen = Nothing
+    Set pStyle = Nothing
     
 End Sub
 

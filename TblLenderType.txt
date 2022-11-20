@@ -1,0 +1,2 @@
+TypeNo,  dbLong
+LenderType,  dbText

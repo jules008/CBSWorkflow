@@ -8,7 +8,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 '===============================================================
-' Class ClsUIMenuItemu
+' Class ClsUIMenu
 '---------------------------------------------------------------
 ' Created by Julian Turner
 ' OneSheet Consulting
@@ -50,12 +50,12 @@ Public Property Get Visible() As Boolean
 End Property
 
 Public Property Let Visible(ByVal vNewValue As Boolean)
-    Dim MenuItem As ClsUIMenuItem
+    Dim Button As ClsUIButton
     
     pVisible = vNewValue
     
-    For Each MenuItem In pUIMenu
-        MenuItem.Visible = vNewValue
+    For Each Button In pUIMenu
+        Button.Visible = vNewValue
     Next
     
 End Property
@@ -75,37 +75,81 @@ Attribute NewEnum.VB_UserMemId = -4
 End Function
 
 ' ===============================================================
-' Method FindItem
-' Finds Item from index
+' Method FindButton
+' Finds Button from index
 '---------------------------------------------------------------
-
-Public Function FindItem(Name As Variant) As ClsUIMenuItem
-Attribute FindItem.VB_UserMemId = 0
+Public Function FindButton(ButtonIndex As String) As ClsUIButton
+Attribute FindButton.VB_UserMemId = 0
     On Error Resume Next
-    Set FindItem = pUIMenu.Item(Name)
+    Set FindButton = pUIMenu.Item(ButtonIndex)
 End Function
 
 ' ===============================================================
-' Method AddItem
-' Add item to Collection
+' Method AddButton
+' Add Button to Collection
 '---------------------------------------------------------------
-
-Public Sub AddItem(UIMenuItem As ClsUIMenuItem)
-    pUIMenu.Add UIMenuItem, Key:=CStr(UIMenuItem.Name)
+Public Sub AddButton(UIButton As ClsUIButton)
+    Dim i As Integer
+    Dim AryIndex() As String
+    Dim ParentIndex As Integer
+    Dim HorOffset As Integer
+    Dim ChildNo As Integer
+    
+    AryIndex = Split(UIButton.ButtonIndex, ".")
+    
+    ParentIndex = AryIndex(0)
+    ChildNo = AryIndex(UBound(AryIndex))
+        
+'    Debug.Print "Button Index: "; UIButton.ButtonIndex
+'    Debug.Print "Parent Index: "; ParentIndex
+'    Debug.Print "Child No: "; ChildNo
+    
+    'treat the first button differently as the collection is empty
+    If pUIMenu.Count = 0 Then
+        With UIButton
+            .Top = pTop
+            .Left = pLeft
+'            Debug.Print "i: "; i
+'            Debug.Print "Button Top: "; UIButton.Top
+'            Debug.Print "Button Left: "; UIButton.Left
+        End With
+    End If
+        
+    With UIButton
+        .OnAction = "'ModUIMenu.ButtonClickEvent(" & .ButtonIndex & ")'"
+        If .ButtonLvl = 1 Then
+            .Visible = True
+            .Top = pTop + (.ButtonIndex - 1) * .Height
+            .Left = pLeft
+        Else
+            .Visible = False
+            
+            'get y pos from parent button
+            .Top = FindButton(CStr(ParentIndex)).Top + (CInt(ChildNo) - 1) * .Height
+            .Left = pLeft + (.ButtonLvl - 1) * .Width
+        End If
+        .Selected = False
+'        Debug.Print "i: "; i
+'        Debug.Print "Button Top: "; UIButton.Top
+'        Debug.Print "Button Left: "; UIButton.Left
+    End With
+        
+    Debug.Print
+    
+    pUIMenu.Add UIButton, Key:=CStr(UIButton.ButtonIndex)
 End Sub
 
 ' ===============================================================
-' Method RemoveItem
-' Deletes item from collection
+' Method RemoveButton
+' Deletes Button from collection
 '---------------------------------------------------------------
-
-Public Sub RemoveItem(Name As Variant)
+Public Sub RemoveButton(ButtonIndex As String)
     pUIMenu.Remove Name
 End Sub
 
 ' ===============================================================
-' Method ItemCount
-' Returns number of items in collection
+' Method ButtonCount
+' Returns number of Buttons in collection
 '---------------------------------------------------------------
 
 Public Function Count() As Integer
@@ -117,13 +161,61 @@ End Function
 ' re-orders the shapes so that the frames sit on top of the screen
 '---------------------------------------------------------------
 Public Sub ReOrder()
-    Dim MenuItem As ClsUIMenuItem
+    Dim Button As ClsUIButton
         
-    For Each MenuItem In pUIMenu
-        MenuItem.ShpMenuItem.ZOrder msoBringToFront
-        MenuItem.ReOrder
+    For Each Button In pUIMenu
+        Button.ShpButton.ZOrder msoBringToFront
+        Button.ReOrder
     Next
     
+End Sub
+
+' ===============================================================
+' Method ButtonClick
+' Presses selected button of menu
+'---------------------------------------------------------------
+Public Sub ButtonClick(BtnName As String)
+    Dim Button As ClsUIButton
+    Dim SubButton As ClsUIButton
+    Dim SubMenu As Boolean
+        
+    For Each Button In pUIMenu
+        With Button
+            If .Name = pUIMenu(BtnName).Name Then
+                .Selected = True
+                
+                'Debug.Print .OnAction
+                'if it isn't a main menu button, show sub menu group
+                Dim i As Integer
+                i = 1
+                Do
+                    Set SubButton = FindButton(.ButtonIndex & "." & i)
+                    If Not SubButton Is Nothing Then
+                        SubButton.Visible = True
+                         SubMenu = True
+                    Else
+                        Exit Do
+                    End If
+                    If i = 10 Then Exit Do
+                    i = i + 1
+                Loop
+                
+                If Not SubMenu Then
+                    
+                    'main button has been clicked, so hide all sub menus and process click
+                    Application.Wait 1000
+                    For Each SubButton In pUIMenu
+                        If SubButton.ButtonLvl > 1 Then SubButton.Visible = False
+                    Next
+                    ModUIMenu.ProcessMenuClicks Replace(.ButtonIndex, ".", "")
+                
+                End If
+        Else
+                .Selected = False
+        End If
+        End With
+    Next
+    Set SubButton = Nothing
 End Sub
 
 ' ===============================================================
@@ -137,10 +229,10 @@ End Sub
 
 ' ===============================================================
 Public Sub Terminate()
-    Dim MenuItem As ClsUIMenuItem
+    Dim Button As ClsUIButton
         
-    For Each MenuItem In pUIMenu
-        MenuItem.Terminate
+    For Each Button In pUIMenu
+        Button.Terminate
     Next
     Set pParent = Nothing
     Set pUIMenu = Nothing

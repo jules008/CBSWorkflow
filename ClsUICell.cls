@@ -2,13 +2,13 @@ VERSION 1.0 CLASS
 BEGIN
   MultiUse = -1  'True
 END
-Attribute VB_Name = "ClsUILineitem"
+Attribute VB_Name = "ClsUICell"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 '===============================================================
-' Class ClsUiLineitem
+' Class ClsUICell
 '---------------------------------------------------------------
 ' Created by Julian Turner
 ' OneSheet Consulting
@@ -21,77 +21,97 @@ Attribute VB_Exposed = False
 
 Option Explicit
 Private pTop As Integer
+Private pRow As Integer
+Private pCol As Integer
 Private pHeight As Integer
 Private pLeft As Integer
 Private pWidth As Integer
 Private pText As String
-Private pStyle As TypeStyle
+Private pStyle As ClsUIStyle
 Private pName As String
 Private pMenu As ClsUIMenu
 Private pOnAction As String
 Private pBadge As Shape
-Private pShpLineitem As Shape
+Private pShpCell As Shape
 Private pVisible As Boolean
-Private pParent As ClsUIFrame
+Private pParent As ClsUITable
 
 '---------------------------------------------------------------
 Public Property Get Top() As Integer
-    Top = pShpLineitem.Top
+    Top = pShpCell.Top
 End Property
 
 Public Property Let Top(ByVal vNewValue As Integer)
     pTop = vNewValue
-    pShpLineitem.Top = pTop
+    pShpCell.Top = pTop
+End Property
+
+'---------------------------------------------------------------
+Public Property Get Row() As Integer
+    Row = pRow
+End Property
+
+Public Property Let Row(ByVal vNewValue As Integer)
+    pRow = vNewValue
+End Property
+
+'---------------------------------------------------------------
+Public Property Get Col() As Integer
+    Col = pCol
+End Property
+
+Public Property Let Col(ByVal vNewValue As Integer)
+    pCol = vNewValue
 End Property
 
 '---------------------------------------------------------------
 Public Property Get Left() As Integer
-    Left = pShpLineitem.Left
+    Left = pShpCell.Left
 End Property
 
 Public Property Let Left(ByVal vNewValue As Integer)
     pLeft = vNewValue
-    pShpLineitem.Left = pLeft
+    pShpCell.Left = pLeft
 End Property
 
 '---------------------------------------------------------------
 Public Property Get Height() As Integer
-    Height = pShpLineitem.Height
+    Height = pShpCell.Height
 End Property
 
 Public Property Let Height(ByVal vNewValue As Integer)
     pHeight = vNewValue
-    pShpLineitem.Height = pHeight
+    pShpCell.Height = pHeight
 End Property
 
 '---------------------------------------------------------------
 Public Property Get Width() As Integer
-    Width = pShpLineitem.Width
+    Width = pShpCell.Width
 End Property
 
 Public Property Let Width(ByVal vNewValue As Integer)
     pWidth = vNewValue
-    pShpLineitem.Width = pWidth
+    pShpCell.Width = pWidth
 End Property
 
 '---------------------------------------------------------------
 Public Property Get Text() As String
-    Text = pShpLineitem.TextFrame.Characters.Text
+    Text = pShpCell.TextFrame.Characters.Text
 End Property
 
 Public Property Let Text(ByVal vNewValue As String)
     pText = vNewValue
-    pShpLineitem.TextFrame.Characters.Text = pText
+    pShpCell.TextFrame.Characters.Text = pText
 End Property
 
 '---------------------------------------------------------------
 Public Property Get Name() As String
-    Name = pShpLineitem.Name
+    Name = pShpCell.Name
 End Property
 
 Public Property Let Name(ByVal vNewValue As String)
     pName = vNewValue
-    pShpLineitem.Name = pName
+    pShpCell.Name = pName
 End Property
 
 '---------------------------------------------------------------
@@ -110,72 +130,71 @@ End Property
 
 Public Property Let Badge(ByVal vNewValue As Shape)
     Set pBadge = vNewValue
-    With pBadge
-        .Top = Top + 1
-        .Left = Left + 1
-        .Height = 15
-        .Width = 18
-    End With
 End Property
 
 '---------------------------------------------------------------
 Public Property Get OnAction() As String
-    OnAction = pShpLineitem.OnAction
+    OnAction = pShpCell.OnAction
 End Property
 
 Public Property Let OnAction(ByVal vNewValue As String)
     pOnAction = vNewValue
-    pShpLineitem.OnAction = vNewValue
+    pShpCell.OnAction = vNewValue
 End Property
 
 '---------------------------------------------------------------
 Public Property Get Visible() As Boolean
-    Visible = pShpLineitem.Visible
+    Visible = pShpCell.Visible
 End Property
 
 Public Property Let Visible(ByVal vNewValue As Boolean)
     
     pVisible = vNewValue
     
-    pShpLineitem.Visible = pVisible
+    pShpCell.Visible = pVisible
        
 End Property
 
 '---------------------------------------------------------------
-Public Property Get ShpLineitem() As Shape
-    Set ShpLineitem = pShpLineitem
+Public Property Get ShpCell() As Shape
+    Set ShpCell = pShpCell
 End Property
 
-Public Property Let ShpLineitem(ByVal vNewValue As Shape)
-    Set pShpLineitem = vNewValue
+Public Property Let ShpCell(ByVal vNewValue As Shape)
+    Set pShpCell = vNewValue
 End Property
 
-Public Property Let Style(vNewValue As TypeStyle)
-    pStyle = vNewValue
+'---------------------------------------------------------------
+Public Property Get Style() As ClsUIStyle
+    Style = pStyle
+End Property
+
+Public Property Let Style(vNewValue As ClsUIStyle)
+    Set pStyle = vNewValue
     
-    With pShpLineitem.Fill
+    With pShpCell.Fill
         .TwoColorGradient msoGradientHorizontal, 1
         .ForeColor.RGB = vNewValue.Fill1
         .BackColor.RGB = vNewValue.Fill2
     End With
     
-    With pShpLineitem.Line
+    With pShpCell.Line
         .ForeColor.RGB = vNewValue.BorderColour
         .Weight = vNewValue.BorderWidth
         If .Weight = 0 Then .Visible = msoFalse Else .Visible = msoCTrue
     End With
     
-    With pShpLineitem.TextFrame
+    With pShpCell.TextFrame
         .Characters.Font.Bold = vNewValue.FontBold
         .Characters.Font.Name = vNewValue.FontStyle
         .Characters.Font.Color = vNewValue.FontColour
         .Characters.Font.Size = vNewValue.FontSize
         If vNewValue.TextDir <> 0 Then .Orientation = vNewValue.TextDir
         If vNewValue.FontXJust <> 0 Then .HorizontalAlignment = vNewValue.FontXJust
-        If vNewValue.FontYJust <> 0 Then .VerticalAlignment = vNewValue.FontYJust
+        If vNewValue.FontVJust <> 0 Then .VerticalAlignment = vNewValue.FontVJust
     End With
     
-    With pShpLineitem.Shadow
+    With pShpCell.Shadow
         If vNewValue.Shadow = 0 Then
             .Visible = msoFalse
         Else
@@ -186,39 +205,41 @@ Public Property Let Style(vNewValue As TypeStyle)
 End Property
 
 '---------------------------------------------------------------
-Public Property Get Parent() As ClsUIFrame
+Public Property Get Parent() As ClsUITable
     Set Parent = pParent
 End Property
 
-Public Property Set Parent(obj As ClsUIFrame)
+Public Property Set Parent(obj As ClsUITable)
     Set pParent = obj
 End Property
 
 ' ===============================================================
 ' Method ReOrder
-' re-orders the shapes so that the Lineitems sit on top of the screen
+' re-orders the shapes so that the Cells sit on top of the screen
 '---------------------------------------------------------------
 Public Sub ReOrder()
     
-    pShpLineitem.ZOrder msoBringToFront
+    pShpCell.ZOrder msoBringToFront
     If Not pBadge Is Nothing Then pBadge.ZOrder msoBringToFront
     
     pMenu.ReOrder
 End Sub
 
 ' ===============================================================
-Public Sub Initialize(obj As ClsUIFrame)
+Public Sub Initialize(obj As ClsUITable)
     Set Me.Parent = obj
 End Sub
 
 Private Sub Class_Initialize()
-    Set pShpLineitem = ShtMain.Shapes.AddTextbox(msoTextOrientationHorizontal, 0, 0, 10, 10)
+    Set pShpCell = ShtMain.Shapes.AddTextbox(msoTextOrientationHorizontal, 0, 0, 10, 10)
+    Set pStyle = New ClsUIStyle
 End Sub
 
 ' ===============================================================
 Public Sub Terminate()
     Set pParent = Nothing
-    pShpLineitem.Delete
+    Set pStyle = Nothing
+    pShpCell.Delete
     
     If Not pBadge Is Nothing Then
         pBadge.Delete
@@ -227,7 +248,8 @@ Public Sub Terminate()
 End Sub
 '---------------------------------------------------------------
 Private Sub Class_Terminate()
-    Set pShpLineitem = Nothing
+    Set pShpCell = Nothing
+    Set pStyle = Nothing
 
     If Not pBadge Is Nothing Then
         Set pBadge = Nothing

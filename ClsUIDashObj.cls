@@ -30,7 +30,7 @@ Private pLocked As Boolean
 Private pShpDashObj As Shape
 Private pEnumObjType As EnumObjType
 Private pVisible As Boolean
-Private pStyle As TypeStyle
+Private pStyle As ClsUIStyle
 Private pParent As ClsUIFrame
 
 '---------------------------------------------------------------
@@ -141,11 +141,11 @@ Public Property Let EnumObjType(ByVal vNewValue As EnumObjType)
 End Property
 
 '---------------------------------------------------------------
-Public Property Get Style() As TypeStyle
+Public Property Get Style() As ClsUIStyle
     Style = pStyle
 End Property
 
-Public Property Let Style(vNewValue As TypeStyle)
+Public Property Let Style(vNewValue As ClsUIStyle)
     pStyle = vNewValue
     
     With pShpDashObj.Fill
@@ -166,7 +166,7 @@ Public Property Let Style(vNewValue As TypeStyle)
         .Characters.Font.Color = vNewValue.FontColour
         .Characters.Font.Size = vNewValue.FontSize
         If vNewValue.FontXJust <> 0 Then .HorizontalAlignment = vNewValue.FontXJust
-        If vNewValue.FontYJust <> 0 Then .VerticalAlignment = vNewValue.FontYJust
+        If vNewValue.FontVJust <> 0 Then .VerticalAlignment = vNewValue.FontVJust
     End With
     
     With pShpDashObj.Shadow

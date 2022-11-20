@@ -41,7 +41,7 @@ Public Property Get PCComplete() As String
     
     Complete = 0
     For Each Step In pSteps
-        If Step.Status = enComplete Then Complete = Complete + 1
+        If Step.Status = "Complete" Then Complete = Complete + 1
     Next
     
     pPCComplete = Complete / pSteps.Count * 100
@@ -77,7 +77,7 @@ Attribute FindItem.VB_UserMemId = 0
     If FindItem Is Nothing Then
         Set FindItem = pSteps.Item(CStr(Parent.WorkflowNo & "-" & StepIndex))
     End If
-    
+    Debug.Assert Not FindItem Is Nothing
 End Function
 
 ' ===============================================================
@@ -123,6 +123,7 @@ End Function
 Public Function SaveCollection()
     Dim Step As ClsStep
     
+    Sin 0
     For Each Step In pSteps
         Step.DBSave
     Next
@@ -141,7 +142,6 @@ Public Sub GetCollection()
     Dim i As Integer
 
     Set RstStep = ModDatabase.SQLQuery("SELECT * FROM TblStep WHERE WorkflowNo = " & Parent.WorkflowNo _
-                                        & " AND Deleted IS NULL" _
                                         & " ORDER BY StepNo")
     
     If RstStep.RecordCount = 0 Then
@@ -198,6 +198,7 @@ End Sub
 
 Public Sub DeleteCollection()
     Dim Step As ClsStep
+    Sin 0
     For Each Step In pSteps
         pSteps.Remove Parent.WorkflowNo & "-" & CStr(Step.StepNo)
     Next
@@ -260,7 +261,7 @@ Public Sub UpdateSteps()
              & "  WHERE" _
              & "    TblStep.UniqueID = TblStepTemplate.UniqueID"
     
-    SQL = "SELECT WorkflowNo FROM TblWorkflow WHERE Status <> 'enComplete'"
+    SQL = "SELECT WorkflowNo FROM TblWorkflow WHERE Status <> 'Complete'"
     Set RstWFs = DB.OpenRecordset(SQL)
     
     With RstWFs
@@ -268,9 +269,8 @@ Public Sub UpdateSteps()
         
             'cycle through WF Nos
             WFNo = !WorkflowNo
-            Debug.Print WFNo
             'get cert type
-            SQL = "SELECT Name FROM TblWorkflow WHERE WorkflowNo = " & WFNo & " AND Status <> 'enComplete'"
+            SQL = "SELECT Name FROM TblWorkflow WHERE WorkflowNo = " & WFNo & " AND Status <> 'Complete'"
             
             Set RstDoDCert = DB.OpenRecordset(SQL)
             
@@ -291,7 +291,6 @@ Public Sub UpdateSteps()
                         
                         With RstTest
                             If RstTest.RecordCount = 0 Then
-                                Debug.Print "Workflow " & WFNo & " Step No " & StepNo & " is missing"
                                 .AddNew
                                 !Wait = RstSteps!Wait
                                 !StepType = RstSteps!StepType
@@ -309,7 +308,7 @@ Public Sub UpdateSteps()
                                 !Email = RstSteps!Email
                                 !AltEmail = RstSteps!AltEmail
                                 !WorkflowNo = WFNo
-                                !Status = "enNotStarted"
+                                !Status = "Not Started"
                                 !CopyText = RstSteps!CopyText
                                 !CopyTextName = RstSteps!CopyTextName
                                 !UniqueID = RstSteps!UniqueID
@@ -322,11 +321,12 @@ Public Sub UpdateSteps()
                                 
                                 If RstNextRec.RecordCount = 0 Then Err.Raise HANDLED_ERROR, , "Error loading WF " & WFNo
                                 
-                                'if the next record has been started, set record to be complete
+                                'if the next record has been started, set record to be Complete
                                 If RstNextRec!StartTime <> 0 And Not IsNull(RstNextRec!StartTime) Then
                                     !StartTime = RstNextRec!StartTime
                                     !EndTime = RstNextRec!StartTime
-                                    !Status = "enComplete"
+                                    !Status = "Complete"
+                                    
                                 End If
                                 
                                 .Update
@@ -398,6 +398,7 @@ End Sub
 Public Sub Terminate()
     Dim Step As ClsStep
 
+    Sin 0
     For Each Step In pSteps
         Step.Terminate
     Next

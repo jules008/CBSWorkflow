@@ -2,13 +2,13 @@ VERSION 1.0 CLASS
 BEGIN
   MultiUse = -1  'True
 END
-Attribute VB_Name = "ClsUIMenuItem"
+Attribute VB_Name = "ClsUIButton"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 '===============================================================
-' Class ClsUIMenuItem
+' Class ClsUIButton
 '---------------------------------------------------------------
 ' Created by Julian Turner
 ' OneSheet Consulting
@@ -29,9 +29,11 @@ Private pText As String
 Private pIcon As Shape
 Private pBadge As Shape
 Private pBadgeText As String
-Private pSelectStyle As TypeStyle
-Private pUnSelectStyle As TypeStyle
-Private pShpMenuItem As Shape
+Private pButtonLvl As Integer
+Private pButtonIndex As String
+Private pSelectStyle As ClsUIStyle
+Private pUnSelectStyle As ClsUIStyle
+Private pShpButton As Shape
 Private pSelected As Boolean
 Private pVisible As Boolean
 Private pOnAction As String
@@ -39,72 +41,62 @@ Private pParent As ClsUIMenu
 
 '---------------------------------------------------------------
 Public Property Get Top() As Integer
-    Top = pShpMenuItem.Top
+    Top = pShpButton.Top
 End Property
 
 Public Property Let Top(ByVal vNewValue As Integer)
-    Dim ParentOffset As Integer
-    
     pTop = vNewValue
-    
-    If Not Parent Is Nothing Then ParentOffset = Parent.Top
-    
-    pShpMenuItem.Top = pTop + ParentOffset
+    pShpButton.Top = pTop
 End Property
 
 '---------------------------------------------------------------
 Public Property Get Left() As Integer
-    Left = pShpMenuItem.Left
+    Left = pShpButton.Left
 End Property
 
 Public Property Let Left(ByVal vNewValue As Integer)
-    Dim ParentOffset As Integer
-    
     pLeft = vNewValue
-    
-    If Not Parent Is Nothing Then ParentOffset = Parent.Left
-    
-    pShpMenuItem.Left = pLeft + ParentOffset
+    pShpButton.Left = pLeft
 End Property
 
 '---------------------------------------------------------------
 Public Property Get Height() As Integer
-    Height = pShpMenuItem.Height
+    Height = pShpButton.Height
 End Property
 
 Public Property Let Height(ByVal vNewValue As Integer)
     pHeight = vNewValue
-    pShpMenuItem.Height = pHeight
+    pShpButton.Height = pHeight
 End Property
 
 '---------------------------------------------------------------
 Public Property Get Width() As Integer
-    Width = pShpMenuItem.Width
+    Width = pShpButton.Width
 End Property
 
 Public Property Let Width(ByVal vNewValue As Integer)
     pWidth = vNewValue
-    pShpMenuItem.Width = pWidth
+    pShpButton.Width = pWidth
 End Property
 
 '---------------------------------------------------------------
 Public Property Get Name() As String
-    Name = pShpMenuItem.Name
+    Name = pShpButton.Name
 End Property
 
 Public Property Let Name(ByVal vNewValue As String)
     pName = vNewValue
-    pShpMenuItem.Name = pName
+    pShpButton.Name = pName
 End Property
 
 '---------------------------------------------------------------
 Public Property Get Text() As String
-    Text = pShpMenuItem.TextFrame.Characters.Caption
+    Text = pShpButton.TextFrame.Characters.Caption
 End Property
 
 Public Property Let Text(ByVal vNewValue As String)
     pText = vNewValue
-    pShpMenuItem.TextFrame.Characters.Caption = pText
+    pShpButton.TextFrame.Characters.Caption = pText
 End Property
 
 '---------------------------------------------------------------
@@ -141,36 +133,53 @@ Public Property Let BadgeText(ByVal vNewValue As String)
     
     If CInt(pBadgeText) > 99 Then pBadgeText = "99"
     
-    ShtMain.Unprotect PROTECT_KEY
-    
     pBadge.TextFrame.Characters.Caption = pBadgeText
 End Property
 
 '---------------------------------------------------------------
-Public Property Get SelectStyle() As TypeStyle
-    SelectStyle = pSelectStyle
-End Property
-
-Public Property Let SelectStyle(vNewValue As TypeStyle)
-    pSelectStyle = vNewValue
-End Property
-
-'---------------------------------------------------------------
-Public Property Get UnSelectStyle() As TypeStyle
-    UnSelectStyle = pUnSelectStyle
-End Property
-
-Public Property Let UnSelectStyle(vNewValue As TypeStyle)
-    pUnSelectStyle = vNewValue
+Public Property Get ButtonLvl() As Integer
+    Dim AryIndex
+    
+    AryIndex = Split(ButtonIndex, ".")
+    pButtonLvl = UBound(AryIndex) + 1
+    ButtonLvl = pButtonLvl
+    
 End Property
 
 '---------------------------------------------------------------
-Public Property Get ShpMenuItem() As Shape
-    Set ShpMenuItem = pShpMenuItem
+Public Property Get ButtonIndex() As String
+    ButtonIndex = pButtonIndex
 End Property
 
-Public Property Let ShpMenuItem(ByVal vNewValue As Shape)
-    Set pShpMenuItem = vNewValue
+Public Property Let ButtonIndex(ByVal vNewValue As String)
+    pButtonIndex = vNewValue
+End Property
+
+'---------------------------------------------------------------
+Public Property Get SelectStyle() As ClsUIStyle
+    Set SelectStyle = pSelectStyle
+End Property
+
+Public Property Let SelectStyle(vNewValue As ClsUIStyle)
+    Set pSelectStyle = vNewValue
+End Property
+
+'---------------------------------------------------------------
+Public Property Get UnSelectStyle() As ClsUIStyle
+    Set UnSelectStyle = pUnSelectStyle
+End Property
+
+Public Property Let UnSelectStyle(vNewValue As ClsUIStyle)
+    Set pUnSelectStyle = vNewValue
+End Property
+
+'---------------------------------------------------------------
+Public Property Get ShpButton() As Shape
+    Set ShpButton = pShpButton
+End Property
+
+Public Property Let ShpButton(ByVal vNewValue As Shape)
+    Set pShpButton = vNewValue
 End Property
 
 '---------------------------------------------------------------
@@ -179,38 +188,38 @@ Public Property Get Selected() As Boolean
 End Property
 
 Public Property Let Selected(ByVal vNewValue As Boolean)
-    Dim Style As TypeStyle
+    Dim Style As ClsUIStyle
     
     pSelected = vNewValue
         
     If pSelected Then
-        Style = pSelectStyle
+        Set Style = pSelectStyle
     Else
-        Style = pUnSelectStyle
+        Set Style = pUnSelectStyle
     End If
     
-    With pShpMenuItem.Fill
-        .TwoColorGradient msoGradientHorizontal, 1
+    With pShpButton.Fill
+'        .TwoColorGradient msoGradientHorizontal, 1
         .ForeColor.RGB = Style.Fill1
         .BackColor.RGB = Style.Fill2
     End With
     
-    With pShpMenuItem.Line
+    With pShpButton.Line
         .Weight = Style.BorderWidth
         If .Weight = 0 Then .Visible = msoFalse Else .Visible = msoCTrue
         .ForeColor.RGB = Style.BorderColour
     End With
     
-    With pShpMenuItem.TextFrame
+    With pShpButton.TextFrame
         .Characters.Font.Bold = Style.FontBold
         .Characters.Font.Name = Style.FontStyle
         .Characters.Font.Color = Style.FontColour
         .Characters.Font.Size = Style.FontSize
         If Style.FontXJust <> 0 Then .HorizontalAlignment = Style.FontXJust
-        If Style.FontYJust <> 0 Then .VerticalAlignment = Style.FontYJust
+'        If Style.FontVJust <> 0 Then .VerticalAlignment = Style.FontVJust
     End With
     
-    With pShpMenuItem.Shadow
+    With pShpButton.Shadow
         If Style.Shadow = 0 Then
             .Visible = msoFalse
         Else
@@ -227,18 +236,18 @@ End Property
 
 Public Property Let Visible(ByVal vNewValue As Boolean)
     pVisible = vNewValue
-    pShpMenuItem.Visible = vNewValue
+    pShpButton.Visible = vNewValue
     If Not pIcon Is Nothing Then pIcon.Visible = vNewValue
     If Not pBadge Is Nothing Then pBadge.Visible = vNewValue
 End Property
 
 '---------------------------------------------------------------
 Public Property Get OnAction() As String
-    OnAction = pShpMenuItem.OnAction
+    OnAction = pShpButton.OnAction
 End Property
 
 Public Property Let OnAction(ByVal vNewValue As String)
-    pShpMenuItem.OnAction = vNewValue
+    pShpButton.OnAction = vNewValue
 End Property
 
 ' ===============================================================
@@ -246,7 +255,7 @@ End Property
 ' re-orders the shapes so that the frames sit on top of the screen
 '---------------------------------------------------------------
 Public Sub ReOrder()
-    pShpMenuItem.ZOrder msoBringToFront
+    pShpButton.ZOrder msoBringToFront
     If Not pIcon Is Nothing Then pIcon.ZOrder msoBringToFront
     If Not pBadge Is Nothing Then pBadge.ZOrder msoBringToFront
 End Sub
@@ -267,17 +276,17 @@ End Sub
 '---------------------------------------------------------------
 
 Private Sub Class_Initialize()
-    Set pShpMenuItem = ShtMain.Shapes.AddShape(msoShapeRectangle, 0, 0, 10, 10)
+    Set pShpButton = ShtMain.Shapes.AddShape(msoShapeRectangle, 0, 0, 10, 10)
 End Sub
 ' ===============================================================
 Public Sub Terminate()
     Set pParent = Nothing
-    pShpMenuItem.Delete
-    Set pShpMenuItem = Nothing
+    pShpButton.Delete
+    Set pShpButton = Nothing
 End Sub
 '---------------------------------------------------------------
 Private Sub Class_Terminate()
-    Set pShpMenuItem = Nothing
+    Set pShpButton = Nothing
 End Sub
 
-'---------------------------------------------------------------
+

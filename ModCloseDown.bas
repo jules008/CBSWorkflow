@@ -20,10 +20,6 @@ Private Const StrMODULE As String = "ModCloseDown"
 ' Closedown processing
 ' ---------------------------------------------------------------
 Public Function Terminate() As Boolean
-    Dim Frame As ClsUIFrame
-    Dim DashObj As ClsUIDashObj
-    Dim MenuItem As ClsUIMenuItem
-    Dim Lineitem As ClsUILineitem
 
     Const StrPROCEDURE As String = "Terminate()"
 
@@ -98,6 +94,9 @@ Private Function EndGlobalClasses() As Boolean
 
     On Error GoTo ErrorHandler
 
+    If Not ActiveWorkflows Is Nothing Then ActiveWorkflows.Terminate
+    
+    Set ActiveWorkflows = Nothing
     
     EndGlobalClasses = True
 
@@ -106,7 +105,10 @@ Exit Function
 
 ErrorExit:
 
-    '***CleanUpCode***
+    ActiveWorkflows.Terminate
+    
+    Set ActiveWorkflows = Nothing
+    
     EndGlobalClasses = False
 
 Exit Function

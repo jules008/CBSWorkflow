@@ -52,15 +52,13 @@ Public Function CentralErrorHandler( _
     iFile = FreeFile()
     Open ThisWorkbook.Path & ERROR_PATH & FILE_ERROR_LOG For Append As #iFile
     If Not FirstRunDone Then
-'        Print #iFile,
-'        Print #iFile, "---------------------------------------------------------------------------------------------------------------------------------------"
-'        Print #iFile, "User: " & Application.UserName
-'        Print #iFile, "Member: " & ActiveWorkFlow.Member.UserName
-'        Print #iFile, "Workflow: " & ActiveWorkFlow.WorkflowNo
-'        Print #iFile, "Step: " & ActiveWorkFlow.CurrentStep
-'        Print #iFile, "Course: " & ActiveWorkFlow.DoDCert.CertName
-'        Print #iFile, "Custom Data: " & CustomData
-'        Print #iFile,
+        Print #iFile,
+        Print #iFile, "---------------------------------------------------------------------------------------------------------------------------------------"
+        Print #iFile, "User: " & Application.UserName
+        Print #iFile, "Member: " & ActiveWorkFlow.Name
+        Print #iFile, "Workflow: " & ActiveWorkFlow.WorkflowNo
+        Print #iFile, "Step: " & ActiveWorkFlow.CurrentStep
+        Print #iFile,
         FirstRunDone = True
     End If
     Print #iFile, Format$(Now(), "mm/dd/yy hh:mm:ss"); LogText
@@ -118,7 +116,7 @@ Public Function CustomErrorHandler(ErrorCode As Long, Optional Message As String
             FaultCount1002 = FaultCount1002 + 1
 
             If FaultCount1002 <= 3 Then
-                Initialise
+                Initialize
                 Application.DisplayStatusBar = True
                 Application.StatusBar = "System failed...Restarting Attempt " & FaultCount1002
                 Application.Wait (Now + TimeValue("0:00:02"))

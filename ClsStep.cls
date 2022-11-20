@@ -45,11 +45,14 @@ Private pDataItem As Variant
 Private pDataFormat As String
 Private pDataDest As String
 Private pWFName As String
-Private pStatus As enStatus
+Private pStatus As String
 Private pWait As Boolean
-'Private pEmail As ClsEmail
-'Private pAltEmail As ClsEmail
+Private pEmail As ClsEmail
+Private pAltEmail As ClsEmail
 Private pUniqueID As Integer
+Private pStepHelp As FrmStepHelp
+Private pStepHelpTitle As String
+Private pStepHelpBody As String
 Private pParent As ClsWorkflow
 
 '---------------------------------------------------------------
@@ -208,7 +211,7 @@ End Property
 '---------------------------------------------------------------
 Public Property Get TimeToAmber() As Variant
     
-    If pStatus = enComplete Then
+    If pStatus = "Complete" Then
         TimeToAmber = AmberThresh
     ElseIf DateDiff("h", Now, AmberTime) > 0 Then
         pTimeToAmber = DateDiff("h", Now, AmberTime)
@@ -222,7 +225,7 @@ End Property
 '---------------------------------------------------------------
 Public Property Get TimeToRed() As Variant
     
-    If pStatus = enComplete Then
+    If pStatus = "Complete" Then
         TimeToRed = RedThresh
     ElseIf DateDiff("h", Now, RedTime) > 0 Then
         pTimeToRed = DateDiff("h", Now, RedTime)
@@ -310,20 +313,20 @@ Public Property Let WFName(ByVal vNewValue As String)
 End Property
 
 '---------------------------------------------------------------
-Public Property Get Status() As enStatus
+Public Property Get Status() As String
     If pStartTime = 0 Then
-        pStatus = enNotStarted
+        pStatus = "Not Started"
     ElseIf pStartTime <> 0 And pEndTime <> 0 Then
-        pStatus = enComplete
+        pStatus = "Complete"
     ElseIf pWait Then
-        pStatus = enWaiting
+        pStatus = "Waiting"
     Else
-        pStatus = enActionReqd
+        pStatus = "Action Req."
     End If
     Status = pStatus
 End Property
 
-Public Property Let Status(ByVal vNewValue As enStatus)
+Public Property Let Status(ByVal vNewValue As String)
     pStatus = vNewValue
 End Property
 '---------------------------------------------------------------
@@ -386,15 +389,22 @@ Public Sub DBGet(WorkflowNo As Integer, StepNo As String)
             If Not IsNull(!RedThresh) Then pRedThresh = !RedThresh
             If Not IsNull(!AmberThresh) Then pAmberThresh = !AmberThresh
             If Not IsNull(!CopyTextName) Then pCopyTextName = !CopyTextName
-            If Not IsNull(!Status) Then pStatus = enStatusVal(!Status)
+            If Not IsNull(!Status) Then pStatus = !Status
             If Not IsNull(!Wait) Then pWait = !Wait
             If Not IsNull(!CopyText) Then pCopyText = !CopyText
             If Not IsNull(!DataItem) Then pDataItem = !DataItem
             If Not IsNull(!DataFormat) Then pDataFormat = !DataFormat
             If Not IsNull(!DataDest) Then pDataDest = !DataDest
             If Not IsNull(!UniqueID) Then pUniqueID = !UniqueID
-'            If Not IsNull(!Email) And !Email <> 0 Then pEmail.DBGet !Email
-'            If Not IsNull(!AltEmail) And !AltEmail <> 0 Then pAltEmail.DBGet !AltEmail
+            If Not IsNull(!HelpText) Then
+                Dim HelpText() As String
+                HelpText = Split(!HelpText, ":")
+                pStepHelpTitle = HelpText(0)
+                pStepHelpBody = HelpText(1)
+            End If
+            
+            If Not IsNull(!Email) And !Email <> 0 Then pEmail.DBGet !Email
+            If Not IsNull(!AltEmail) And !AltEmail <> 0 Then pAltEmail.DBGet !AltEmail
         End If
     End With
 Set RstStep = Nothing
@@ -428,8 +438,14 @@ Public Sub DBGetTemplate(StepNo As String)
             If Not IsNull(!WFName) Then pWFName = !WFName
             If Not IsNull(!UniqueID) Then pUniqueID = !UniqueID
             If Not IsNull(!Wait) Then pWait = !Wait
-'            If Not IsNull(!Email) And !Email <> 0 Then pEmail.DBGet !Email
-'            If Not IsNull(!AltEmail) And !AltEmail <> 0 Then pAltEmail.DBGet !AltEmail
+            If Not IsNull(!HelpText) Then
+                Dim HelpText() As String
+                HelpText = Split(!HelpText, ":")
+                pStepHelpTitle = HelpText(0)
+                pStepHelpBody = HelpText(1)
+            End If
+            If Not IsNull(!Email) And !Email <> 0 Then pEmail.DBGet !Email
+            If Not IsNull(!AltEmail) And !AltEmail <> 0 Then pAltEmail.DBGet !AltEmail
             
         End If
     End With
@@ -444,12 +460,13 @@ Public Sub Start()
     
     pStartTime = Now
     DBSave
-'    If pEmail.EmailNo <> 0 Then pEmail.Display
+    If pEmail.EmailNo <> 0 Then pEmail.Display
+    
 End Sub
 
 ' ===============================================================
 ' Method Complete
-' completes the step
+' Completes the step
 '---------------------------------------------------------------
 Public Sub Complete()
     pEndTime = Now
@@ -466,7 +483,7 @@ Public Sub DBSave(Optional StepIndex As String)
 
     If StepIndex = "" Then StepIndex = pStepIndex
     
-    Set RstStep = ModDatabase.SQLQuery("SELECT * FROM TblStep WHERE StepIndex = " & StepIndex & " AND Deleted IS NULL")
+    Set RstStep = ModDatabase.SQLQuery("SELECT * FROM TblStep WHERE StepIndex = " & StepIndex)
     Set RstMaxNo = ModDatabase.SQLQuery("SELECT MAX(StepIndex) FROM TblStep ")
 
     If RstMaxNo.Fields(0).Value <> 0 Then
@@ -501,11 +518,12 @@ Public Sub DBSave(Optional StepIndex As String)
         !DataFormat = pDataFormat
         !DataDest = pDataDest
         !UniqueID = pUniqueID
-        !Status = enStatusStr(pStatus)
-'        !Email = pEmail.EmailNo
-'        !AltEmail = pAltEmail.EmailNo
+        !Status = pStatus
+        !Email = pEmail.EmailNo
+        !AltEmail = pAltEmail.EmailNo
         !Wait = pWait
         !WorkflowNo = Parent.WorkflowNo
+        !HelpText = pStepHelpTitle & ":" & pStepHelpBody
         .Update
 
     End With
@@ -560,7 +578,7 @@ Public Sub DBDelete(Optional FullDelete As Boolean)
     Dim RstStep As Recordset
     Dim i As Integer
 
-    Set RstStep = ModDatabase.SQLQuery("SELECT * FROM TblStep WHERE StepNo = " & pStepNo & " AND Deleted IS NULL")
+    Set RstStep = ModDatabase.SQLQuery("SELECT * FROM TblStep WHERE StepNo = " & pStepNo)
     With RstStep
         For i = .RecordCount To 1 Step -1
             If FullDelete Then
@@ -587,27 +605,45 @@ Public Sub Reset()
 End Sub
 
 ' ===============================================================
+' Method DisplayForm
+' displays client form
+' ---------------------------------------------------------------
+Public Sub DisplayForm()
+    With pStepHelp
+        .TxtTitle = pStepHelpTitle
+        .xTxtHelpText = pStepHelpBody
+        .Show
+    End With
+End Sub
+
+' ===============================================================
 Public Sub Initialize(obj As ClsWorkflow)
     Set Me.Parent = obj
 End Sub
     
 Private Sub Class_Initialize()
-'    Set pEmail = New ClsEmail
-'    Set pAltEmail = New ClsEmail
+    Set pStepHelp = New FrmStepHelp
+    Set pEmail = New ClsEmail
+    Set pAltEmail = New ClsEmail
+    
+    pEmail.Initialize Me
+    pAltEmail.Initialize Me
 End Sub
 ' ===============================================================
 Public Sub Terminate()
-'    pEmail.Terminate
-'    pAltEmail.Terminate
+    pEmail.Terminate
+    pAltEmail.Terminate
 
     Set pParent = Nothing
-'    Set pEmail = Nothing
-'    Set pAltEmail = Nothing
+    Set pStepHelp = Nothing
+    Set pEmail = Nothing
+    Set pAltEmail = Nothing
 End Sub
 '---------------------------------------------------------------
 Private Sub Class_Terminate()
-'    Set pEmail = Nothing
-'    Set pAltEmail = Nothing
+    Set pStepHelp = Nothing
+    Set pEmail = Nothing
+    Set pAltEmail = Nothing
 End Sub
 
 '---------------------------------------------------------------
