@@ -95,6 +95,7 @@ Public CTimer As ClsCodeTimer
 Public SubTable As ClsUITable
 Public MailSystem As ClsMailSystem
 Public CurrentUser As ClsCBSUser
+Public MailInbox As ClsMailInbox
 
 ' ===============================================================
 ' Global UI Class Declarations
