@@ -25,14 +25,18 @@ Public Function LogUserOn(UserName As String) As Boolean
     On Error GoTo ErrorHandler
 
     If UserName = "" Then Err.Raise HANDLED_ERROR, , "Username blank"
-'
-'    CurrentUser.DBGet UserName
-'
-'    If CurrentUser.UserLvl = enAdmin Then
-'        Debug.Print Now & " - " & UserName & " Logged in as Admin User"
-'    Else
-'        Debug.Print Now & " - " & UserName & " Logged in as Basic User"
-'    End If
+
+    With CurrentUser
+        .DBGet UserName
+    
+        If .CBSUserNo = 0 Then
+            .UserName = UserName
+            .UserLvl = "Admin"
+            .DBSave
+        End If
+    End With
+    
+    Debug.Print Now & " - " & UserName & " Logged in as " & CurrentUser.UserLvl
     
 GracefulExit:
 

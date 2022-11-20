@@ -25,13 +25,12 @@ Public Sub QueryTest()
     Set DB = OpenDatabase(GetDocLocalPath(ThisWorkbook.Path) & INI_FILE_PATH & DB_FILE_NAME & ".accdb")
     
     'undo commands
-    
+    DB.Execute "ALTER TABLE TblCBSUser DROP COLUMN UserLvl)"
     
     Stop
     
     'Update commands
-    DB.Execute "UPDATE TblStepTemplate SET AltStep = '1.04' WHERE StepNo = '1.02'"
-    DB.Execute "UPDATE TblStep SET AltStep = '1.04' WHERE StepNo = '1.02'"
+    DB.Execute "ALTER TABLE TblCBSUser ADD COLUMN UserLvl text (20)"
     
     Set RstUpdate = Nothing
     Set DB = Nothing
@@ -78,11 +77,9 @@ Public Function UpdateDBScript() As Boolean
     ' ========================================================================================
     ' Database commands
     ' ----------------------------------------------------------------------------------------
-    DB.Execute "UPDATE TblStepTemplate SET NextStep = '1.04' WHERE StepNo = '1.02'"
-    DB.Execute "UPDATE TblStepTemplate SET AltStep = '1.03' WHERE StepNo = '1.02'"
-    DB.Execute "UPDATE TblStep SET NextStep = '1.04' WHERE StepNo = '1.02'"
-    DB.Execute "UPDATE TblStep SET AltStep = '1.03' WHERE StepNo = '1.02'"
     
+    'Userlevel changes
+    DB.Execute "ALTER TABLE TblCBSUser ADD COLUMN UserLvl text (20)"
 '    DB.Execute "DELETE * FROM TblStep"
     
 '    UpdateTable
@@ -150,8 +147,8 @@ Public Function UpdateDBScriptUndo() As Boolean
     
         
     If RstTable.Fields(0) <> DB_VER Then
-        UpdateDBScriptUndo = True
-        Exit Function
+'        UpdateDBScriptUndo = True
+'        Exit Function
     End If
     
     With RstTable
@@ -164,7 +161,8 @@ Public Function UpdateDBScriptUndo() As Boolean
     ' ========================================================================================
     ' Database commands
     ' ----------------------------------------------------------------------------------------
-    
+    'user level changes
+    DB.Execute "ALTER TABLE TblCBSUser DROP COLUMN UserLvl)"
     ' ========================================================================================
     
     DB.Close

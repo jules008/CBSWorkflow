@@ -32,6 +32,7 @@ Private pCBSUserNo As Integer
 Private pUserName As String
 Private pPosition As String
 Private pPhoneNo As String
+Private pUserLvl As String
 Private WithEvents pCBSUserForm As FrmCBSUser
 Attribute pCBSUserForm.VB_VarHelpID = -1
 
@@ -71,14 +72,43 @@ Public Property Let PhoneNo(ByVal vNewValue As String)
     pPhoneNo = vNewValue
 End Property
 
+'---------------------------------------------------------------
+Public Property Get UserLvl() As String
+    UserLvl = pUserLvl
+End Property
+
+Public Property Let UserLvl(ByVal vNewValue As String)
+    pUserLvl = vNewValue
+End Property
+
 ' ===============================================================
 ' Method DBNew
 ' displays new User form
 ' ---------------------------------------------------------------
 Public Sub DBNew()
+    pUserName = ""
+    pPosition = ""
+    pPhoneNo = ""
+    pUserLvl = ""
     
     With pCBSUserForm
         .Tag = "New"
+        .Show
+    End With
+End Sub
+
+' ===============================================================
+' Method DisplayForm
+' displays client form
+' ---------------------------------------------------------------
+Public Sub DisplayForm()
+    With pCBSUserForm
+        .Tag = "Update"
+        .TxtCBSUserNo = pCBSUserNo
+        .TxtPhoneNo = pPhoneNo
+        .TxtPosition = pPosition
+        .TxtUserName = pUserName
+        .CmoUserLvl = pUserLvl
         .Show
     End With
 End Sub
@@ -102,6 +132,7 @@ Public Sub DBGet(CBSUserNameOrNo As Variant)
             If Not IsNull(!UserName) Then pUserName = !UserName
             If Not IsNull(!Position) Then pPosition = !Position
             If Not IsNull(!PhoneNo) Then pPhoneNo = !PhoneNo
+            If Not IsNull(!UserLvl) Then pUserLvl = !UserLvl
         End If
     End With
     Set RstCBSUser = Nothing
@@ -137,6 +168,7 @@ Public Sub DBSave()
         !UserName = CleanSQLText(pUserName, True)
         !Position = CleanSQLText(pPosition, True)
         !PhoneNo = CleanSQLText(pPhoneNo, True)
+        !UserLvl = CleanSQLText(pUserLvl, True)
 
         .Update
     End With
@@ -156,16 +188,36 @@ Public Sub DBDelete(Optional FullDelete As Boolean)
 End Sub
 
 ' ===============================================================
+' Event pCBSUserForm_Update
+' Event from client form to update CBS User
+' ---------------------------------------------------------------
+Private Sub pCBSUserForm_Update()
+    With pCBSUserForm
+        pUserName = CleanSQLText(.TxtUserName)
+        pPosition = CleanSQLText(.TxtPosition)
+        pPhoneNo = CleanSQLText(.TxtPhoneNo)
+        pUserLvl = CleanSQLText(.CmoUserLvl)
+    End With
+    DBSave
+End Sub
+
+' ===============================================================
 ' Event pCBSUserForm_CreateNew
 ' Event from user form to create new SPV
 ' ---------------------------------------------------------------
 Private Sub pCBSUserForm_CreateNew()
     With pCBSUserForm
-        pPhoneNo = .TxtPhoneNo
-        pPosition = .TxtPosition
-        pUserName = .TxtUserName
+        .Hide
     End With
-    DBSave
+    DBNew
+End Sub
+
+' ===============================================================
+' Event pCBSUserForm_Delete
+' Deletes Contact
+' ---------------------------------------------------------------
+Private Sub pCBSUserForm_Delete()
+    DBDelete
 End Sub
 
 ' ===============================================================

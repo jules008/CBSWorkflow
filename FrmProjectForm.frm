@@ -48,11 +48,22 @@ End Sub
 Private Sub BtnDelete_Click()
     Dim Response As Integer
     
+    On Error GoTo ErrorHandler
+    
+    If CurrentUser.UserLvl <> "Admin" Then Err.Raise ACCESS_DENIED
+    
     Response = MsgBox("Are you sure you want to delete the Project from the database?", vbYesNo + vbExclamation, APP_NAME)
     
     If Response = 6 Then
         RaiseEvent Delete
         Unload Me
+    End If
+    
+ErrorHandler:
+    Dim ErrNo As Integer
+    If Err.Number >= 2000 And Err.Number <= 2500 Then
+        ErrNo = Err.Number
+        CustomErrorHandler (Err.Number)
     End If
 End Sub
 
@@ -75,7 +86,17 @@ End Sub
 ' Creates new Contact
 ' ---------------------------------------------------------------
 Private Sub BtnNew_Click()
+    On Error GoTo ErrorHandler
+    
+    If CurrentUser.UserLvl <> "Admin" Or CurrentUser.UserLvl <> "Case Manager" Then Err.Raise ACCESS_DENIED
+    
     RaiseEvent CreateNew
+ErrorHandler:
+    Dim ErrNo As Integer
+    If Err.Number >= 2000 And Err.Number <= 2500 Then
+        ErrNo = Err.Number
+        CustomErrorHandler (Err.Number)
+    End If
 End Sub
 
 ' ===============================================================
@@ -92,6 +113,7 @@ Private Sub BtnUpdate_Click()
 Restart:
 
     If MainScreen Is Nothing Then Err.Raise SYSTEM_RESTART
+    If CurrentUser.UserLvl <> "Admin" Then Err.Raise ACCESS_DENIED
     
     Select Case ValidateForm
 

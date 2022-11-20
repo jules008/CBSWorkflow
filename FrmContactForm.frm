@@ -45,11 +45,22 @@ End Sub
 Private Sub BtnDelete_Click()
     Dim Response As Integer
     
+    On Error GoTo ErrorHandler
+    
+    If CurrentUser.UserLvl <> "Admin" Then Err.Raise ACCESS_DENIED
+    
     Response = MsgBox("Are you sure you want to delete the Contact from the database?", vbYesNo + vbExclamation, APP_NAME)
     
     If Response = 6 Then
         RaiseEvent Delete
         Unload Me
+    End If
+    
+ErrorHandler:
+    Dim ErrNo As Integer
+    If Err.Number >= 2000 And Err.Number <= 2500 Then
+        ErrNo = Err.Number
+        CustomErrorHandler (Err.Number)
     End If
 End Sub
 
