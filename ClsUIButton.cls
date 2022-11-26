@@ -27,7 +27,11 @@ Private pWidth As Integer
 Private pName As String
 Private pText As String
 Private pIcon As Shape
+Private pIconLeft As Integer
+Private pIconTop As Integer
 Private pBadge As ClsUICell
+Private pBadgeLeft As Integer
+Private pBadgeTop As Integer
 Private pBadgeText As String
 Private pButtonLvl As Integer
 Private pButtonIndex As String
@@ -47,6 +51,12 @@ End Property
 Public Property Let Top(ByVal vNewValue As Integer)
     pTop = vNewValue
     pShpButton.Top = pTop
+    If Not Icon Is Nothing Then
+        Icon.Top = pIconTop + pTop
+    End If
+    If Not Badge Is Nothing Then
+        Badge.Top = pBadgeTop + pTop
+    End If
 End Property
 
 '---------------------------------------------------------------
@@ -57,6 +67,12 @@ End Property
 Public Property Let Left(ByVal vNewValue As Integer)
     pLeft = vNewValue
     pShpButton.Left = pLeft
+    If Not Icon Is Nothing Then
+        Icon.Left = pIconLeft + pLeft
+    End If
+    If Not Badge Is Nothing Then
+        Badge.Left = pBadgeLeft + pLeft
+    End If
 End Property
 
 '---------------------------------------------------------------
@@ -109,18 +125,22 @@ Public Property Let Icon(ByVal vNewValue As Shape)
 End Property
 
 Public Property Let IconLeft(ByVal IconLeft As Integer)
+    pIconLeft = IconLeft
     pIcon.Left = pLeft + IconLeft
 End Property
 
 Public Property Let IconTop(ByVal IconTop As Integer)
+    pIconTop = IconTop
     pIcon.Top = pTop + IconTop
 End Property
 
 Public Property Let BadgeLeft(ByVal BadgeLeft As Integer)
+    pBadgeLeft = BadgeLeft
     pBadge.Left = pLeft + BadgeLeft
 End Property
 
 Public Property Let BadgeTop(ByVal BadgeTop As Integer)
+    pBadgeTop = BadgeTop
     pBadge.Top = pTop + BadgeTop
 End Property
 

@@ -21,57 +21,23 @@ Public Sub QueryTest()
     Dim Message As String
     Dim RstUpdate As Recordset
     Dim i As Integer
+    Dim FSO As FileSystemObject
     
-    On Error Resume Next
+    Set FSO = New FileSystemObject
     
-    Set DB = OpenDatabase(GetDocLocalPath(ThisWorkbook.Path) & INI_FILE_PATH & DB_FILE_NAME & ".accdb")
-    Set RstUpdate = ModDatabase.SQLQuery("SELECT * FROM TblProject Where ProjectName IS NULL OR ProjectName =''")
-    
-    'undo commands
-    DB.Execute "ALTER TABLE TblWorkflow DROP COLUMN Progress"
-    DB.Execute "ALTER TABLE TblCBSUser DROP COLUMN UserLvl)"
-    DB.Execute "ALTER TABLE TblContact DROP COLUMN OptOut, Comfrq, LastComm"
     
     Stop
     
-    On Error GoTo 0
+    With FSO
+        If .FileExists(GetDocLocalPath(ThisWorkbook.Path) & PICTURES_PATH & "ToDo.png") Then
+            .DeleteFile GetDocLocalPath(ThisWorkbook.Path) & PICTURES_PATH & "ToDo.png"
+        End If
+    End With
     
-    'Update commands
-    DB.Execute "ALTER TABLE TblContact ADD COLUMN OptOut YesNo, ComFrq Int, LastComm Date"
-    DB.Execute "UPDATE TblStepTemplate SET AltStep = '1.04' WHERE StepNo = '1.02'"
-    DB.Execute "UPDATE TblStep SET AltStep = '1.04' WHERE StepNo = '1.02'"
-    DB.Execute "ALTER TABLE TblCBSUser ADD COLUMN UserLvl text (20)"
-
-    'Bugfix
-    DB.Execute "UPDATE TblStepTemplate SET NextStep = '1.04' WHERE StepNo = '1.02'"
-    DB.Execute "UPDATE TblStepTemplate SET AltStep = '1.03' WHERE StepNo = '1.02'"
-    DB.Execute "UPDATE TblStep SET NextStep = '1.04' WHERE StepNo = '1.02'"
-    DB.Execute "UPDATE TblStep SET AltStep = '1.03' WHERE StepNo = '1.02'"
+    ShtMain.Shapes("ToDo").Select
+    ModLibrary.SaveShapeAsPicture
+    ShtMain.Shapes("ToDo").Delete
     
-    'Progress Bars
-    DB.Execute "ALTER TABLE TblWorkflow ADD COLUMN Progress integer"
-    Dim Workflow As ClsWorkflow
-    
-'    Set RstUpdate = ModDatabase.SQLQuery("TblWorkflow")
-'
-'    Set Workflow = New ClsWorkflow
-'    With RstUpdate
-'        Do While Not .EOF
-'            Set Workflow = New ClsWorkflow
-'            Workflow.DBGet !WorkflowNo
-'            Workflow.DBSave
-'            Set Workflow = Nothing
-'            .MoveNext
-'            DoEvents
-'            'Debug.Print !WorkflowNo
-'        Loop
-'    End With
-    
-    Set Workflow = Nothing
-    Set RstUpdate = Nothing
-    
-    Set RstUpdate = Nothing
-    Set DB = Nothing
 End Sub
 
 ' ===============================================================
@@ -79,10 +45,12 @@ End Sub
 ' Script to update DB
 ' ---------------------------------------------------------------
 Public Function UpdateDBScript() As Boolean
+    Dim FSO As FileSystemObject
     Dim Message As String
     Dim RstUpdate As Recordset
     Dim i As Integer
     
+    Set FSO = New FileSystemObject
     Set DB = OpenDatabase(GetDocLocalPath(ThisWorkbook.Path) & INI_FILE_PATH & DB_FILE_NAME & ".accdb")
     Set RstUpdate = ModDatabase.SQLQuery("SELECT * FROM TblProject Where ProjectName IS NULL OR ProjectName =''")
     
@@ -115,35 +83,22 @@ Public Function UpdateDBScript() As Boolean
     ' ========================================================================================
     ' Database commands
     ' ----------------------------------------------------------------------------------------
-    DB.Execute "ALTER TABLE TblContact ADD COLUMN OptOut YesNo, ComFrq Int, LastComm Date"
-    DB.Execute "UPDATE TblStepTemplate SET NextStep = '1.04' WHERE StepNo = '1.02'"
-    DB.Execute "UPDATE TblStepTemplate SET AltStep = '1.03' WHERE StepNo = '1.02'"
-    DB.Execute "UPDATE TblStep SET NextStep = '1.04' WHERE StepNo = '1.02'"
-    DB.Execute "UPDATE TblStep SET AltStep = '1.03' WHERE StepNo = '1.02'"
     
-    'Userlevel changes
-    DB.Execute "ALTER TABLE TblCBSUser ADD COLUMN UserLvl text (20)"
-    'Progress Bars
-    DB.Execute "ALTER TABLE TblWorkflow ADD COLUMN Progress integer"
-'    Dim Workflow As ClsWorkflow
-'
-'    Set RstUpdate = ModDatabase.SQLQuery("TblWorkflow")
-'
-'    With Workflow
-'        Do While Not RstTable.EOF
-'            Set Workflow = New ClsWorkflow
-'            .DBGet RstUpdate!WorkflowNo
-'            .DBSave
-'            RstTable.MoveNext
-'            Set Workflow = Nothing
-'        Loop
-'    End With
-'
-'    Set Workflow = Nothing
-'    Set RstUpdate = Nothing
-'    DB.Execute "DELETE * FROM TblStep"
+    'Add icons********************************************************************************
+    With FSO
+        If .FileExists(GetDocLocalPath(ThisWorkbook.Path) & PICTURES_PATH & "ToDo.png") Then
+            .DeleteFile GetDocLocalPath(ThisWorkbook.Path) & PICTURES_PATH & "ToDo.png"
+        End If
+    End With
     
-'    UpdateTable
+    ShtMain.Shapes("ToDo").Select
+    ModLibrary.SaveShapeAsPicture
+    ShtMain.Shapes("ToDo").Delete
+    
+    'Update Step Templates********************************************************************
+    DB.Execute "DELETE * FROM TblStepTemplate"
+    
+    UpdateTable
     
     ' ========================================================================================
         
@@ -222,10 +177,6 @@ Public Function UpdateDBScriptUndo() As Boolean
     ' ========================================================================================
     ' Database commands
     ' ----------------------------------------------------------------------------------------
-    DB.Execute "ALTER TABLE TblWorkflow DROP COLUMN Progress"
-    DB.Execute "ALTER TABLE TblContact DROP COLUMN OptOut, Comfrq, LastComm"
-    'user level changes
-    DB.Execute "ALTER TABLE TblCBSUser DROP COLUMN UserLvl)"
     ' ========================================================================================
     
     DB.Close
@@ -265,12 +216,15 @@ Public Sub UpdateTable()
     Dim i As Integer
     Dim x As Integer
     Dim Val As String
+    Dim RngFields As Range
+    Dim RngCol As Range
     
     If DB Is Nothing Then DBConnect
     
     DB.Execute "DELETE * FROM TblStepTemplate"
         
     Set RstTable = ModDatabase.SQLQuery("TblStepTemplate")
+    Set RngFields = ShtTableImport.Range("A1:Y20")
     
     With RstTable
         x = 2
@@ -278,8 +232,13 @@ Public Sub UpdateTable()
             i = 1
             .AddNew
             For Each Fld In RstTable.Fields
-                    Val = ShtTableImport.Cells(x, i)
-                Debug.Print "i: "; i, Fld.Name, Val, Fld.Type
+                Set RngCol = RngFields.Find(CStr(Fld.Name), , , xlWhole, xlByRows, xlNext, False)
+                
+                If RngCol Is Nothing Then
+                    Debug.Print Fld.Name & " not found"
+                Else
+                    Val = ShtTableImport.Cells(x, RngCol.Column)
+                    Debug.Print "Col: "; RngCol.Column, "Row: "; x, Fld.Name, Val, Fld.Type
                     
                     Select Case Fld.Type
                         Case 1
@@ -294,6 +253,7 @@ Public Sub UpdateTable()
                     End Select
     
                 i = i + 1
+                End If
             Next
             x = x + 1
             .Update

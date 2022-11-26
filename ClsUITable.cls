@@ -332,8 +332,11 @@ Public Sub BuildTable(Optional SplitRow As Integer, Optional SplitSize As Intege
     Dim Cell As ClsUICell
     Dim ColOffset As Integer
     Dim RowOffset As Integer
+    Static SplitFlag As Boolean
     
     If SplitRow = 0 Then SplitFrame 0
+    
+    SplitFlag = False
     
     If pNoCols > 0 And pNoRows > 0 Then
         pCells.DeleteCollection
@@ -362,21 +365,29 @@ Public Sub BuildTable(Optional SplitRow As Integer, Optional SplitSize As Intege
             
             If SplitRow <> 0 Then
                     
-                'check if either it is a split row, or if it is the last row
-                If y = SplitRow + 1 Then
+                'last row?
+                If y <= pNoRows Then
+                    If SplitFlag Then
                     SplitFrame SplitRow, pSubTable.Height
+                        With pSubTable
+                            .Top = pTop + RowOffset + pSubTableHOff
+                            .Left = Me.Left + pSubTableVOff
+                            .BuildSubTable
+                            RowOffset = RowOffset + pSubTable.Height + (2 * pSubTableHOff)
+                        End With
                 End If
                 
-                If y = SplitRow + 1 Or _
-                    (y = pNoRows And y = SplitRow) Then
+                    'do we split rows next
+                    If y = SplitRow Then SplitFlag = True Else SplitFlag = False
                         
+                    If y = SplitRow And y = pNoRows And SplitFlag Then
+                        SplitFrame 0
                     With pSubTable
-                        .Top = pTop + RowOffset + pSubTableHOff
+                            .Top = pTop + RowOffset + (pSubTableHOff * 3)
                         .Left = Me.Left + pSubTableVOff
                         .BuildSubTable
                     End With
-                    RowOffset = RowOffset + pSubTable.Height + (2 * pSubTableHOff)
-                    
+                    End If
                 End If
             End If
                     

@@ -347,7 +347,7 @@ Private Sub pContactForm_Update()
         pPrimaryContact = CleanString(.ChkPrimaryContact)
         pOptOut = CleanString(.ChkOptOut)
         If .TxtLastComm = "" Then pLastComm = 0 Else pLastComm = .TxtLastComm
-        pComFrq = CleanString(.CmoCommFreq)
+        If .CmoCommFreq = "" Then pComFrq = 0 Else pComFrq = CInt(.CmoCommFreq)
     End With
     DBSave
     

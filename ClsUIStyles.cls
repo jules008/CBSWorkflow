@@ -48,7 +48,7 @@ End Function
 Public Function Find(Name As String) As ClsUIStyle
     On Error Resume Next
     If Name <> "" Then
-        Set Find = pStyles.Item(Name)
+        Set Find = pStyles.item(Name)
     End If
 End Function
 

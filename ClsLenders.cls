@@ -48,7 +48,7 @@ End Function
 Public Function Find(LenderNo As Variant) As ClsLender
 Attribute Find.VB_UserMemId = 0
     On Error Resume Next
-    Set Find = pLenders.Item(LenderNo)
+    Set Find = pLenders.item(LenderNo)
 End Function
 
 ' ===============================================================

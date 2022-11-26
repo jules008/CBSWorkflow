@@ -356,7 +356,8 @@ Public Sub DBGet(WorkflowNo As String)
             If Not IsNull(!Progress) Then pProgress = !Progress
             
             pLender.DBGet !LenderNo
-            pSteps.DeleteCollection
+            Set pSteps = New ClsSteps
+            pSteps.Initialize Me
             pSteps.GetCollection
         End If
     End With
@@ -390,7 +391,6 @@ Public Sub DBSave()
         End If
         
         If pSteps.Count = 0 Then pSteps.GetCollection
-Debug.Print pProjectNo, pProgress
         If CurrentStep = "" Then pCurrentStep = pSteps.Start
         !CurrentStep = CleanSQLText(pCurrentStep, True)
         !WorkflowNo = CleanSQLText(pWorkflowNo, True)

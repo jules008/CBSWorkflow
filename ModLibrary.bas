@@ -557,3 +557,52 @@ Public Function CleanSQLText(TextInput As Variant, Optional ReturnNULL As Boolea
     End If
     
 End Function
+
+Sub SaveShapeAsPicture()
+'PURPOSE: Save a selected shape/icon as a PNG file to computer's desktop
+'SOURCE: www.thespreadsheetguru.com
+
+Dim cht As ChartObject
+Dim ActiveShape As Shape
+Dim UserSelection As Variant
+
+'Ensure a Shape is selected
+  On Error GoTo NoShapeSelected
+    Set UserSelection = ActiveWindow.Selection
+    Set ActiveShape = ActiveSheet.Shapes(UserSelection.Name)
+  On Error GoTo 0
+
+'Create a temporary chart object (same size as shape)
+  Set cht = ActiveSheet.ChartObjects.Add( _
+    Left:=ActiveCell.Left, _
+    Width:=ActiveShape.Width, _
+    Top:=ActiveCell.Top, _
+    Height:=ActiveShape.Height)
+
+'Format temporary chart to have a transparent background
+  cht.ShapeRange.Fill.Visible = msoFalse
+  cht.ShapeRange.Line.Visible = msoFalse
+    
+'Copy/Paste Shape inside temporary chart
+  ActiveShape.Copy
+  cht.Activate
+  ActiveChart.Paste
+  
+'Save chart to User's Desktop as PNG File
+  cht.Chart.Export GetDocLocalPath(ThisWorkbook.Path) & PICTURES_PATH & "0r.png"
+
+'Delete temporary Chart
+  cht.Delete
+
+'Re-Select Shape (appears like nothing happened!)
+  ActiveShape.Select
+
+Exit Sub
+
+'ERROR HANDLERS
+NoShapeSelected:
+  MsgBox "You do not have a single shape selected!"
+  Exit Sub
+
+End Sub
+

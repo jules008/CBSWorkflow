@@ -215,7 +215,6 @@ Public Sub DBGet(ByVal ProjectNameNo As Variant)
         pCaseManager.DBGet !CaseManager
             pContacts.GetCollection "Project", CleanSQLText(pProjectName)
         pProjectWorkflow.DBGet !ProjectWFNo
-            pWorkflows.GetCollection
         End If
     End With
     Set RstProject = Nothing
@@ -343,6 +342,7 @@ Private Sub Class_Initialize()
     With pProjectWorkflow
         .Name = "Project"
         .WorkflowType = enProject
+        .DBSave
     End With
     
     Set pParent = New ClsSPV

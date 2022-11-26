@@ -45,7 +45,7 @@ End Property
 Public Function FindItem(EmailNo As Variant) As ClsEmail
 Attribute FindItem.VB_UserMemId = 0
     On Error Resume Next
-    Set FindItem = pEmails.Item(EmailNo)
+    Set FindItem = pEmails.item(EmailNo)
 End Function
 
 ' ===============================================================

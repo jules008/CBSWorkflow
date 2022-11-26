@@ -44,7 +44,11 @@ Public Property Get PCComplete() As String
         If Step.Status = "Complete" Then Complete = Complete + 1
     Next
     
+    If Complete = 0 Then
+        pPCComplete = 0
+    Else
     pPCComplete = Complete / pSteps.Count * 100
+    End If
     
     PCComplete = pPCComplete
 End Property
@@ -72,12 +76,11 @@ Public Function FindItem(ByRef StepIndex As Variant) As ClsStep
 Attribute FindItem.VB_UserMemId = 0
     
     On Error Resume Next
-    Set FindItem = pSteps.Item(StepIndex)
+    Set FindItem = pSteps.item(StepIndex)
     
     If FindItem Is Nothing Then
-        Set FindItem = pSteps.Item(CStr(Parent.WorkflowNo & "-" & StepIndex))
+        Set FindItem = pSteps.item(CStr(Parent.WorkflowNo & "-" & StepIndex))
     End If
-    Debug.Assert Not FindItem Is Nothing
 End Function
 
 ' ===============================================================
@@ -200,7 +203,7 @@ Public Sub DeleteCollection()
     Dim Step As ClsStep
     Sin 0
     For Each Step In pSteps
-        pSteps.Remove Parent.WorkflowNo & "-" & CStr(Step.StepNo)
+       Set Step = Nothing
     Next
 End Sub
 

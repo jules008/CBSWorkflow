@@ -49,12 +49,12 @@ Public Const TODO_BUTTON_LEFT As Integer = 0
 Public Const TODO_BUTTON_TOP As Integer = 25
 Public Const TODO_ICON_FILE As String = "ToDo.png"
 Public Const TODO_ICON_WIDTH As String = 18
-Public Const TODO_ICON_TOP As String = 15
+Public Const TODO_ICON_TOP As String = 11
 Public Const TODO_ICON_LEFT As String = 5
 Public Const TODO_BADGE_FILE As String = "ToDo.png"
 Public Const TODO_BADGE_WIDTH As String = 25
 Public Const TODO_BADGE_HEIGHT As String = 18
-Public Const TODO_BADGE_TOP As String = 16
+Public Const TODO_BADGE_TOP As String = 11
 Public Const TODO_BADGE_LEFT As String = 107
 
 ' ---------------------------------------------------------------
@@ -134,54 +134,54 @@ Public Const CRM_TABLE_STYLES As String = "GENERIC_TABLE"
 ' ---------------------------------------------------------------
 ' CRM Screen Btn 1 Settings
 ' ---------------------------------------------------------------
-Public Const CRM_BTN_MAIN_1_LEFT As Integer = 220
+Public Const CRM_BTN_MAIN_1_LEFT As Integer = 800
 Public Const CRM_BTN_MAIN_1_TOP As Integer = 20
 
 ' ---------------------------------------------------------------
 ' CRM Screen Btn 2 Settings
 ' ---------------------------------------------------------------
-Public Const CRM_BTN_MAIN_2_LEFT As Integer = 110
+Public Const CRM_BTN_MAIN_2_LEFT As Integer = 690
 Public Const CRM_BTN_MAIN_2_TOP As Integer = 20
 
 ' ---------------------------------------------------------------
 ' CRM Screen Btn 3 Settings
 ' ---------------------------------------------------------------
-Public Const CRM_BTN_MAIN_3_LEFT As Integer = 0
+Public Const CRM_BTN_MAIN_3_LEFT As Integer = 580
 Public Const CRM_BTN_MAIN_3_TOP As Integer = 20
 
 ' ---------------------------------------------------------------
 ' CRM Clients Screen
 ' ---------------------------------------------------------------
-Public Const CRM_CLIENT_TABLE_COL_WIDTHS As String = "100:250:150:250"
-Public Const CRM_CLIENT_TABLE_TITLES As String = "Client No:Client Name:Phone No:Url"
+Public Const CRM_CLIENT_TABLE_COL_WIDTHS As String = "100:250:150:250:150"
+Public Const CRM_CLIENT_TABLE_TITLES As String = "Client No:Client Name:Phone No:Url:"
 Public Const CRM_CLIENT_MAX_LINES As Integer = 150
 
 ' ---------------------------------------------------------------
 ' CRM SPV Screen
 ' ---------------------------------------------------------------
-Public Const CRM_SPV_TABLE_COL_WIDTHS As String = "100:300:300"
-Public Const CRM_SPV_TABLE_TITLES As String = "SPV No:SPV Name: "
+Public Const CRM_SPV_TABLE_COL_WIDTHS As String = "100:300:300:200"
+Public Const CRM_SPV_TABLE_TITLES As String = "SPV No:SPV Name: : "
 Public Const CRM_SPV_MAX_LINES As Integer = 150
 
 ' ---------------------------------------------------------------
 ' CRM Contact Screen
 ' ---------------------------------------------------------------
-Public Const CRM_CONTACT_TABLE_COL_WIDTHS As String = "50:100:100:125:125:100:150"
+Public Const CRM_CONTACT_TABLE_COL_WIDTHS As String = "50:150:100:150:150:100:200"
 Public Const CRM_CONTACT_TABLE_TITLES As String = "Contact No:Contact Name:Contact Type:Organisation:Position:Phone No:Email Address"
 Public Const CRM_CONTACT_MAX_LINES As Integer = 150
 
 ' ---------------------------------------------------------------
 ' CRM Projects Screen
 ' ---------------------------------------------------------------
-Public Const CRM_PROJECT_TABLE_COL_WIDTHS As String = "100:150:150:150:100:100"
-Public Const CRM_PROJECT_TABLE_TITLES As String = "Project No:Project Name:Client Name:SPV:Case Manager:"
+Public Const CRM_PROJECT_TABLE_COL_WIDTHS As String = "100:150:150:150:100:100:150"
+Public Const CRM_PROJECT_TABLE_TITLES As String = "Project No:Project Name:Client Name:SPV:Case Manager::"
 Public Const CRM_PROJECT_MAX_LINES As Integer = 150
 
 ' ---------------------------------------------------------------
 ' CRM Lenders Screen
 ' ---------------------------------------------------------------
-Public Const CRM_LENDER_TABLE_COL_WIDTHS As String = "100:200:100:100:250"
-Public Const CRM_LENDER_TABLE_TITLES As String = "Lender No:Name:Phone No:Lender Type:Address"
+Public Const CRM_LENDER_TABLE_COL_WIDTHS As String = "100:200:100:100:250:150"
+Public Const CRM_LENDER_TABLE_TITLES As String = "Lender No:Name:Phone No:Lender Type:Address:"
 Public Const CRM_LENDER_MAX_LINES As Integer = 150
 
 ' ===============================================================

@@ -94,7 +94,7 @@ Private Sub UserForm_Initialize()
     LblVer = "System:  " & VERSION
     LblDBVer = "DB:  " & DB_VER
     LblDate = "Date:  " & VER_DATE
-    LblCopyright = Chr(169) & " Copyright 2021"
+    LblCopyright = Chr(169) & " Copyright 2022"
 End Sub
 
 ' ===============================================================

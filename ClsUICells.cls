@@ -44,7 +44,7 @@ End Function
 Public Function FindCell(Name As Variant) As ClsUICell
 Attribute FindCell.VB_UserMemId = 0
     On Error Resume Next
-    Set FindCell = pCells.Item(Name)
+    Set FindCell = pCells.item(Name)
 End Function
 
 ' ===============================================================

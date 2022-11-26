@@ -177,8 +177,6 @@ Private Function BuildMainFrame(ByVal ScreenPage As enScreenPage) As Boolean
     With BtnCommsToDo
 
         .Height = GENERIC_BUTTON_HEIGHT
-        .Left = TODO_BUTTON_LEFT
-        .Top = TODO_BUTTON_TOP
         .Width = TODO_BUTTON_WIDTH
         .Name = "BtnMain3"
         .OnAction = "'ModUIButtonHandler.ProcessBtnClicks(""" & ScreenPage & ":" & enBtnCommsToDo & ":0" & """)'"
@@ -203,6 +201,8 @@ Private Function BuildMainFrame(ByVal ScreenPage As enScreenPage) As Boolean
         End With
         .BadgeTop = TODO_BADGE_TOP
         .BadgeLeft = TODO_BADGE_LEFT
+        .Left = TODO_BUTTON_LEFT
+        .Top = TODO_BUTTON_TOP
     End With
     ButtonFrame.Buttons.Add BtnProjectNewWF
     ButtonFrame.Buttons.Add BtnNewLenderWF

@@ -57,7 +57,7 @@ End Property
 Public Function Find(ContactNo As Variant) As ClsContact
 Attribute Find.VB_UserMemId = 0
     On Error Resume Next
-    Set Find = pContacts.Item(ContactNo)
+    Set Find = pContacts.item(ContactNo)
 End Function
 
 ' ===============================================================

@@ -81,7 +81,7 @@ End Function
 Public Function FindButton(ButtonIndex As String) As ClsUIButton
 Attribute FindButton.VB_UserMemId = 0
     On Error Resume Next
-    Set FindButton = pUIMenu.Item(ButtonIndex)
+    Set FindButton = pUIMenu.item(ButtonIndex)
 End Function
 
 ' ===============================================================
