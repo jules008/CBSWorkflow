@@ -22,15 +22,15 @@ Private Const StrMODULE As String = "ModErrorHandling"
 Public Function CentralErrorHandler( _
             ByVal ErrModule As String, _
             ByVal ErrProc As String, _
-            Optional ByVal ErrFile As String, _
             Optional ByVal EntryPoint As Boolean, _
-            Optional ByVal CustomData As Variant) As Boolean
+            Optional ByVal CustomData As String) As Boolean
 
     Static ErrMsg As String
     Static FirstRunDone As Boolean
     
     Dim iFile As Integer
     Dim ErrNum As Long
+    Dim ErrFile As String
     Dim ErrHeader As String
     Dim LogText As String
     
@@ -41,7 +41,7 @@ Public Function CentralErrorHandler( _
                 
     On Error Resume Next
     
-    If Len(ErrFile) = 0 Then ErrFile = ThisWorkbook.Name
+    ErrFile = ThisWorkbook.Name
     
     If Right$(SYS_PATH, 1) <> "\" Then SYS_PATH = SYS_PATH & "\"
     
@@ -50,15 +50,15 @@ Public Function CentralErrorHandler( _
     LogText = "  " & ErrHeader & ", Error " & CStr(ErrNum) & ": " & ErrMsg
     
     iFile = FreeFile()
-    Open ThisWorkbook.Path & ERROR_PATH & FILE_ERROR_LOG For Append As #iFile
+    Open GetDocLocalPath(ThisWorkbook.Path) & ERROR_PATH & FILE_ERROR_LOG For Append As #iFile
     If Not FirstRunDone Then
         Print #iFile,
         Print #iFile, "---------------------------------------------------------------------------------------------------------------------------------------"
         Print #iFile, "User: " & Application.UserName
-        Print #iFile, "Member: " & ActiveWorkFlow.Name
+        Print #iFile, "Project: " & ActiveProject.ProjectNo
         Print #iFile, "Workflow: " & ActiveWorkFlow.WorkflowNo
         Print #iFile, "Step: " & ActiveWorkFlow.CurrentStep
-        Print #iFile,
+        Print #iFile, "Custom Data: " & CustomData
         FirstRunDone = True
     End If
     Print #iFile, Format$(Now(), "mm/dd/yy hh:mm:ss"); LogText
@@ -172,19 +172,18 @@ Private Sub SendErrMessage()
     
     On Error Resume Next
     
-'    If MailSystem Is Nothing Then Set MailSystem = New ClsMailSystem
-'
-'    If Not ModLibrary.OutlookRunning Then
-'        Shell "Outlook.exe"
-'    End If
-'
-'    With MailSystem
-'        .MailItem.To = "Julian Turner"
-'        .MailItem.Subject = "Debug Report - " & APP_NAME
-'        .MailItem.Importance = olImportanceHigh
-'        .MailItem.Attachments.Add SYS_PATH & FILE_ERROR_LOG
-'                           .SendEmail
-'        If SEND_EMAILS Then .SendEmail Else .DisplayEmail
-'    End With
+    If MailSystem Is Nothing Then Set MailSystem = New ClsMailSystem
+
+    If Not ModLibrary.OutlookRunning Then
+        Shell "Outlook.exe"
+    End If
+
+    With MailSystem
+        .MailItem.To = "julian.turner@onesheet.co.uk"
+        .MailItem.Subject = "Debug Report - " & APP_NAME
+        .MailItem.Importance = olImportanceHigh
+        .MailItem.Attachments.Add SYS_PATH & FILE_ERROR_LOG
+        If SEND_EMAILS Then .SendEmail Else .DisplayEmail
+    End With
 
 End Sub

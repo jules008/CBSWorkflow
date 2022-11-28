@@ -35,7 +35,7 @@ Public Sub QueryTest()
     End With
     
     ShtMain.Shapes("ToDo").Select
-    ModLibrary.SaveShapeAsPicture
+    ModLibrary.SaveShapeAsPicture "ToDo.png"
     ShtMain.Shapes("ToDo").Delete
     
 End Sub
@@ -91,15 +91,33 @@ Public Function UpdateDBScript() As Boolean
         End If
     End With
     
-    ShtMain.Shapes("ToDo").Select
-    ModLibrary.SaveShapeAsPicture
-    ShtMain.Shapes("ToDo").Delete
+    ShtMain.Shapes("TEMPLATE - Todo").Select
+    ModLibrary.SaveShapeAsPicture "ToDo.png"
+    ShtMain.Shapes("TEMPLATE - Todo").Delete
     
     'Update Step Templates********************************************************************
     DB.Execute "DELETE * FROM TblStepTemplate"
     
     UpdateTable
     
+    'Update INI File********************************************************************
+    With FSO
+        If .FileExists(GetDocLocalPath(ThisWorkbook.Path) & INI_FILE_PATH & INI_FILE_NAME) Then
+            .DeleteFile GetDocLocalPath(ThisWorkbook.Path) & INI_FILE_PATH & INI_FILE_NAME
+        End If
+    End With
+    
+    Dim iFile As Integer
+    iFile = FreeFile()
+    Open GetDocLocalPath(ThisWorkbook.Path) & INI_FILE_PATH & INI_FILE_NAME For Append As #iFile
+    Print #iFile, "DebugMode: False"
+    Print #iFile, "SendEmails: True"
+    Print #iFile, "EnablePrint: False"
+    Print #iFile, "DBPath: System Files\"
+    Print #iFile, "DevMode: False"
+    Print #iFile, "Stop on Startup: False"
+    Close #iFile
+
     ' ========================================================================================
         
     'update DB Version
@@ -301,15 +319,15 @@ Public Function CopyFiles() As Boolean
     Set FSO = New Scripting.FileSystemObject
     
     With FSO
-        If .FileExists(ThisWorkbook.Path & "\FIRES.xlsm") Then
-            .CopyFile ThisWorkbook.Path & "\FIRES.xlsm", ThisWorkbook.Path & "\FIRES_BAK.xlsm"
-            .DeleteFile ThisWorkbook.Path & "\FIRES.xlsm"
-            ThisWorkbook.SaveAs ThisWorkbook.Path & "\FIRES.xlsm"
+        If .FileExists(GetDocLocalPath(ThisWorkbook.Path) & "\FIRES.xlsm") Then
+            .CopyFile GetDocLocalPath(ThisWorkbook.Path) & "\FIRES.xlsm", GetDocLocalPath(ThisWorkbook.Path) & "\FIRES_BAK.xlsm"
+            .DeleteFile GetDocLocalPath(ThisWorkbook.Path) & "\FIRES.xlsm"
+            ThisWorkbook.SaveAs GetDocLocalPath(ThisWorkbook.Path) & "\FIRES.xlsm"
         Else
             Err.Raise 2022, , "FIRES file not found"
         End If
     
-        .DeleteFile ThisWorkbook.Path & "\FIRES_NEW.xlsm"
+        .DeleteFile GetDocLocalPath(ThisWorkbook.Path) & "\FIRES_NEW.xlsm"
     End With
     
     Set FSO = Nothing
@@ -346,15 +364,15 @@ Public Function FileCopyUndo() As Boolean
     Set FSO = New Scripting.FileSystemObject
     
     With FSO
-        If .FileExists(ThisWorkbook.Path & "\FIRES_BAK.xlsm") Then
-            If .FileExists(ThisWorkbook.Path & "\FIRES.xlsm") Then
+        If .FileExists(GetDocLocalPath(ThisWorkbook.Path) & "\FIRES_BAK.xlsm") Then
+            If .FileExists(GetDocLocalPath(ThisWorkbook.Path) & "\FIRES.xlsm") Then
                 If ThisWorkbook.Name = "FIRES.xlsm" Then
-                    ThisWorkbook.SaveAs ThisWorkbook.Path & "\FIRES_NEW.xlsm"
+                    ThisWorkbook.SaveAs GetDocLocalPath(ThisWorkbook.Path) & "\FIRES_NEW.xlsm"
                 End If
-                .DeleteFile ThisWorkbook.Path & "\FIRES.xlsm"
+                .DeleteFile GetDocLocalPath(ThisWorkbook.Path) & "\FIRES.xlsm"
             End If
-            .CopyFile ThisWorkbook.Path & "\FIRES_BAK.xlsm", ThisWorkbook.Path & "\FIRES.xlsm"
-            .DeleteFile ThisWorkbook.Path & "\FIRES_BAK.xlsm"
+            .CopyFile GetDocLocalPath(ThisWorkbook.Path) & "\FIRES_BAK.xlsm", GetDocLocalPath(ThisWorkbook.Path) & "\FIRES.xlsm"
+            .DeleteFile GetDocLocalPath(ThisWorkbook.Path) & "\FIRES_BAK.xlsm"
                     
         End If
     End With

@@ -28,14 +28,14 @@ Public Sub ImportModules()
     On Error Resume Next
     
     Set FSO = New Scripting.FileSystemObject
-    If FSO.GetFolder(ThisWorkbook.Path).Files.Count = 0 Then
+    If FSO.GetFolder(GetDocLocalPath(ThisWorkbook.Path)).Files.Count = 0 Then
        MsgBox "There are no files to import", vbInformation
        Exit Sub
     End If
 
     Set VBModules = ThisWorkbook.VBProject.VBComponents
     
-    For Each FileObj In FSO.GetFolder(ThisWorkbook.Path).Files
+    For Each FileObj In FSO.GetFolder(GetDocLocalPath(ThisWorkbook.Path)).Files
         'Debug.Print FileObj.Name
         
         If (FSO.GetExtensionName(FileObj.Name) = "cls") Or _

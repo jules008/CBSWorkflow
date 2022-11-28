@@ -51,7 +51,7 @@ Restart:
     Select Case BtnNo
     
         Case enBtnProjectNew
-            
+ Err.Raise 5
             If Not BtnProjectNewWFClick(ScreenPage) Then Err.Raise HANDLED_ERROR
         
         Case enBtnLenderNewWF

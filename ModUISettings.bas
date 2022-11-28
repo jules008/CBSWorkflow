@@ -94,10 +94,10 @@ Public Const HEADER_ICON_RIGHT As Integer = 10
 ' ---------------------------------------------------------------
 ' Generic Project Screen Settings
 ' ---------------------------------------------------------------
-Public Const PROJECT_TABLE_COL_WIDTHS As String = "50:50:100:100:100:50:200:150:100"
+Public Const PROJECT_TABLE_COL_WIDTHS As String = "50:50:100:100:100:100:50:150:100:100"
 Public Const PROJECT_CELL_ROW_HEIGHTS As String = "50:50"
 Public Const PROJECT_TABLE_STYLES As String = "GENERIC_TABLE"
-Public Const PROJECT_TABLE_TITLES As String = "Expand:Project No:Client Name:SPV Name:Case Manager:Step No:Step Name:Progress:Status"
+Public Const PROJECT_TABLE_TITLES As String = "Expand:Project No:Project Name:Client Name:SPV Name:Case Manager:Step No:Step Name:Progress:Status"
 Public Const PROJECT_MAX_LINES As Integer = 150
 Public Const PROJECT_BTN_MAIN_1_LEFT As Integer = 690
 Public Const PROJECT_BTN_MAIN_1_TOP As Integer = 20

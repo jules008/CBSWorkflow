@@ -391,6 +391,10 @@ Restart:
 
             If Not ResetScreen Then Err.Raise HANDLED_ERROR
             
+        Case enBtnExit
+            
+            BtnExitClick
+        
     End Select
 
 GracefulExit:

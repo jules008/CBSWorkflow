@@ -386,4 +386,26 @@ Public Sub BtnCommsToDoClick()
     Set Contact = Nothing
 End Sub
 
+' ===============================================================
+' BtnExitClick
+' ---------------------------------------------------------------
+Public Sub BtnExitClick()
+    Dim Response As Integer
+    
+    Response = MsgBox("Are you sure you want to exit?", vbExclamation + vbYesNo + vbDefaultButton2, APP_NAME)
+
+    If Response = 6 Then
+
+        If Workbooks.Count = 1 Then
+            With Application
+                .DisplayAlerts = False
+                .Quit
+                .DisplayAlerts = True
+            End With
+        Else
+            ThisWorkbook.Close savechanges:=False
+        End If
+
+    End If
+End Sub
 

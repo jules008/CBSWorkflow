@@ -558,7 +558,7 @@ Public Function CleanSQLText(TextInput As Variant, Optional ReturnNULL As Boolea
     
 End Function
 
-Sub SaveShapeAsPicture()
+Sub SaveShapeAsPicture(FileName As String)
 'PURPOSE: Save a selected shape/icon as a PNG file to computer's desktop
 'SOURCE: www.thespreadsheetguru.com
 
@@ -589,7 +589,7 @@ Dim UserSelection As Variant
   ActiveChart.Paste
   
 'Save chart to User's Desktop as PNG File
-  cht.Chart.Export GetDocLocalPath(ThisWorkbook.Path) & PICTURES_PATH & "0r.png"
+  cht.Chart.Export GetDocLocalPath(ThisWorkbook.Path) & PICTURES_PATH & FileName
 
 'Delete temporary Chart
   cht.Delete
