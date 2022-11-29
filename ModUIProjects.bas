@@ -389,7 +389,7 @@ Restart:
         MainScreen.ReOrder
     Else
     
-    SQL = "SELECT TblWorkflow.WorkflowNo, TblLender.Name, TblWorkflow.CurrentStep, TblStepTemplate.StepName, TblWorkflow.Progress & '%',TblWorkflow.Status, TblWorkflow.RAG " _
+    SQL = "SELECT TblWorkflow.WorkflowNo, TblWorkflow.Name, TblLender.Name, TblWorkflow.CurrentStep, TblStepTemplate.StepName, TblWorkflow.Progress & '%',TblWorkflow.Status, TblWorkflow.RAG " _
                 & "FROM TblStepTemplate RIGHT JOIN (TblWorkflow LEFT JOIN TblLender ON TblWorkflow.LenderNo = TblLender.LenderNo) ON TblStepTemplate.StepNo = TblWorkflow.CurrentStep " _
             & "WHERE (((TblWorkflow.ProjectNo)= " & ProjectNo & ") AND ((TblWorkflow.WorkflowType)='enLender'))"
 
@@ -417,7 +417,7 @@ Restart:
             .MoveFirst
             For y = 0 To NoRows - 1
                 
-                If x = 5 Then
+                If x = 6 Then
                     If !RAG = "en1Red" Then AryStyles(x, y) = "RED_CELL"
                     If !RAG = "en2Amber" Then AryStyles(x, y) = "AMBER_CELL"
                     If !RAG = "en3Green" Then AryStyles(x, y) = "GREEN_CELL"
@@ -549,37 +549,32 @@ End Function
 ' Opens project workflow
 ' ---------------------------------------------------------------
 Public Function OpenLenderWF(ByVal ScreenPage As enScreenPage, ByVal Index As String) As Boolean
-    Dim RstWorkflow As Recordset
-    Dim CRMItem As Object
+    Dim RstResults As Recordset
     
     Const StrPROCEDURE As String = "OpenLenderWF()"
 
     On Error GoTo ErrorHandler
     
+    Set RstResults = ModDatabase.SQLQuery("SELECT ProjectNo FROM TblWorkflow WHERE WorkflowNo = " & Index)
+    
     Set ActiveWorkFlow = New ClsWorkflow
     Set ActiveProject = New ClsProject
     
-    Set RstWorkflow = ModDatabase.SQLQuery("SELECT ProjectNo FROM TblWorkflow WHERE WorkflowNo = " & Index)
+    ActiveProject.DBGet RstResults!ProjectNo
     
-    With ActiveProject
-        .DBGet RstWorkflow.Fields(0)
-        .Workflows(Index).DisplayForm
-    End With
-    
-    Set ActiveWorkFlow = Nothing
-    Set ActiveProject = Nothing
-    Set RstWorkflow = Nothing
+    ActiveWorkFlow.DBGet Index
+    ActiveProject.Workflows.Add ActiveWorkFlow
+    ActiveWorkFlow.DisplayForm
     
     OpenLenderWF = True
 
+    Set ActiveWorkFlow = Nothing
+    Set ActiveProject = Nothing
+    Set RstResults = Nothing
 Exit Function
 
 ErrorExit:
 
-    Set ActiveWorkFlow = Nothing
-    Set ActiveProject = Nothing
-    Set RstWorkflow = Nothing
-    
     OpenLenderWF = False
 
 Exit Function

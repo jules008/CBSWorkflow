@@ -279,7 +279,7 @@ Public Sub DisplayForm()
             .TxtLenderContactPhone = pLender.Contacts.PrimaryContact.Phone1
         End If
         
-'        .Progress ProgPC
+        .Progress ProgPC
         .TxtClientName = pParent.Client.Name
         .TxtSPVName = pParent.SPV.Name
         .TxtProjectNo = pParent.ProjectNo
