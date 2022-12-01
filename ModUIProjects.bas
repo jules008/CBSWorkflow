@@ -440,6 +440,7 @@ Restart:
         MainFrame.Table.BuildTable RowNo, 100
         MainScreen.ReOrder
         Else
+            MsgBox "There are no Lender Workflows for this Project", vbOKOnly + vbInformation, APP_NAME
             MainFrame.Table.BuildTable 0
         End If
     End If
@@ -447,13 +448,13 @@ Restart:
 GracefulExit:
 
 
-Exit Sub
+        Exit Sub
 
 ErrorExit:
 
     '***CleanUpCode***
 
-Exit Sub
+        Exit Sub
 
 ErrorHandler:
     If Err.Number >= 2000 And Err.Number <= 2500 Then
@@ -468,7 +469,7 @@ ErrorHandler:
     Else
         Resume ErrorExit
     End If
-End Sub
+    End Sub
 
 ' ===============================================================
 ' Method GetActiveList

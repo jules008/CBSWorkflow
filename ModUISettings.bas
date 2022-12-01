@@ -108,7 +108,7 @@ Public Const PROJECT_BTN_MAIN_2_TOP As Integer = 20
 ' Project Sub Table Settings
 ' ---------------------------------------------------------------
 Public Const PROJECT_SUB_TABLE_COL_WIDTHS As String = "100:100:150:100:150:150:100"
-Public Const PROJECT_SUB_TABLE_TITLES As String = "Workflow No:Workflow Name:Lender Name:Step No:Step Name:Progress:Status"
+Public Const PROJECT_SUB_TABLE_TITLES As String = "Workflow No:Workflow Type:Lender Name:Step No:Step Name:Progress:Status"
 
 ' ---------------------------------------------------------------
 ' Project For Action Screen Settings

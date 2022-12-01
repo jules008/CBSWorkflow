@@ -18,25 +18,20 @@ Dim OldTables() As String
 Private Const StrMODULE As String = "ModDeploy"
 
 Public Sub QueryTest()
-    Dim Message As String
-    Dim RstUpdate As Recordset
-    Dim i As Integer
-    Dim FSO As FileSystemObject
+    Set DB = OpenDatabase(GetDocLocalPath(ThisWorkbook.Path) & INI_FILE_PATH & DB_FILE_NAME & ".accdb")
     
-    Set FSO = New FileSystemObject
-    
-    
+    DB.Execute "DROP TABLE TblWorkflowType"
     Stop
     
-    With FSO
-        If .FileExists(GetDocLocalPath(ThisWorkbook.Path) & PICTURES_PATH & "ToDo.png") Then
-            .DeleteFile GetDocLocalPath(ThisWorkbook.Path) & PICTURES_PATH & "ToDo.png"
-        End If
-    End With
+    DB.Execute "CREATE TABLE TblWorkflowType"
+    DB.Execute "ALTER TABLE TblWorkflowType ADD COLUMN WFNo Number"
+    DB.Execute "ALTER TABLE TblWorkflowType ADD COLUMN WFName Text"
+    DB.Execute "ALTER TABLE TblWorkflowType ADD COLUMN DisplayName Text"
+    DB.Execute "ALTER TABLE TblWorkflowType ADD COLUMN Description Text"
     
-    ShtMain.Shapes("ToDo").Select
-    ModLibrary.SaveShapeAsPicture "ToDo.png"
-    ShtMain.Shapes("ToDo").Delete
+    DB.Execute "INSERT INTO TblWorkflowType (WFNo, WFName, DisplayName, Description) VALUES (1,'Project', 'Project', 'Standard workflow for all projects')"
+    DB.Execute "INSERT INTO TblWorkflowType (WFNo, WFName, DisplayName, Description) VALUES (2,'Senior', 'Senior Lender', 'Senior Lender Workflow')"
+    DB.Execute "INSERT INTO TblWorkflowType (WFNo, WFName, DisplayName, Description) VALUES (3,'2ndChgeMezLoan', '2nd Chrge/Mez Loan','2nd Charge/Mezzanine Loan')"
     
 End Sub
 
@@ -84,39 +79,15 @@ Public Function UpdateDBScript() As Boolean
     ' Database commands
     ' ----------------------------------------------------------------------------------------
     
-    'Add icons********************************************************************************
-    With FSO
-        If .FileExists(GetDocLocalPath(ThisWorkbook.Path) & PICTURES_PATH & "ToDo.png") Then
-            .DeleteFile GetDocLocalPath(ThisWorkbook.Path) & PICTURES_PATH & "ToDo.png"
-        End If
-    End With
+    DB.Execute "CREATE TABLE TblWorkflowType"
+    DB.Execute "ALTER TABLE TblWorkflowType ADD COLUMN WFNo Number"
+    DB.Execute "ALTER TABLE TblWorkflowType ADD COLUMN WFName Text"
+    DB.Execute "ALTER TABLE TblWorkflowType ADD COLUMN DisplayName Text"
+    DB.Execute "ALTER TABLE TblWorkflowType ADD COLUMN Description Text"
     
-    ShtMain.Shapes("TEMPLATE - Todo").Select
-    ModLibrary.SaveShapeAsPicture "ToDo.png"
-    ShtMain.Shapes("TEMPLATE - Todo").Delete
-    
-    'Update Step Templates********************************************************************
-    DB.Execute "DELETE * FROM TblStepTemplate"
-    
-    UpdateTable
-    
-    'Update INI File********************************************************************
-    With FSO
-        If .FileExists(GetDocLocalPath(ThisWorkbook.Path) & INI_FILE_PATH & INI_FILE_NAME) Then
-            .DeleteFile GetDocLocalPath(ThisWorkbook.Path) & INI_FILE_PATH & INI_FILE_NAME
-        End If
-    End With
-    
-    Dim iFile As Integer
-    iFile = FreeFile()
-    Open GetDocLocalPath(ThisWorkbook.Path) & INI_FILE_PATH & INI_FILE_NAME For Append As #iFile
-    Print #iFile, "DebugMode: False"
-    Print #iFile, "SendEmails: True"
-    Print #iFile, "EnablePrint: False"
-    Print #iFile, "DBPath: System Files\"
-    Print #iFile, "DevMode: False"
-    Print #iFile, "Stop on Startup: False"
-    Close #iFile
+    DB.Execute "INSERT INTO TblWorkflowType (WFNo, WFName, DisplayName, Description) VALUES (1,'Project', 'Project', 'Standard workflow for all projects')"
+    DB.Execute "INSERT INTO TblWorkflowType (WFNo, WFName, DisplayName, Description) VALUES (2,'Senior', 'Senior Lender', 'Senior Lender Workflow')"
+    DB.Execute "INSERT INTO TblWorkflowType (WFNo, WFName, DisplayName, Description) VALUES (3,'2ndChgeMezLoan', '2nd Chrge/Mez Loan','2nd Charge/Mezzanine Loan')"
 
     ' ========================================================================================
         
@@ -195,6 +166,7 @@ Public Function UpdateDBScriptUndo() As Boolean
     ' ========================================================================================
     ' Database commands
     ' ----------------------------------------------------------------------------------------
+    DB.Execute "DROP TABLE TblWorkflowType"
     ' ========================================================================================
     
     DB.Close

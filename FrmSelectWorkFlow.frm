@@ -30,63 +30,7 @@ Option Explicit
 
 Private Const StrMODULE As String = "FrmSelectWorkFlow"
 Private RstWorkflow As Recordset
-
-' ===============================================================
-' ShowForm
-' Shows form
-' ---------------------------------------------------------------
-Public Function ShowForm() As String
-    Dim SelWorkflow As String
-    
-    Const StrPROCEDURE As String = "ShowForm()"
-
-    On Error GoTo ErrorHandler
-    
-Restart:
-    
-    Show
-      
-    Set RstWorkflow = ModDatabase.SQLQuery("SELECT * FROM TblWorkflowName WHERE Deleted IS NULL")
-    
-    If CmoWorkflow.ListIndex <> -1 Then
-         With RstWorkflow
-             .FindFirst "WFDispName = '" & CmoWorkflow.Value & "'"
-             ShowForm = !WFName
-        End With
-    Else
-        ShowForm = ""
-    End If
-    
-GracefulExit:
-   
-   Set RstWorkflow = Nothing
-   
-Exit Function
-
-ErrorExit:
-    
-   Set RstWorkflow = Nothing
-   ShowForm = "Error"
-
-Exit Function
-
-ErrorHandler:
-    
-    If Err.Number >= 2000 And Err.Number <= 2500 Then
-        If CustomErrorHandler(Err.Number) = SYSTEM_RESTART Then
-            Resume Restart
-        Else
-            Resume GracefulExit
-        End If
-    End If
-    
-    If CentralErrorHandler(StrMODULE, StrPROCEDURE, , True) Then
-       Stop
-        Resume
-    Else
-        Resume ErrorExit
-    End If
-End Function
+Public Event Update()
 
 '===============================================================
 ' BtnClose_Click
@@ -116,8 +60,11 @@ Restart:
             
     If MainScreen Is Nothing Then Err.Raise SYSTEM_RESTART
         
-    If CmoWorkflow.ListIndex <> -1 Then Unload Me
+    If CmoWorkflow.ListIndex <> -1 Then
 
+        RaiseEvent Update
+        Unload Me
+    End If
     
 GracefulExit:
 
@@ -159,14 +106,14 @@ End Sub
 Private Sub UserForm_Initialize()
     Dim Workflow As String
     
-    Set RstWorkflow = ModDatabase.SQLQuery("SELECT * FROM TblWorkflowName WHERE Deleted IS NULL")
+    Set RstWorkflow = ModDatabase.SQLQuery("TblworkflowType")
     
     With CmoWorkflow
         .Value = ""
         .Clear
         With RstWorkflow
             Do While Not .EOF
-                CmoWorkflow.AddItem !WFDispName
+                CmoWorkflow.AddItem !DisplayName
                 .MoveNext
             Loop
         End With
@@ -198,7 +145,7 @@ Private Function PopulateForm() As Boolean
     With RstWorkflow
         Debug.Print .RecordCount
         .MoveFirst
-        .FindFirst "WFDispName = '" & CmoWorkflow & "'"
+        .FindFirst "DisplayName = '" & CmoWorkflow & "'"
         LblDesc = !Description
     
     End With
@@ -224,3 +171,36 @@ ErrorHandler:
 End Function
 
 
+' ===============================================================
+' GetWFName
+' Gets workflow name that was selected on form
+' ---------------------------------------------------------------
+Public Function GetWFName() As String
+    Dim RstWFName As Recordset
+    
+    Const StrPROCEDURE As String = "GetWFName()"
+
+    On Error GoTo ErrorHandler
+    
+    Set RstWFName = ModDatabase.SQLQuery("SELECT WFName FROM TblWorkflowType  WHERE Displayname = '" & CmoWorkflow.List(CmoWorkflow.ListIndex) & "'")
+    
+    GetWFName = RstWFName!WFName
+    Set RstWFName = Nothing
+    
+Exit Function
+
+ErrorExit:
+
+    Set RstWFName = Nothing
+    GetWFName = "Error"
+
+Exit Function
+
+ErrorHandler:
+    If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
+        Stop
+        Resume
+    Else
+        Resume ErrorExit
+    End If
+End Function

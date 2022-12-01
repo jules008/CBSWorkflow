@@ -247,8 +247,6 @@ Public Function BtnLenderNewWFClick(ScreenPage As enScreenPage) As Boolean
         GoTo GracefullExit
     End If
     
-    'get workflow type
-    
     With ActiveLender
         .DBGet Picker.SelectedItem
         .DBSave
@@ -257,7 +255,7 @@ Public Function BtnLenderNewWFClick(ScreenPage As enScreenPage) As Boolean
     Set ActiveWorkFlow = New ClsWorkflow
     
     With ActiveWorkFlow
-        .Name = "Senior"
+        .DisplayWFSelectForm
         .WorkflowType = enLender
         .Lender = ActiveLender
         .DBSave

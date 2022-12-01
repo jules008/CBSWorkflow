@@ -42,6 +42,8 @@ Private pParent As ClsProject
 
 Private WithEvents pProjWFForm As FrmWFProject
 Attribute pProjWFForm.VB_VarHelpID = -1
+Private WithEvents pWFNameForm As FrmSelectWorkFlow
+Attribute pWFNameForm.VB_VarHelpID = -1
 
 '---------------------------------------------------------------
 Public Property Get Deleted() As Date
@@ -223,7 +225,16 @@ Public Sub DBNew()
     
     With pProjWFForm
         .Tag = "New"
-'        .ClearForm
+        .Show
+    End With
+End Sub
+
+' ===============================================================
+' Method DisplayWFSelectForm
+' displays workflow select form
+' ---------------------------------------------------------------
+Public Sub DisplayWFSelectForm()
+    With pWFNameForm
         .Show
     End With
 End Sub
@@ -563,50 +574,18 @@ End Sub
 ' Calculates progress of workflow, including lender workflows if it is type project
 ' ---------------------------------------------------------------
 Private Sub UpdateProgress()
-'    Dim RstProject As Recordset
-'    Dim RstLenders As Recordset
-'    Dim Progress As Single
-'    Dim i As Integer
-'
-'    If !WorkflowType = "enLender" Then
-'        Set RstProgress = ModDatabase.SQLQuery("SELECT WorkflowNo, WorkflowType, Progress FROM TblWorkflow WHERE ProjectNo = " & pProjectNo)
-'        With RstProgress
-'            .Edit
-'            !Progress = pSteps.PCComplete
-'            .Update
-'        End With
-'    Else
-'        Set RstProgress = ModDatabase.SQLQuery("SELECT WorkflowNo, WorkflowType, Progress FROM TblWorkflow WHERE ProjectNo = " & "pProjectNo AND WorkflowType = 'enLender'")
-'        With RstProgress
-'            If .RecordCount = 0 Then
-'                .Edit
-'                !Progress = pSteps.PCComplete
-'                .Update
-'            Else
-'            Do While Not .EOF
-'                    .Edit
-'                    If IsNull(!Progress) Then
-'                        Progress = Progress + 0
-'                    Else
-'                    Progress = Progress + !Progress
-'                End If
-'                i = i + 1
-'                    DoEvents
-'                    Debug.Print "Project No "; pProjectNo, "Workflow No "; !WorkflowNo
-'                .MoveNext
-'            Loop
-'
-'                .Update
-'            End If
-'            If Progress = 0 Then
-'                UpdateProgress = 0
-'            Else
-'                UpdateProgress = Progress / i
-'            End If
-'        End With
-'    End If
     
-'    Set RstProgress = Nothing
+End Sub
+
+' ===============================================================
+' Event pWFNameForm_Update
+' Event on selection of workflow type
+' ---------------------------------------------------------------
+Private Sub pWFNameForm_Update()
+    With pWFNameForm
+        pName = .GetWFName
+    
+    End With
 End Sub
 
 ' ===============================================================
@@ -703,6 +682,7 @@ Private Sub Class_Initialize()
     Set pFrmInputBox = New FrmInputBox
     Set pLender = New ClsLender
     Set pProjWFForm = New FrmWFProject
+    Set pWFNameForm = New FrmSelectWorkFlow
     Set pChatRoom = New ClsChatRoom
     
     pActiveStep.Initialize Me
@@ -720,6 +700,7 @@ Public Sub Terminate()
     Set pFrmInputBox = Nothing
     Set pLender = Nothing
     Set pProjWFForm = Nothing
+    Set pWFNameForm = Nothing
     Set pChatRoom = Nothing
 End Sub
 '---------------------------------------------------------------
@@ -730,6 +711,7 @@ Private Sub Class_Terminate()
     Set pFrmInputBox = Nothing
     Set pLender = Nothing
     Set pProjWFForm = Nothing
+    Set pWFNameForm = Nothing
     Set pChatRoom = Nothing
 End Sub
 '---------------------------------------------------------------
