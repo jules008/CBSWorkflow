@@ -6,7 +6,7 @@ StepIndex,  dbDouble
 StepName,  dbText
 StartTime,  dbDate
 EndTime,  dbDate
-StepAction,  dbText
+StepAction,  dbMemo
 NextStep,  dbText
 PrevStep,  dbText
 AltStep,  dbText
