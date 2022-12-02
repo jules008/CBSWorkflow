@@ -146,7 +146,7 @@ Public Function BtnProjectNewWFClick(ScreenPage As enScreenPage) As Boolean
     End With
 
     If Not ResetScreen Then Err.Raise HANDLED_ERROR
-    If Not ModUIProjects.BuildScreen(ScreenPage) Then Err.Raise HANDLED_ERROR
+    If Not ModUIProjects.BuildScreen(ScreenPage, False) Then Err.Raise HANDLED_ERROR
     
 GracefullExit:
     
@@ -269,7 +269,7 @@ Public Function BtnLenderNewWFClick(ScreenPage As enScreenPage) As Boolean
     ActiveWorkFlow.DisplayForm
     
     If Not ResetScreen Then Err.Raise HANDLED_ERROR
-    If Not ModUIProjects.BuildScreen(ScreenPage) Then Err.Raise HANDLED_ERROR
+    If Not ModUIProjects.BuildScreen(ScreenPage, False) Then Err.Raise HANDLED_ERROR
     
 GracefullExit:
 
@@ -314,7 +314,7 @@ End Function
 Public Sub BtnProjectOpenWFClick(ByVal ScreenPage As enScreenPage, ByVal Index As String)
     If Not ModUIProjects.OpenProjectWF(ScreenPage, Index) Then Err.Raise HANDLED_ERROR
     If Not ResetScreen Then Err.Raise HANDLED_ERROR
-    If Not ModUIProjects.BuildScreen(ScreenPage) Then Err.Raise HANDLED_ERROR
+    If Not ModUIProjects.BuildScreen(ScreenPage, False) Then Err.Raise HANDLED_ERROR
 End Sub
 
 ' ===============================================================
@@ -323,7 +323,7 @@ End Sub
 Public Sub BtnLenderOpenWFClick(ByVal ScreenPage As enScreenPage, ByVal Index As String)
     If Not ModUIProjects.OpenLenderWF(ScreenPage, Index) Then Err.Raise HANDLED_ERROR
     If Not ResetScreen Then Err.Raise HANDLED_ERROR
-    If Not ModUIProjects.BuildScreen(ScreenPage) Then Err.Raise HANDLED_ERROR
+    If Not ModUIProjects.BuildScreen(ScreenPage, True) Then Err.Raise HANDLED_ERROR
 End Sub
 
 ' ===============================================================
@@ -331,7 +331,7 @@ End Sub
 ' ---------------------------------------------------------------
 Public Sub BtnProjectsClick(ScreenPage As enScreenPage)
     If Not ResetScreen Then Err.Raise HANDLED_ERROR
-    If Not ModUIProjects.BuildScreen(ScreenPage) Then Err.Raise HANDLED_ERROR
+    If Not ModUIProjects.BuildScreen(ScreenPage, False) Then Err.Raise HANDLED_ERROR
 End Sub
 
 ' ===============================================================

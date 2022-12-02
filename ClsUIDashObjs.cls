@@ -45,7 +45,7 @@ End Function
 Public Function FindItem(Name As Variant) As ClsUIDashObj
 Attribute FindItem.VB_UserMemId = 0
     On Error Resume Next
-    Set FindItem = pUIDashObjs.item(Name)
+    Set FindItem = pUIDashObjs.Item(Name)
 End Function
 
 ' ===============================================================

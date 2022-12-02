@@ -58,7 +58,7 @@ End Function
 Public Function Find(ProjectNo As Variant) As ClsProject
 Attribute Find.VB_UserMemId = 0
     On Error Resume Next
-    Set Find = pProjects.item(ProjectNo)
+    Set Find = pProjects.Item(ProjectNo)
 End Function
 
 ' ===============================================================

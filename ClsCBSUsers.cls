@@ -48,7 +48,7 @@ End Function
 Public Function Find(CBSUserNo As Variant) As ClsCBSUser
 Attribute Find.VB_UserMemId = 0
     On Error Resume Next
-    Set Find = pCBSUsers.item(CBSUserNo)
+    Set Find = pCBSUsers.Item(CBSUserNo)
 End Function
 
 ' ===============================================================

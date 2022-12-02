@@ -76,10 +76,10 @@ Public Function FindItem(ByRef StepIndex As Variant) As ClsStep
 Attribute FindItem.VB_UserMemId = 0
     
     On Error Resume Next
-    Set FindItem = pSteps.item(StepIndex)
+    Set FindItem = pSteps.Item(StepIndex)
     
     If FindItem Is Nothing Then
-        Set FindItem = pSteps.item(CStr(Parent.WorkflowNo & "-" & StepIndex))
+        Set FindItem = pSteps.Item(CStr(Parent.WorkflowNo & "-" & StepIndex))
     End If
 End Function
 

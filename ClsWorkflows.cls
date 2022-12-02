@@ -58,7 +58,7 @@ End Function
 Public Function Find(WorkflowNo As Variant) As ClsWorkflow
 Attribute Find.VB_UserMemId = 0
     On Error Resume Next
-    Set Find = pWorkflows.item(WorkflowNo)
+    Set Find = pWorkflows.Item(WorkflowNo)
 End Function
 
 ' ===============================================================

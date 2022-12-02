@@ -45,7 +45,7 @@ End Function
 Public Function FindItem(Name As Variant) As ClsUIFrame
 Attribute FindItem.VB_UserMemId = 0
     On Error Resume Next
-    Set FindItem = pUIFrames.item(Name)
+    Set FindItem = pUIFrames.Item(Name)
 End Function
 
 ' ===============================================================

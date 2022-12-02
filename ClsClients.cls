@@ -48,7 +48,7 @@ End Function
 Public Function Find(ClientNo As Variant) As ClsClient
 Attribute Find.VB_UserMemId = 0
 '    On Error Resume Next
-    Set Find = pClients.item(ClientNo)
+    Set Find = pClients.Item(ClientNo)
 End Function
 
 ' ===============================================================

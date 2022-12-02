@@ -15,13 +15,14 @@ Option Explicit
 
 Private Const StrMODULE As String = "ModUIProjects"
 Private ScreenPage As String
-Private SplitRow As Integer
+Private OldSplitRow As Integer
+Private OldProjectNo As Integer
 
 ' ===============================================================
 ' BuildScreen
 ' Builds the display using shapes
 ' ---------------------------------------------------------------
-Public Function BuildScreen(ScrnPage As enScreenPage) As Boolean
+Public Function BuildScreen(ScrnPage As enScreenPage, ByRef SplitScreenOn As Boolean) As Boolean
     
     Const StrPROCEDURE As String = "BuildScreen()"
 
@@ -32,7 +33,8 @@ Public Function BuildScreen(ScrnPage As enScreenPage) As Boolean
     ScreenPage = ScrnPage
     
     If Not BuildMainFrame(ScreenPage) Then Err.Raise HANDLED_ERROR
-    If Not RefreshList(ScreenPage) Then Err.Raise HANDLED_ERROR
+    
+    If Not RefreshList(ScreenPage, SplitScreenOn) Then Err.Raise HANDLED_ERROR
     
     MainScreen.ReOrder
     
@@ -62,7 +64,7 @@ End Function
 ' BuildMainFrame
 ' Builds screen components
 ' ---------------------------------------------------------------
-Private Function BuildMainFrame(ByVal ScreenPage As enScreenPage) As Boolean
+Private Function BuildMainFrame(ByVal ScreenPage As enScreenPage, Optional SplitScreenInfo As String) As Boolean
     Dim HeaderText As String
     Dim TableHeadingText As String
     Dim TableColWidths As String
@@ -233,7 +235,7 @@ End Function
 ' RefreshList
 ' Refreshes the list of active workflows
 ' ---------------------------------------------------------------
-Public Function RefreshList(ByVal ScreenPage As enScreenPage, Optional SortBy As String) As Boolean
+Public Function RefreshList(ByVal ScreenPage As enScreenPage, ByVal SplitScreenOn As Boolean, Optional SortBy As String) As Boolean
     Dim NoCols As Integer
     Dim NoRows As Integer
     Dim StrSortBy As String
@@ -322,6 +324,10 @@ Public Function RefreshList(ByVal ScreenPage As enScreenPage, Optional SortBy As
         .BuildTable
     End With
     
+    If SplitScreenOn Then
+        ModUIProjects.SplitScreen
+    End If
+    
     ModLibrary.PerfSettingsOff
 
 GracefulExit:
@@ -355,7 +361,7 @@ End Function
 ' SplitScreen
 ' Splits the screen and inserts the lender workflows
 ' ---------------------------------------------------------------
-Private Sub SplitScreen(RowInfo As String)
+Public Sub SplitScreen(Optional NewRowInfo As String)
     Dim ErrNo As Integer
     Dim RstWorkflows As Recordset
     Dim SQL As String
@@ -366,7 +372,7 @@ Private Sub SplitScreen(RowInfo As String)
     Dim NoRows As Integer
     Dim y As Integer
     Dim x As Integer
-    Dim RowNo As Integer
+    Dim SplitRow As Integer
     Dim ProjectNo As Integer
     
     Const StrPROCEDURE As String = "SplitScreen()"
@@ -377,17 +383,26 @@ Restart:
 
     If MainScreen Is Nothing Then Err.Raise SYSTEM_RESTART
     
-    AryRowInfo = Split(RowInfo, ":")
+    If NewRowInfo = "" Then
+        'keeping split the same
+        SplitRow = OldSplitRow
+        ProjectNo = OldProjectNo
+    Else
+        'update with new info
+        AryRowInfo = Split(NewRowInfo, ":")
     
-    RowNo = CInt(AryRowInfo(0))
+        SplitRow = CInt(AryRowInfo(0))
     ProjectNo = CInt(AryRowInfo(1))
+    End If
     
-    If SplitRow = RowNo Then
+    If SplitRow = OldSplitRow And NewRowInfo <> "" Then
         MainFrame.Table.BuildTable 0
         
-        SplitRow = 0
+        OldSplitRow = 0
         MainScreen.ReOrder
     Else
+        OldSplitRow = SplitRow
+        OldProjectNo = ProjectNo
     
     SQL = "SELECT TblWorkflow.WorkflowNo, TblWorkflow.Name, TblLender.Name, TblWorkflow.CurrentStep, TblStepTemplate.StepName, TblWorkflow.Progress & '%',TblWorkflow.Status, TblWorkflow.RAG " _
                 & "FROM TblStepTemplate RIGHT JOIN (TblWorkflow LEFT JOIN TblLender ON TblWorkflow.LenderNo = TblLender.LenderNo) ON TblStepTemplate.StepNo = TblWorkflow.CurrentStep " _
@@ -436,8 +451,7 @@ Restart:
             .OnAction = AryOnAction
         End With
     
-        SplitRow = RowNo
-        MainFrame.Table.BuildTable RowNo, 100
+            MainFrame.Table.BuildTable SplitRow, 100
         MainScreen.ReOrder
         Else
             MainFrame.Table.BuildTable 0
@@ -446,15 +460,13 @@ Restart:
     End If
     
 GracefulExit:
-
-
-Exit Sub
+    Set RstWorkflows = Nothing
+    Exit Sub
 
 ErrorExit:
 
-    '***CleanUpCode***
-
-Exit Sub
+    Set RstWorkflows = Nothing
+    Exit Sub
 
 ErrorHandler:
     If Err.Number >= 2000 And Err.Number <= 2500 Then
@@ -470,7 +482,7 @@ ErrorHandler:
         Resume ErrorExit
     End If
 End Sub
-
+' ===============================================================
 ' ===============================================================
 ' Method GetActiveList
 ' Gets data for workflow list

@@ -377,7 +377,7 @@ Restart:
             ShtMain.[Button] = enBtnProjectsClosed
 
             If Not ResetScreen Then Err.Raise HANDLED_ERROR
-            If Not ModUIProjects.BuildScreen("Closed") Then Err.Raise HANDLED_ERROR
+            If Not ModUIProjects.BuildScreen("Closed", False) Then Err.Raise HANDLED_ERROR
 
         Case enBtnAdminLists
         

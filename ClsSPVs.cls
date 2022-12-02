@@ -58,7 +58,7 @@ End Function
 Public Function Find(SPVNo As Variant) As ClsSPV
 Attribute Find.VB_UserMemId = 0
     On Error Resume Next
-    Set Find = pSPVs.item(CStr(SPVNo))
+    Set Find = pSPVs.Item(CStr(SPVNo))
     
 End Function
 

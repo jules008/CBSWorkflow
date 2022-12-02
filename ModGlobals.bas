@@ -38,8 +38,8 @@ Public Const BACKUP_INT As Integer = 5
 Public Const FILE_ERROR_LOG As String = "Error.log"
 Public Const OLD_DB_VER = "V0.01.07"
 Public Const DB_VER = "V0.01.08"
-Public Const VERSION = "V0.01.10" 'Lender Workflows
-Public Const VER_DATE = "30 Nov 22"
+Public Const VERSION = "V0.01.11" 'Bugfix
+Public Const VER_DATE = "02 Dec 22"
 ' ===============================================================
 ' Error Constants
 ' ---------------------------------------------------------------

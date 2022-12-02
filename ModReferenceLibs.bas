@@ -115,7 +115,7 @@ Public Function ReferenceExists(Ref As String) As Boolean
     
     With ThisWorkbook.VBProject.References
         For i = 1 To .Count
-            If .item(i).GUID = Ref Then
+            If .Item(i).GUID = Ref Then
                 ReferenceExists = True
                 Exit Function
             End If
