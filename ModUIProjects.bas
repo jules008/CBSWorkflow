@@ -374,6 +374,9 @@ Public Sub SplitScreen(Optional NewRowInfo As String)
     Dim x As Integer
     Dim SplitRow As Integer
     Dim ProjectNo As Integer
+    Dim SQLSelect As String
+    Dim SQLFrom As String
+    Dim SQLWhere As String
     
     Const StrPROCEDURE As String = "SplitScreen()"
 
@@ -404,9 +407,23 @@ Restart:
         OldSplitRow = SplitRow
         OldProjectNo = ProjectNo
     
-    SQL = "SELECT TblWorkflow.WorkflowNo, TblWorkflow.Name, TblLender.Name, TblWorkflow.CurrentStep, TblStepTemplate.StepName, TblWorkflow.Progress & '%',TblWorkflow.Status, TblWorkflow.RAG " _
-                & "FROM TblStepTemplate RIGHT JOIN (TblWorkflow LEFT JOIN TblLender ON TblWorkflow.LenderNo = TblLender.LenderNo) ON TblStepTemplate.StepNo = TblWorkflow.CurrentStep " _
-            & "WHERE (((TblWorkflow.ProjectNo)= " & ProjectNo & ") AND ((TblWorkflow.WorkflowType)='enLender'))"
+        SQLSelect = "SELECT TblWorkflow.WorkflowNo, " _
+                        & "TblWorkflowType.DisplayName, " _
+                        & "TblLender.Name, " _
+                        & "TblWorkflow.CurrentStep, " _
+                        & "TblStepTemplate.StepName, " _
+                        & "TblWorkflow.Progress & '%' AS [Progress], " _
+                        & "TblWorkflow.Status, " _
+                        & "TblWorkflow.RAG "
+       SQLFrom = "FROM (TblStepTemplate " _
+                        & "RIGHT JOIN (TblWorkflow " _
+                        & "LEFT JOIN TblLender ON TblWorkflow.LenderNo = TblLender.LenderNo) " _
+                        & "ON TblStepTemplate.StepNo = TblWorkflow.CurrentStep) " _
+                        & "LEFT JOIN TblWorkflowType ON TblWorkflow.Name = TblWorkflowType.WFName "
+        SQLWhere = "WHERE (((TblWorkflow.ProjectNo)= " & ProjectNo & ") " _
+                        & "AND ((TblWorkflow.WorkflowType)='enLender'))"
+
+        SQL = SQLSelect & SQLFrom & SQLWhere
 
     Set RstWorkflows = ModDatabase.SQLQuery(SQL)
     

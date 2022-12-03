@@ -65,18 +65,8 @@ Public Function UpdateDBScript() As Boolean
     ' Database commands
     ' ----------------------------------------------------------------------------------------
     
-    DB.Execute "CREATE TABLE TblWorkflowType"
-    DB.Execute "ALTER TABLE TblStepTemplate ALTER COLUMN StepAction memo"
-    DB.Execute "ALTER TABLE TblStep ALTER COLUMN StepAction memo"
-    DB.Execute "ALTER TABLE TblWorkflowType ADD COLUMN WFNo Number"
-    DB.Execute "ALTER TABLE TblWorkflowType ADD COLUMN WFName Text"
-    DB.Execute "ALTER TABLE TblWorkflowType ADD COLUMN DisplayName Text"
-    DB.Execute "ALTER TABLE TblWorkflowType ADD COLUMN Description Text"
-    
-    DB.Execute "INSERT INTO TblWorkflowType (WFNo, WFName, DisplayName, Description) VALUES (1,'Project', 'Project', 'Standard workflow for all projects')"
-    DB.Execute "INSERT INTO TblWorkflowType (WFNo, WFName, DisplayName, Description) VALUES (2,'Senior', 'Senior Lender', 'Senior Lender Workflow')"
-    DB.Execute "INSERT INTO TblWorkflowType (WFNo, WFName, DisplayName, Description) VALUES (3,'2ndChgeMezLoan', '2nd Chrge/Mez Loan','2nd Charge/Mezzanine Loan')"
-    DB.Execute "INSERT INTO TblWorkflowType (WFNo, WFName, DisplayName, Description) VALUES (4,'Equityloan', 'Equity loan','Equity loan')"
+    DB.Execute "INSERT INTO TblWorkflowType (WFNo, WFName, DisplayName, Description) VALUES (5,'SDLTLoan', 'SDLT Loan','SDLT Loan')"
+    DB.Execute "INSERT INTO TblWorkflowType (WFNo, WFName, DisplayName, Description) VALUES (6,'VATLoan', 'VAT Loan','VAT Loan')"
  
     DB.Execute "DELETE * FROM TblStepTemplate"
     UpdateTable
@@ -158,7 +148,6 @@ Public Function UpdateDBScriptUndo() As Boolean
     ' ========================================================================================
     ' Database commands
     ' ----------------------------------------------------------------------------------------
-    DB.Execute "DROP TABLE TblWorkflowType"
     ' ========================================================================================
     
     DB.Close
