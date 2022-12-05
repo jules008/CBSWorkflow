@@ -65,6 +65,8 @@ Public Function UpdateDBScript() As Boolean
     ' Database commands
     ' ----------------------------------------------------------------------------------------
     
+    DB.Execute "ALTER TABLE TblStepTemplate ALTER COLUMN StepAction memo"
+    DB.Execute "ALTER TABLE TblStep ALTER COLUMN StepAction memo"
     DB.Execute "INSERT INTO TblWorkflowType (WFNo, WFName, DisplayName, Description) VALUES (5,'SDLTLoan', 'SDLT Loan','SDLT Loan')"
     DB.Execute "INSERT INTO TblWorkflowType (WFNo, WFName, DisplayName, Description) VALUES (6,'VATLoan', 'VAT Loan','VAT Loan')"
  
