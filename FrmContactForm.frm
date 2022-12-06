@@ -289,11 +289,13 @@ Private Sub CmoContactType_Change()
             TxtLastComm.Enabled = True
             CmoCommFreq.Enabled = True
             xBtnSent.Enabled = True
+            If CmoCommFreq = "" Or CmoCommFreq = 30 Then CmoCommFreq = 2
         ElseIf .Value = "Lead" Then
             ChkOptOut.Enabled = False
             TxtLastComm.Enabled = True
             CmoCommFreq.Enabled = True
             xBtnSent.Enabled = True
+            If CmoCommFreq = "" Or CmoCommFreq = 2 Then CmoCommFreq = 30
         Else
             ChkOptOut.Enabled = False
             TxtLastComm.Enabled = False
@@ -434,7 +436,7 @@ Private Function ValidateForm() As enFormValidation
     End With
     
     With CmoOrganisation
-        If .ListIndex = -1 Then
+        If .ListIndex = -1 And CmoContactType <> "Lead" Then
             .BackColor = COL_AMBER
             ValidateForm = enValidationError
         End If

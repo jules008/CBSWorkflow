@@ -18,6 +18,10 @@ Dim OldTables() As String
 Private Const StrMODULE As String = "ModDeploy"
 
 Public Sub QueryTest()
+    Set DB = OpenDatabase(GetDocLocalPath(ThisWorkbook.Path) & INI_FILE_PATH & DB_FILE_NAME & ".accdb")
+    DB.Execute "DELETE FROM TblContact WHERE ContactType IS NULL"
+    DB.Execute "UPDATE TblContact SET ComFrq = 30 WHERE ContactType = 'Lead'"
+    DB.Execute "UPDATE TblContact SET ComFrq = 2 WHERE ContactType = 'Client'"
     
 End Sub
 
@@ -64,14 +68,12 @@ Public Function UpdateDBScript() As Boolean
     ' ========================================================================================
     ' Database commands
     ' ----------------------------------------------------------------------------------------
+    DB.Execute "DELETE FROM TblContact WHERE ContactType IS NULL"
+    DB.Execute "UPDATE TblContact SET ComFrq = 30 WHERE ContactType = 'Lead'"
+    DB.Execute "UPDATE TblContact SET ComFrq = 2 WHERE ContactType = 'Client'"
     
-    DB.Execute "ALTER TABLE TblStepTemplate ALTER COLUMN StepAction memo"
-    DB.Execute "ALTER TABLE TblStep ALTER COLUMN StepAction memo"
-    DB.Execute "INSERT INTO TblWorkflowType (WFNo, WFName, DisplayName, Description) VALUES (5,'SDLTLoan', 'SDLT Loan','SDLT Loan')"
-    DB.Execute "INSERT INTO TblWorkflowType (WFNo, WFName, DisplayName, Description) VALUES (6,'VATLoan', 'VAT Loan','VAT Loan')"
- 
-    DB.Execute "DELETE * FROM TblStepTemplate"
-    UpdateTable
+'    DB.Execute "DELETE * FROM TblStepTemplate"
+'    UpdateTable
 
     ' ========================================================================================
         

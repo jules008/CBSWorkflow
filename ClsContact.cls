@@ -256,6 +256,7 @@ Public Sub DBSave()
     
     Dim LastNo As Integer
 
+    If pContactType <> "" Then
     Set RstContact = ModDatabase.SQLQuery("SELECT * FROM TblContact WHERE ContactNo = " & pContactNo)
     Set RstMaxNo = ModDatabase.SQLQuery("SELECT MAX(ContactNo) FROM TblContact ")
     Set RstNoCont = ModDatabase.SQLQuery("SELECT COUNT (ContactNo) FROM TblContact " _
@@ -297,6 +298,7 @@ Public Sub DBSave()
 
         .Update
     End With
+    End If
 
     Set RstContact = Nothing
     Set RstMaxNo = Nothing
@@ -336,16 +338,16 @@ End Function
 ' ---------------------------------------------------------------
 Private Sub pContactForm_Update()
     With pContactForm
-        pAddress = CleanString(.TxtAddress1)
-        pContactName = CleanString(.TxtContactName)
-        pPhone1 = CleanString(.TxtPhone1)
-        pPhone2 = CleanString(.TxtPhone2)
-        pPosition = CleanString(.TxtPosition)
-        pContactType = CleanString(.CmoContactType)
-        pOrganisation = CleanString(.CmoOrganisation)
+        pAddress = Trim(.TxtAddress1)
+        pContactName = Trim(.TxtContactName)
+        pPhone1 = Trim(.TxtPhone1)
+        pPhone2 = Trim(.TxtPhone2)
+        pPosition = Trim(.TxtPosition)
+        pContactType = Trim(.CmoContactType)
+        pOrganisation = Trim(.CmoOrganisation)
         pEmailAddress = Trim(.TxtEmailAdd)
-        pPrimaryContact = CleanString(.ChkPrimaryContact)
-        pOptOut = CleanString(.ChkOptOut)
+        pPrimaryContact = Trim(.ChkPrimaryContact)
+        pOptOut = Trim(.ChkOptOut)
         If .TxtLastComm = "" Then pLastComm = 0 Else pLastComm = .TxtLastComm
         If .CmoCommFreq = "" Then pComFrq = 0 Else pComFrq = CInt(.CmoCommFreq)
     End With
