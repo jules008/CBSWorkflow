@@ -360,13 +360,7 @@ Public Sub UpdateTableData()
     If Not DEV_MODE Or ShtSettings.ChkDebugOride Then
     
         DB.Execute "DELETE * FROM TblStepTemplate"
-        DB.Execute "DELETE * FROM TblWorkflowType"
-        DB.Execute "INSERT INTO TblWorkflowType (WFNo, WFName, DisplayName, Description) VALUES (1,'Project', 'Project', 'Standard workflow for all projects')"
-        DB.Execute "INSERT INTO TblWorkflowType (WFNo, WFName, DisplayName, Description) VALUES (2,'Senior', 'Senior Lender', 'Senior Lender Workflow')"
-        DB.Execute "INSERT INTO TblWorkflowType (WFNo, WFName, DisplayName, Description) VALUES (3,'2ndChgeMezLoan', '2nd Chrge/Mez Loan','2nd Charge/Mezzanine Loan')"
-        DB.Execute "INSERT INTO TblWorkflowType (WFNo, WFName, DisplayName, Description) VALUES (4,'Equityloan', 'Equity loan','Equity loan')"
-        DB.Execute "INSERT INTO TblWorkflowType (WFNo, WFName, DisplayName, Description) VALUES (5,'SDLTLoan', 'SDLT Loan','SDLT Loan')"
-        DB.Execute "INSERT INTO TblWorkflowType (WFNo, WFName, DisplayName, Description) VALUES (6,'VATLoan', 'VAT Loan','VAT Loan')"
+        
         ModDeploy.UpdateTable
         
         If DEV_MODE Then

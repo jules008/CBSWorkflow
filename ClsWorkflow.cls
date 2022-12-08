@@ -496,8 +496,10 @@ End Sub
 ' Completes current step and starts the next
 ' ---------------------------------------------------------------
 Public Sub MoveToNextStep()
+    Dim PrevStep As String
     
         With ActiveStep
+        PrevStep = pCurrentStep
         .Complete
             .DBSave
         End With
@@ -507,6 +509,7 @@ Public Sub MoveToNextStep()
             DBSave
             With ActiveStep
                 .Start
+            .PrevStep = PrevStep
                 .DBSave
             End With
     Else
