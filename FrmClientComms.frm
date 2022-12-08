@@ -28,6 +28,8 @@ Option Explicit
 Private Const StrMODULE As String = "FrmClientComms"
 
 Dim ClsChkBoxes() As New ClsChkBox
+Dim LocCommsList As Recordset
+
 Public Event MailSent(ContactNo As Integer)
 
 ' ---------------------------------------------------------------
@@ -39,6 +41,8 @@ Public Sub AddFields(CommsList As Recordset)
     Dim Chkbox As MSForms.CheckBox
     Dim IntExt As String
     Dim OrgStr As String
+    
+    Set LocCommsList = CommsList
     
     i = 1
     With CommsList
@@ -83,6 +87,15 @@ End Sub
 ' BtnClose_Click
 ' ---------------------------------------------------------------
 Private Sub BtnClose_Click()
+    Unload Me
+End Sub
+
+' ---------------------------------------------------------------
+' BtnExport_Click
+' Exports comms list to report
+' ---------------------------------------------------------------
+Private Sub BtnExport_Click()
+    If Not ModReport.IntExtCommsReport(LocCommsList) Then Err.Raise HANDLED_ERROR
     Unload Me
 End Sub
 

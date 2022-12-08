@@ -31,7 +31,7 @@ Private pFontStyle As String
 Private pFontBold As Boolean
 Private pFontSize As Integer
 Private pFontColour As Long
-Private pFontXJust As XLHAlign
+Private pFontXJust As XlHAlign
 Private pFontVJust As XlVAlign
 Private pFill1 As Long
 Private pFill2 As Long
@@ -103,11 +103,11 @@ Public Property Let FontColour(ByVal vNewValue As Long)
 End Property
 
 '---------------------------------------------------------------
-Public Property Get FontXJust() As XLHAlign
+Public Property Get FontXJust() As XlHAlign
     FontXJust = pFontXJust
 End Property
 
-Public Property Let FontXJust(ByVal vNewValue As XLHAlign)
+Public Property Let FontXJust(ByVal vNewValue As XlHAlign)
     pFontXJust = vNewValue
 End Property
 

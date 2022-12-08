@@ -20,7 +20,7 @@ Private Const StrMODULE As String = "ModWorkflow"
 ' Replaces <keywords> with defined data
 ' ---------------------------------------------------------------
 Private Function KeyWords(Keyword As String, ByRef Workflow As ClsWorkflow) As String
-    Dim x As String
+    Dim X As String
     
     Const StrPROCEDURE As String = "KeyWords()"
 

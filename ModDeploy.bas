@@ -186,7 +186,7 @@ Public Sub UpdateTable()
     Dim RstTable As Recordset
     Dim Fld As Field
     Dim i As Integer
-    Dim x As Integer
+    Dim X As Integer
     Dim Val As String
     Dim RngFields As Range
     Dim RngCol As Range
@@ -199,8 +199,8 @@ Public Sub UpdateTable()
     Set RngFields = ShtTableImport.Range("A1:Y20")
     
     With RstTable
-        x = 2
-        Do While ShtTableImport.Cells(x, 1) <> ""
+        X = 2
+        Do While ShtTableImport.Cells(X, 1) <> ""
             i = 1
             .AddNew
             For Each Fld In RstTable.Fields
@@ -209,8 +209,8 @@ Public Sub UpdateTable()
                 If RngCol Is Nothing Then
                     Debug.Print Fld.Name & " not found"
                 Else
-                    Val = ShtTableImport.Cells(x, RngCol.Column)
-                    Debug.Print "Col: "; RngCol.Column, "Row: "; x, Fld.Name, Val, Fld.Type
+                    Val = ShtTableImport.Cells(X, RngCol.Column)
+                    Debug.Print "Col: "; RngCol.Column, "Row: "; X, Fld.Name, Val, Fld.Type
                     
                     Select Case Fld.Type
                         Case 1
@@ -227,7 +227,7 @@ Public Sub UpdateTable()
                 i = i + 1
                 End If
             Next
-            x = x + 1
+            X = X + 1
             .Update
         Loop
     End With
@@ -357,6 +357,8 @@ End Function
 ' ---------------------------------------------------------------
 Public Sub UpdateTableData()
         If DB Is Nothing Then DBConnect
+    If Not DEV_MODE Or ShtSettings.ChkDebugOride Then
+    
         DB.Execute "DELETE * FROM TblStepTemplate"
         DB.Execute "DELETE * FROM TblWorkflowType"
         DB.Execute "INSERT INTO TblWorkflowType (WFNo, WFName, DisplayName, Description) VALUES (1,'Project', 'Project', 'Standard workflow for all projects')"
@@ -367,10 +369,13 @@ Public Sub UpdateTableData()
         DB.Execute "INSERT INTO TblWorkflowType (WFNo, WFName, DisplayName, Description) VALUES (6,'VATLoan', 'VAT Loan','VAT Loan')"
         ModDeploy.UpdateTable
         
-        If Not DEV_MODE Then
+        If DEV_MODE Then
+            ShtSettings.ChkDebugOride = False
+        Else
             ShtSettings.ChkUpdateDB = False
             Application.EnableEvents = False
             ActiveWorkbook.Save
             Application.EnableEvents = True
         End If
+    End If
 End Sub

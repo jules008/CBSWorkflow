@@ -314,11 +314,11 @@ End Function
 ' Prints any document
 ' ---------------------------------------------------------------
 Public Function PrintDoc(FileName As String)
-    Dim x As LongPtr
+    Dim X As LongPtr
     
     On Error Resume Next
     
-    x = ShellExecute(0, "Print", FileName, 0&, 0&, 3)
+    X = ShellExecute(0, "Print", FileName, 0&, 0&, 3)
 
 End Function
 
@@ -327,11 +327,11 @@ End Function
 ' Opens any document
 ' ---------------------------------------------------------------
 Public Function OpenDoc(FileName As String)
-    Dim x As LongPtr
+    Dim X As LongPtr
     
 '    On Error Resume Next
     
-    x = ShellExecute(0, "Open", FileName, "", "", vbNormalNoFocus)
+    X = ShellExecute(0, "Open", FileName, "", "", vbNormalNoFocus)
 
 End Function
 
@@ -418,7 +418,7 @@ End Function
 ' Transposes input array
 ' ---------------------------------------------------------------
 Public Function TransposeArray(myarray() As Variant) As Variant()
-Dim x As Long
+Dim X As Long
 Dim y As Long
 Dim XLower As Long
 Dim XUpper As Long
@@ -432,11 +432,11 @@ Dim TempArray As Variant
     YUpper = UBound(myarray, 1)
     
     ReDim TempArray(XUpper, YUpper)
-    For x = XLower To XUpper
+    For X = XLower To XUpper
         For y = YLower To YUpper
-            TempArray(x, y) = myarray(y, x)
+            TempArray(X, y) = myarray(y, X)
         Next y
-    Next x
+    Next X
     TransposeArray = TempArray
 End Function
 

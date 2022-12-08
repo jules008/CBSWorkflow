@@ -241,7 +241,7 @@ Public Function RefreshList(ByVal ScreenPage As enScreenPage, ByVal SplitScreenO
     Dim StrSortBy As String
     Dim RstWorkflowList As Recordset
     Dim y As Integer
-    Dim x As Integer
+    Dim X As Integer
     Dim AryStyles() As String
     Dim AryOnAction() As String
     
@@ -296,22 +296,22 @@ Public Function RefreshList(ByVal ScreenPage As enScreenPage, ByVal SplitScreenO
     Debug.Assert MainFrame.Table.Cells.Count = 0
     
     With RstWorkflowList
-        For x = 0 To NoCols - 1
+        For X = 0 To NoCols - 1
             .MoveFirst
             For y = 0 To NoRows - 1
                 
-                If x = 9 Then
-                    If !RAG = "en1Red" Then AryStyles(x, y) = "RED_CELL"
-                    If !RAG = "en2Amber" Then AryStyles(x, y) = "AMBER_CELL"
-                    If !RAG = "en3Green" Then AryStyles(x, y) = "GREEN_CELL"
+                If X = 9 Then
+                    If !RAG = "en1Red" Then AryStyles(X, y) = "RED_CELL"
+                    If !RAG = "en2Amber" Then AryStyles(X, y) = "AMBER_CELL"
+                    If !RAG = "en3Green" Then AryStyles(X, y) = "GREEN_CELL"
                 Else
-            AryStyles(x, y) = "GENERIC_TABLE"
+            AryStyles(X, y) = "GENERIC_TABLE"
                 End If
                 
-                If x = 0 Then
-                    AryOnAction(x, y) = "'ModUIProjects.SplitScreen(""" & y + 1 & ":" & !ProjectNo & """)'"
+                If X = 0 Then
+                    AryOnAction(X, y) = "'ModUIProjects.SplitScreen(""" & y + 1 & ":" & !ProjectNo & """)'"
                 Else
-                AryOnAction(x, y) = "'ModUIButtonHandler.ProcessBtnClicks(""" & ScreenPage & ":" & enBtnProjectOpen & ":" & !ProjectNo & """)'"
+                AryOnAction(X, y) = "'ModUIButtonHandler.ProcessBtnClicks(""" & ScreenPage & ":" & enBtnProjectOpen & ":" & !ProjectNo & """)'"
                 End If
                 .MoveNext
         Next
@@ -371,7 +371,7 @@ Public Sub SplitScreen(Optional NewRowInfo As String)
     Dim NoCols As Integer
     Dim NoRows As Integer
     Dim y As Integer
-    Dim x As Integer
+    Dim X As Integer
     Dim SplitRow As Integer
     Dim ProjectNo As Integer
     Dim SQLSelect As String
@@ -445,19 +445,19 @@ Restart:
     
     With RstWorkflows
     
-        For x = 0 To NoCols - 1
+        For X = 0 To NoCols - 1
             .MoveFirst
             For y = 0 To NoRows - 1
                 
-                If x = 6 Then
-                    If !RAG = "en1Red" Then AryStyles(x, y) = "RED_CELL"
-                    If !RAG = "en2Amber" Then AryStyles(x, y) = "AMBER_CELL"
-                    If !RAG = "en3Green" Then AryStyles(x, y) = "GREEN_CELL"
+                If X = 6 Then
+                    If !RAG = "en1Red" Then AryStyles(X, y) = "RED_CELL"
+                    If !RAG = "en2Amber" Then AryStyles(X, y) = "AMBER_CELL"
+                    If !RAG = "en3Green" Then AryStyles(X, y) = "GREEN_CELL"
                 Else
-                    AryStyles(x, y) = "GENERIC_TABLE"
+                    AryStyles(X, y) = "GENERIC_TABLE"
                 End If
                 
-                            AryOnAction(x, y) = "'ModUIButtonHandler.ProcessBtnClicks(""" & ScreenPage & ":" & enBtnLenderOpenWF & ":" & !WorkflowNo & """)'"
+                            AryOnAction(X, y) = "'ModUIButtonHandler.ProcessBtnClicks(""" & ScreenPage & ":" & enBtnLenderOpenWF & ":" & !WorkflowNo & """)'"
                 .MoveNext
             Next
         Next
