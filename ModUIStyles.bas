@@ -66,7 +66,7 @@ Public Function BuildScreenStyles() As Boolean
         .FontStyle = BUTTON_UNSET_FONT_STYLE
         .FontSize = BUTTON_UNSET_FONT_SIZE
         .FontColour = BUTTON_UNSET_FONT_COLOUR
-        .FontXJust = BUTTON_UNSET_FONT_X_JUST
+        .FontXJust = BUTTON_UNSET_FONT_x_JUST
         .FontVJust = BUTTON_UNSET_FONT_Y_JUST
     End With
 
@@ -80,7 +80,7 @@ Public Function BuildScreenStyles() As Boolean
         .FontStyle = BUTTON_SET_FONT_STYLE
         .FontSize = BUTTON_SET_FONT_SIZE
         .FontColour = BUTTON_SET_FONT_COLOUR
-        .FontXJust = BUTTON_SET_FONT_X_JUST
+        .FontXJust = BUTTON_SET_FONT_x_JUST
         .FontVJust = BUTTON_SET_FONT_Y_JUST
     End With
     
@@ -110,7 +110,7 @@ Public Function BuildScreenStyles() As Boolean
         .FontSize = HEADER_FONT_SIZE
         .FontBold = HEADER_FONT_BOLD
         .FontColour = HEADER_FONT_COLOUR
-        .FontXJust = HEADER_FONT_X_JUST
+        .FontXJust = HEADER_FONT_x_JUST
         .FontVJust = HEADER_FONT_Y_JUST
     End With
 
@@ -124,7 +124,7 @@ Public Function BuildScreenStyles() As Boolean
         .FontSize = BTN_MAIN_FONT_SIZE
         .FontBold = BTN_MAIN_FONT_BOLD
         .FontColour = BTN_MAIN_FONT_COLOUR
-        .FontXJust = BTN_MAIN_FONT_X_JUST
+        .FontXJust = BTN_MAIN_FONT_x_JUST
         .FontVJust = BTN_MAIN_FONT_Y_JUST
     End With
 
@@ -138,7 +138,7 @@ Public Function BuildScreenStyles() As Boolean
         .FontSize = GENERIC_BUTTON_FONT_SIZE
         .FontBold = GENERIC_BUTTON_FONT_BOLD
         .FontColour = GENERIC_BUTTON_FONT_COLOUR
-        .FontXJust = GENERIC_BUTTON_FONT_X_JUST
+        .FontXJust = GENERIC_BUTTON_FONT_x_JUST
         .FontVJust = GENERIC_BUTTON_FONT_Y_JUST
     End With
 
@@ -152,7 +152,7 @@ Public Function BuildScreenStyles() As Boolean
         .FontSize = TODO_BUTTON_FONT_SIZE
         .FontBold = TODO_BUTTON_FONT_BOLD
         .FontColour = TODO_BUTTON_FONT_COLOUR
-        .FontXJust = TODO_BUTTON_FONT_X_JUST
+        .FontXJust = TODO_BUTTON_FONT_x_JUST
         .FontVJust = TODO_BUTTON_FONT_Y_JUST
     End With
 
@@ -167,7 +167,7 @@ Public Function BuildScreenStyles() As Boolean
         .FontSize = TODO_BADGE_FONT_SIZE
         .FontBold = TODO_BADGE_FONT_BOLD
         .FontColour = TODO_BADGE_FONT_COLOUR
-        .FontXJust = TODO_BADGE_FONT_X_JUST
+        .FontXJust = TODO_BADGE_FONT_x_JUST
         .FontVJust = TODO_BADGE_FONT_Y_JUST
     End With
 
@@ -180,7 +180,7 @@ Public Function BuildScreenStyles() As Boolean
 '        .FontSize = TOOL_BUTTON_FONT_SIZE
 '        .FontBold = TOOL_BUTTON_FONT_BOLD
 '        .FontColour = TOOL_BUTTON_FONT_COLOUR
-'        .FontXJust = TOOL_BUTTON_FONT_X_JUST
+'        .FontXJust = TOOL_BUTTON_FONT_x_JUST
 '        .FontVJust = TOOL_BUTTON_FONT_Y_JUST
 '    End With
 
@@ -194,7 +194,7 @@ Public Function BuildScreenStyles() As Boolean
         .FontSize = GENERIC_TABLE_FONT_SIZE
         .FontBold = GENERIC_TABLE_FONT_BOLD
         .FontColour = GENERIC_TABLE_FONT_COLOUR
-        .FontXJust = GENERIC_TABLE_FONT_X_JUST
+        .FontXJust = GENERIC_TABLE_FONT_x_JUST
         .FontVJust = GENERIC_TABLE_FONT_Y_JUST
     End With
 
@@ -208,7 +208,7 @@ Public Function BuildScreenStyles() As Boolean
         .FontSize = GREEN_CELL_FONT_SIZE
         .FontBold = GREEN_CELL_FONT_BOLD
         .FontColour = GREEN_CELL_FONT_COLOUR
-        .FontXJust = GREEN_CELL_FONT_X_JUST
+        .FontXJust = GREEN_CELL_FONT_x_JUST
         .FontVJust = GREEN_CELL_FONT_Y_JUST
     End With
 
@@ -222,7 +222,7 @@ Public Function BuildScreenStyles() As Boolean
         .FontSize = AMBER_CELL_FONT_SIZE
         .FontBold = AMBER_CELL_FONT_BOLD
         .FontColour = AMBER_CELL_FONT_COLOUR
-        .FontXJust = AMBER_CELL_FONT_X_JUST
+        .FontXJust = AMBER_CELL_FONT_x_JUST
         .FontVJust = AMBER_CELL_FONT_Y_JUST
     End With
 
@@ -236,7 +236,7 @@ Public Function BuildScreenStyles() As Boolean
         .FontSize = RED_CELL_FONT_SIZE
         .FontBold = RED_CELL_FONT_BOLD
         .FontColour = RED_CELL_FONT_COLOUR
-        .FontXJust = RED_CELL_FONT_X_JUST
+        .FontXJust = RED_CELL_FONT_x_JUST
         .FontVJust = RED_CELL_FONT_Y_JUST
     End With
 
@@ -250,7 +250,7 @@ Public Function BuildScreenStyles() As Boolean
         .FontSize = GENERIC_TABLE_HEADER_FONT_SIZE
         .FontBold = GENERIC_TABLE_HEADER_FONT_BOLD
         .FontColour = GENERIC_TABLE_HEADER_FONT_COLOUR
-        .FontXJust = GENERIC_TABLE_HEADER_FONT_X_JUST
+        .FontXJust = GENERIC_TABLE_HEADER_FONT_x_JUST
         .FontVJust = GENERIC_TABLE_HEADER_FONT_Y_JUST
     End With
 
@@ -264,7 +264,7 @@ Public Function BuildScreenStyles() As Boolean
         .FontSize = GENERIC_TABLE_HEADER_FONT_SIZE
         .FontBold = GENERIC_TABLE_HEADER_FONT_BOLD
         .FontColour = GENERIC_TABLE_HEADER_FONT_COLOUR
-        .FontXJust = GENERIC_TABLE_HEADER_FONT_X_JUST
+        .FontXJust = GENERIC_TABLE_HEADER_FONT_x_JUST
         .FontVJust = GENERIC_TABLE_HEADER_FONT_Y_JUST
     End With
 
@@ -277,7 +277,7 @@ Public Function BuildScreenStyles() As Boolean
 '        .FontSize = TRANSPARENT_TEXT_BOX_FONT_SIZE
 '        .FontBold = TRANSPARENT_TEXT_BOX_FONT_BOLD
 '        .FontColour = TRANSPARENT_TEXT_BOX_FONT_COLOUR
-'        .FontXJust = TRANSPARENT_TEXT_BOX_FONT_X_JUST
+'        .FontXJust = TRANSPARENT_TEXT_BOX_FONT_x_JUST
 '        .FontVJust = TRANSPARENT_TEXT_BOX_FONT_Y_JUST
 '    End With
 '
@@ -290,7 +290,7 @@ Public Function BuildScreenStyles() As Boolean
 '        .FontSize = TRANSPARENT_TEXT_BOX_FONT_SIZE
 '        .FontBold = TRANSPARENT_TEXT_BOX_FONT_BOLD
 '        .FontColour = TRANSPARENT_TEXT_BOX_FONT_COLOUR
-'        .FontXJust = TRANSPARENT_TEXT_BOX_FONT_X_JUST
+'        .FontXJust = TRANSPARENT_TEXT_BOX_FONT_x_JUST
 '        .FontVJust = TRANSPARENT_TEXT_BOX_FONT_Y_JUST
 '    End With
 '
@@ -303,7 +303,7 @@ Public Function BuildScreenStyles() As Boolean
 '        .FontSize = VERT_Cell_HEADER_FONT_SIZE
 '        .FontBold = VERT_Cell_HEADER_FONT_BOLD
 '        .FontColour = VERT_Cell_HEADER_FONT_COLOUR
-'        .FontXJust = VERT_Cell_HEADER_FONT_X_JUST
+'        .FontXJust = VERT_Cell_HEADER_FONT_x_JUST
 '        .FontVJust = VERT_Cell_HEADER_FONT_Y_JUST
 '        .TextDir = VERT_Cell_HEADER_TEXT_DIR
 '    End With
@@ -317,7 +317,7 @@ Public Function BuildScreenStyles() As Boolean
 '        .FontSize = MATRIX_DEF_FONT_SIZE
 '        .FontBold = MATRIX_DEF_FONT_BOLD
 '        .FontColour = MATRIX_DEF_FONT_COLOUR
-'        .FontXJust = MATRIX_DEF_FONT_X_JUST
+'        .FontXJust = MATRIX_DEF_FONT_x_JUST
 '        .FontVJust = MATRIX_DEF_FONT_Y_JUST
 '    End With
 '
@@ -331,7 +331,7 @@ Public Function BuildScreenStyles() As Boolean
 '        .FontSize = MATRIX_1_FONT_SIZE
 '        .FontBold = MATRIX_1_FONT_BOLD
 '        .FontColour = MATRIX_1_FONT_COLOUR
-'        .FontXJust = MATRIX_1_FONT_X_JUST
+'        .FontXJust = MATRIX_1_FONT_x_JUST
 '        .FontVJust = MATRIX_1_FONT_Y_JUST
 '    End With
 '
@@ -345,7 +345,7 @@ Public Function BuildScreenStyles() As Boolean
 '        .FontSize = MATRIX_3_FONT_SIZE
 '        .FontBold = MATRIX_3_FONT_BOLD
 '        .FontColour = MATRIX_3_FONT_COLOUR
-'        .FontXJust = MATRIX_3_FONT_X_JUST
+'        .FontXJust = MATRIX_3_FONT_x_JUST
 '        .FontVJust = MATRIX_3_FONT_Y_JUST
 '    End With
 '
@@ -359,7 +359,7 @@ Public Function BuildScreenStyles() As Boolean
 '        .FontSize = MATRIX_4_FONT_SIZE
 '        .FontBold = MATRIX_4_FONT_BOLD
 '        .FontColour = MATRIX_4_FONT_COLOUR
-'        .FontXJust = MATRIX_4_FONT_X_JUST
+'        .FontXJust = MATRIX_4_FONT_x_JUST
 '        .FontVJust = MATRIX_4_FONT_Y_JUST
 '    End With
 '
@@ -373,7 +373,7 @@ Public Function BuildScreenStyles() As Boolean
 '        .FontSize = BTN_SUPPORT_FONT_SIZE
 '        .FontBold = BTN_SUPPORT_FONT_BOLD
 '        .FontColour = BTN_SUPPORT_FONT_COLOUR
-'        .FontXJust = BTN_SUPPORT_FONT_X_JUST
+'        .FontXJust = BTN_SUPPORT_FONT_x_JUST
 '        .FontVJust = BTN_SUPPORT_FONT_Y_JUST
 '    End With
 '

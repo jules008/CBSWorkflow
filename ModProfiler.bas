@@ -21,7 +21,7 @@ Private Const StrMODULE As String = "ModProfiler"
 ' ---------------------------------------------------------------
 Public Sub ObjectCheck()
     Dim VBModule As VBIDE.VBComponent
-    Dim i, X As Integer
+    Dim i, x As Integer
     Dim NoObjs As Single
     Dim NoObjsClsd As Single
     Dim LineCode As String
@@ -42,10 +42,10 @@ Public Sub ObjectCheck()
                     TmpAry = Split(LineCode, " ")
                     
                     If InStr(1, LineCode, "Nothing", vbTextCompare) Then
-                        For X = LBound(Objs) To UBound(Objs)
-                            If TmpAry(1) = Objs(X) Then
+                        For x = LBound(Objs) To UBound(Objs)
+                            If TmpAry(1) = Objs(x) Then
                                 NoObjsClsd = NoObjsClsd + 1
-                                Objs(X) = ""
+                                Objs(x) = ""
                                 Exit For
                             End If
                         Next
@@ -64,8 +64,8 @@ Public Sub ObjectCheck()
             Debug.Print "Objects left open" & vbCr
             Debug.Print "=================" & vbCr
             
-            For X = LBound(Objs) To UBound(Objs)
-                If Objs(X) <> "" Then Debug.Print Objs(X) & vbCr
+            For x = LBound(Objs) To UBound(Objs)
+                If Objs(x) <> "" Then Debug.Print Objs(x) & vbCr
             Next
         Next
     Next

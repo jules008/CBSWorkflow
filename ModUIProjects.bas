@@ -241,7 +241,7 @@ Public Function RefreshList(ByVal ScreenPage As enScreenPage, ByVal SplitScreenO
     Dim StrSortBy As String
     Dim RstWorkflowList As Recordset
     Dim y As Integer
-    Dim X As Integer
+    Dim x As Integer
     Dim AryStyles() As String
     Dim AryOnAction() As String
     
@@ -251,7 +251,7 @@ Public Function RefreshList(ByVal ScreenPage As enScreenPage, ByVal SplitScreenO
 
     ModLibrary.PerfSettingsOn
 
-    Set RstWorkflowList = GetActiveList(ScreenPage, StrSortBy)
+    Set RstWorkflowList = GetActiveList(ScreenPage, SortBy)
     
     With RstWorkflowList
         If .RecordCount = 0 Then GoTo GracefulExit
@@ -265,6 +265,7 @@ Public Function RefreshList(ByVal ScreenPage As enScreenPage, ByVal SplitScreenO
         .ColWidths = PROJECT_TABLE_COL_WIDTHS
         .RstText = RstWorkflowList
         .NoRows = RstWorkflowList.RecordCount
+        .StylesColl.RemoveCollection
         .StylesColl.Add GENERIC_TABLE
         .StylesColl.Add GENERIC_TABLE_HEADER
         .StylesColl.Add RED_CELL
@@ -279,6 +280,7 @@ Public Function RefreshList(ByVal ScreenPage As enScreenPage, ByVal SplitScreenO
             .HeadingHeight = GENERIC_TABLE_HEADING_HEIGHT
             .Name = "SubTable"
         .ColWidths = PROJECT_SUB_TABLE_COL_WIDTHS
+        .StylesColl.RemoveCollection
         .StylesColl.Add GENERIC_TABLE
         .StylesColl.Add SUB_TABLE_HEADER
         .StylesColl.Add RED_CELL
@@ -293,25 +295,31 @@ Public Function RefreshList(ByVal ScreenPage As enScreenPage, ByVal SplitScreenO
     ReDim AryStyles(0 To NoCols - 1, 0 To NoRows - 1)
     ReDim AryOnAction(0 To NoCols - 1, 0 To NoRows - 1)
     
+    MainFrame.Table.Cells.DeleteCollection
     Debug.Assert MainFrame.Table.Cells.Count = 0
     
     With RstWorkflowList
-        For X = 0 To NoCols - 1
+        For x = 0 To NoCols - 1
             .MoveFirst
             For y = 0 To NoRows - 1
                 
-                If X = 9 Then
-                    If !RAG = "en1Red" Then AryStyles(X, y) = "RED_CELL"
-                    If !RAG = "en2Amber" Then AryStyles(X, y) = "AMBER_CELL"
-                    If !RAG = "en3Green" Then AryStyles(X, y) = "GREEN_CELL"
+                If y = 0 Then
+                    'headers
+                    AryOnAction(x, y) = "'ModUIProjects.SortBy (""" & ScreenPage & ":" & .Fields(x).Name & """)'"
                 Else
-            AryStyles(X, y) = "GENERIC_TABLE"
+                    If x = 0 Then
+                        AryOnAction(x, y) = "'ModUIProjects.SplitScreen(""" & y + 1 & ":" & !ProjectNo & """)'"
+                Else
+                        AryOnAction(x, y) = "'ModUIButtonHandler.ProcessBtnClicks(""" & ScreenPage & ":" & enBtnProjectOpen & ":" & !ProjectNo & """)'"
+                    End If
                 End If
                 
-                If X = 0 Then
-                    AryOnAction(X, y) = "'ModUIProjects.SplitScreen(""" & y + 1 & ":" & !ProjectNo & """)'"
+                If x = 9 Then
+                    If !RAG = "en1Red" Then AryStyles(x, y) = "RED_CELL"
+                    If !RAG = "en2Amber" Then AryStyles(x, y) = "AMBER_CELL"
+                    If !RAG = "en3Green" Then AryStyles(x, y) = "GREEN_CELL"
                 Else
-                AryOnAction(X, y) = "'ModUIButtonHandler.ProcessBtnClicks(""" & ScreenPage & ":" & enBtnProjectOpen & ":" & !ProjectNo & """)'"
+                    AryStyles(x, y) = "GENERIC_TABLE"
                 End If
                 .MoveNext
         Next
@@ -336,7 +344,7 @@ GracefulExit:
  
     Set RstWorkflowList = Nothing
     
-Exit Function
+    Exit Function
 
 ErrorExit:
 
@@ -346,7 +354,7 @@ ErrorExit:
     
     RefreshList = False
 
-Exit Function
+    Exit Function
 
 ErrorHandler:
     If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
@@ -371,7 +379,7 @@ Public Sub SplitScreen(Optional NewRowInfo As String)
     Dim NoCols As Integer
     Dim NoRows As Integer
     Dim y As Integer
-    Dim X As Integer
+    Dim x As Integer
     Dim SplitRow As Integer
     Dim ProjectNo As Integer
     Dim SQLSelect As String
@@ -445,19 +453,19 @@ Restart:
     
     With RstWorkflows
     
-        For X = 0 To NoCols - 1
+        For x = 0 To NoCols - 1
             .MoveFirst
             For y = 0 To NoRows - 1
                 
-                If X = 6 Then
-                    If !RAG = "en1Red" Then AryStyles(X, y) = "RED_CELL"
-                    If !RAG = "en2Amber" Then AryStyles(X, y) = "AMBER_CELL"
-                    If !RAG = "en3Green" Then AryStyles(X, y) = "GREEN_CELL"
+                If x = 6 Then
+                    If !RAG = "en1Red" Then AryStyles(x, y) = "RED_CELL"
+                    If !RAG = "en2Amber" Then AryStyles(x, y) = "AMBER_CELL"
+                    If !RAG = "en3Green" Then AryStyles(x, y) = "GREEN_CELL"
                 Else
-                    AryStyles(X, y) = "GENERIC_TABLE"
+                    AryStyles(x, y) = "GENERIC_TABLE"
                 End If
                 
-                            AryOnAction(X, y) = "'ModUIButtonHandler.ProcessBtnClicks(""" & ScreenPage & ":" & enBtnLenderOpenWF & ":" & !WorkflowNo & """)'"
+                            AryOnAction(x, y) = "'ModUIButtonHandler.ProcessBtnClicks(""" & ScreenPage & ":" & enBtnLenderOpenWF & ":" & !WorkflowNo & """)'"
                 .MoveNext
             Next
         Next
@@ -499,7 +507,7 @@ ErrorHandler:
         Resume ErrorExit
     End If
 End Sub
-' ===============================================================
+
 ' ===============================================================
 ' Method GetActiveList
 ' Gets data for workflow list
@@ -512,19 +520,24 @@ Public Function GetActiveList(ScreenPage As enScreenPage, StrSortBy As String) A
     Dim SQL2 As String
     Dim SQL3 As String
 
+    If StrSortBy <> "" Then StrSortBy = "ORDER BY " & StrSortBy
+    
     Select Case ScreenPage
         Case enScrProjForAction
-            SQL = "SELECT Null AS Expand, TblProject.ProjectNo, TblProject.ProjectName, TblClient.Name, TblSPV.Name, TblCBSUser.UserName, TblWorkflow.CurrentStep, TblStepTemplate.StepName, TblWorkflow.Progress & '%', TblWorkflow.Status, TblWorkflow.RAG " _
+            SQL = "SELECT Null AS Expand, TblProject.ProjectNo, TblProject.ProjectName, TblClient.Name, TblSPV.Name, TblCBSUser.UserName, TblWorkflow.CurrentStep, TblStepTemplate.StepName, TblWorkflow.Progress & '%' AS [Progress], TblWorkflow.Status, TblWorkflow.RAG " _
                     & "FROM TblClient RIGHT JOIN ((((TblProject LEFT JOIN TblSPV ON TblProject.SPVNo = TblSPV.SPVNo) LEFT JOIN TblCBSUser ON TblProject.CaseManager = TblCBSUser.CBSUserNo) LEFT JOIN TblWorkflow ON TblProject.ProjectWFNo = TblWorkflow.WorkflowNo) LEFT JOIN TblStepTemplate ON TblWorkflow.CurrentStep = TblStepTemplate.StepNo) ON TblClient.ClientNo = TblProject.ClientNo " _
-                    & "WHERE (((TblWorkflow.RAG)='en1Red') AND ((TblWorkflow.WorkflowType)='enProject')) OR (((TblWorkflow.RAG)='en2Amber') AND ((TblWorkflow.WorkflowType)='enProject')) OR (((TblWorkflow.Status)='Action Req.') AND ((TblWorkflow.RAG)='en3Green') AND ((TblWorkflow.WorkflowType)='enProject'))"
+                    & "WHERE (((TblWorkflow.RAG)='en1Red') AND ((TblWorkflow.WorkflowType)='enProject')) OR (((TblWorkflow.RAG)='en2Amber') AND ((TblWorkflow.WorkflowType)='enProject')) OR (((TblWorkflow.Status)='Action Req.') AND ((TblWorkflow.RAG)='en3Green') AND ((TblWorkflow.WorkflowType)='enProject')) " _
+                    & StrSortBy
         Case enScrProjActive
-            SQL = "SELECT Null AS Expand, TblProject.ProjectNo, TblProject.ProjectName, TblClient.Name, TblSPV.Name, TblCBSUser.UserName, TblWorkflow.CurrentStep, TblStepTemplate.StepName, TblWorkflow.Progress & '%', TblWorkflow.Status, TblWorkflow.RAG " _
+            SQL = "SELECT Null AS Expand, TblProject.ProjectNo, TblProject.ProjectName, TblClient.Name, TblSPV.Name, TblCBSUser.UserName, TblWorkflow.CurrentStep, TblStepTemplate.StepName, TblWorkflow.Progress & '%' AS [Progress], TblWorkflow.Status, TblWorkflow.RAG " _
                     & "FROM TblClient RIGHT JOIN ((((TblProject LEFT JOIN TblSPV ON TblProject.SPVNo = TblSPV.SPVNo) LEFT JOIN TblWorkflow ON TblProject.ProjectWFNo = TblWorkflow.WorkflowNo) LEFT JOIN TblCBSUser ON TblProject.CaseManager = TblCBSUser.CBSUserNo) LEFT JOIN TblStepTemplate ON TblWorkflow.CurrentStep = TblStepTemplate.StepNo) ON TblClient.ClientNo = TblProject.ClientNo " _
-                    & "WHERE (((TblWorkflow.Status)<>'Complete') AND ((TblWorkflow.WorkflowType)='enProject'))"
+                    & "WHERE (((TblWorkflow.Status)<>'Complete') AND ((TblWorkflow.WorkflowType)='enProject')) " _
+                    & StrSortBy
         Case enScrProjComplete
-            SQL = "SELECT Null AS Expand, TblProject.ProjectNo, TblProject.ProjectName, TblClient.Name, TblSPV.Name, TblCBSUser.UserName, TblWorkflow.CurrentStep, TblStepTemplate.StepName, TblWorkflow.Progress & '%', TblWorkflow.Status, TblWorkflow.RAG " _
+            SQL = "SELECT Null AS Expand, TblProject.ProjectNo, TblProject.ProjectName, TblClient.Name, TblSPV.Name, TblCBSUser.UserName, TblWorkflow.CurrentStep, TblStepTemplate.StepName, TblWorkflow.Progress & '%' AS [Progress], TblWorkflow.Status, TblWorkflow.RAG " _
                     & "FROM TblClient RIGHT JOIN ((((TblProject LEFT JOIN TblSPV ON TblProject.SPVNo = TblSPV.SPVNo) LEFT JOIN TblWorkflow ON TblProject.ProjectWFNo = TblWorkflow.WorkflowNo) LEFT JOIN TblCBSUser ON TblProject.CaseManager = TblCBSUser.CBSUserNo) LEFT JOIN TblStepTemplate ON TblWorkflow.CurrentStep = TblStepTemplate.StepNo) ON TblClient.ClientNo = TblProject.ClientNo " _
-                    & "WHERE (((TblWorkflow.Status)='Complete') AND ((TblWorkflow.WorkflowType)='enProject'))"
+                    & "WHERE (((TblWorkflow.Status)='Complete') AND ((TblWorkflow.WorkflowType)='enProject')) " _
+                    & StrSortBy
     End Select
                 
     Set RstWorkflow = ModDatabase.SQLQuery(SQL)
@@ -618,4 +631,75 @@ ErrorHandler:
     End If
 End Function
 
+
+' ===============================================================
+' SortBy
+' Sorts cols by selected field
+' ---------------------------------------------------------------
+Private Sub SortBy(SortByData As String)
+    Dim ArySort() As String
+    Dim SortBy As String
+    Dim StrSort As String
+    Dim ScreenPage As enScreenPage
+    Dim ErrNo As Integer
+
+    Const StrPROCEDURE As String = "SortBy()"
+
+    On Error GoTo ErrorHandler
+
+Restart:
+
+    If MainScreen Is Nothing Then Err.Raise SYSTEM_RESTART
+
+    ArySort = Split(SortByData, ":")
+    ScreenPage = ArySort(0)
+    SortBy = ArySort(1)
+    
+    Select Case SortBy
+        Case Is = "ProjectNo"
+            StrSort = "TblProject.ProjectNo"
+        Case Is = "ProjectName"
+            StrSort = "TblProject.ProjectName"
+        Case Is = "TblClient.Name"
+            StrSort = "TblClient.Name"
+        Case Is = "TblSPV.Name"
+            StrSort = "TblSPV.Name"
+        Case Is = "UserName"
+            StrSort = "TblCBSUser.UserName"
+        Case Is = "CurrentStep"
+            StrSort = "TblWorkflow.CurrentStep"
+        Case Is = "StepName"
+            StrSort = "TblStepTemplate.StepName"
+        Case Is = "Progress"
+            StrSort = "Progress"
+        Case Is = "Status"
+            StrSort = "TblWorkflow.Status"
+    End Select
+
+    If Not RefreshList(ScreenPage, False, StrSort) Then Err.Raise HANDLED_ERROR
+
+GracefulExit:
+
+Exit Sub
+
+ErrorExit:
+
+    '***CleanUpCode***
+
+Exit Sub
+
+ErrorHandler:
+    If Err.Number >= 2000 And Err.Number <= 2500 Then
+        ErrNo = Err.Number
+        CustomErrorHandler (Err.Number)
+        If ErrNo = SYSTEM_RESTART Then Resume Restart Else Resume GracefulExit
+    End If
+
+    If CentralErrorHandler(StrMODULE, StrPROCEDURE, , True) Then
+        Stop
+        Resume
+    Else
+        Resume ErrorExit
+    End If
+End Sub
 

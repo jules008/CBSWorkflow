@@ -227,7 +227,7 @@ Public Const GENERIC_BUTTON_FONT_STYLE As String = "Eras Medium ITC"
 Public Const GENERIC_BUTTON_FONT_SIZE As Integer = 12
 Public Const GENERIC_BUTTON_FONT_COLOUR As Long = COL_WHITE
 Public Const GENERIC_BUTTON_FONT_BOLD As Boolean = False
-Public Const GENERIC_BUTTON_FONT_X_JUST As Integer = xlHAlignCenter
+Public Const GENERIC_BUTTON_FONT_x_JUST As Integer = xlHAlignCenter
 Public Const GENERIC_BUTTON_FONT_Y_JUST As Integer = xlVAlignCenter
 
 ' ---------------------------------------------------------------
@@ -241,7 +241,7 @@ Public Const TODO_BUTTON_FONT_STYLE As String = "Eras Medium ITC"
 Public Const TODO_BUTTON_FONT_SIZE As Integer = 12
 Public Const TODO_BUTTON_FONT_COLOUR As Long = COL_WHITE
 Public Const TODO_BUTTON_FONT_BOLD As Boolean = False
-Public Const TODO_BUTTON_FONT_X_JUST As Integer = xlHAlignCenter
+Public Const TODO_BUTTON_FONT_x_JUST As Integer = xlHAlignCenter
 Public Const TODO_BUTTON_FONT_Y_JUST As Integer = xlVAlignCenter
 
 ' ---------------------------------------------------------------
@@ -256,7 +256,7 @@ Public Const TODO_BADGE_FONT_STYLE As String = "Eras Medium ITC"
 Public Const TODO_BADGE_FONT_SIZE As Integer = 12
 Public Const TODO_BADGE_FONT_COLOUR As Long = COL_WHITE
 Public Const TODO_BADGE_FONT_BOLD As Boolean = False
-Public Const TODO_BADGE_FONT_X_JUST As Integer = xlHAlignRight
+Public Const TODO_BADGE_FONT_x_JUST As Integer = xlHAlignRight
 Public Const TODO_BADGE_FONT_Y_JUST As Integer = xlVAlignCenter
 
 ' ---------------------------------------------------------------
@@ -270,7 +270,7 @@ Public Const GENERIC_TABLE_FONT_STYLE As String = "Eras Medium ITC"
 Public Const GENERIC_TABLE_FONT_SIZE As Integer = 10
 Public Const GENERIC_TABLE_FONT_COLOUR As Long = COL_DRK_GREY
 Public Const GENERIC_TABLE_FONT_BOLD As Boolean = False
-Public Const GENERIC_TABLE_FONT_X_JUST As Integer = xlHAlignCenter
+Public Const GENERIC_TABLE_FONT_x_JUST As Integer = xlHAlignCenter
 Public Const GENERIC_TABLE_FONT_Y_JUST As Integer = xlVAlignBottom
 
 ' ---------------------------------------------------------------
@@ -284,7 +284,7 @@ Public Const GENERIC_TABLE_HEADER_FONT_STYLE As String = "Calibri"
 Public Const GENERIC_TABLE_HEADER_FONT_SIZE As Integer = 10
 Public Const GENERIC_TABLE_HEADER_FONT_COLOUR As Long = COL_WHITE
 Public Const GENERIC_TABLE_HEADER_FONT_BOLD As Boolean = False
-Public Const GENERIC_TABLE_HEADER_FONT_X_JUST As Integer = xlHAlignCenter
+Public Const GENERIC_TABLE_HEADER_FONT_x_JUST As Integer = xlHAlignCenter
 Public Const GENERIC_TABLE_HEADER_FONT_Y_JUST As Integer = xlVAlignBottom
 
 ' ---------------------------------------------------------------
@@ -304,7 +304,7 @@ Public Const TRANSPARENT_TEXT_BOX_FONT_STYLE As String = "Eras Medium ITC"
 Public Const TRANSPARENT_TEXT_BOX_FONT_SIZE As Integer = 10
 Public Const TRANSPARENT_TEXT_BOX_FONT_COLOUR As Long = COL_PINK
 Public Const TRANSPARENT_TEXT_BOX_FONT_BOLD As Boolean = False
-Public Const TRANSPARENT_TEXT_BOX_FONT_X_JUST As Integer = xlHAlignLeft
+Public Const TRANSPARENT_TEXT_BOX_FONT_x_JUST As Integer = xlHAlignLeft
 Public Const TRANSPARENT_TEXT_BOX_FONT_Y_JUST As Integer = xlVAlignCenter
 
 ' ===============================================================
@@ -320,7 +320,7 @@ Public Const GREEN_CELL_FONT_STYLE As String = "Eras Medium ITC"
 Public Const GREEN_CELL_FONT_SIZE As Integer = 11
 Public Const GREEN_CELL_FONT_COLOUR As Long = COL_DRK_GREY
 Public Const GREEN_CELL_FONT_BOLD As Boolean = False
-Public Const GREEN_CELL_FONT_X_JUST As Integer = xlHAlignCenter
+Public Const GREEN_CELL_FONT_x_JUST As Integer = xlHAlignCenter
 Public Const GREEN_CELL_FONT_Y_JUST As Integer = xlVAlignCenter
 
 ' ---------------------------------------------------------------
@@ -334,7 +334,7 @@ Public Const AMBER_CELL_FONT_STYLE As String = "Eras Medium ITC"
 Public Const AMBER_CELL_FONT_SIZE As Integer = 11
 Public Const AMBER_CELL_FONT_COLOUR As Long = COL_DRK_GREY
 Public Const AMBER_CELL_FONT_BOLD As Boolean = False
-Public Const AMBER_CELL_FONT_X_JUST As Integer = xlHAlignCenter
+Public Const AMBER_CELL_FONT_x_JUST As Integer = xlHAlignCenter
 Public Const AMBER_CELL_FONT_Y_JUST As Integer = xlVAlignCenter
 
 ' ---------------------------------------------------------------
@@ -348,7 +348,7 @@ Public Const RED_CELL_FONT_STYLE As String = "Eras Medium ITC"
 Public Const RED_CELL_FONT_SIZE As Integer = 11
 Public Const RED_CELL_FONT_COLOUR As Long = COL_WHITE
 Public Const RED_CELL_FONT_BOLD As Boolean = False
-Public Const RED_CELL_FONT_X_JUST As Integer = xlHAlignCenter
+Public Const RED_CELL_FONT_x_JUST As Integer = xlHAlignCenter
 Public Const RED_CELL_FONT_Y_JUST As Integer = xlVAlignCenter
 
 ' ---------------------------------------------------------------
@@ -362,7 +362,7 @@ Public Const TOOL_BUTTON_FONT_STYLE As String = "Eras Medium ITC"
 Public Const TOOL_BUTTON_FONT_SIZE As Integer = 9
 Public Const TOOL_BUTTON_FONT_COLOUR As Long = COL_AMBER
 Public Const TOOL_BUTTON_FONT_BOLD As Boolean = False
-Public Const TOOL_BUTTON_FONT_X_JUST As Integer = xlHAlignCenter
+Public Const TOOL_BUTTON_FONT_x_JUST As Integer = xlHAlignCenter
 Public Const TOOL_BUTTON_FONT_Y_JUST As Integer = xlVAlignCenter
 
 ' ---------------------------------------------------------------
@@ -377,7 +377,7 @@ Public Const BTN_SUPPORT_FONT_STYLE As String = "Eras Medium ITC"
 Public Const BTN_SUPPORT_FONT_SIZE As Integer = 9
 Public Const BTN_SUPPORT_FONT_COLOUR As Long = COL_GREEN
 Public Const BTN_SUPPORT_FONT_BOLD As Boolean = False
-Public Const BTN_SUPPORT_FONT_X_JUST As Integer = xlHAlignCenter
+Public Const BTN_SUPPORT_FONT_x_JUST As Integer = xlHAlignCenter
 Public Const BTN_SUPPORT_FONT_Y_JUST As Integer = xlVAlignCenter
 
 ' ===============================================================
@@ -401,7 +401,7 @@ Public Const BUTTON_UNSET_SHADOW As Long = 0
 Public Const BUTTON_UNSET_FONT_STYLE As String = "Eras Medium ITC"
 Public Const BUTTON_UNSET_FONT_SIZE As Integer = 12
 Public Const BUTTON_UNSET_FONT_COLOUR As Long = COL_BLACK
-Public Const BUTTON_UNSET_FONT_X_JUST As Integer = xlHAlignCenter
+Public Const BUTTON_UNSET_FONT_x_JUST As Integer = xlHAlignCenter
 Public Const BUTTON_UNSET_FONT_Y_JUST As Integer = xlVAlignCenter
 
 Public Const BUTTON_SET_BORDER_WIDTH As Single = 0
@@ -412,7 +412,7 @@ Public Const BUTTON_SET_SHADOW As Long = 0
 Public Const BUTTON_SET_FONT_STYLE As String = "Eras Medium ITC"
 Public Const BUTTON_SET_FONT_SIZE As Integer = 12
 Public Const BUTTON_SET_FONT_COLOUR As Long = COL_WHITE
-Public Const BUTTON_SET_FONT_X_JUST As Integer = xlHAlignCenter
+Public Const BUTTON_SET_FONT_x_JUST As Integer = xlHAlignCenter
 Public Const BUTTON_SET_FONT_Y_JUST As Integer = xlVAlignCenter
 
 Public Const MAIN_FRAME_BORDER_WIDTH As Single = 0
@@ -433,7 +433,7 @@ Public Const HEADER_FONT_STYLE As String = "Eras Medium ITC"
 Public Const HEADER_FONT_SIZE As Integer = 12
 Public Const HEADER_FONT_COLOUR As Long = COL_WHITE
 Public Const HEADER_FONT_BOLD As Boolean = False
-Public Const HEADER_FONT_X_JUST As Integer = xlHAlignCenter
+Public Const HEADER_FONT_x_JUST As Integer = xlHAlignCenter
 Public Const HEADER_FONT_Y_JUST As Integer = xlVAlignCenter
 
 Public Const BTN_MAIN_BORDER_WIDTH As Single = 0
@@ -444,6 +444,6 @@ Public Const BTN_MAIN_FONT_STYLE As String = "Calibri"
 Public Const BTN_MAIN_FONT_SIZE As Integer = 32
 Public Const BTN_MAIN_FONT_COLOUR As Long = COL_WHITE
 Public Const BTN_MAIN_FONT_BOLD As Boolean = True
-Public Const BTN_MAIN_FONT_X_JUST As Integer = xlHAlignCenter
+Public Const BTN_MAIN_FONT_x_JUST As Integer = xlHAlignCenter
 Public Const BTN_MAIN_FONT_Y_JUST As Integer = xlVAlignCenter
 

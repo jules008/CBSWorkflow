@@ -244,7 +244,7 @@ Public Function RefreshList(ByVal ScreenPage As enScreenPage, Optional SortBy As
     Dim StrSortBy As String
     Dim RstWorkflowList As Recordset
     Dim y As Integer
-    Dim X As Integer
+    Dim x As Integer
     Dim AryStyles() As String
     Dim AryOnAction() As String
     Dim OpenItmBtn As EnumBtnNo
@@ -302,11 +302,11 @@ Public Function RefreshList(ByVal ScreenPage As enScreenPage, Optional SortBy As
     Debug.Assert MainFrame.Table.Cells.Count = 0
     
     With RstWorkflowList
-        For X = 0 To NoCols - 1
+        For x = 0 To NoCols - 1
             .MoveFirst
             For y = 0 To NoRows - 1
-                AryStyles(X, y) = CRM_TABLE_STYLES
-                AryOnAction(X, y) = "'ModUIButtonHandler.ProcessBtnClicks(""" & ScreenPage & ":" & OpenItmBtn & ":" & .Fields(ItemIndex) & """)'"
+                AryStyles(x, y) = CRM_TABLE_STYLES
+                AryOnAction(x, y) = "'ModUIButtonHandler.ProcessBtnClicks(""" & ScreenPage & ":" & OpenItmBtn & ":" & .Fields(ItemIndex) & """)'"
                 .MoveNext
             Next
         Next

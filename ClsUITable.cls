@@ -328,7 +328,7 @@ End Sub
 ' Builds matrix of cells once dimensions are received.
 '---------------------------------------------------------------
 Public Sub BuildTable(Optional SplitRow As Integer, Optional SplitSize As Integer)
-    Dim X, y As Integer
+    Dim x, y As Integer
     Dim Cell As ClsUICell
     Dim ColOffset As Integer
     Dim RowOffset As Integer
@@ -342,16 +342,16 @@ Public Sub BuildTable(Optional SplitRow As Integer, Optional SplitSize As Intege
         pCells.DeleteCollection
         
         'heading
-        For X = 0 To pNoCols - 1
+        For x = 0 To pNoCols - 1
             Set Cell = New ClsUICell
-            Cell.Name = "Cell - " & X & "-" & "0"
-            pCells.AddCell Cell, X, y
+            Cell.Name = "Cell - " & x & "-" & "0"
+            pCells.AddCell Cell, x, y
             With Cell
                 .Left = .Parent.Left + ColOffset
                 .Top = .Parent.Top + RowOffset
-                .Width = pColWidths(X)
-                .Text = pHeadingText(X)
-                .OnAction = pOnAction(X, 0)
+                .Width = pColWidths(x)
+                .Text = pHeadingText(x)
+                .OnAction = pOnAction(x, 0)
                 .Style = pHeadingStyle
                 .Height = pHeadingHeight
             End With
@@ -391,16 +391,16 @@ Public Sub BuildTable(Optional SplitRow As Integer, Optional SplitSize As Intege
                 End If
             End If
                     
-            For X = 0 To pNoCols - 1
+            For x = 0 To pNoCols - 1
                 Set Cell = New ClsUICell
-                Cell.Name = "Cell - " & X & "-" & y
-                pCells.AddCell Cell, X, y
+                Cell.Name = "Cell - " & x & "-" & y
+                pCells.AddCell Cell, x, y
                 With Cell
                     .Left = .Parent.Left + ColOffset
                     .Top = .Parent.Top + RowOffset
-                    .Width = pColWidths(X)
+                    .Width = pColWidths(x)
                     
-                    If X = 0 And ExpandIcon <> "" Then
+                    If x = 0 And ExpandIcon <> "" Then
                         .Badge = pShpExpand.Duplicate
                         With .Badge
                             If y = SplitRow Then
@@ -409,35 +409,35 @@ Public Sub BuildTable(Optional SplitRow As Integer, Optional SplitSize As Intege
                                 .Left = Cell.Left + 30
                                 .Height = 13
                                 .Width = 11
-                                .OnAction = pOnAction(X, y - 1)
+                                .OnAction = pOnAction(x, y - 1)
                             Else
                                 .Top = Cell.Top + 3
                                 .Left = Cell.Left + 20
                                 .Height = 13
                                 .Width = 11
-                                .OnAction = pOnAction(X, y - 1)
+                                .OnAction = pOnAction(x, y - 1)
                             End If
                         End With
                     End If
                     
                     If y = 0 Then
-                        .Text = pHeadingText(X)
+                        .Text = pHeadingText(x)
                     Else
                         'cater for blank columns with no data
-                        If X < pRstText.Fields.Count Then
-                        If Not IsNull(pRstText.Fields(X)) Then .Text = pRstText.Fields(X)
-                        .OnAction = pOnAction(X, y - 1)
+                        If x < pRstText.Fields.Count Then
+                        If Not IsNull(pRstText.Fields(x)) Then .Text = pRstText.Fields(x)
+                        .OnAction = pOnAction(x, y - 1)
                         End If
                     End If
                     
-                    If pStyles(X, y - 1) = "" Then
+                    If pStyles(x, y - 1) = "" Then
                         If pStyles(1, y - 1) = "" Then
                             .Style = pStylesColl.Find(pStyles(1, 2))
                         Else
                             .Style = pStylesColl.Find(pStyles(1, y))
                 End If
                     Else
-                        .Style = pStylesColl.Find(pStyles(X, y - 1))
+                        .Style = pStylesColl.Find(pStyles(x, y - 1))
             End If
             
                     .Height = pRowHeight
@@ -457,7 +457,7 @@ End Sub
 ' Builds the sub table in the main table split
 '---------------------------------------------------------------
 Public Sub BuildSubTable()
-    Dim X, y As Integer
+    Dim x, y As Integer
     Dim Cell As ClsUICell
     Dim ColOffset As Integer
     Dim RowOffset As Integer
@@ -467,16 +467,16 @@ Public Sub BuildSubTable()
         pCells.DeleteCollection
         
         'heading
-        For X = 0 To pNoCols - 1
+        For x = 0 To pNoCols - 1
             Set Cell = New ClsUICell
-            Cell.Name = "Cell - " & X & "-" & "0"
-            pCells.AddCell Cell, X, y
+            Cell.Name = "Cell - " & x & "-" & "0"
+            pCells.AddCell Cell, x, y
             With Cell
                 .Left = .Parent.Left + ColOffset
                 .Top = .Parent.Top + RowOffset
-                .Width = pColWidths(X)
-                .Text = pHeadingText(X)
-                .OnAction = pOnAction(X, 0)
+                .Width = pColWidths(x)
+                .Text = pHeadingText(x)
+                .OnAction = pOnAction(x, 0)
                 .Style = pHeadingStyle
                 .Height = pHeadingHeight
             End With
@@ -488,32 +488,32 @@ Public Sub BuildSubTable()
         pRstText.MoveFirst
         For y = 1 To pNoRows
             
-            For X = 0 To pNoCols - 1
+            For x = 0 To pNoCols - 1
                 Set Cell = New ClsUICell
-                Cell.Name = "Cell - " & X & "-" & y
-                pCells.AddCell Cell, X, y
+                Cell.Name = "Cell - " & x & "-" & y
+                pCells.AddCell Cell, x, y
                 With Cell
                     .Left = .Parent.Left + ColOffset
                     .Top = .Parent.Top + RowOffset
-                    .Width = pColWidths(X)
+                    .Width = pColWidths(x)
                     If y = 0 Then
-                        .Text = pHeadingText(X)
+                        .Text = pHeadingText(x)
                     Else
                         'cater for blank columns with no data
-                        If X < pRstText.Fields.Count Then
-                        If Not IsNull(pRstText.Fields(X)) Then .Text = pRstText.Fields(X)
-                        .OnAction = pOnAction(X, y - 1)
+                        If x < pRstText.Fields.Count Then
+                        If Not IsNull(pRstText.Fields(x)) Then .Text = pRstText.Fields(x)
+                        .OnAction = pOnAction(x, y - 1)
                         End If
                     End If
                         
-                    If pStyles(X, y - 1) = "" Then
+                    If pStyles(x, y - 1) = "" Then
                         If pStyles(1, y - 1) = "" Then
                             .Style = pStylesColl.Find(pStyles(1, 2))
                         Else
                             .Style = pStylesColl.Find(pStyles(1, y))
                         End If
                     Else
-                        .Style = pStylesColl.Find(pStyles(X, y - 1))
+                        .Style = pStylesColl.Find(pStyles(x, y - 1))
                     End If
                     
                     .Height = pRowHeight
