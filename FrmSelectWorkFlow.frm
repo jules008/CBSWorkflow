@@ -31,11 +31,13 @@ Option Explicit
 Private Const StrMODULE As String = "FrmSelectWorkFlow"
 Private RstWorkflow As Recordset
 Public Event Update()
+Public Event CloseFrm()
 
 '===============================================================
 ' BtnClose_Click
 '---------------------------------------------------------------
 Private Sub BtnClose_Click()
+    RaiseEvent CloseFrm
     Unload Me
 End Sub
 

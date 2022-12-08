@@ -578,6 +578,16 @@ Private Sub UpdateProgress()
 End Sub
 
 ' ===============================================================
+' Event pWFNameForm_CloseFrm
+' Event on form close
+' ---------------------------------------------------------------
+Private Sub pWFNameForm_CloseFrm()
+    With pWFNameForm
+        pName = ""
+    End With
+End Sub
+
+' ===============================================================
 ' Event pWFNameForm_Update
 ' Event on selection of workflow type
 ' ---------------------------------------------------------------

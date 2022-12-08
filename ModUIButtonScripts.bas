@@ -256,6 +256,10 @@ Public Function BtnLenderNewWFClick(ScreenPage As enScreenPage) As Boolean
     
     With ActiveWorkFlow
         .DisplayWFSelectForm
+        If .Name = "" Then
+            MsgBox "No selection made, please try again", vbExclamation + vbOKOnly, APP_NAME
+            GoTo GracefullExit
+        End If
         .WorkflowType = enLender
         .Lender = ActiveLender
         .DBSave

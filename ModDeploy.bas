@@ -72,9 +72,6 @@ Public Function UpdateDBScript() As Boolean
     DB.Execute "UPDATE TblContact SET ComFrq = 30 WHERE ContactType = 'Lead'"
     DB.Execute "UPDATE TblContact SET ComFrq = 2 WHERE ContactType = 'Client'"
     
-'    DB.Execute "DELETE * FROM TblStepTemplate"
-'    UpdateTable
-
     ' ========================================================================================
         
     'update DB Version
@@ -220,7 +217,7 @@ Public Sub UpdateTable()
                             If Val <> "" Then Fld = CBool(Val)
                         Case 4
                             If Val <> "" Then Fld = CInt(Val)
-                        Case 10
+                        Case 10, 12
                             If Val <> "" Then Fld = CStr(Val)
                         Case 8
                             If IsDate(Val) Then Fld = CDate(Val)
@@ -354,3 +351,26 @@ ErrorHandler:   If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
     End If
 End Function
 
+' ===============================================================
+' UpdateTableData
+' Updates the table data without changing version number of DB
+' ---------------------------------------------------------------
+Public Sub UpdateTableData()
+        If DB Is Nothing Then DBConnect
+        DB.Execute "DELETE * FROM TblStepTemplate"
+        DB.Execute "DELETE * FROM TblWorkflowType"
+        DB.Execute "INSERT INTO TblWorkflowType (WFNo, WFName, DisplayName, Description) VALUES (1,'Project', 'Project', 'Standard workflow for all projects')"
+        DB.Execute "INSERT INTO TblWorkflowType (WFNo, WFName, DisplayName, Description) VALUES (2,'Senior', 'Senior Lender', 'Senior Lender Workflow')"
+        DB.Execute "INSERT INTO TblWorkflowType (WFNo, WFName, DisplayName, Description) VALUES (3,'2ndChgeMezLoan', '2nd Chrge/Mez Loan','2nd Charge/Mezzanine Loan')"
+        DB.Execute "INSERT INTO TblWorkflowType (WFNo, WFName, DisplayName, Description) VALUES (4,'Equityloan', 'Equity loan','Equity loan')"
+        DB.Execute "INSERT INTO TblWorkflowType (WFNo, WFName, DisplayName, Description) VALUES (5,'SDLTLoan', 'SDLT Loan','SDLT Loan')"
+        DB.Execute "INSERT INTO TblWorkflowType (WFNo, WFName, DisplayName, Description) VALUES (6,'VATLoan', 'VAT Loan','VAT Loan')"
+        ModDeploy.UpdateTable
+        
+        If Not DEV_MODE Then
+            ShtSettings.ChkUpdateDB = False
+            Application.EnableEvents = False
+            ActiveWorkbook.Save
+            Application.EnableEvents = True
+        End If
+End Sub

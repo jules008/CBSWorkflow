@@ -54,6 +54,8 @@ Public Function Initialize() As Boolean
         ModDeploy.UpdateDBScript
     End If
 
+    If ShtSettings.ChkUpdateDB Then ModDeploy.UpdateTableData
+
     If ModDatabase.GetDBVer <> DB_VER Then
         Err.Raise DB_WRONG_VER
         Debug.Print Now & "Globals Ver: ", DB_VER, "DB Ver: ", ModDatabase.GetDBVer
