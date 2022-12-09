@@ -107,8 +107,22 @@ Public Const PROJECT_BTN_MAIN_2_TOP As Integer = 20
 ' ---------------------------------------------------------------
 ' Project Sub Table Settings
 ' ---------------------------------------------------------------
-Public Const PROJECT_SUB_TABLE_COL_WIDTHS As String = "100:100:150:100:150:150:100"
+Public Const PROJECT_SUB_TABLE_COL_WIDTHS As String = "100:150:150:100:150:100:100"
 Public Const PROJECT_SUB_TABLE_TITLES As String = "Workflow No:Workflow Type:Lender Name:Step No:Step Name:Progress:Status"
+
+' ---------------------------------------------------------------
+' Project Table Progress Bar Settings
+' ---------------------------------------------------------------
+Public Const TABLE_PROGRESS_BADGE_LEFT As Integer = 0
+Public Const TABLE_PROGRESS_BADGE_TOP As Integer = 5
+Public Const TABLE_PROGRESS_BADGE_MARGIN_TOP As Integer = 4
+Public Const TABLE_PROGRESS_FONT_SIZE As Integer = 10
+Public Const TABLE_PROGRESS_FONT_COLOUR As Long = COL_WHITE
+Public Const TABLE_PROGRESS_BORDER_WEIGHT As Integer = 0
+Public Const TABLE_PROGRESS_BADGE_HEIGHT As Integer = 10
+Public Const TABLE_PROGRESS_BADGE_FILL_COLOUR As Long = COL_AQUA
+Public Const TABLE_PROGRESS_CELL_X_JUST As Integer = xlHAlignRight
+Public Const TABLE_PROGRESS_CELL_Y_JUST As Integer = xlVAlignCenter
 
 ' ---------------------------------------------------------------
 ' Project For Action Screen Settings
@@ -206,7 +220,7 @@ Public AMBER_CELL As ClsUIStyle
 Public RED_CELL As ClsUIStyle
 Public GENERIC_TABLE_HEADER As ClsUIStyle
 Public SUB_TABLE_HEADER As ClsUIStyle
-
+Public TABLE_PROGRESS_STYLE As ClsUIStyle
 ' ---------------------------------------------------------------
 ' New Order Workflow
 ' ---------------------------------------------------------------

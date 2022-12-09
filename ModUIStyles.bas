@@ -39,6 +39,7 @@ Public Function BuildScreenStyles() As Boolean
     Set RED_CELL = New ClsUIStyle
     Set GENERIC_TABLE_HEADER = New ClsUIStyle
     Set SUB_TABLE_HEADER = New ClsUIStyle
+    Set TABLE_PROGRESS_STYLE = New ClsUIStyle
 
     With SCREEN_STYLE
         .Name = "SCREEN_STYLE"
@@ -198,6 +199,20 @@ Public Function BuildScreenStyles() As Boolean
         .FontVJust = GENERIC_TABLE_FONT_Y_JUST
     End With
 
+    With TABLE_PROGRESS_STYLE
+        .Name = "TABLE_PROGRESS_STYLE"
+        .BorderWidth = GENERIC_TABLE_BORDER_WIDTH
+        .Fill1 = GENERIC_TABLE_FILL_1
+        .Fill2 = GENERIC_TABLE_FILL_2
+        .Shadow = GENERIC_TABLE_SHADOW
+        .FontStyle = GENERIC_TABLE_FONT_STYLE
+        .FontSize = TABLE_PROGRESS_FONT_SIZE
+        .FontBold = GENERIC_TABLE_FONT_BOLD
+        .FontColour = GENERIC_TABLE_FONT_COLOUR
+        .FontXJust = TABLE_PROGRESS_CELL_X_JUST
+        .FontVJust = TABLE_PROGRESS_CELL_Y_JUST
+    End With
+
     With GREEN_CELL
         .Name = "GREEN_CELL"
         .BorderWidth = GREEN_CELL_BORDER_WIDTH
@@ -268,115 +283,6 @@ Public Function BuildScreenStyles() As Boolean
         .FontVJust = GENERIC_TABLE_HEADER_FONT_Y_JUST
     End With
 
-'    With TRANSPARENT_TEXT_BOX
-'        .BorderWidth = TRANSPARENT_TEXT_BOX_BORDER_WIDTH
-'        .Fill1 = TRANSPARENT_TEXT_BOX_FILL_1
-'        .Fill2 = TRANSPARENT_TEXT_BOX_FILL_2
-'        .Shadow = TRANSPARENT_TEXT_BOX_SHADOW
-'        .FontStyle = TRANSPARENT_TEXT_BOX_FONT_STYLE
-'        .FontSize = TRANSPARENT_TEXT_BOX_FONT_SIZE
-'        .FontBold = TRANSPARENT_TEXT_BOX_FONT_BOLD
-'        .FontColour = TRANSPARENT_TEXT_BOX_FONT_COLOUR
-'        .FontXJust = TRANSPARENT_TEXT_BOX_FONT_x_JUST
-'        .FontVJust = TRANSPARENT_TEXT_BOX_FONT_Y_JUST
-'    End With
-'
-'    With TRANSPARENT_TEXT_BOX
-'        .BorderWidth = TRANSPARENT_TEXT_BOX_BORDER_WIDTH
-'        .Fill1 = TRANSPARENT_TEXT_BOX_FILL_1
-'        .Fill2 = TRANSPARENT_TEXT_BOX_FILL_2
-'        .Shadow = TRANSPARENT_TEXT_BOX_SHADOW
-'        .FontStyle = TRANSPARENT_TEXT_BOX_FONT_STYLE
-'        .FontSize = TRANSPARENT_TEXT_BOX_FONT_SIZE
-'        .FontBold = TRANSPARENT_TEXT_BOX_FONT_BOLD
-'        .FontColour = TRANSPARENT_TEXT_BOX_FONT_COLOUR
-'        .FontXJust = TRANSPARENT_TEXT_BOX_FONT_x_JUST
-'        .FontVJust = TRANSPARENT_TEXT_BOX_FONT_Y_JUST
-'    End With
-'
-'    With VERT_Cell_HEADER
-'        .BorderWidth = VERT_Cell_HEADER_BORDER_WIDTH
-'        .Fill1 = VERT_Cell_HEADER_FILL_1
-'        .Fill2 = VERT_Cell_HEADER_FILL_2
-'        .Shadow = VERT_Cell_HEADER_SHADOW
-'        .FontStyle = VERT_Cell_HEADER_FONT_STYLE
-'        .FontSize = VERT_Cell_HEADER_FONT_SIZE
-'        .FontBold = VERT_Cell_HEADER_FONT_BOLD
-'        .FontColour = VERT_Cell_HEADER_FONT_COLOUR
-'        .FontXJust = VERT_Cell_HEADER_FONT_x_JUST
-'        .FontVJust = VERT_Cell_HEADER_FONT_Y_JUST
-'        .TextDir = VERT_Cell_HEADER_TEXT_DIR
-'    End With
-'
-'    With MATRIX_DEF
-'        .BorderWidth = MATRIX_DEF_BORDER_WIDTH
-'        .Fill1 = MATRIX_DEF_FILL_1
-'        .Fill2 = MATRIX_DEF_FILL_2
-'        .Shadow = MATRIX_DEF_SHADOW
-'        .FontStyle = MATRIX_DEF_FONT_STYLE
-'        .FontSize = MATRIX_DEF_FONT_SIZE
-'        .FontBold = MATRIX_DEF_FONT_BOLD
-'        .FontColour = MATRIX_DEF_FONT_COLOUR
-'        .FontXJust = MATRIX_DEF_FONT_x_JUST
-'        .FontVJust = MATRIX_DEF_FONT_Y_JUST
-'    End With
-'
-'    With MATRIX_1
-'        .BorderWidth = MATRIX_1_BORDER_WIDTH
-'        .BorderColour = MATRIX_1_BORDER_COLOUR
-'        .Fill1 = MATRIX_1_FILL_1
-'        .Fill2 = MATRIX_1_FILL_2
-'        .Shadow = MATRIX_1_SHADOW
-'        .FontStyle = MATRIX_1_FONT_STYLE
-'        .FontSize = MATRIX_1_FONT_SIZE
-'        .FontBold = MATRIX_1_FONT_BOLD
-'        .FontColour = MATRIX_1_FONT_COLOUR
-'        .FontXJust = MATRIX_1_FONT_x_JUST
-'        .FontVJust = MATRIX_1_FONT_Y_JUST
-'    End With
-'
-'    With MATRIX_3
-'        .BorderWidth = MATRIX_3_BORDER_WIDTH
-'        .BorderColour = MATRIX_3_BORDER_COLOUR
-'        .Fill1 = MATRIX_3_FILL_1
-'        .Fill2 = MATRIX_3_FILL_2
-'        .Shadow = MATRIX_3_SHADOW
-'        .FontStyle = MATRIX_3_FONT_STYLE
-'        .FontSize = MATRIX_3_FONT_SIZE
-'        .FontBold = MATRIX_3_FONT_BOLD
-'        .FontColour = MATRIX_3_FONT_COLOUR
-'        .FontXJust = MATRIX_3_FONT_x_JUST
-'        .FontVJust = MATRIX_3_FONT_Y_JUST
-'    End With
-'
-'    With MATRIX_4
-'        .BorderWidth = MATRIX_4_BORDER_WIDTH
-'        .BorderColour = MATRIX_4_BORDER_COLOUR
-'        .Fill1 = MATRIX_4_FILL_1
-'        .Fill2 = MATRIX_4_FILL_2
-'        .Shadow = MATRIX_4_SHADOW
-'        .FontStyle = MATRIX_4_FONT_STYLE
-'        .FontSize = MATRIX_4_FONT_SIZE
-'        .FontBold = MATRIX_4_FONT_BOLD
-'        .FontColour = MATRIX_4_FONT_COLOUR
-'        .FontXJust = MATRIX_4_FONT_x_JUST
-'        .FontVJust = MATRIX_4_FONT_Y_JUST
-'    End With
-'
-'    With BTN_SUPPORT
-'        .BorderWidth = BTN_SUPPORT_BORDER_WIDTH
-'        .BorderColour = BTN_SUPPORT_BORDER_COLOUR
-'        .Fill1 = BTN_SUPPORT_FILL_1
-'        .Fill2 = BTN_SUPPORT_FILL_2
-'        .Shadow = BTN_SUPPORT_SHADOW
-'        .FontStyle = BTN_SUPPORT_FONT_STYLE
-'        .FontSize = BTN_SUPPORT_FONT_SIZE
-'        .FontBold = BTN_SUPPORT_FONT_BOLD
-'        .FontColour = BTN_SUPPORT_FONT_COLOUR
-'        .FontXJust = BTN_SUPPORT_FONT_x_JUST
-'        .FontVJust = BTN_SUPPORT_FONT_Y_JUST
-'    End With
-'
     BuildScreenStyles = True
 
 Exit Function
