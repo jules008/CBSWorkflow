@@ -360,6 +360,7 @@ Public Sub UpdateTableData()
     If Not DEV_MODE Or ShtSettings.ChkDebugOride Then
     
         DB.Execute "DELETE * FROM TblStepTemplate"
+        DB.Execute "UPDATE TblWorkflow SET Progress = 0 WHERE Progress IS NULL"
         
         ModDeploy.UpdateTable
         
