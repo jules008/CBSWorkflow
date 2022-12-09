@@ -502,7 +502,7 @@ Public Sub BuildSubTable()
                         'cater for blank columns with no data
                         If x < pRstText.Fields.Count Then
                         If Not IsNull(pRstText.Fields(x)) Then .Text = pRstText.Fields(x)
-                        .OnAction = pOnAction(x, y - 1)
+                        .OnAction = pOnAction(x, y)
                         End If
                     End If
                         
@@ -579,6 +579,33 @@ Private Sub SplitFrame(RowNo As Integer, Optional SplitSize As Integer)
             Set Frame2 = Nothing
         End If
     End If
+End Sub
+
+' ===============================================================
+' Method AddProgressBars
+' Adds progress bars to cell
+'---------------------------------------------------------------
+Public Sub AddProgressBars()
+    Dim UICell As ClsUICell
+    
+    For Each UICell In pCells
+        With UICell
+            If .Row > 0 And .Col = 8 Then
+                .AddBadge
+                .BadgeLeft = 0
+                .BadgeTop = 5
+                With .Badge
+                    .Name = "Progress"
+                    .Width = (UICell.Width - 5) / 100 * UICell.Text
+                    .Fill.ForeColor.RGB = COL_AQUA
+                    .Line.Weight = 0
+                End With
+            End If
+            Debug.Print "Row"; .Row, "Col"; .Col
+        End With
+    Next
+
+    Set UICell = Nothing
 End Sub
 
 ' ===============================================================

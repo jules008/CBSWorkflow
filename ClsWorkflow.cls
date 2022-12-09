@@ -212,6 +212,41 @@ End Property
 
 '---------------------------------------------------------------
 Public Property Get Progress() As Single
+    Dim NoComplete As Integer
+    Dim NoSteps As Integer
+    Dim AryStepNo() As String
+    
+    If pWorkflowType = enLender Then
+        AryStepNo = Split(pCurrentStep, ".")
+        NoComplete = AryStepNo(1)
+        NoSteps = pSteps.Count
+        
+        pProgress = NoComplete / NoSteps * 100
+    Else
+        Dim RstLenders As Recordset
+        Dim SumProgress As Single
+        Dim CntProgress As Integer
+        
+        If pProjectNo > 0 Then
+            Set RstLenders = ModDatabase.SQLQuery("SELECT Progress FROM TblWorkflow WHERE ProjectNo = " & pProjectNo)
+            SumProgress = 0
+            With RstLenders
+                .MoveLast
+                .MoveFirst
+                CntProgress = .RecordCount
+                Do While Not .EOF
+                    SumProgress = SumProgress + !Progress
+                    .MoveNext
+                Loop
+            End With
+            
+            pProgress = SumProgress / CntProgress
+        End If
+        Set RstLenders = Nothing
+    End If
+    
+    Debug.Print "NoSteps"; NoSteps, "NoComplete"; NoComplete, "pProgress"; pProgress
+    
     Progress = pProgress
 End Property
 
@@ -249,7 +284,7 @@ Public Sub DisplayForm()
     Dim Adjust1 As Integer
     Dim Adjust2 As Integer
     
-    ProgPC = pSteps.PCComplete
+    ProgPC = Progress
     
     With pProjWFForm
     
@@ -411,7 +446,7 @@ Public Sub DBSave()
         !Status = CleanSQLText(Status, True)
         !RAG = CleanSQLText(enRAGStr(RAG), True)
         !LenderNo = CleanSQLText(pLender.LenderNo, True)
-        
+        !Progress = Progress
         If Not Parent Is Nothing Then !ProjectNo = Parent.ProjectNo
         .Update
                     

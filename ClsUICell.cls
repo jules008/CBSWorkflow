@@ -132,6 +132,14 @@ Public Property Let Badge(ByVal vNewValue As Shape)
     Set pBadge = vNewValue
 End Property
 
+Public Property Let BadgeLeft(ByVal vNewValue As Integer)
+    pBadge.Left = pLeft + vNewValue
+End Property
+
+Public Property Let BadgeTop(ByVal vNewValue As Integer)
+    pBadge.Top = pTop + vNewValue
+End Property
+
 '---------------------------------------------------------------
 Public Property Get OnAction() As String
     OnAction = pShpCell.OnAction
@@ -223,6 +231,14 @@ Public Sub ReOrder()
     If Not pBadge Is Nothing Then pBadge.ZOrder msoBringToFront
     
     If Not pMenu Is Nothing Then pMenu.ReOrder
+End Sub
+
+' ===============================================================
+' Method AddBadge
+' Adds badge to the cell
+'---------------------------------------------------------------
+Public Sub AddBadge()
+    Set pBadge = ShtMain.Shapes.AddTextbox(msoTextOrientationHorizontal, 0, 0, 10, 10)
 End Sub
 
 ' ===============================================================

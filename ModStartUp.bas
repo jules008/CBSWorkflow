@@ -367,6 +367,7 @@ Private Function SetGlobalClasses() As Boolean
     Set ActiveWorkflows = New ClsWorkflows
     Set MailSystem = New ClsMailSystem
     Set MailInbox = New ClsMailInbox
+    Set CodeTimer = New ClsCodeTimer
     ActiveWorkflows.UpdateRAGs
 
     SetGlobalClasses = True

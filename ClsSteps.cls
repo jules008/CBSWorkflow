@@ -22,7 +22,6 @@ Attribute VB_Exposed = False
 Option Explicit
 Private pSteps As Collection
 Private pStart As String
-Private pPCComplete As Single
 Private pParent As ClsWorkflow
 
 '---------------------------------------------------------------
@@ -32,25 +31,6 @@ End Property
 
 Public Property Set Parent(obj As ClsWorkflow)
     Set pParent = obj
-End Property
-
-'---------------------------------------------------------------
-Public Property Get PCComplete() As String
-    Dim Step As ClsStep
-    Dim Complete As Integer
-    
-    Complete = 0
-    For Each Step In pSteps
-        If Step.Status = "Complete" Then Complete = Complete + 1
-    Next
-    
-    If Complete = 0 Then
-        pPCComplete = 0
-    Else
-    pPCComplete = Complete / pSteps.Count * 100
-    End If
-    
-    PCComplete = pPCComplete
 End Property
 
 '---------------------------------------------------------------
