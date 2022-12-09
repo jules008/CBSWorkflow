@@ -582,23 +582,61 @@ Private Sub SplitFrame(RowNo As Integer, Optional SplitSize As Integer)
 End Sub
 
 ' ===============================================================
-' Method AddProgressBars
-' Adds progress bars to cell
+' Method AddTableProgressBars
+' Adds progress bars to Table
 '---------------------------------------------------------------
-Public Sub AddProgressBars()
+Public Sub AddTableProgressBars()
+    AddProgressBars "Table"
+End Sub
+
+' ===============================================================
+' Method AddSubTableProgressBars
+' Adds progress bars to SubTable
+'---------------------------------------------------------------
+Public Sub AddSubTableProgressBars()
+    AddProgressBars "SubTable"
+End Sub
+
+' ===============================================================
+' Method AddProgressBars
+' Adds progress bars to either table or subtable
+'---------------------------------------------------------------
+Private Sub AddProgressBars(TableType As String)
+    Dim TableCells As ClsUICells
     Dim UICell As ClsUICell
+    Dim ProgressCol As Integer
     
-    For Each UICell In pCells
+    If TableType = "Table" Then
+        Set TableCells = pCells
+        ProgressCol = 8
+    Else
+        Set TableCells = pSubTable.Cells
+        ProgressCol = 5
+    End If
+    
+    Sin 0
+    For Each UICell In TableCells
         With UICell
-            If .Row > 0 And .Col = 8 Then
+            If .Row > 0 And .Col = ProgressCol Then
                 .AddBadge
-                .BadgeLeft = 0
-                .BadgeTop = 5
+                .BadgeLeft = TABLE_PROGRESS_BADGE_LEFT
+                .BadgeTop = TABLE_PROGRESS_BADGE_TOP
                 With .Badge
+                    With .TextFrame
+                        .MarginTop = TABLE_PROGRESS_BADGE_MARGIN_TOP
+                        .HorizontalAlignment = xlHAlignCenter
+                        .VerticalAlignment = xlVAlignCenter
+                        With .Characters
+                            '.Text = UICell.Text
+                            .Font.Size = TABLE_PROGRESS_FONT_SIZE
+                            .Font.Color = TABLE_PROGRESS_FONT_COLOUR
+                        End With
+                    End With
                     .Name = "Progress"
-                    .Width = (UICell.Width - 5) / 100 * UICell.Text
-                    .Fill.ForeColor.RGB = COL_AQUA
-                    .Line.Weight = 0
+                    .Line.Weight = TABLE_PROGRESS_BORDER_WEIGHT
+                    .Height = TABLE_PROGRESS_BADGE_HEIGHT
+                    .Width = (UICell.Width - 30) / 100 * Replace(UICell.Text, "%", "")
+                    .Fill.ForeColor.RGB = TABLE_PROGRESS_BADGE_FILL_COLOUR
                 End With
             End If
             Debug.Print "Row"; .Row, "Col"; .Col
