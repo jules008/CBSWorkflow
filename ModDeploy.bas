@@ -356,9 +356,61 @@ End Function
 ' Updates the table data without changing version number of DB
 ' ---------------------------------------------------------------
 Public Sub UpdateTableData()
-        If DB Is Nothing Then DBConnect
+    Dim RstProject As Recordset
+    Dim RstWorkflow As Recordset
+    Dim NoComplete As Integer
+    Dim NoSteps As Integer
+    Dim AryStepNo() As String
+    Dim SumProgress As Single
+    Dim CntProgress As Integer
+    
+    Set RstProject = ModDatabase.SQLQuery("TblProject")
+    
+    If DB Is Nothing Then DBConnect
     If Not DEV_MODE Or ShtSettings.ChkDebugOride Then
     
+        Do While Not RstProject.EOF
+            SumProgress = 0
+            CntProgress = 0
+            Set RstWorkflow = ModDatabase.SQLQuery("SELECT * FROM TblWorkflow WHERE ProjectNo = " & RstProject!ProjectNo)
+            
+            With RstWorkflow
+                Do While Not .EOF
+                    .Edit
+                    If Not IsNull(!CurrentStep) And !CurrentStep <> "" Then
+                        AryStepNo = Split(!CurrentStep, ".")
+                        
+                        Select Case AryStepNo(0)
+                            Case 1
+                                NoSteps = 20
+                            Case 2
+                                NoSteps = 91
+                            Case 3
+                                NoSteps = 16
+                            Case 4
+                                NoSteps = 16
+                            Case 5
+                                NoSteps = 15
+                            Case 6
+                                NoSteps = 15
+                        End Select
+                        
+                        NoComplete = AryStepNo(1)
+                        
+                        If NoSteps > 0 Then
+                            !Progress = NoComplete / NoSteps * 100
+                            SumProgress = SumProgress + !Progress
+                            CntProgress = CntProgress + 1
+                        End If
+                        .Update
+                    End If
+                    .MoveNext
+                Loop
+                DB.Execute "UPDATE TblWorkflow SET Progress = " & SumProgress / CntProgress & " WHERE ProjectNo = " & RstProject!ProjectNo & " And WorkflowType = 'enProject'"
+            End With
+            RstProject.MoveNext
+        Loop
+            
         DB.Execute "DELETE * FROM TblStepTemplate"
         DB.Execute "UPDATE TblWorkflow SET Progress = 0 WHERE Progress IS NULL"
         
@@ -373,4 +425,7 @@ Public Sub UpdateTableData()
             Application.EnableEvents = True
         End If
     End If
+    
+    Set RstProject = Nothing
+    Set RstWorkflow = Nothing
 End Sub

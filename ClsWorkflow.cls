@@ -216,13 +216,13 @@ Public Property Get Progress() As Single
     Dim NoSteps As Integer
     Dim AryStepNo() As String
     
+    AryStepNo = Split(pCurrentStep, ".")
+    NoComplete = AryStepNo(1)
+    NoSteps = pSteps.Count
+    
+    pProgress = NoComplete / NoSteps * 100
+    
     If pWorkflowType = enLender Then
-        AryStepNo = Split(pCurrentStep, ".")
-        NoComplete = AryStepNo(1)
-        NoSteps = pSteps.Count
-        
-        pProgress = NoComplete / NoSteps * 100
-    Else
         Dim RstLenders As Recordset
         Dim SumProgress As Single
         Dim CntProgress As Integer
