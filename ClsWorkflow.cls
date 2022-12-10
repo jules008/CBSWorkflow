@@ -215,35 +215,40 @@ Public Property Get Progress() As Single
     Dim NoComplete As Integer
     Dim NoSteps As Integer
     Dim AryStepNo() As String
+    Dim ProjectWFNo As Integer
+    Dim RstLenders As Recordset
+    Dim SumProgress As Single
+    Dim CntProgress As Integer
     
     AryStepNo = Split(pCurrentStep, ".")
     NoComplete = AryStepNo(1)
     NoSteps = pSteps.Count
     
-    pProgress = NoComplete / NoSteps * 100
-    
-    If pWorkflowType = enLender Then
-        Dim RstLenders As Recordset
-        Dim SumProgress As Single
-        Dim CntProgress As Integer
-        
         If pProjectNo > 0 Then
-            Set RstLenders = ModDatabase.SQLQuery("SELECT Progress FROM TblWorkflow WHERE ProjectNo = " & pProjectNo)
+        Set RstLenders = ModDatabase.SQLQuery("SELECT * FROM TblWorkflow WHERE ProjectNo = " & pProjectNo)
             SumProgress = 0
             With RstLenders
                 .MoveLast
                 .MoveFirst
                 CntProgress = .RecordCount
                 Do While Not .EOF
+                If !WorkflowType = "enProject" Then ProjectWFNo = !ProjectNo
                     SumProgress = SumProgress + !Progress
                     .MoveNext
                 Loop
             End With
             
+        If pWorkflowType = enLender Then
+            pProgress = NoComplete / NoSteps * 100
+            If ProjectWFNo > 0 Then
+                DB.Execute "UPDATE TblWorkflow SET Progress = " & SumProgress / CntProgress & " WHERE ProjectNo = " & ProjectWFNo & " And WorkflowType = 'enProject'"
+            End If
+        Else
             pProgress = SumProgress / CntProgress
         End If
-        Set RstLenders = Nothing
+        
     End If
+    Set RstLenders = Nothing
     
     Debug.Print "NoSteps"; NoSteps, "NoComplete"; NoComplete, "pProgress"; pProgress
     
@@ -308,7 +313,7 @@ Public Sub DisplayForm()
             .xBtnChat.Visible = True
             .LblCl.Top = .LblCl.Top - Adjust2
             .LblCont1.Top = .LblCont1.Top - Adjust2
-            .LblPhone1.Top = .LblPhone1.Top - Adjust2
+            .Lblphone1.Top = .Lblphone1.Top - Adjust2
             .TxtClientContactName.Top = .TxtClientContactName.Top - Adjust2
             .TxtClientContactPhone.Top = .TxtClientContactPhone.Top - Adjust2
             .TxtClientName.Top = .TxtClientName.Top - Adjust2
@@ -450,7 +455,6 @@ Public Sub DBSave()
         If Not Parent Is Nothing Then !ProjectNo = Parent.ProjectNo
         .Update
                     
-        UpdateProgress
         Steps.SaveCollection
         
     End With
@@ -605,14 +609,6 @@ Public Sub Pause()
     End If
     
     Set InputForm = Nothing
-End Sub
-
-' ===============================================================
-' Method UpdateProgress
-' Calculates progress of workflow, including lender workflows if it is type project
-' ---------------------------------------------------------------
-Private Sub UpdateProgress()
-    
 End Sub
 
 ' ===============================================================
