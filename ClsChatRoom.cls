@@ -36,7 +36,7 @@ Option Explicit
 Private pChatRoom As Collection
 Private WithEvents pChatRoomForm As FrmChatRoom
 Attribute pChatRoomForm.VB_VarHelpID = -1
-Private WithEvents pWFProjectForm As FrmWFProject
+Private WithEvents pWFProjectForm As FrmProjectWF
 Attribute pWFProjectForm.VB_VarHelpID = -1
 
 Public Function NewEnum() As IUnknown
@@ -200,7 +200,7 @@ End Sub
 Private Sub Class_Initialize()
     Set pChatRoom = New Collection
     Set pChatRoomForm = New FrmChatRoom
-    Set pWFProjectForm = New FrmWFProject
+    Set pWFProjectForm = New FrmProjectWF
 End Sub
 ' ===============================================================
 Private Sub Class_Terminate()

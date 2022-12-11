@@ -18,10 +18,29 @@ Dim OldTables() As String
 Private Const StrMODULE As String = "ModDeploy"
 
 Public Sub QueryTest()
+    If DB Is Nothing Then
     Set DB = OpenDatabase(GetDocLocalPath(ThisWorkbook.Path) & INI_FILE_PATH & DB_FILE_NAME & ".accdb")
-    DB.Execute "DELETE FROM TblContact WHERE ContactType IS NULL"
-    DB.Execute "UPDATE TblContact SET ComFrq = 30 WHERE ContactType = 'Lead'"
-    DB.Execute "UPDATE TblContact SET ComFrq = 2 WHERE ContactType = 'Client'"
+    End If
+    
+    DB.Execute "ALTER TABLE TblClient DROP COLUMN Address"
+    DB.Execute "ALTER TABLE TblClient DROP COLUMN CBS"
+    DB.Execute "ALTER TABLE TblWorkflow DROP COLUMN Debt "
+    DB.Execute "ALTER TABLE TblWorkflow DROP COLUMN CBSComm "
+    DB.Execute "ALTER TABLE TblWorkflow DROP COLUMN ExitFee "
+    DB.Execute "ALTER TABLE TblWorkflow DROP COLUMN LoanTerm "
+    DB.Execute "ALTER TABLE TblProject DROP COLUMN Debt "
+    DB.Execute "ALTER TABLE TblProject ALTER COLUMN ExitFee yesno"
+    
+    Stop
+    
+    DB.Execute "ALTER TABLE TblClient ADD COLUMN Address Memo"
+    DB.Execute "ALTER TABLE TblClient ADD COLUMN CBS text"
+    DB.Execute "ALTER TABLE TblWorkflow ADD COLUMN Debt Single"
+    DB.Execute "ALTER TABLE TblWorkflow ADD COLUMN CBSComm Single"
+    DB.Execute "ALTER TABLE TblWorkflow ADD COLUMN ExitFee Single"
+    DB.Execute "ALTER TABLE TblWorkflow ADD COLUMN LoanTerm integer"
+    DB.Execute "ALTER TABLE TblProject ADD COLUMN Debt Single"
+    DB.Execute "ALTER TABLE TblProject ALTER COLUMN ExitFee single"
     
 End Sub
 
@@ -68,10 +87,14 @@ Public Function UpdateDBScript() As Boolean
     ' ========================================================================================
     ' Database commands
     ' ----------------------------------------------------------------------------------------
-    DB.Execute "DELETE FROM TblContact WHERE ContactType IS NULL"
-    DB.Execute "UPDATE TblContact SET ComFrq = 30 WHERE ContactType = 'Lead'"
-    DB.Execute "UPDATE TblContact SET ComFrq = 2 WHERE ContactType = 'Client'"
-    
+    DB.Execute "ALTER TABLE TblClient ADD COLUMN Address Memo"
+    DB.Execute "ALTER TABLE TblClient ADD COLUMN CBS text"
+    DB.Execute "ALTER TABLE TblWorkflow ADD COLUMN Debt Single"
+    DB.Execute "ALTER TABLE TblWorkflow ADD COLUMN CBSComm Single"
+    DB.Execute "ALTER TABLE TblWorkflow ADD COLUMN ExitFee Single"
+    DB.Execute "ALTER TABLE TblWorkflow ADD COLUMN LoanTerm integer"
+    DB.Execute "ALTER TABLE TblProject ADD COLUMN Debt Single"
+    DB.Execute "ALTER TABLE TblProject ALTER COLUMN ExitFee single"
     ' ========================================================================================
         
     'update DB Version
@@ -149,6 +172,14 @@ Public Function UpdateDBScriptUndo() As Boolean
     ' ========================================================================================
     ' Database commands
     ' ----------------------------------------------------------------------------------------
+    DB.Execute "ALTER TABLE TblClient DROP COLUMN Address"
+    DB.Execute "ALTER TABLE TblClient DROP COLUMN CBS"
+    DB.Execute "ALTER TABLE TblWorkflow DROP COLUMN Debt "
+    DB.Execute "ALTER TABLE TblWorkflow DROP COLUMN CBSComm "
+    DB.Execute "ALTER TABLE TblWorkflow DROP COLUMN ExitFee "
+    DB.Execute "ALTER TABLE TblWorkflow DROP COLUMN LoanTerm "
+    DB.Execute "ALTER TABLE TblProject DROP COLUMN Debt "
+    DB.Execute "ALTER TABLE TblProject ALTER COLUMN ExitFee yesno"
     ' ========================================================================================
     
     DB.Close
@@ -411,6 +442,7 @@ Public Sub UpdateTableData()
             RstProject.MoveNext
         Loop
             
+        DB.Execute "DELETE * FROM TblWorkflow WHERE ProjectNo = 0"
         DB.Execute "DELETE * FROM TblStepTemplate"
         DB.Execute "UPDATE TblWorkflow SET Progress = 0 WHERE Progress IS NULL"
         

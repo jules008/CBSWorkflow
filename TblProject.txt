@@ -4,8 +4,9 @@ ClientNo,  dbLong
 CaseManager,  dbLong
 LoanTerm,  dbText
 CBSComPC,  dbSingle
-ExitFee,  dbBoolean
+ExitFee,  dbSingle
 Workflows,  dbText
 Contacts,  dbText
 ProjectWFNo,  dbLong
 ProjectName,  dbText
+Debt,  dbSingle

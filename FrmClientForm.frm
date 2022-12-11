@@ -176,6 +176,12 @@ Private Sub UserForm_Initialize()
         TtlTop.Caption = "Update Client"
         BtnUpdate.Caption = "Update"
     End If
+    
+    With CmoCBS
+        .Clear
+        .AddItem "CBS"
+        .AddItem "HP"
+    End With
     ClearForm
 End Sub
 

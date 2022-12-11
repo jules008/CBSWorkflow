@@ -352,7 +352,7 @@ Public Sub BuildTable(Optional SplitRow As Integer, Optional SplitSize As Intege
                 .Width = pColWidths(x)
                 .Text = pHeadingText(x)
                 .OnAction = pOnAction(x, 0)
-                .Style = pHeadingStyle
+                .Style = pStylesColl.Find(pStyles(x, 0))
                 .Height = pHeadingHeight
             End With
             ColOffset = ColOffset + Cell.Width + HPad
@@ -409,13 +409,13 @@ Public Sub BuildTable(Optional SplitRow As Integer, Optional SplitSize As Intege
                                 .Left = Cell.Left + 30
                                 .Height = 13
                                 .Width = 11
-                                .OnAction = pOnAction(x, y - 1)
+                                .OnAction = pOnAction(x, y)
                             Else
                                 .Top = Cell.Top + 3
                                 .Left = Cell.Left + 20
                                 .Height = 13
                                 .Width = 11
-                                .OnAction = pOnAction(x, y - 1)
+                                .OnAction = pOnAction(x, y)
                             End If
                         End With
                     End If
@@ -426,18 +426,18 @@ Public Sub BuildTable(Optional SplitRow As Integer, Optional SplitSize As Intege
                         'cater for blank columns with no data
                         If x < pRstText.Fields.Count Then
                         If Not IsNull(pRstText.Fields(x)) Then .Text = pRstText.Fields(x)
-                        .OnAction = pOnAction(x, y - 1)
+                        .OnAction = pOnAction(x, y)
                         End If
                     End If
                     
-                    If pStyles(x, y - 1) = "" Then
-                        If pStyles(1, y - 1) = "" Then
+                    If pStyles(x, y) = "" Then
+                        If pStyles(1, y) = "" Then
                             .Style = pStylesColl.Find(pStyles(1, 2))
                         Else
                             .Style = pStylesColl.Find(pStyles(1, y))
                 End If
                     Else
-                        .Style = pStylesColl.Find(pStyles(x, y - 1))
+                        .Style = pStylesColl.Find(pStyles(x, y))
             End If
             
                     .Height = pRowHeight
@@ -635,7 +635,7 @@ Private Sub AddProgressBars(TableType As String)
                     .Name = "Progress"
                     .Line.Weight = TABLE_PROGRESS_BORDER_WEIGHT
                     .Height = TABLE_PROGRESS_BADGE_HEIGHT
-                    .Width = (UICell.Width - 30) / 100 * Replace(UICell.Text, "%", "")
+                    .Width = (UICell.Width - 35) / 100 * Replace(UICell.Text, "%", "")
                     .Fill.ForeColor.RGB = TABLE_PROGRESS_BADGE_FILL_COLOUR
                 End With
             End If

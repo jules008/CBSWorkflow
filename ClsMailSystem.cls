@@ -214,7 +214,7 @@ End Sub
 'saves email details when it has been sent
 '---------------------------------------------------------------
 Private Sub pMailItem_Send(Cancel As Boolean)
-    FrmWFProject.BringToFront
+    FrmProjectWF.BringToFront
 End Sub
 
 '===============================================================

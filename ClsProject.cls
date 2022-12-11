@@ -34,7 +34,7 @@ Private pCaseManager As ClsCBSUser
 Private pLoanTerm As String
 Private pProjectWorkflow As ClsWorkflow
 Private pCBSComPC As Single
-Private pExitFee As Boolean
+Private pExitFee As Single
 Private pWorkflows As ClsWorkflows
 Private pContacts As ClsContacts
 Private pParent As ClsSPV
@@ -102,11 +102,11 @@ Public Property Let CBSComPC(ByVal vNewValue As Single)
 End Property
 
 '---------------------------------------------------------------
-Public Property Get ExitFee() As Boolean
+Public Property Get ExitFee() As Single
     ExitFee = pExitFee
 End Property
 
-Public Property Let ExitFee(ByVal vNewValue As Boolean)
+Public Property Let ExitFee(ByVal vNewValue As Single)
     pExitFee = vNewValue
 End Property
 

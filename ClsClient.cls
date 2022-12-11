@@ -29,6 +29,8 @@ Attribute VB_Exposed = False
 Option Explicit
 
 Private pName As String
+Private pAddress As String
+Private pCBS As String
 Private pUrl As String
 Private pPhoneNo As String
 Private pClientNo As Integer
@@ -44,6 +46,24 @@ End Property
 
 Public Property Let Name(ByVal vNewValue As String)
     pName = vNewValue
+End Property
+
+'---------------------------------------------------------------
+Public Property Get Address() As String
+    Address = pAddress
+End Property
+
+Public Property Let Address(ByVal vNewValue As String)
+    pAddress = vNewValue
+End Property
+
+'---------------------------------------------------------------
+Public Property Get CBS() As String
+    CBS = pCBS
+End Property
+
+Public Property Let CBS(ByVal vNewValue As String)
+    pCBS = vNewValue
 End Property
 
 '---------------------------------------------------------------
@@ -98,6 +118,8 @@ End Property
 Public Sub DBNew()
     pClientNo = 0
     pName = ""
+    pAddress = ""
+    pCBS = ""
     pPhoneNo = ""
     pUrl = ""
     
@@ -117,6 +139,8 @@ Public Sub DisplayForm()
     With pClientForm
         .Tag = "Update"
         .TxtClientNo = pClientNo
+        .CmoCBS = pCBS
+        .TxtAddress = pAddress
         .TxtName = pName
         .TxtPhoneNo = pPhoneNo
         .TxtUrl = pUrl
@@ -140,6 +164,8 @@ Public Sub DBGet(ClientNameNo As Variant)
     With RstClient
         If .RecordCount > 0 Then
             If Not IsNull(!Name) Then pName = !Name
+            If Not IsNull(!Address) Then pAddress = !Address
+            If Not IsNull(!CBS) Then pCBS = !CBS
             If Not IsNull(!Url) Then pUrl = !Url
             If Not IsNull(!PhoneNo) Then pPhoneNo = !PhoneNo
             If Not IsNull(!ClientNo) Then pClientNo = !ClientNo
@@ -176,6 +202,8 @@ Public Sub DBSave()
         End If
 
         !Name = CleanSQLText(pName, True)
+        !Address = CleanSQLText(pAddress, True)
+        !CBS = CleanSQLText(pCBS, True)
         !Url = CleanSQLText(pUrl, True)
         !PhoneNo = CleanSQLText(pPhoneNo, True)
         !ClientNo = CleanSQLText(pClientNo, True)
@@ -206,6 +234,8 @@ End Sub
 Private Sub pClientForm_Update()
     With pClientForm
         pName = .TxtName
+        pAddress = .TxtAddress
+        pCBS = .CmoCBS
         pPhoneNo = .TxtPhoneNo
         pUrl = .TxtUrl
     End With

@@ -121,7 +121,6 @@ Public Sub DisplayForm()
         .TxtName = pName
         .TxtPhoneNo = pPhoneNo
         .CmoLenderType = pLenderType
-        .LstContacts = ""
         .Show
     End With
 End Sub

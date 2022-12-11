@@ -38,10 +38,16 @@ Private pFrmInputBox As FrmInputBox
 Private pSteps As ClsSteps
 Private pChatRoom As ClsChatRoom
 Private pProgress As Single
+Private pDebt As Single
+Private pCBSComm As Single
+Private pExitFee As Single
+Private pLoanTerm As Integer
 Private pParent As ClsProject
 
-Private WithEvents pProjWFForm As FrmWFProject
+Private WithEvents pProjWFForm As FrmProjectWF
 Attribute pProjWFForm.VB_VarHelpID = -1
+Private WithEvents pLenderWFForm As FrmLenderWF
+Attribute pLenderWFForm.VB_VarHelpID = -1
 Private WithEvents pWFNameForm As FrmSelectWorkFlow
 Attribute pWFNameForm.VB_VarHelpID = -1
 
@@ -220,11 +226,14 @@ Public Property Get Progress() As Single
     Dim SumProgress As Single
     Dim CntProgress As Integer
     
+    If pProjectNo > 0 Then
     AryStepNo = Split(pCurrentStep, ".")
     NoComplete = AryStepNo(1)
     NoSteps = pSteps.Count
     
-        If pProjectNo > 0 Then
+        If NoSteps > 0 Then pProgress = NoComplete / NoSteps * 100
+        DB.Execute "UPDATE TblWorkflow SET Progress = " & pProgress & " WHERE WorkflowNo = " & pWorkflowNo
+        
         Set RstLenders = ModDatabase.SQLQuery("SELECT * FROM TblWorkflow WHERE ProjectNo = " & pProjectNo)
             SumProgress = 0
             With RstLenders
@@ -238,21 +247,51 @@ Public Property Get Progress() As Single
                 Loop
             End With
             
-        If pWorkflowType = enLender Then
-            pProgress = NoComplete / NoSteps * 100
             If ProjectWFNo > 0 Then
                 DB.Execute "UPDATE TblWorkflow SET Progress = " & SumProgress / CntProgress & " WHERE ProjectNo = " & ProjectWFNo & " And WorkflowType = 'enProject'"
             End If
-        Else
-            pProgress = SumProgress / CntProgress
-        End If
-        
     End If
     Set RstLenders = Nothing
     
     Debug.Print "NoSteps"; NoSteps, "NoComplete"; NoComplete, "pProgress"; pProgress
     
     Progress = pProgress
+End Property
+
+'---------------------------------------------------------------
+Public Property Get Debt() As String
+    Debt = pDebt
+End Property
+
+Public Property Let Debt(ByVal vNewValue As String)
+    pDebt = vNewValue
+End Property
+
+'---------------------------------------------------------------
+Public Property Get CBSComm() As String
+    CBSComm = pCBSComm
+End Property
+
+Public Property Let CBSComm(ByVal vNewValue As String)
+    pCBSComm = vNewValue
+End Property
+
+'---------------------------------------------------------------
+Public Property Get ExitFee() As String
+    ExitFee = pExitFee
+End Property
+
+Public Property Let ExitFee(ByVal vNewValue As String)
+    pExitFee = vNewValue
+End Property
+
+'---------------------------------------------------------------
+Public Property Get LoanTerm() As Integer
+    LoanTerm = pLoanTerm
+End Property
+
+Public Property Let LoanTerm(ByVal vNewValue As Integer)
+    pLoanTerm = vNewValue
 End Property
 
 ' ===============================================================
@@ -280,64 +319,95 @@ Public Sub DisplayWFSelectForm()
 End Sub
 
 ' ===============================================================
-' Method DisplayForm
-' displays client form
+' Method DisplayLenderForm
+' displays Lender Workflow form
 ' ---------------------------------------------------------------
-Public Sub DisplayForm()
+Public Sub DisplayLenderForm()
     Dim ProgPC As Single
     Dim TmpWorkflow As ClsWorkflow
     Dim Adjust1 As Integer
     Dim Adjust2 As Integer
     
     ProgPC = Progress
-    
-    With pProjWFForm
-    
-        If .ScreenAdjusted Then
-            Adjust1 = 0
-            Adjust2 = 0
-        Else
-            Adjust1 = 8
-            Adjust2 = 16
-            .ScreenAdjusted = True
-        End If
-        
-        If pWorkflowType = enProject Then
-            .TtlTop.Caption = "Project No " & Parent.ProjectNo & " Workflow"
-            .LblLenderName.Visible = False
-            .LblLenderCont.Visible = False
-            .LblLenderPhone.Visible = False
-            .TxtLenderContactName.Visible = False
-            .TxtLenderContactPhone.Visible = False
-            .TxtLenderName.Visible = False
-            .xBtnChat.Visible = True
-            .LblCl.Top = .LblCl.Top - Adjust2
-            .LblCont1.Top = .LblCont1.Top - Adjust2
-            .Lblphone1.Top = .Lblphone1.Top - Adjust2
-            .TxtClientContactName.Top = .TxtClientContactName.Top - Adjust2
-            .TxtClientContactPhone.Top = .TxtClientContactPhone.Top - Adjust2
-            .TxtClientName.Top = .TxtClientName.Top - Adjust2
-            .LblSPV.Top = .LblSPV.Top - Adjust1
-            .LblCont2.Top = .LblCont2.Top - Adjust1
-            .LblPhone2.Top = .LblPhone2.Top - Adjust1
-            .TxtSPVContactName.Top = .TxtSPVContactName.Top - Adjust1
-            .TxtSPVContactPhone.Top = .TxtSPVContactPhone.Top - Adjust1
-            .TxtSPVName.Top = .TxtSPVName.Top - Adjust1
-        Else
+    With pLenderWFForm
             .TtlTop.Caption = "Lender Workflow - Project No" & pProjectNo
             .TxtLenderName = pLender.Name
             .TxtLenderContactName = pLender.Contacts.PrimaryContact.ContactName
             .TxtLenderContactPhone = pLender.Contacts.PrimaryContact.Phone1
+        .TxtDebt = pDebt
+        .TxtCBSComm = pCBSComm
+        .TxtExitFee = pExitFee
+        .TxtLoanTerm = pLoanTerm
+        .Progress ProgPC
+        .TxtClientName = pParent.Client.Name
+        .TxtProjectNo = pParent.ProjectNo
+        .TxtCaseManager = pParent.CaseManager.UserName
+        .TxtLoanTerm = pParent.LoanTerm
+        .TxtStepName = ActiveStep.StepNo & " - " & pActiveStep.StepName
+        .xTxtAction = pActiveStep.StepAction
+        .TxtClientContactName = Parent.Client.Contacts.PrimaryContact.ContactName
+        .TxtClientContactPhone = Parent.Client.Contacts.PrimaryContact.Phone1
+
+         Select Case pActiveStep.StepType
+             Case enYesNo
+                 .TxtDataInput.Visible = False
+                 .BtnNo.Visible = True
+                 .BtnComplete.Visible = True
+                 .BtnComplete.Caption = "Yes"
+             
+             Case enStep
+                 .TxtDataInput.Visible = False
+                 .BtnNo.Visible = False
+                 .BtnComplete.Visible = True
+                 .BtnComplete.Caption = "Step Complete"
+             
+             Case enDataInput
+                 .TxtDataInput.Visible = True
+                 .TxtDataInput.Value = ""
+                 .BtnNo.Visible = False
+                 .BtnComplete.Visible = True
+                 .BtnComplete.Caption = "Step Complete"
+        
+                 If pActiveStep.DataFormat = "Date" And .TxtDataInput = "" Then
+                     Set TmpWorkflow = ActiveProject.ProjectWorkflow
+                     .TxtDataInput = Format(FrmCalPicker.ShowForm, "dd mmm yy")
+                     Set ActiveProject.ProjectWorkflow = TmpWorkflow
         End If
         
+             Case enAltBranch
+                 .TxtDataInput.Visible = False
+                 .BtnCopyText.Visible = False
+                 .BtnNo.Visible = True
+                 .BtnComplete.Visible = True
+                 .BtnComplete.Caption = "Yes"
+            End Select
+        If Not .Visible Then .Show
+    End With
+    
+    Set TmpWorkflow = Nothing
+End Sub
+
+' ===============================================================
+' Method DisplayProjectForm
+' displays project Workflow form
+' ---------------------------------------------------------------
+Public Sub DisplayProjectForm()
+    Dim ProgPC As Single
+    Dim TmpWorkflow As ClsWorkflow
+    Dim Adjust1 As Integer
+    Dim Adjust2 As Integer
+    
+    ProgPC = Progress
+    With pProjWFForm
+        .TtlTop.Caption = "Project No " & Parent.ProjectNo & " Workflow"
+        .xBtnChat.Visible = True
         .Progress ProgPC
         .TxtClientName = pParent.Client.Name
         .TxtSPVName = pParent.SPV.Name
         .TxtProjectNo = pParent.ProjectNo
         .TxtCaseManager = pParent.CaseManager.UserName
-        .TxtLoanTerm = pParent.LoanTerm
         .TxtCommision = pParent.CBSComPC
-        .ChkExitFee = pParent.ExitFee
+        .TxtExitFee = pExitFee
         .TxtStepName = ActiveStep.StepNo & " - " & pActiveStep.StepName
         .xTxtAction = pActiveStep.StepAction
         .TxtClientContactName = Parent.Client.Contacts.PrimaryContact.ContactName
@@ -405,6 +475,10 @@ Public Sub DBGet(WorkflowNo As String)
             If Not IsNull(!RAG) Then pRAG = enRAGVal(!RAG)
             If Not IsNull(!Member) Then pMember = !Member
             If Not IsNull(!Progress) Then pProgress = !Progress
+            If Not IsNull(!Debt) Then pDebt = !Debt
+            If Not IsNull(!CBSComm) Then pCBSComm = !CBSComm
+            If Not IsNull(!ExitFee) Then pExitFee = !ExitFee
+            If Not IsNull(!LoanTerm) Then pLoanTerm = !LoanTerm
             
             pLender.DBGet !LenderNo
             Set pSteps = New ClsSteps
@@ -427,6 +501,7 @@ Public Sub DBSave()
     Set RstWorkflow = ModDatabase.SQLQuery("SELECT * FROM TblWorkflow WHERE WorkflowNo = " & pWorkflowNo)
     Set RstMaxNo = ModDatabase.SQLQuery("SELECT MAX(WorkflowNo) FROM TblWorkflow ")
 
+    If ProjectNo <> 0 Then
     If RstMaxNo.Fields(0).Value <> 0 Then
         LastNo = RstMaxNo.Fields(0).Value
     Else
@@ -452,13 +527,17 @@ Public Sub DBSave()
         !RAG = CleanSQLText(enRAGStr(RAG), True)
         !LenderNo = CleanSQLText(pLender.LenderNo, True)
         !Progress = Progress
+            !Debt = CleanSQLText(pDebt, True)
+            !CBSComm = CleanSQLText(pCBSComm, True)
+            !ExitFee = CleanSQLText(pExitFee, True)
+            !LoanTerm = CleanSQLText(pLoanTerm, True)
         If Not Parent Is Nothing Then !ProjectNo = Parent.ProjectNo
         .Update
                     
         Steps.SaveCollection
         
     End With
-    
+    End If
     Set RstWorkflow = Nothing
     Set RstMaxNo = Nothing
 End Sub
@@ -510,6 +589,7 @@ Public Sub MoveToPrevStep()
             End With
         End If
     End If
+    pProjWFForm.Progress Progress
 End Sub
 
 ' ===============================================================
@@ -528,6 +608,7 @@ Public Sub MoveToAltStep()
         .Start
             .DBSave
     End With
+    pProjWFForm.Progress Progress
 End Sub
 
 ' ===============================================================
@@ -557,6 +638,7 @@ Public Sub MoveToNextStep()
             .DBSave
         End With
     End If
+    pProjWFForm.Progress Progress
 End Sub
 
 ' ===============================================================
@@ -612,23 +694,114 @@ Public Sub Pause()
 End Sub
 
 ' ===============================================================
-' Event pWFNameForm_CloseFrm
-' Event on form close
+' Event pLenderWFForm_ClickNo
+' Event on clicking no button
 ' ---------------------------------------------------------------
-Private Sub pWFNameForm_CloseFrm()
-    With pWFNameForm
-        pName = ""
+Private Sub pLenderWFForm_ClickNo()
+    pLenderWFForm.Hide
+    MoveToAltStep
+    With pLenderWFForm
+        If pActiveStep.LastStep Then
+            Unload pLenderWFForm
+        Else
+            If pActiveStep.Wait Then
+                DBSave
+                .Hide
+            Else
+                DisplayProjectForm
+            End If
+        End If
     End With
 End Sub
 
 ' ===============================================================
-' Event pWFNameForm_Update
-' Event on selection of workflow type
+' Event pLenderWFForm_CloseForm
+' Event on clicking close lender workflow
 ' ---------------------------------------------------------------
-Private Sub pWFNameForm_Update()
-    With pWFNameForm
-        pName = .GetWFName
+Private Sub pLenderWFForm_CloseForm()
+    DBSave
+    Unload pLenderWFForm
+End Sub
+
+' ===============================================================
+' Event pLenderWFForm_PrevStep
+' Event on clicking previous step
+' ---------------------------------------------------------------
+Private Sub pLenderWFForm_PrevStep()
+    pLenderWFForm.Hide
+    MoveToPrevStep
+    pActiveStep.Start
+    DBSave
     
+    pLenderWFForm.TxtDataInput = ""
+    
+    DisplayProjectForm
+    
+End Sub
+
+' ===============================================================
+' Event pLenderWFForm_StartChat
+' Event on completion of workflow step
+' ---------------------------------------------------------------
+Private Sub pLenderWFForm_StartChat()
+    pChatRoom.DisplayForm pParent.ProjectNo
+End Sub
+
+' ===============================================================
+' Event pLenderWFForm_StepComplete
+' Event on completion of workflow step
+' ---------------------------------------------------------------
+Private Sub pLenderWFForm_StepComplete()
+    pLenderWFForm.Hide
+    With pLenderWFForm
+        If .TxtDataInput <> "" Then
+            pActiveStep.DataItem = .TxtDataInput
+            .TxtDataInput = ""
+        End If
+        
+        MoveToNextStep
+        
+        If pActiveStep.LastStep Then
+            Unload pLenderWFForm
+        Else
+            If pActiveStep.Wait = True Then
+                DBSave
+                pLenderWFForm.Hide
+            Else
+                DisplayLenderForm
+'                .Visible = True
+            End If
+        End If
+    End With
+End Sub
+    
+' ===============================================================
+' Event pLenderWFForm_UpdateLoan
+' Updates Loan details
+' ---------------------------------------------------------------
+Private Sub pLenderWFForm_UpdateLoan()
+    With pLenderWFForm
+        pCBSComm = .TxtCBSComm
+        pDebt = .TxtDebt
+        pExitFee = .TxtExitFee
+        pLoanTerm = .TxtLoanTerm
+        DBSave
+        MsgBox "Loan Details Updated", vbOKOnly + vbInformation, APP_NAME
+    End With
+End Sub
+
+' ===============================================================
+' Event pProjWFForm_UpdateLoan
+' Updates Loan details
+' ---------------------------------------------------------------
+Private Sub pProjWFForm_UpdateLoan()
+    With pProjWFForm
+        pCBSComm = .TxtCBSComm
+        pDebt = .TxtDebt
+        pExitFee = .TxtExitFee
+        pLoanTerm = .TxtLoanTerm
+        DBSave
+        MsgBox "Loan Details Updated", vbOKOnly + vbInformation, APP_NAME
     End With
 End Sub
 
@@ -647,7 +820,7 @@ Private Sub pProjWFForm_ClickNo()
                 DBSave
                 .Hide
             Else
-                DisplayForm
+                DisplayProjectForm
             End If
         End If
     End With
@@ -655,7 +828,7 @@ End Sub
 
 ' ===============================================================
 ' Event pProjWFForm_CloseForm
-' Event on clicking close workflow
+' Event on clicking close lender workflow
 ' ---------------------------------------------------------------
 Private Sub pProjWFForm_CloseForm()
     DBSave
@@ -674,8 +847,16 @@ Private Sub pProjWFForm_PrevStep()
     
     pProjWFForm.TxtDataInput = ""
     
-    DisplayForm
+    DisplayProjectForm
     
+End Sub
+
+' ===============================================================
+' Event pProjWFForm_StartChat
+' Event on completion of workflow step
+' ---------------------------------------------------------------
+Private Sub pProjWFForm_StartChat()
+    pChatRoom.DisplayForm pParent.ProjectNo
 End Sub
 
 ' ===============================================================
@@ -699,7 +880,7 @@ Private Sub pProjWFForm_StepComplete()
                 DBSave
                 pProjWFForm.Hide
             Else
-                DisplayForm
+                DisplayProjectForm
 '                .Visible = True
             End If
         End If
@@ -707,11 +888,24 @@ Private Sub pProjWFForm_StepComplete()
 End Sub
 
 ' ===============================================================
-' Event pProjWFForm_StartChat
-' Event on completion of workflow step
+' Event pWFNameForm_CloseFrm
+' Event on form close
 ' ---------------------------------------------------------------
-Private Sub pProjWFForm_StartChat()
-    pChatRoom.DisplayForm pParent.ProjectNo
+Private Sub pWFNameForm_CloseFrm()
+    With pWFNameForm
+        pName = ""
+    End With
+End Sub
+
+' ===============================================================
+' Event pWFNameForm_Update
+' Event on selection of workflow type
+' ---------------------------------------------------------------
+Private Sub pWFNameForm_Update()
+    With pWFNameForm
+        pName = .GetWFName
+    
+    End With
 End Sub
 
 ' ===============================================================
@@ -725,7 +919,8 @@ Private Sub Class_Initialize()
     Set pActiveStep = New ClsStep
     Set pFrmInputBox = New FrmInputBox
     Set pLender = New ClsLender
-    Set pProjWFForm = New FrmWFProject
+    Set pProjWFForm = New FrmProjectWF
+    Set pLenderWFForm = New FrmLenderWF
     Set pWFNameForm = New FrmSelectWorkFlow
     Set pChatRoom = New ClsChatRoom
     
@@ -744,6 +939,7 @@ Public Sub Terminate()
     Set pFrmInputBox = Nothing
     Set pLender = Nothing
     Set pProjWFForm = Nothing
+    Set pLenderWFForm = Nothing
     Set pWFNameForm = Nothing
     Set pChatRoom = Nothing
 End Sub
@@ -755,6 +951,7 @@ Private Sub Class_Terminate()
     Set pFrmInputBox = Nothing
     Set pLender = Nothing
     Set pProjWFForm = Nothing
+    Set pLenderWFForm = Nothing
     Set pWFNameForm = Nothing
     Set pChatRoom = Nothing
 End Sub

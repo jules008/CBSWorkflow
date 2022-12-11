@@ -294,27 +294,27 @@ Public Function RefreshList(ByVal ScreenPage As enScreenPage, ByVal SplitScreenO
     NoRows = RstWorkflowList.RecordCount
     NoCols = MainFrame.Table.NoCols
     
-    ReDim AryStyles(0 To NoCols - 1, 0 To NoRows - 1)
-    ReDim AryOnAction(0 To NoCols - 1, 0 To NoRows - 1)
+    ReDim AryStyles(0 To NoCols - 1, 0 To NoRows)
+    ReDim AryOnAction(0 To NoCols - 1, 0 To NoRows)
     
     MainFrame.Table.Cells.DeleteCollection
-    Debug.Assert MainFrame.Table.Cells.Count = 0
     
     With RstWorkflowList
         For x = 0 To NoCols - 1
             .MoveFirst
-            For y = 0 To NoRows - 1
+            For y = 0 To NoRows
                 
                 If y = 0 Then
                     'headers
                     AryOnAction(x, y) = "'ModUIProjects.SortBy (""" & ScreenPage & ":" & .Fields(x).Name & """)'"
+                    AryStyles(x, y) = "GENERIC_TABLE_HEADER"
+
                 Else
                     If x = 0 Then
-                        AryOnAction(x, y) = "'ModUIProjects.SplitScreen(""" & y + 1 & ":" & !ProjectNo & """)'"
+                        AryOnAction(x, y) = "'ModUIProjects.SplitScreen(""" & y & ":" & !ProjectNo & """)'"
                 Else
                         AryOnAction(x, y) = "'ModUIButtonHandler.ProcessBtnClicks(""" & ScreenPage & ":" & enBtnProjectOpen & ":" & !ProjectNo & """)'"
                     End If
-                End If
                 
                 If x = 9 Then
                     If !RAG = "en1Red" Then AryStyles(x, y) = "RED_CELL"
@@ -326,6 +326,7 @@ Public Function RefreshList(ByVal ScreenPage As enScreenPage, ByVal SplitScreenO
                     AryStyles(x, y) = "GENERIC_TABLE"
                 End If
                 .MoveNext
+                End If
         Next
     Next
     End With
@@ -583,7 +584,7 @@ Public Function OpenProjectWF(ByVal ScreenPage As enScreenPage, ByVal Index As S
     
     With ActiveProject
         .DBGet Index
-        .ProjectWorkflow.DisplayForm
+        .ProjectWorkflow.DisplayProjectForm
     End With
     
     Set ActiveProject = Nothing
@@ -629,7 +630,7 @@ Public Function OpenLenderWF(ByVal ScreenPage As enScreenPage, ByVal Index As St
     
     ActiveWorkFlow.DBGet Index
     ActiveProject.Workflows.Add ActiveWorkFlow
-    ActiveWorkFlow.DisplayForm
+    ActiveWorkFlow.DisplayLenderForm
     
     OpenLenderWF = True
 
@@ -698,7 +699,7 @@ Restart:
             StrSort = "TblWorkflow.Status"
     End Select
 
-    If Not RefreshList(ScreenPage, False, StrSort) Then Err.Raise HANDLED_ERROR
+    If Not ModUIProjects.RefreshList(ScreenPage, False, StrSort) Then Err.Raise HANDLED_ERROR
 
 GracefulExit:
 

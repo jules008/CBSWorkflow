@@ -2,3 +2,5 @@ ClientNo,  dbInteger
 Name,  dbText
 Url,  dbText
 PhoneNo,  dbText
+Address,  dbMemo
+CBS,  dbText

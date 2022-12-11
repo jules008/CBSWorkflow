@@ -141,7 +141,7 @@ Public Function BtnProjectNewWFClick(ScreenPage As enScreenPage) As Boolean
         .WorkflowType = enProject
         .ActiveStep.Start
         .DBSave
-        .DisplayForm
+        .DisplayProjectForm
     
     End With
 
@@ -270,7 +270,7 @@ Public Function BtnLenderNewWFClick(ScreenPage As enScreenPage) As Boolean
         .DBSave
     End With
     
-    ActiveWorkFlow.DisplayForm
+    ActiveWorkFlow.DisplayLenderForm
     
     If Not ResetScreen Then Err.Raise HANDLED_ERROR
     If Not ModUIProjects.BuildScreen(ScreenPage, False) Then Err.Raise HANDLED_ERROR

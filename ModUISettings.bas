@@ -24,7 +24,7 @@ Public Const SCREEN_HEIGHT As Integer = 2000
 Public Const SCREEN_WIDTH As Integer = 1825
 Public Const MAIN_FRAME_TOP As Integer = 90
 Public Const MAIN_FRAME_LEFT As Integer = 170
-Public Const MAIN_FRAME_WIDTH As Integer = 900
+Public Const MAIN_FRAME_WIDTH As Integer = 1000
 Public Const MAIN_FRAME_HEIGHT As Integer = 360
 
 ' ---------------------------------------------------------------
@@ -32,7 +32,7 @@ Public Const MAIN_FRAME_HEIGHT As Integer = 360
 ' ---------------------------------------------------------------
 Public Const BUTTON_FRAME_TOP As Integer = 5
 Public Const BUTTON_FRAME_LEFT As Integer = 170
-Public Const BUTTON_FRAME_WIDTH As Integer = 900
+Public Const BUTTON_FRAME_WIDTH As Integer = 1000
 Public Const BUTTON_FRAME_HEIGHT As Integer = 60
 
 ' ---------------------------------------------------------------
@@ -94,20 +94,20 @@ Public Const HEADER_ICON_RIGHT As Integer = 10
 ' ---------------------------------------------------------------
 ' Generic Project Screen Settings
 ' ---------------------------------------------------------------
-Public Const PROJECT_TABLE_COL_WIDTHS As String = "50:50:100:100:100:100:50:150:100:100"
+Public Const PROJECT_TABLE_COL_WIDTHS As String = "50:50:100:100:100:100:50:220:130:100"
 Public Const PROJECT_CELL_ROW_HEIGHTS As String = "50:50"
 Public Const PROJECT_TABLE_STYLES As String = "GENERIC_TABLE"
 Public Const PROJECT_TABLE_TITLES As String = "Expand:Project No:Project Name:Client Name:SPV Name:Case Manager:Step No:Step Name:Progress:Status"
 Public Const PROJECT_MAX_LINES As Integer = 150
-Public Const PROJECT_BTN_MAIN_1_LEFT As Integer = 690
+Public Const PROJECT_BTN_MAIN_1_LEFT As Integer = 790
 Public Const PROJECT_BTN_MAIN_1_TOP As Integer = 20
-Public Const PROJECT_BTN_MAIN_2_LEFT As Integer = 800
+Public Const PROJECT_BTN_MAIN_2_LEFT As Integer = 900
 Public Const PROJECT_BTN_MAIN_2_TOP As Integer = 20
 
 ' ---------------------------------------------------------------
 ' Project Sub Table Settings
 ' ---------------------------------------------------------------
-Public Const PROJECT_SUB_TABLE_COL_WIDTHS As String = "100:150:150:100:150:100:100"
+Public Const PROJECT_SUB_TABLE_COL_WIDTHS As String = "100:150:150:100:220:130:100"
 Public Const PROJECT_SUB_TABLE_TITLES As String = "Workflow No:Workflow Type:Lender Name:Step No:Step Name:Progress:Status"
 
 ' ---------------------------------------------------------------
@@ -143,58 +143,57 @@ Public Const PROJ_CLOSED_HEADER_TEXT As String = "Closed Projects"
 ' Generic CRM Screen Settings
 ' ---------------------------------------------------------------
 Public Const CRM_CELL_ROW_HEIGHTS As String = "50:50"
-Public Const CRM_TABLE_STYLES As String = "GENERIC_TABLE"
 
 ' ---------------------------------------------------------------
 ' CRM Screen Btn 1 Settings
 ' ---------------------------------------------------------------
-Public Const CRM_BTN_MAIN_1_LEFT As Integer = 800
+Public Const CRM_BTN_MAIN_1_LEFT As Integer = 900
 Public Const CRM_BTN_MAIN_1_TOP As Integer = 20
 
 ' ---------------------------------------------------------------
 ' CRM Screen Btn 2 Settings
 ' ---------------------------------------------------------------
-Public Const CRM_BTN_MAIN_2_LEFT As Integer = 690
+Public Const CRM_BTN_MAIN_2_LEFT As Integer = 790
 Public Const CRM_BTN_MAIN_2_TOP As Integer = 20
 
 ' ---------------------------------------------------------------
 ' CRM Screen Btn 3 Settings
 ' ---------------------------------------------------------------
-Public Const CRM_BTN_MAIN_3_LEFT As Integer = 580
+Public Const CRM_BTN_MAIN_3_LEFT As Integer = 680
 Public Const CRM_BTN_MAIN_3_TOP As Integer = 20
 
 ' ---------------------------------------------------------------
 ' CRM Clients Screen
 ' ---------------------------------------------------------------
-Public Const CRM_CLIENT_TABLE_COL_WIDTHS As String = "100:250:150:250:150"
-Public Const CRM_CLIENT_TABLE_TITLES As String = "Client No:Client Name:Phone No:Url:"
+Public Const CRM_CLIENT_TABLE_COL_WIDTHS As String = "100:150:150:300:150:150"
+Public Const CRM_CLIENT_TABLE_TITLES As String = "Client No:Client Name:CBS/HP:Address:Phone No:Url:"
 Public Const CRM_CLIENT_MAX_LINES As Integer = 150
 
 ' ---------------------------------------------------------------
 ' CRM SPV Screen
 ' ---------------------------------------------------------------
-Public Const CRM_SPV_TABLE_COL_WIDTHS As String = "100:300:300:200"
+Public Const CRM_SPV_TABLE_COL_WIDTHS As String = "100:300:300:300"
 Public Const CRM_SPV_TABLE_TITLES As String = "SPV No:SPV Name: : "
 Public Const CRM_SPV_MAX_LINES As Integer = 150
 
 ' ---------------------------------------------------------------
 ' CRM Contact Screen
 ' ---------------------------------------------------------------
-Public Const CRM_CONTACT_TABLE_COL_WIDTHS As String = "50:150:100:150:150:100:200"
+Public Const CRM_CONTACT_TABLE_COL_WIDTHS As String = "50:150:100:200:200:100:200"
 Public Const CRM_CONTACT_TABLE_TITLES As String = "Contact No:Contact Name:Contact Type:Organisation:Position:Phone No:Email Address"
 Public Const CRM_CONTACT_MAX_LINES As Integer = 150
 
 ' ---------------------------------------------------------------
 ' CRM Projects Screen
 ' ---------------------------------------------------------------
-Public Const CRM_PROJECT_TABLE_COL_WIDTHS As String = "100:150:150:150:100:100:150"
+Public Const CRM_PROJECT_TABLE_COL_WIDTHS As String = "100:150:150:150:100:100:250"
 Public Const CRM_PROJECT_TABLE_TITLES As String = "Project No:Project Name:Client Name:SPV:Case Manager::"
 Public Const CRM_PROJECT_MAX_LINES As Integer = 150
 
 ' ---------------------------------------------------------------
 ' CRM Lenders Screen
 ' ---------------------------------------------------------------
-Public Const CRM_LENDER_TABLE_COL_WIDTHS As String = "100:200:100:100:250:150"
+Public Const CRM_LENDER_TABLE_COL_WIDTHS As String = "100:200:150:150:250:150"
 Public Const CRM_LENDER_TABLE_TITLES As String = "Lender No:Name:Phone No:Lender Type:Address:"
 Public Const CRM_LENDER_MAX_LINES As Integer = 150
 

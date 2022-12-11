@@ -11,3 +11,7 @@ Deleted,  dbText
 DDate,  dbDate
 LenderNo,  dbLong
 Progress,  dbLong
+Debt,  dbSingle
+CBSComm,  dbSingle
+ExitFee,  dbSingle
+LoanTerm,  dbLong

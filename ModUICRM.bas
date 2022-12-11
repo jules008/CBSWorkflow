@@ -15,6 +15,7 @@ Option Explicit
 
 Private Const StrMODULE As String = "ModUICRM"
 Private ScreenPage As String
+Private ModFilter As String
 
 ' ===============================================================
 ' BuildScreen
@@ -28,10 +29,12 @@ Public Function BuildScreen(ByVal ScrnPage As enScreenPage, Optional Filter As S
     
     ModLibrary.PerfSettingsOn
     
+    ModFilter = Filter
+    
     ScreenPage = ScrnPage
     
     If Not BuildMainFrame(ScreenPage) Then Err.Raise HANDLED_ERROR
-    If Not RefreshList(ScreenPage, , Filter) Then Err.Raise HANDLED_ERROR
+    If Not RefreshList(ScreenPage) Then Err.Raise HANDLED_ERROR
     
     MainScreen.ReOrder
     
@@ -237,7 +240,7 @@ End Function
 ' RefreshList
 ' Refreshes the list of active workflows
 ' ---------------------------------------------------------------
-Public Function RefreshList(ByVal ScreenPage As enScreenPage, Optional SortBy As String, Optional Filter As String) As Boolean
+Public Function RefreshList(ByVal ScreenPage As enScreenPage, Optional SortBy As String) As Boolean
     Dim NoCols As Integer
     Dim NoRows As Integer
     Dim Workflows As ClsWorkflows
@@ -277,7 +280,7 @@ Public Function RefreshList(ByVal ScreenPage As enScreenPage, Optional SortBy As
     
     Set Workflows = New ClsWorkflows
     
-    Set RstWorkflowList = GetCRMData(ScreenPage, StrSortBy, Filter)
+    Set RstWorkflowList = GetCRMData(ScreenPage, SortBy)
     
     With RstWorkflowList
         If .RecordCount = 0 Then GoTo GracefulExit
@@ -288,26 +291,37 @@ Public Function RefreshList(ByVal ScreenPage As enScreenPage, Optional SortBy As
     With MainFrame.Table
         .RstText = RstWorkflowList
         .NoRows = RstWorkflowList.RecordCount
+        .StylesColl.RemoveCollection
         .StylesColl.Add GENERIC_TABLE
         .StylesColl.Add GENERIC_TABLE_HEADER
         .RowHeight = GENERIC_TABLE_ROW_HEIGHT
+        .Cells.DeleteCollection
     End With
     
     NoRows = RstWorkflowList.RecordCount
     NoCols = MainFrame.Table.NoCols
     
-    ReDim AryStyles(0 To NoCols - 1, 0 To NoRows - 1)
-    ReDim AryOnAction(0 To NoCols - 1, 0 To NoRows - 1)
+    ReDim AryStyles(0 To NoCols - 1, 0 To NoRows)
+    ReDim AryOnAction(0 To NoCols - 1, 0 To NoRows)
     
     Debug.Assert MainFrame.Table.Cells.Count = 0
     
     With RstWorkflowList
         For x = 0 To NoCols - 1
             .MoveFirst
-            For y = 0 To NoRows - 1
-                AryStyles(x, y) = CRM_TABLE_STYLES
+            For y = 0 To NoRows
+                If y = 0 Then
+                    AryStyles(x, y) = "GENERIC_TABLE_HEADER"
+                    If x < .Fields.Count Then
+                        AryOnAction(x, y) = "'ModUICRM.SortBy (""" & ScreenPage & ":" & .Fields(x).Name & """)'"
+                    End If
+                Else
+                    AryStyles(x, y) = "GENERIC_TABLE"
+                    If x < .Fields.Count Then
                 AryOnAction(x, y) = "'ModUIButtonHandler.ProcessBtnClicks(""" & ScreenPage & ":" & OpenItmBtn & ":" & .Fields(ItemIndex) & """)'"
+                    End If
                 .MoveNext
+                End If
             Next
         Next
     End With
@@ -354,7 +368,7 @@ End Function
 ' Method GetCRMData
 ' Gets data for workflow list
 '---------------------------------------------------------------
-Private Function GetCRMData(ByVal ScreenPage As enScreenPage, StrSortBy As String, Optional Filter As String) As Recordset
+Private Function GetCRMData(ByVal ScreenPage As enScreenPage, StrSortBy As String) As Recordset
     Dim AryBtn() As String
     Dim RstWorkflow As Recordset
     Dim Workflow As ClsWorkflow
@@ -364,29 +378,30 @@ Private Function GetCRMData(ByVal ScreenPage As enScreenPage, StrSortBy As Strin
     Dim SQL1 As String
     Dim SQL2 As String
     Dim SQL3 As String
+    Dim StrFilter As String
 
-    If Filter <> "" Then
-        AryBtn = Split(Filter, ":")
+    If ModFilter <> "" Then
+        AryBtn = Split(ModFilter, ":")
         FilterCol = AryBtn(0)
         FilterStr = AryBtn(1)
     End If
     
+    If StrSortBy <> "" Then StrSortBy = " ORDER BY " & StrSortBy
+    If ModFilter <> "" Then StrFilter = " WHERE " & FilterCol & " = '" & FilterStr & "' "
+    
     Select Case ScreenPage
         Case enScrCRMClient
-            SQL = "SELECT ClientNo, Name, PhoneNo, Url FROM TblClient"
+            SQL = "SELECT ClientNo, Name, CBS, Address, PhoneNo, Url FROM TblClient " & StrSortBy
         Case enScrCRMSPV
-            SQL = "SELECT SPVNo, Name FROM TblSPV"
+            SQL = "SELECT SPVNo, Name FROM TblSPV " & StrSortBy
         Case enScrCRMContact
             SQL = "SELECT TblContact.ContactNo, TblContact.ContactName, TblContact.ContactType, TblContact.Organisation, TblContact.Position, TblContact.Phone1, TblContact.EmailAddress " _
-                    & "FROM TblContact"
-            If Filter <> "" Then
-                SQL = SQL & " WHERE " & FilterCol & " = '" & FilterStr & "'"
-            End If
+                    & "FROM TblContact " & StrFilter & StrSortBy
         Case enScrCRMProject
             SQL = "SELECT TblProject.ProjectNo, TblProject.ProjectName, TblClient.Name, TblSPV.Name, TblCBSUser.UserName " _
-                    & "FROM ((TblProject LEFT JOIN TblClient ON TblProject.ClientNo = TblClient.ClientNo) LEFT JOIN TblSPV ON TblProject.SPVNo = TblSPV.SPVNo) LEFT JOIN TblCBSUser ON TblProject.CaseManager = TblCBSUser.CBSUserNo"
+                    & "FROM ((TblProject LEFT JOIN TblClient ON TblProject.ClientNo = TblClient.ClientNo) LEFT JOIN TblSPV ON TblProject.SPVNo = TblSPV.SPVNo) LEFT JOIN TblCBSUser ON TblProject.CaseManager = TblCBSUser.CBSUserNo " & StrSortBy
         Case enScrCRMLender
-            SQL = "SELECT LenderNo, Name, PhoneNo, LenderType, Address FROM TblLender"
+            SQL = "SELECT LenderNo, Name, PhoneNo, LenderType, Address FROM TblLender " & StrSortBy
     
     End Select
 
@@ -395,6 +410,105 @@ Private Function GetCRMData(ByVal ScreenPage As enScreenPage, StrSortBy As Strin
     Set GetCRMData = RstWorkflow
     
 End Function
+
+' ===============================================================
+' SortBy
+' Sorts cols by selected field
+' ---------------------------------------------------------------
+Private Sub SortBy(SortByData As String)
+    Dim ArySort() As String
+    Dim SortBy As String
+    Dim StrSort As String
+    Dim ScreenPage As enScreenPage
+    Dim ErrNo As Integer
+
+    Const StrPROCEDURE As String = "SortBy()"
+
+    On Error GoTo ErrorHandler
+
+Restart:
+
+    If MainScreen Is Nothing Then Err.Raise SYSTEM_RESTART
+
+    Select Case SortByData
+        Case Is = "3:ClientNo"
+            StrSort = "TblClient.ClientNo"
+        Case Is = "3:Name"
+            StrSort = "TblClient.Name"
+        Case Is = "3:Url"
+            StrSort = "TblClient.url"
+        Case Is = "3:PhoneNo"
+            StrSort = "TblClient.PhoneNo"
+        Case Is = "4:SPVNo"
+            StrSort = "TblSPV.SPVNo"
+        Case Is = "4:Name"
+            StrSort = "TblSPV.Name"
+        Case Is = "5:ContactNo"
+            StrSort = "TblContact.ContactNo"
+        Case Is = "5:ContactName"
+            StrSort = "TblContact.ContactName"
+        Case Is = "5:ContactType"
+            StrSort = "TblContact.ContactType"
+        Case Is = "5:Organisation"
+            StrSort = "TblContact.Organisation"
+        Case Is = "5:Position"
+            StrSort = "TblContact.Position"
+        Case Is = "5:Phone1"
+            StrSort = "TblContact.Phone1"
+        Case Is = "5:EmailAddress"
+            StrSort = "TblContact.EmailAddress"
+        Case Is = "6:ProjectNo"
+            StrSort = "TblProject.ProjectNo"
+        Case Is = "6:ProjectName"
+            StrSort = "TblProject.ProjectName"
+        Case Is = "6:TblClient.Name"
+            StrSort = "TblProject.CaseManager"
+        Case Is = "6:TblSPV.Name"
+            StrSort = "TblProject.SPVNo"
+        Case Is = "6:CaseManager"
+            StrSort = "TblProject.CaseManager"
+        Case Is = "7:LenderNo"
+            StrSort = "TblLender.LenderNo"
+        Case Is = "7:Name"
+            StrSort = "TblLender.Name"
+        Case Is = "7:PhoneNo"
+            StrSort = "TblLender.PhoneNo"
+        Case Is = "7:LenderType"
+            StrSort = "TblLender.LenderType"
+        Case Is = "7:Address"
+            StrSort = "TblLender.Address"
+    End Select
+
+    ArySort = Split(SortByData, ":")
+    ScreenPage = ArySort(0)
+    SortBy = ArySort(1)
+    
+    If Not ModUICRM.RefreshList(ScreenPage, StrSort) Then Err.Raise HANDLED_ERROR
+
+GracefulExit:
+
+Exit Sub
+
+ErrorExit:
+
+    '***CleanUpCode***
+
+Exit Sub
+
+ErrorHandler:
+    If Err.Number >= 2000 And Err.Number <= 2500 Then
+        ErrNo = Err.Number
+        CustomErrorHandler (Err.Number)
+        If ErrNo = SYSTEM_RESTART Then Resume Restart Else Resume GracefulExit
+    End If
+
+    If CentralErrorHandler(StrMODULE, StrPROCEDURE, , True) Then
+        Stop
+        Resume
+    Else
+        Resume ErrorExit
+    End If
+End Sub
 
 ' ===============================================================
 ' OpenItem

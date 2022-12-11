@@ -63,7 +63,6 @@ Public Sub ClearForm()
     TxtName = ""
     TxtPhoneNo = ""
     CmoLenderType = ""
-    LstContacts = ""
 End Sub
 
 ' ===============================================================
