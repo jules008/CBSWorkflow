@@ -406,7 +406,7 @@ Public Sub DisplayProjectForm()
         .TxtSPVName = pParent.SPV.Name
         .TxtProjectNo = pParent.ProjectNo
         .TxtCaseManager = pParent.CaseManager.UserName
-        .TxtCommision = pParent.CBSComPC
+        .TxtCBSComm = pParent.CBSComPC
         .TxtExitFee = pExitFee
         .TxtStepName = ActiveStep.StepNo & " - " & pActiveStep.StepName
         .xTxtAction = pActiveStep.StepAction
@@ -501,7 +501,6 @@ Public Sub DBSave()
     Set RstWorkflow = ModDatabase.SQLQuery("SELECT * FROM TblWorkflow WHERE WorkflowNo = " & pWorkflowNo)
     Set RstMaxNo = ModDatabase.SQLQuery("SELECT MAX(WorkflowNo) FROM TblWorkflow ")
 
-    If ProjectNo <> 0 Then
     If RstMaxNo.Fields(0).Value <> 0 Then
         LastNo = RstMaxNo.Fields(0).Value
     Else
@@ -537,7 +536,6 @@ Public Sub DBSave()
         Steps.SaveCollection
         
     End With
-    End If
     Set RstWorkflow = Nothing
     Set RstMaxNo = Nothing
 End Sub
@@ -799,7 +797,6 @@ Private Sub pProjWFForm_UpdateLoan()
         pCBSComm = .TxtCBSComm
         pDebt = .TxtDebt
         pExitFee = .TxtExitFee
-        pLoanTerm = .TxtLoanTerm
         DBSave
         MsgBox "Loan Details Updated", vbOKOnly + vbInformation, APP_NAME
     End With

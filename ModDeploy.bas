@@ -22,25 +22,9 @@ Public Sub QueryTest()
     Set DB = OpenDatabase(GetDocLocalPath(ThisWorkbook.Path) & INI_FILE_PATH & DB_FILE_NAME & ".accdb")
     End If
     
-    DB.Execute "ALTER TABLE TblClient DROP COLUMN Address"
-    DB.Execute "ALTER TABLE TblClient DROP COLUMN CBS"
-    DB.Execute "ALTER TABLE TblWorkflow DROP COLUMN Debt "
-    DB.Execute "ALTER TABLE TblWorkflow DROP COLUMN CBSComm "
-    DB.Execute "ALTER TABLE TblWorkflow DROP COLUMN ExitFee "
-    DB.Execute "ALTER TABLE TblWorkflow DROP COLUMN LoanTerm "
-    DB.Execute "ALTER TABLE TblProject DROP COLUMN Debt "
-    DB.Execute "ALTER TABLE TblProject ALTER COLUMN ExitFee yesno"
     
     Stop
     
-    DB.Execute "ALTER TABLE TblClient ADD COLUMN Address Memo"
-    DB.Execute "ALTER TABLE TblClient ADD COLUMN CBS text"
-    DB.Execute "ALTER TABLE TblWorkflow ADD COLUMN Debt Single"
-    DB.Execute "ALTER TABLE TblWorkflow ADD COLUMN CBSComm Single"
-    DB.Execute "ALTER TABLE TblWorkflow ADD COLUMN ExitFee Single"
-    DB.Execute "ALTER TABLE TblWorkflow ADD COLUMN LoanTerm integer"
-    DB.Execute "ALTER TABLE TblProject ADD COLUMN Debt Single"
-    DB.Execute "ALTER TABLE TblProject ALTER COLUMN ExitFee single"
     
 End Sub
 
@@ -87,14 +71,6 @@ Public Function UpdateDBScript() As Boolean
     ' ========================================================================================
     ' Database commands
     ' ----------------------------------------------------------------------------------------
-    DB.Execute "ALTER TABLE TblClient ADD COLUMN Address Memo"
-    DB.Execute "ALTER TABLE TblClient ADD COLUMN CBS text"
-    DB.Execute "ALTER TABLE TblWorkflow ADD COLUMN Debt Single"
-    DB.Execute "ALTER TABLE TblWorkflow ADD COLUMN CBSComm Single"
-    DB.Execute "ALTER TABLE TblWorkflow ADD COLUMN ExitFee Single"
-    DB.Execute "ALTER TABLE TblWorkflow ADD COLUMN LoanTerm integer"
-    DB.Execute "ALTER TABLE TblProject ADD COLUMN Debt Single"
-    DB.Execute "ALTER TABLE TblProject ALTER COLUMN ExitFee single"
     ' ========================================================================================
         
     'update DB Version
@@ -172,14 +148,6 @@ Public Function UpdateDBScriptUndo() As Boolean
     ' ========================================================================================
     ' Database commands
     ' ----------------------------------------------------------------------------------------
-    DB.Execute "ALTER TABLE TblClient DROP COLUMN Address"
-    DB.Execute "ALTER TABLE TblClient DROP COLUMN CBS"
-    DB.Execute "ALTER TABLE TblWorkflow DROP COLUMN Debt "
-    DB.Execute "ALTER TABLE TblWorkflow DROP COLUMN CBSComm "
-    DB.Execute "ALTER TABLE TblWorkflow DROP COLUMN ExitFee "
-    DB.Execute "ALTER TABLE TblWorkflow DROP COLUMN LoanTerm "
-    DB.Execute "ALTER TABLE TblProject DROP COLUMN Debt "
-    DB.Execute "ALTER TABLE TblProject ALTER COLUMN ExitFee yesno"
     ' ========================================================================================
     
     DB.Close
