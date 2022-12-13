@@ -446,7 +446,9 @@ Public Sub UpdateTableData()
                     End If
                     .MoveNext
                 Loop
+                If SumProgress > 0 And CntProgress > 0 Then
                 DB.Execute "UPDATE TblWorkflow SET Progress = " & SumProgress / CntProgress & " WHERE ProjectNo = " & RstProject!ProjectNo & " And WorkflowType = 'enProject'"
+                End If
             End With
             RstProject.MoveNext
         Loop
