@@ -94,7 +94,9 @@ Public Function Initialize() As Boolean
             
     If Not HideTabs Then Err.Raise HANDLED_ERROR
     
+    If Not DEV_MODE Then
     If Not ModUIMenu.ButtonClickEvent("1") Then Err.Raise HANDLED_ERROR
+    End If
     
 '    MenuBar.Menu(1).BadgeText = Workflows.CountForAction
     

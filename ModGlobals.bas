@@ -38,8 +38,8 @@ Public Const BACKUP_INT As Integer = 5
 Public Const FILE_ERROR_LOG As String = "Error.log"
 Public Const OLD_DB_VER = "V0.01.10"
 Public Const DB_VER = "V0.01.11"
-Public Const VERSION = "V0.01.15"
-Public Const VER_DATE = "11 Dec 22"
+Public Const VERSION = "V0.01.16"
+Public Const VER_DATE = "13 Dec 22"
 ' ===============================================================
 ' Error Constants
 ' ---------------------------------------------------------------
@@ -97,6 +97,8 @@ Public MailSystem As ClsMailSystem
 Public CurrentUser As ClsCBSUser
 Public MailInbox As ClsMailInbox
 Public CodeTimer As ClsCodeTimer
+Public Graph1 As ClsUIGraph
+
 ' ===============================================================
 ' Global UI Class Declarations
 ' ---------------------------------------------------------------
@@ -248,4 +250,10 @@ Enum enScreenPage
     enScrCRMProject
     enScrCRMLender
 End Enum
-            '
+            
+Enum EnChartType
+    enDoNut
+    enBarStacked
+    enBarHoriz
+    enline
+End Enum

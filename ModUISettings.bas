@@ -197,6 +197,15 @@ Public Const CRM_LENDER_TABLE_COL_WIDTHS As String = "100:200:150:150:250:150"
 Public Const CRM_LENDER_TABLE_TITLES As String = "Lender No:Name:Phone No:Lender Type:Address:"
 Public Const CRM_LENDER_MAX_LINES As Integer = 150
 
+' ---------------------------------------------------------------
+' Dashboard Screen
+' ---------------------------------------------------------------
+Public Const GRAPH_1_TOP As Integer = 45
+Public Const GRAPH_1_LEFT As Integer = 20
+Public Const GRAPH_1_HEIGHT As Integer = 120
+Public Const GRAPH_1_COL_1 As Long = COLOUR_15
+Public Const GRAPH_1_COL_2 As Long = COLOUR_16
+
 ' ===============================================================
 ' Style Declarations
 ' ---------------------------------------------------------------

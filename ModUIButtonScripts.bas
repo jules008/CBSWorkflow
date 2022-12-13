@@ -373,6 +373,14 @@ Public Sub BtnCRMContShwLeads(ByVal ScreenPage As enScreenPage, Optional ByVal I
 End Sub
 
 ' ===============================================================
+' BtnDashboardClick
+' ---------------------------------------------------------------
+Public Sub BtnDashboardClick()
+    If Not ResetScreen Then Err.Raise HANDLED_ERROR
+    If Not ModUIDashboard.BuildScreen() Then Err.Raise HANDLED_ERROR
+End Sub
+
+' ===============================================================
 ' BtnAdminUsersClick
 ' ---------------------------------------------------------------
 Public Sub BtnAdminUsersClick(Optional ByVal ScreenPage As enScreenPage, Optional ByVal Index As String)

@@ -26,6 +26,7 @@ Private pHeight As Integer
 Private pWidth As Integer
 Private pName As String
 Private pStyle As ClsUIStyle
+Private pGraphs As ClsUiGraphs
 Private pDashObjs As ClsUIDashObjs
 Private pMenu As ClsUIMenu
 Private pEnableHeader As Boolean
@@ -97,6 +98,15 @@ End Property
 
 Public Property Let DashObjs(ByVal vNewValue As ClsUIDashObjs)
     Set pDashObjs = vNewValue
+End Property
+
+'---------------------------------------------------------------
+Public Property Get Graphs() As ClsUiGraphs
+    Set Graphs = pGraphs
+End Property
+
+Public Property Let Graphs(ByVal vNewValue As ClsUiGraphs)
+    Set pGraphs = vNewValue
 End Property
 
 '---------------------------------------------------------------
@@ -257,6 +267,7 @@ End Property
 Public Sub ReOrder()
     Dim DashObj As ClsUIDashObj
     Dim UICell As ClsUICell
+    Dim Graph As ClsUIGraph
     
     pShpFrame.ZOrder msoBringToFront
     pHeader.ReOrder
@@ -266,6 +277,7 @@ Public Sub ReOrder()
         DashObj.ShpDashObj.ZOrder msoBringToFront
     Next
     
+    pGraphs.ReOrder
     pButtons.ReOrder
     pMenu.ReOrder
 End Sub
@@ -278,6 +290,7 @@ End Sub
 Private Sub Class_Initialize()
     Set pDashObjs = New ClsUIDashObjs
     Set pMenu = New ClsUIMenu
+    Set pGraphs = New ClsUiGraphs
     Set pHeader = New ClsUIHeader
     Set pCells = New ClsUICells
     Set pShpFrame = ShtMain.Shapes.AddShape(msoShapeRectangle, 0, 0, 10, 10)
@@ -287,6 +300,7 @@ Private Sub Class_Initialize()
     
     pDashObjs.Initialize Me
     pMenu.Initialize Me
+    pGraphs.Initialize Me
     pHeader.Initialize Me
     pTable.Initialize Me
     pButtons.Initialize Me
@@ -296,6 +310,7 @@ Public Sub Terminate()
     pDashObjs.Terminate
     pMenu.Terminate
     pHeader.Terminate
+    pGraphs.Terminate
     pTable.Terminate
     pCells.Terminate
     pButtons.Terminate
@@ -309,6 +324,7 @@ Public Sub Terminate()
     Set pShpFrame = Nothing
     Set pDashObjs = Nothing
     Set pMenu = Nothing
+    Set pGraphs = Nothing
     Set pHeader = Nothing
     Set pTable = Nothing
     Set pButtons = Nothing
@@ -320,6 +336,7 @@ Private Sub Class_Terminate()
     Set pDashObjs = Nothing
     Set pMenu = Nothing
     Set pHeader = Nothing
+    Set pGraphs = Nothing
     Set pCellHeaders = Nothing
     Set pCells = Nothing
     Set pTable = Nothing
