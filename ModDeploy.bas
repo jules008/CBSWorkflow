@@ -22,9 +22,31 @@ Public Sub QueryTest()
     Set DB = OpenDatabase(GetDocLocalPath(ThisWorkbook.Path) & INI_FILE_PATH & DB_FILE_NAME & ".accdb")
     End If
     
+    'undo
+    DB.Execute "ALTER TABLE TblProject DROP COLUMN FirstClientInt "
+    DB.Execute "ALTER TABLE TblProject DROP COLUMN SecondClientRef "
+    DB.Execute "ALTER TABLE TblProject DROP COLUMN Facilitator "
+    DB.Execute "ALTER TABLE TblProject ADD COLUMN CBSComPC integer"
+    DB.Execute "UPDATE TblProject SET CBSComPC = CBSCommission"
+    DB.Execute "ALTER TABLE TblProject DROP COLUMN CBSCommission"
+    
     
     Stop
+    'update
+    DB.Execute "ALTER TABLE TblProject ADD COLUMN FirstClientInt integer"
+    DB.Execute "ALTER TABLE TblProject ADD COLUMN SecondClientRef integer"
+    DB.Execute "ALTER TABLE TblProject ADD COLUMN Facilitator integer"
+    DB.Execute "ALTER TABLE TblProject ADD COLUMN CBSCommission integer"
+    DB.Execute "UPDATE TblProject SET CBSCommission = CBSComPC"
+    DB.Execute "ALTER TABLE TblProject DROP COLUMN CBSComPC"
     
+    DB.Execute "DELETE * FROM TblCBSUser"
+    DB.Execute "UPDATE TblCBSUser INSERT INTO (CBSUserNo, UserName) VALUES ('1', 'Jason Way')"
+    DB.Execute "UPDATE TblCBSUser INSERT INTO (CBSUserNo, UserName) VALUES ('2', 'Heather Critchlow')"
+    DB.Execute "UPDATE TblCBSUser INSERT INTO (CBSUserNo, UserName) VALUES ('3', ' Steven Dunn')"
+    DB.Execute "UPDATE TblCBSUser INSERT INTO (CBSUserNo, UserName) VALUES ('4', 'Hari Patel')"
+    DB.Execute "UPDATE TblCBSUser INSERT INTO (CBSUserNo, UserName) VALUES ('5', 'Emma Flindell')"
+    DB.Execute "UPDATE TblCBSUser INSERT INTO (CBSUserNo, UserName) VALUES ('6', 'Matt Harrison')"
     
 End Sub
 
@@ -40,7 +62,6 @@ Public Function UpdateDBScript() As Boolean
     
     Set FSO = New FileSystemObject
     Set DB = OpenDatabase(GetDocLocalPath(ThisWorkbook.Path) & INI_FILE_PATH & DB_FILE_NAME & ".accdb")
-    Set RstUpdate = ModDatabase.SQLQuery("SELECT * FROM TblProject Where ProjectName IS NULL OR ProjectName =''")
     
     Const StrPROCEDURE As String = "UpdateDBScript()"
     
@@ -71,6 +92,20 @@ Public Function UpdateDBScript() As Boolean
     ' ========================================================================================
     ' Database commands
     ' ----------------------------------------------------------------------------------------
+    DB.Execute "ALTER TABLE TblProject ADD COLUMN FirstClientInt integer"
+    DB.Execute "ALTER TABLE TblProject ADD COLUMN SecondClientRef integer"
+    DB.Execute "ALTER TABLE TblProject ADD COLUMN Facilitator integer"
+    DB.Execute "ALTER TABLE TblProject ADD COLUMN CBSCommission integer"
+    DB.Execute "UPDATE TblProject SET CBSCommission = CBSComPC"
+    DB.Execute "ALTER TABLE TblProject DROP COLUMN CBSComPC"
+    
+    DB.Execute "DELETE * FROM TblCBSUser"
+    DB.Execute "UPDATE TblCBSUser INSERT INTO (CBSUserNo, UserName) VALUES ('1', 'Jason Way')"
+    DB.Execute "UPDATE TblCBSUser INSERT INTO (CBSUserNo, UserName) VALUES ('2', 'Heather Critchlow')"
+    DB.Execute "UPDATE TblCBSUser INSERT INTO (CBSUserNo, UserName) VALUES ('3', ' Steven Dunn')"
+    DB.Execute "UPDATE TblCBSUser INSERT INTO (CBSUserNo, UserName) VALUES ('4', 'Hari Patel')"
+    DB.Execute "UPDATE TblCBSUser INSERT INTO (CBSUserNo, UserName) VALUES ('5', 'Emma Flindell')"
+    DB.Execute "UPDATE TblCBSUser INSERT INTO (CBSUserNo, UserName) VALUES ('6', 'Matt Harrison')"
     ' ========================================================================================
         
     'update DB Version
@@ -148,6 +183,12 @@ Public Function UpdateDBScriptUndo() As Boolean
     ' ========================================================================================
     ' Database commands
     ' ----------------------------------------------------------------------------------------
+    DB.Execute "ALTER TABLE TblProject DROP COLUMN FirstClientInt "
+    DB.Execute "ALTER TABLE TblProject DROP COLUMN SecondClientRef "
+    DB.Execute "ALTER TABLE TblProject DROP COLUMN Facilitator "
+    DB.Execute "ALTER TABLE TblProject ADD COLUMN CBSComPC integer"
+    DB.Execute "UPDATE TblProject SET CBSComPC = CBSCommission"
+    DB.Execute "ALTER TABLE TblProject DROP COLUMN CBSCommission"
     ' ========================================================================================
     
     DB.Close

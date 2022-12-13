@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FrmProjectForm 
    Caption         =   "CRM - Project"
-   ClientHeight    =   4755
+   ClientHeight    =   6390
    ClientLeft      =   120
    ClientTop       =   465
-   ClientWidth     =   11760
+   ClientWidth     =   11940
    OleObjectBlob   =   "FrmProjectForm.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -72,13 +72,13 @@ End Sub
 ' Clears form
 ' ---------------------------------------------------------------
 Public Sub ClearForm()
-    TxtCBSComPC = 0
+    TxtCBSCommission = 0
     TxtLoanTerm = 0
     TxtProjectNo = 0
     CmoCaseManager = ""
     CmoClientNo = ""
     CmoSPVNo = ""
-    ChkExitFee = False
+    TxtExitFee = ""
 End Sub
 
 ' ===============================================================
@@ -173,10 +173,10 @@ Private Sub CmoSPVNo_Change()
 End Sub
 
 ' ===============================================================
-' TxtCBSComPC_Change
+' TxtCBSCommission_Change
 ' ---------------------------------------------------------------
-Private Sub TxtCBSComPC_Change()
-    TxtCBSComPC.BackColor = COL_WHITE
+Private Sub TxtCBSCommission_Change()
+    TxtCBSCommission.BackColor = COL_WHITE
 End Sub
 
 ' ===============================================================
@@ -216,6 +216,46 @@ Private Sub UserForm_Initialize()
     i = 0
     With CmoCaseManager
         .Clear
+        RstSource.MoveFirst
+        Do While Not RstSource.EOF
+            .AddItem
+            If Not IsNull(RstSource!CBSUserNo) Then .List(i, 0) = RstSource!CBSUserNo
+            If Not IsNull(RstSource!UserName) Then .List(i, 1) = RstSource!UserName
+            RstSource.MoveNext
+            i = i + 1
+        Loop
+    End With
+    
+    i = 0
+    With CmoFirstClientInt
+        .Clear
+        RstSource.MoveFirst
+        Do While Not RstSource.EOF
+            .AddItem
+            If Not IsNull(RstSource!CBSUserNo) Then .List(i, 0) = RstSource!CBSUserNo
+            If Not IsNull(RstSource!UserName) Then .List(i, 1) = RstSource!UserName
+            RstSource.MoveNext
+            i = i + 1
+        Loop
+    End With
+    
+    i = 0
+    With CmoSecondClientRef
+        .Clear
+        RstSource.MoveFirst
+        Do While Not RstSource.EOF
+            .AddItem
+            If Not IsNull(RstSource!CBSUserNo) Then .List(i, 0) = RstSource!CBSUserNo
+            If Not IsNull(RstSource!UserName) Then .List(i, 1) = RstSource!UserName
+            RstSource.MoveNext
+            i = i + 1
+        Loop
+    End With
+    
+    i = 0
+    With CmoFacilitator
+        .Clear
+        RstSource.MoveFirst
         Do While Not RstSource.EOF
             .AddItem
             If Not IsNull(RstSource!CBSUserNo) Then .List(i, 0) = RstSource!CBSUserNo
@@ -280,20 +320,6 @@ Private Function ValidateForm() As enFormValidation
         End If
     End With
     
-    With TxtCBSComPC
-        If .Value = "" Or Not IsNumeric(.Value) Then
-            .BackColor = COL_AMBER
-            ValidateForm = enValidationError
-        End If
-    End With
-           
-    With TxtLoanTerm
-        If .Value = "" Or Not IsNumeric(.Value) Then
-            .BackColor = COL_AMBER
-            ValidateForm = enValidationError
-        End If
-    End With
-           
     With CmoCaseManager
         If .ListIndex = -1 Then
             .BackColor = COL_AMBER

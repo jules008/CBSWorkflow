@@ -33,7 +33,7 @@ Private pProjectName As String
 Private pCaseManager As ClsCBSUser
 Private pLoanTerm As String
 Private pProjectWorkflow As ClsWorkflow
-Private pCBSComPC As Single
+Private pCBSCommission As Single
 Private pExitFee As Single
 Private pWorkflows As ClsWorkflows
 Private pContacts As ClsContacts
@@ -41,7 +41,9 @@ Private pParent As ClsSPV
 Private pProjectWFNo As Integer
 Private pClient As ClsClient
 Private pSPV As ClsSPV
-
+Private pFirstClientInt As Integer
+Private pSecondClientRef As Integer
+Private pFacilitator As Integer
 Private WithEvents pProjectForm As FrmProjectForm
 Attribute pProjectForm.VB_VarHelpID = -1
 
@@ -93,12 +95,12 @@ Public Property Let ProjectWorkflow(ByRef vNewValue As ClsWorkflow)
 End Property
 
 '---------------------------------------------------------------
-Public Property Get CBSComPC() As Single
-    CBSComPC = pCBSComPC
+Public Property Get CBSCommission() As Single
+    CBSCommission = pCBSCommission
 End Property
 
-Public Property Let CBSComPC(ByVal vNewValue As Single)
-    pCBSComPC = vNewValue
+Public Property Let CBSCommission(ByVal vNewValue As Single)
+    pCBSCommission = vNewValue
 End Property
 
 '---------------------------------------------------------------
@@ -147,6 +149,33 @@ Public Property Let SPV(ByRef SPV As ClsSPV)
 End Property
     
 '---------------------------------------------------------------
+Public Property Get FirstClientInt() As Integer
+    FirstClientInt = pFirstClientInt
+End Property
+
+Public Property Let FirstClientInt(ByRef FirstClientInt As Integer)
+    pFirstClientInt = FirstClientInt
+End Property
+    
+'---------------------------------------------------------------
+Public Property Get SecondClientRef() As Integer
+    SecondClientRef = pSecondClientRef
+End Property
+
+Public Property Let SecondClientRef(ByRef SecondClientRef As Integer)
+    pSecondClientRef = SecondClientRef
+End Property
+    
+'---------------------------------------------------------------
+Public Property Get Facilitator() As Integer
+    Facilitator = pFacilitator
+End Property
+
+Public Property Let Facilitator(ByRef Facilitator As Integer)
+    pFacilitator = Facilitator
+End Property
+    
+'---------------------------------------------------------------
 Public Property Get Parent() As ClsSPV
     Set Parent = pParent
 End Property
@@ -176,14 +205,17 @@ End Sub
 ' ---------------------------------------------------------------
 Public Sub DisplayForm()
     With pProjectForm
-        .TxtCBSComPC = pCBSComPC
+        .TxtCBSCommission = pCBSCommission
         .TxtLoanTerm = pLoanTerm
         .TxtProjectNo = pProjectNo
         .TxtProjName = pProjectName
+        If pFirstClientInt > 0 Then .CmoFirstClientInt = pFirstClientInt
+        If pSecondClientRef > 0 Then .CmoSecondClientRef = pSecondClientRef
+        If pFacilitator > 0 Then .CmoFacilitator = pFacilitator
         If pCaseManager.CBSUserNo > 0 Then .CmoCaseManager = pCaseManager.CBSUserNo
         If pClient.ClientNo > 0 Then .CmoClientNo = pClient.ClientNo
         If pSPV.SPVNo > 0 Then .CmoSPVNo = pSPV.SPVNo
-        .ChkExitFee = pExitFee
+        .TxtExitFee = pExitFee
         .Show
     End With
 End Sub
@@ -205,10 +237,13 @@ Public Sub DBGet(ByVal ProjectNameNo As Variant)
         If .RecordCount > 0 Then
             If Not IsNull(!ProjectNo) Then pProjectNo = !ProjectNo
             If Not IsNull(!LoanTerm) Then pLoanTerm = !LoanTerm
-            If Not IsNull(!CBSComPC) Then pCBSComPC = !CBSComPC
+            If Not IsNull(!CBSCommission) Then pCBSCommission = !CBSCommission
             If Not IsNull(!ExitFee) Then pExitFee = !ExitFee
             If Not IsNull(!ProjectNo) Then pProjectNo = !ProjectNo
             If Not IsNull(!ProjectName) Then pProjectName = !ProjectName
+            If Not IsNull(!FirstClientInt) Then pFirstClientInt = !FirstClientInt
+            If Not IsNull(!SecondClientRef) Then pSecondClientRef = !SecondClientRef
+            If Not IsNull(!Facilitator) Then pFacilitator = !Facilitator
             
             pSPV.DBGet !SPVNo
             pClient.DBGet !ClientNo
@@ -256,9 +291,12 @@ Public Sub DBSave()
         
         !ProjectNo = CleanSQLText(pProjectNo, True)
         !LoanTerm = CleanSQLText(pLoanTerm, True)
-        !CBSComPC = CleanSQLText(pCBSComPC, True)
+        !CBSCommission = CleanSQLText(pCBSCommission, True)
         !ExitFee = CleanSQLText(pExitFee, True)
         !ProjectNo = CleanSQLText(pProjectNo, True)
+        !FirstClientInt = CleanSQLText(pFirstClientInt, True)
+        !SecondClientRef = CleanSQLText(pSecondClientRef, True)
+        !Facilitator = CleanSQLText(pFacilitator, True)
         !ProjectName = CleanSQLText(pProjectName, True)
         !ProjectWFNo = CleanSQLText(pProjectWorkflow.WorkflowNo, True)
         !CaseManager = CleanSQLText(pCaseManager.CBSUserNo, True)
@@ -294,12 +332,15 @@ Private Sub pProjectForm_Update()
     Set pCaseManager = New ClsCBSUser
     
     With pProjectForm
-       pCBSComPC = .TxtCBSComPC
+       pCBSCommission = .TxtCBSCommission
        pLoanTerm = .TxtLoanTerm
        pClient.DBGet .CmoClientNo.List(.CmoClientNo.ListIndex, 0)
+       pFirstClientInt = .CmoClientNo.List(.CmoFirstClientInt.ListIndex, 0)
+       pSecondClientRef = .CmoClientNo.List(.CmoSecondClientRef.ListIndex, 0)
+       pFacilitator = .CmoClientNo.List(.CmoFacilitator.ListIndex, 0)
        pSPV.DBGet .CmoSPVNo.List(.CmoSPVNo - 1, 0)
        pCaseManager.DBGet .CmoCaseManager.List(.CmoCaseManager - 1, 0)
-       pExitFee = .ChkExitFee
+       pExitFee = .TxtExitFee
        pProjectName = .TxtProjName
     End With
     DBSave

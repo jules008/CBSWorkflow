@@ -406,7 +406,7 @@ Public Sub DisplayProjectForm()
         .TxtSPVName = pParent.SPV.Name
         .TxtProjectNo = pParent.ProjectNo
         .TxtCaseManager = pParent.CaseManager.UserName
-        .TxtCBSComm = pParent.CBSComPC
+        .TxtCBSComm = pParent.CBSCommission
         .TxtExitFee = pExitFee
         .TxtStepName = ActiveStep.StepNo & " - " & pActiveStep.StepName
         .xTxtAction = pActiveStep.StepAction

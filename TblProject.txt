@@ -3,10 +3,15 @@ SPVNo,  dbLong
 ClientNo,  dbLong
 CaseManager,  dbLong
 LoanTerm,  dbText
-CBSComPC,  dbSingle
 ExitFee,  dbSingle
 Workflows,  dbText
 Contacts,  dbText
 ProjectWFNo,  dbLong
 ProjectName,  dbText
 Debt,  dbSingle
+1stClientInt,  dbLong
+2ndClientRef,  dbLong
+FirstClientInt,  dbLong
+SecondClientRef,  dbLong
+Facilitator,  dbLong
+CBSCommission,  dbLong
