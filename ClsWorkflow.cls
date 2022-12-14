@@ -406,7 +406,7 @@ Public Sub DisplayProjectForm()
         .TxtSPVName = pParent.SPV.Name
         .TxtProjectNo = pParent.ProjectNo
         .TxtCaseManager = pParent.CaseManager.UserName
-        .TxtCBSComm = pParent.CBSCommission
+        .TxtCommision = pParent.CBSCommission
         .TxtExitFee = pExitFee
         .TxtStepName = ActiveStep.StepNo & " - " & pActiveStep.StepName
         .xTxtAction = pActiveStep.StepAction
@@ -794,7 +794,7 @@ End Sub
 ' ---------------------------------------------------------------
 Private Sub pProjWFForm_UpdateLoan()
     With pProjWFForm
-        pCBSComm = .TxtCBSComm
+        pCBSComm = .TxtCommision
         pDebt = .TxtDebt
         pExitFee = .TxtExitFee
         DBSave
