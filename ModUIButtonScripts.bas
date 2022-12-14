@@ -381,6 +381,14 @@ Public Sub BtnDashboardClick()
 End Sub
 
 ' ===============================================================
+' BtnReportsClick
+' ---------------------------------------------------------------
+Public Sub BtnReportsClick()
+    If Not ResetScreen Then Err.Raise HANDLED_ERROR
+    If Not ModUIReports.BuildScreen() Then Err.Raise HANDLED_ERROR
+End Sub
+
+' ===============================================================
 ' BtnAdminUsersClick
 ' ---------------------------------------------------------------
 Public Sub BtnAdminUsersClick(Optional ByVal ScreenPage As enScreenPage, Optional ByVal Index As String)

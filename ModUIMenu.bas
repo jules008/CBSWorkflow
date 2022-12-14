@@ -345,7 +345,7 @@ Restart:
         
             ShtMain.Unprotect PROTECT_KEY
 
-            If Not ResetScreen Then Err.Raise HANDLED_ERROR
+            BtnReportsClick
 
         Case enBtnAdminUsers
         
