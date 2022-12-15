@@ -105,13 +105,13 @@ Private Function BuildMainFrame() As Boolean
     
     BuildMainFrame = True
 
-Exit Function
+    Exit Function
 
 ErrorExit:
 
     BuildMainFrame = False
 
-Exit Function
+    Exit Function
 
 ErrorHandler:   If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
         Stop

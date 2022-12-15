@@ -37,9 +37,12 @@ Public Function BuildScreen() As Boolean
     If Not BuildScreenBtn2 Then Err.Raise HANDLED_ERROR
     If Not BuildScreenBtn3 Then Err.Raise HANDLED_ERROR
     If Not BuildScreenBtn4 Then Err.Raise HANDLED_ERROR
+    If Not BuildScreenBtn5 Then Err.Raise HANDLED_ERROR
+    If Not BuildScreenBtn6 Then Err.Raise HANDLED_ERROR
+    If Not BuildScreenBtn7 Then Err.Raise HANDLED_ERROR
+    If Not BuildScreenBtn8 Then Err.Raise HANDLED_ERROR
     
-    MainFrame.ReOrder
-'    MainFrame2.ReOrder
+    MainScreen.ReOrder
            
     Application.ScreenUpdating = True
     
@@ -71,7 +74,6 @@ End Function
 
 ' ===============================================================
 ' BuildMainFrame1
-' Builds main frame at top of screen
 ' ---------------------------------------------------------------
 Private Function BuildMainFrame1() As Boolean
     Const StrPROCEDURE As String = "BuildMainFrame1()"
@@ -84,10 +86,10 @@ Private Function BuildMainFrame1() As Boolean
     'add main frame
     With MainFrame
         .Name = "Main Frame"
-        .Top = MAIN_FRAME_TOP
-        .Left = MAIN_FRAME_LEFT
-        .Width = MAIN_FRAME_WIDTH
-        .Height = MAIN_FRAME_HEIGHT
+        .Top = REP_FRAME_TOP
+        .Left = REP_FRAME_LEFT
+        .Width = REP_FRAME_WIDTH
+        .Height = REP_FRAME_HEIGHT
         .Style = MAIN_FRAME_STYLE
         .EnableHeader = True
 		.ZOrder = 1
@@ -100,6 +102,7 @@ Private Function BuildMainFrame1() As Boolean
             .Name = "Main Frame Header"
             .Text = "Reports"
             .Style = HEADER_STYLE
+            .Visible = True
         End With
         
     End With
@@ -124,7 +127,6 @@ End Function
 
 ' ===============================================================
 ' BuildMainFrame2
-' Builds main frame at top of screen
 ' ---------------------------------------------------------------
 Private Function BuildMainFrame2() As Boolean
     Const StrPROCEDURE As String = "BuildMainFrame2()"
@@ -136,12 +138,13 @@ Private Function BuildMainFrame2() As Boolean
     
     'add main frame
     With MainFrame2
-        .Top = MAIN_FRAME_2_TOP
-        .Left = MAIN_FRAME_2_LEFT
-        .Width = MAIN_FRAME_2_WIDTH
-        .Height = MAIN_FRAME_2_HEIGHT
+        .Top = REP_FRAME_2_TOP
+        .Left = REP_FRAME_2_LEFT
+        .Width = REP_FRAME_2_WIDTH
+        .Height = REP_FRAME_2_HEIGHT
         .Style = MAIN_FRAME_STYLE
         .EnableHeader = True
+        .ZOrder = 1
         
         With .Header
             .Top = .Parent.Top
@@ -151,6 +154,7 @@ Private Function BuildMainFrame2() As Boolean
             .Name = "Main Frame 2 Header"
             .Text = "Data Exports"
             .Style = HEADER_STYLE
+            .Visible = True
          End With
         
     End With
@@ -175,7 +179,6 @@ End Function
 
 ' ===============================================================
 ' BuildScreenBtn1
-' Adds the button to switch order list between open and closed orders
 ' ---------------------------------------------------------------
 Private Function BuildScreenBtn1() As Boolean
 
@@ -195,7 +198,8 @@ Private Function BuildScreenBtn1() As Boolean
         .OnAction = ""
         .UnSelectStyle = BTN_MAIN_STYLE
         .Selected = False
-        .Text = "Expiry Report" & vbCr & vbCr & "Members whose qualifications are close to or have expired"
+        .Text = "Report 1" & vbCr & vbCr & "Report 1 description"
+        .Visible = True
     End With
     
     
@@ -219,7 +223,6 @@ End Function
 
 ' ===============================================================
 ' BuildScreenBtn2
-' Adds the button to switch order list between open and closed orders
 ' ---------------------------------------------------------------
 Private Function BuildScreenBtn2() As Boolean
 
@@ -239,7 +242,7 @@ Private Function BuildScreenBtn2() As Boolean
         .OnAction = ""
         .UnSelectStyle = BTN_MAIN_STYLE
         .Selected = False
-        .Text = "Expiry Report" & vbCr & vbCr & "Members whose qualifications are close to or have expired"
+        .Text = "Report 2" & vbCr & vbCr & "Report 2 description"
     End With
     
     
@@ -263,7 +266,6 @@ End Function
 
 ' ===============================================================
 ' BuildScreenBtn3
-' Adds the button to switch order list between open and closed orders
 ' ---------------------------------------------------------------
 Private Function BuildScreenBtn3() As Boolean
 
@@ -283,7 +285,7 @@ Private Function BuildScreenBtn3() As Boolean
         .OnAction = ""
         .UnSelectStyle = BTN_MAIN_STYLE
         .Selected = False
-        .Text = "Expiry Report" & vbCr & vbCr & "Members whose qualifications are close to or have expired"
+        .Text = "Report 3" & vbCr & vbCr & "Report 3 description"
     End With
     
     
@@ -308,7 +310,6 @@ End Function
 
 ' ===============================================================
 ' BuildScreenBtn4
-' Adds the button to switch order list between open and closed orders
 ' ---------------------------------------------------------------
 Private Function BuildScreenBtn4() As Boolean
 
@@ -328,7 +329,7 @@ Private Function BuildScreenBtn4() As Boolean
         .OnAction = ""
         .UnSelectStyle = BTN_MAIN_STYLE
         .Selected = False
-        .Text = "Expiry Report" & vbCr & vbCr & "Members whose qualifications are close to or have expired"
+        .Text = "Report 4" & vbCr & vbCr & "Report 4 description"
     End With
     
     
@@ -349,4 +350,181 @@ ErrorHandler:   If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
         Resume ErrorExit
     End If
 End Function
+
+' ===============================================================
+' BuildScreenBtn5
+' ---------------------------------------------------------------
+Private Function BuildScreenBtn5() As Boolean
+
+    Const StrPROCEDURE As String = "BuildScreenBtn5()"
+
+    On Error GoTo ErrorHandler
+
+    Set BtnReport5 = New ClsUIButton
+    
+    With BtnReport5
+        .Name = "BtnExpt5"
+        MainFrame2.Buttons.Add BtnReport5
+        .Height = BTN_EXP_5_HEIGHT
+        .Left = BTN_EXP_5_LEFT
+        .Top = BTN_EXP_5_TOP
+        .Width = BTN_EXP_5_WIDTH
+        .OnAction = ""
+        .UnSelectStyle = BTN_MAIN_STYLE
+        .Selected = False
+        .Text = "Export 5" & vbCr & vbCr & "Export 5 description"
+        .Visible = True
+    End With
+    
+    
+    BuildScreenBtn5 = True
+
+Exit Function
+
+ErrorExit:
+
+    BuildScreenBtn5 = False
+
+Exit Function
+
+ErrorHandler:   If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
+        Stop
+        Resume
+    Else
+        Resume ErrorExit
+    End If
+End Function
+
+' ===============================================================
+' BuildScreenBtn6
+' ---------------------------------------------------------------
+Private Function BuildScreenBtn6() As Boolean
+
+    Const StrPROCEDURE As String = "BuildScreenBtn6()"
+
+    On Error GoTo ErrorHandler
+
+    Set BtnReport6 = New ClsUIButton
+    
+    With BtnReport6
+        .Name = "BtnExpt6"
+        MainFrame2.Buttons.Add BtnReport6
+        .Height = BTN_EXP_6_HEIGHT
+        .Left = BTN_EXP_6_LEFT
+        .Top = BTN_EXP_6_TOP
+        .Width = BTN_EXP_6_WIDTH
+        .OnAction = ""
+        .UnSelectStyle = BTN_MAIN_STYLE
+        .Selected = False
+        .Text = "Export 6" & vbCr & vbCr & "Export 6 description"
+        .Visible = True
+    End With
+    
+    
+    BuildScreenBtn6 = True
+
+Exit Function
+
+ErrorExit:
+
+    BuildScreenBtn6 = False
+
+Exit Function
+
+ErrorHandler:   If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
+        Stop
+        Resume
+    Else
+        Resume ErrorExit
+    End If
+End Function
+
+' ===============================================================
+' BuildScreenBtn7
+' ---------------------------------------------------------------
+Private Function BuildScreenBtn7() As Boolean
+
+    Const StrPROCEDURE As String = "BuildScreenBtn7()"
+
+    On Error GoTo ErrorHandler
+
+    Set BtnReport7 = New ClsUIButton
+    
+    With BtnReport7
+        .Name = "BtnExpt7"
+        MainFrame2.Buttons.Add BtnReport7
+        .Height = BTN_EXP_7_HEIGHT
+        .Left = BTN_EXP_7_LEFT
+        .Top = BTN_EXP_7_TOP
+        .Width = BTN_EXP_7_WIDTH
+        .OnAction = ""
+        .UnSelectStyle = BTN_MAIN_STYLE
+        .Selected = False
+        .Text = "Export 7" & vbCr & vbCr & "Export 7 description"
+        .Visible = True
+    End With
+    
+    
+    BuildScreenBtn7 = True
+
+Exit Function
+
+ErrorExit:
+
+    BuildScreenBtn7 = False
+
+Exit Function
+
+ErrorHandler:   If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
+        Stop
+        Resume
+    Else
+        Resume ErrorExit
+    End If
+End Function
+
+' ===============================================================
+' BuildScreenBtn8
+' ---------------------------------------------------------------
+Private Function BuildScreenBtn8() As Boolean
+
+    Const StrPROCEDURE As String = "BuildScreenBtn8()"
+
+    On Error GoTo ErrorHandler
+
+    Set BtnReport8 = New ClsUIButton
+    
+    With BtnReport8
+        .Name = "BtnExpt8"
+        MainFrame2.Buttons.Add BtnReport8
+        .Height = BTN_EXP_8_HEIGHT
+        .Left = BTN_EXP_8_LEFT
+        .Top = BTN_EXP_8_TOP
+        .Width = BTN_EXP_8_WIDTH
+        .OnAction = ""
+        .UnSelectStyle = BTN_MAIN_STYLE
+        .Selected = False
+        .Text = "Export 8" & vbCr & vbCr & "Export 8 description"
+        .Visible = True
+    End With
+    
+    
+    BuildScreenBtn8 = True
+
+Exit Function
+
+ErrorExit:
+
+    BuildScreenBtn8 = False
+
+Exit Function
+
+ErrorHandler:   If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
+        Stop
+        Resume
+    Else
+        Resume ErrorExit
+    End If
+End Function
+
 

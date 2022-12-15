@@ -73,20 +73,6 @@ Public Function UpdateDBScript() As Boolean
     ' ========================================================================================
     ' Database commands
     ' ----------------------------------------------------------------------------------------
-    DB.Execute "ALTER TABLE TblProject ADD COLUMN FirstClientInt integer"
-    DB.Execute "ALTER TABLE TblProject ADD COLUMN SecondClientRef integer"
-    DB.Execute "ALTER TABLE TblProject ADD COLUMN Facilitator integer"
-    DB.Execute "ALTER TABLE TblProject ADD COLUMN CBSCommission integer"
-    DB.Execute "UPDATE TblProject SET CBSCommission = CBSComPC"
-    DB.Execute "ALTER TABLE TblProject DROP COLUMN CBSComPC"
-    
-    DB.Execute "DELETE * FROM TblCBSUser"
-    DB.Execute "INSERT INTO TblCBSUser (CBSUserNo, UserName) VALUES ('1', 'Jason Way')"
-    DB.Execute "INSERT INTO TblCBSUser (CBSUserNo, UserName) VALUES ('2', 'Heather Critchlow')"
-    DB.Execute "INSERT INTO TblCBSUser (CBSUserNo, UserName) VALUES ('3', ' Steven Dunn')"
-    DB.Execute "INSERT INTO TblCBSUser (CBSUserNo, UserName) VALUES ('4', 'Hari Patel')"
-    DB.Execute "INSERT INTO TblCBSUser (CBSUserNo, UserName) VALUES ('5', 'Emma Flindell')"
-    DB.Execute "INSERT INTO TblCBSUser (CBSUserNo, UserName) VALUES ('6', 'Matt Harrison')"
     ' ========================================================================================
         
     'update DB Version
@@ -164,12 +150,6 @@ Public Function UpdateDBScriptUndo() As Boolean
     ' ========================================================================================
     ' Database commands
     ' ----------------------------------------------------------------------------------------
-    DB.Execute "ALTER TABLE TblProject DROP COLUMN FirstClientInt "
-    DB.Execute "ALTER TABLE TblProject DROP COLUMN SecondClientRef "
-    DB.Execute "ALTER TABLE TblProject DROP COLUMN Facilitator "
-    DB.Execute "ALTER TABLE TblProject ADD COLUMN CBSComPC integer"
-    DB.Execute "UPDATE TblProject SET CBSComPC = CBSCommission"
-    DB.Execute "ALTER TABLE TblProject DROP COLUMN CBSCommission"
     ' ========================================================================================
     
     DB.Close

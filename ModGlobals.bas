@@ -38,8 +38,8 @@ Public Const BACKUP_INT As Integer = 5
 Public Const FILE_ERROR_LOG As String = "Error.log"
 Public Const OLD_DB_VER = "V0.01.11"
 Public Const DB_VER = "V0.01.12"
-Public Const VERSION = "V0.01.16"
-Public Const VER_DATE = "13 Dec 22"
+Public Const VERSION = "V0.01.17"
+Public Const VER_DATE = "15 Dec 22"
 ' ===============================================================
 ' Error Constants
 ' ---------------------------------------------------------------
@@ -117,6 +117,10 @@ Public BtnReport1 As ClsUIButton
 Public BtnReport2 As ClsUIButton
 Public BtnReport3 As ClsUIButton
 Public BtnReport4 As ClsUIButton
+Public BtnReport5 As ClsUIButton
+Public BtnReport6 As ClsUIButton
+Public BtnReport7 As ClsUIButton
+Public BtnReport8 As ClsUIButton
 Public Logo As ClsUIDashObj
 
 ' ===============================================================

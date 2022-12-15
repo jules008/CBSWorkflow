@@ -91,10 +91,10 @@ Private Sub BtnClose_Click()
 End Sub
 
 ' ---------------------------------------------------------------
-' BtnExport_Click
+' BtnReport_Click
 ' Exports comms list to report
 ' ---------------------------------------------------------------
-Private Sub BtnExport_Click()
+Private Sub BtnReport_Click()
     If Not ModReport.IntExtCommsReport(LocCommsList) Then Err.Raise HANDLED_ERROR
     Unload Me
 End Sub

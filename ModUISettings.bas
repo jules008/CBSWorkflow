@@ -205,37 +205,76 @@ Public Const CRM_LENDER_TABLE_COL_WIDTHS As String = "100:200:150:150:250:150"
 Public Const CRM_LENDER_TABLE_TITLES As String = "Lender No:Name:Phone No:Lender Type:Address:"
 Public Const CRM_LENDER_MAX_LINES As Integer = 150
 
-' ---------------------------------------------------------------
+'===============================================================
 ' Dashboard Screen
-' ---------------------------------------------------------------
+'===============================================================
 Public Const GRAPH_1_TOP As Integer = 45
 Public Const GRAPH_1_LEFT As Integer = 20
 Public Const GRAPH_1_HEIGHT As Integer = 120
 Public Const GRAPH_1_COL_1 As Long = COLOUR_15
 Public Const GRAPH_1_COL_2 As Long = COLOUR_16
 
-' ---------------------------------------------------------------
+'===============================================================
 ' Report Screen
+'===============================================================
+' Frame 1
 ' ---------------------------------------------------------------
-Public Const BTN_REP_1_HEIGHT As Integer = 100
+
+Public Const REP_FRAME_TOP As Integer = 90
+Public Const REP_FRAME_LEFT As Integer = 170
+Public Const REP_FRAME_WIDTH As Integer = 1000
+Public Const REP_FRAME_HEIGHT As Integer = 270
+
+' ---------------------------------------------------------------
+' Frame 2
+' ---------------------------------------------------------------
+Public Const REP_FRAME_2_TOP As Integer = 400
+Public Const REP_FRAME_2_LEFT As Integer = 170
+Public Const REP_FRAME_2_WIDTH As Integer = 1000
+Public Const REP_FRAME_2_HEIGHT As Integer = 270
+
+' ---------------------------------------------------------------
+' Buttons
+' ---------------------------------------------------------------
+Public Const BTN_REP_1_HEIGHT As Integer = 70
 Public Const BTN_REP_1_LEFT As Integer = 200
-Public Const BTN_REP_1_TOP As Integer = 500
-Public Const BTN_REP_1_WIDTH As Integer = 200
+Public Const BTN_REP_1_TOP As Integer = 140
+Public Const BTN_REP_1_WIDTH As Integer = 150
 
-Public Const BTN_REP_2_HEIGHT As Integer = 100
-Public Const BTN_REP_2_LEFT As Integer = 400
-Public Const BTN_REP_2_TOP As Integer = 500
-Public Const BTN_REP_2_WIDTH As Integer = 200
+Public Const BTN_REP_2_HEIGHT As Integer = 70
+Public Const BTN_REP_2_LEFT As Integer = 380
+Public Const BTN_REP_2_TOP As Integer = 140
+Public Const BTN_REP_2_WIDTH As Integer = 150
 
-Public Const BTN_REP_3_HEIGHT As Integer = 100
-Public Const BTN_REP_3_LEFT As Integer = 600
-Public Const BTN_REP_3_TOP As Integer = 500
-Public Const BTN_REP_3_WIDTH As Integer = 200
+Public Const BTN_REP_3_HEIGHT As Integer = 70
+Public Const BTN_REP_3_LEFT As Integer = 560
+Public Const BTN_REP_3_TOP As Integer = 140
+Public Const BTN_REP_3_WIDTH As Integer = 150
 
-Public Const BTN_REP_4_HEIGHT As Integer = 100
-Public Const BTN_REP_4_LEFT As Integer = 800
-Public Const BTN_REP_4_TOP As Integer = 500
-Public Const BTN_REP_4_WIDTH As Integer = 200
+Public Const BTN_REP_4_HEIGHT As Integer = 70
+Public Const BTN_REP_4_LEFT As Integer = 740
+Public Const BTN_REP_4_TOP As Integer = 140
+Public Const BTN_REP_4_WIDTH As Integer = 150
+
+Public Const BTN_EXP_5_HEIGHT As Integer = 70
+Public Const BTN_EXP_5_LEFT As Integer = 200
+Public Const BTN_EXP_5_TOP As Integer = 450
+Public Const BTN_EXP_5_WIDTH As Integer = 150
+
+Public Const BTN_EXP_6_HEIGHT As Integer = 70
+Public Const BTN_EXP_6_LEFT As Integer = 380
+Public Const BTN_EXP_6_TOP As Integer = 450
+Public Const BTN_EXP_6_WIDTH As Integer = 150
+
+Public Const BTN_EXP_7_HEIGHT As Integer = 70
+Public Const BTN_EXP_7_LEFT As Integer = 560
+Public Const BTN_EXP_7_TOP As Integer = 450
+Public Const BTN_EXP_7_WIDTH As Integer = 150
+
+Public Const BTN_EXP_8_HEIGHT As Integer = 70
+Public Const BTN_EXP_8_LEFT As Integer = 740
+Public Const BTN_EXP_8_TOP As Integer = 450
+Public Const BTN_EXP_8_WIDTH As Integer = 150
 
 ' ===============================================================
 ' Style Declarations
@@ -490,13 +529,13 @@ Public Const HEADER_FONT_x_JUST As Integer = xlHAlignCenter
 Public Const HEADER_FONT_Y_JUST As Integer = xlVAlignCenter
 
 Public Const BTN_MAIN_BORDER_WIDTH As Single = 0
-Public Const BTN_MAIN_FILL_1 As Long = COL_BLACK
-Public Const BTN_MAIN_FILL_2 As Long = COL_BLACK
+Public Const BTN_MAIN_FILL_1 As Long = COL_BLUE
+Public Const BTN_MAIN_FILL_2 As Long = COL_BLUE
 Public Const BTN_MAIN_SHADOW As Long = msoShadow21
 Public Const BTN_MAIN_FONT_STYLE As String = "Calibri"
-Public Const BTN_MAIN_FONT_SIZE As Integer = 32
+Public Const BTN_MAIN_FONT_SIZE As Integer = 10
 Public Const BTN_MAIN_FONT_COLOUR As Long = COL_WHITE
-Public Const BTN_MAIN_FONT_BOLD As Boolean = True
+Public Const BTN_MAIN_FONT_BOLD As Boolean = False
 Public Const BTN_MAIN_FONT_x_JUST As Integer = xlHAlignCenter
 Public Const BTN_MAIN_FONT_Y_JUST As Integer = xlVAlignCenter
 
