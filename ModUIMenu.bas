@@ -339,7 +339,7 @@ Restart:
         
             ShtMain.Unprotect PROTECT_KEY
 
-'            BtnDashboardClick
+            BtnDashboardClick
 
         Case enBtnReports
         

@@ -105,6 +105,7 @@ Public Graph1 As ClsUIGraph
 Public MainScreen As ClsUIScreen
 Public MenuBar As ClsUIFrame
 Public MainFrame As ClsUIFrame
+Public MainFrame2 As ClsUIFrame
 Public ButtonFrame As ClsUIFrame
 Public BtnProjectNewWF As ClsUIButton
 Public BtnNewLenderWF As ClsUIButton
@@ -112,6 +113,10 @@ Public BtnCRMNewItem As ClsUIButton
 Public BtnCRMContCalImp As ClsUIButton
 Public BtnCRMContShwLead As ClsUIButton
 Public BtnCommsToDo As ClsUIButton
+Public BtnReport1 As ClsUIButton
+Public BtnReport2 As ClsUIButton
+Public BtnReport3 As ClsUIButton
+Public BtnReport4 As ClsUIButton
 Public Logo As ClsUIDashObj
 
 ' ===============================================================

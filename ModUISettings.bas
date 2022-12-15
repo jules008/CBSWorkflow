@@ -28,6 +28,14 @@ Public Const MAIN_FRAME_WIDTH As Integer = 1000
 Public Const MAIN_FRAME_HEIGHT As Integer = 360
 
 ' ---------------------------------------------------------------
+' Main Frame 2
+' ---------------------------------------------------------------
+Public Const MAIN_FRAME_2_TOP As Integer = 300
+Public Const MAIN_FRAME_2_LEFT As Integer = 170
+Public Const MAIN_FRAME_2_WIDTH As Integer = 1000
+Public Const MAIN_FRAME_2_HEIGHT As Integer = 360
+
+' ---------------------------------------------------------------
 ' Button Frame
 ' ---------------------------------------------------------------
 Public Const BUTTON_FRAME_TOP As Integer = 5
@@ -205,6 +213,29 @@ Public Const GRAPH_1_LEFT As Integer = 20
 Public Const GRAPH_1_HEIGHT As Integer = 120
 Public Const GRAPH_1_COL_1 As Long = COLOUR_15
 Public Const GRAPH_1_COL_2 As Long = COLOUR_16
+
+' ---------------------------------------------------------------
+' Report Screen
+' ---------------------------------------------------------------
+Public Const BTN_REP_1_HEIGHT As Integer = 100
+Public Const BTN_REP_1_LEFT As Integer = 200
+Public Const BTN_REP_1_TOP As Integer = 500
+Public Const BTN_REP_1_WIDTH As Integer = 200
+
+Public Const BTN_REP_2_HEIGHT As Integer = 100
+Public Const BTN_REP_2_LEFT As Integer = 400
+Public Const BTN_REP_2_TOP As Integer = 500
+Public Const BTN_REP_2_WIDTH As Integer = 200
+
+Public Const BTN_REP_3_HEIGHT As Integer = 100
+Public Const BTN_REP_3_LEFT As Integer = 600
+Public Const BTN_REP_3_TOP As Integer = 500
+Public Const BTN_REP_3_WIDTH As Integer = 200
+
+Public Const BTN_REP_4_HEIGHT As Integer = 100
+Public Const BTN_REP_4_LEFT As Integer = 800
+Public Const BTN_REP_4_TOP As Integer = 500
+Public Const BTN_REP_4_WIDTH As Integer = 200
 
 ' ===============================================================
 ' Style Declarations

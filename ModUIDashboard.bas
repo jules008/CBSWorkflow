@@ -36,10 +36,7 @@ Public Function BuildScreen() As Boolean
     If Not BuildMainFrame Then Err.Raise HANDLED_ERROR
     If Not BuildGraphs Then Err.Raise HANDLED_ERROR
     
-    MainFrame.ReOrder
-       
-
-
+    MainScreen.ReOrder
     
     Application.ScreenUpdating = True
     
@@ -101,6 +98,7 @@ Private Function BuildMainFrame() As Boolean
             .Name = "Main Frame Header"
             .Text = "Dashboard"
             .Style = HEADER_STYLE
+            .Visible = True
         End With
         
     End With
@@ -138,7 +136,7 @@ Private Function BuildGraphs() As Boolean
 
     On Error GoTo ErrorHandler
     
-    Set Graph1 = New ClsUIGraph
+'    Set Graph1 = New ClsUIGraph
 
     
     If Not ReadINIFile Then Err.Raise HANDLED_ERROR
