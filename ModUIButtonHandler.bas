@@ -24,7 +24,7 @@ Public Sub ProcessBtnClicks(ButtonNo As String)
     Dim AryBtn() As String
     Dim Picker As ClsFrmPicker
     Dim BtnNo As EnumBtnNo
-    Dim BtnIndex As Integer
+    Dim BtnIndex As String
     Dim ScreenPage As enScreenPage
     
     Const StrPROCEDURE As String = "ProcessBtnClicks()"
@@ -45,7 +45,7 @@ Restart:
     End If
     
     If UBound(AryBtn) = 2 Then
-        If Not IsNull(CInt(AryBtn(2))) Then BtnIndex = CInt(AryBtn(2))
+        If Not IsNull(AryBtn(2)) Then BtnIndex = AryBtn(2)
     End If
     
     Select Case BtnNo
@@ -85,6 +85,14 @@ Restart:
         Case enBtnCommsToDo
         
             BtnCommsToDoClick
+            
+        Case enBtnAdminOpenItem
+        
+            BtnAdminOpenItem ScreenPage, BtnIndex
+            
+        Case enBtnAdminNewItem
+        
+            BtnAdminOpenItem ScreenPage
     End Select
 
 GracefulExit:

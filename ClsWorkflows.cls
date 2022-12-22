@@ -35,6 +35,7 @@ Option Explicit
 
 Private pWorkflows As Collection
 Private pParent As ClsProject
+Private WithEvents pWFTypeForm As FrmAdnWFTypes
 
 '---------------------------------------------------------------
 Public Property Get Parent() As ClsProject
@@ -218,6 +219,91 @@ Public Sub UpdateRAGs()
 End Sub
 
 ' ===============================================================
+' Method DisplayWFTypeFrm
+' displays wf type form
+'---------------------------------------------------------------
+Public Sub DisplayWFTypeFrm(Optional WFNo As String)
+    Dim RstWFType As Recordset
+    
+    If WFNo <> "" Then
+        Set RstWFType = ModDatabase.SQLQuery("SELECT * FROM TblWorkflowType WHERE WFNo = " & WFNo)
+        
+        With RstWFType
+            If .RecordCount > 0 Then
+                pWFTypeForm.TxtDescription = !Description
+                pWFTypeForm.TxtDisplayName = !DisplayName
+                pWFTypeForm.TxtWFNo = !WFNo
+                pWFTypeForm.Show
+            End If
+        End With
+        
+        Set RstWFType = Nothing
+    Else
+        pWFTypeForm.ClearForm
+        pWFTypeForm.Show
+    End If
+End Sub
+
+' ===============================================================
+' Event pWFTypeForm_Delete
+' Form event to delete workflow type
+'---------------------------------------------------------------
+Private Sub pWFTypeForm_Delete(WFNo As String)
+    DB.Execute "DELETE FROM TblWorkflowType WHERE WFNo = " & WFNo
+End Sub
+
+' ===============================================================
+' Event pWFTypeForm_Update
+' Form event to update workflow type
+'---------------------------------------------------------------
+Private Sub pWFTypeForm_Update(WFNo As String)
+    Dim RstWFType As Recordset
+    
+    If WFNo = "" Then
+        pWFTypeForm_CreateNew
+    Else
+        Set RstWFType = ModDatabase.SQLQuery("SELECT * FROM TblWorkflowType WHERE WFNo = " & WFNo)
+        
+        With RstWFType
+            If .RecordCount = 0 Then
+                pWFTypeForm_CreateNew
+            Else
+                .Edit
+                !Description = pWFTypeForm.TxtDescription
+                !DisplayName = pWFTypeForm.TxtDisplayName
+                .Update
+            End If
+        End With
+        
+        Set RstWFType = Nothing
+    End If
+End Sub
+
+' ===============================================================
+' Event pWFTypeForm_CreateNew
+' Form event to create new workflow type
+'---------------------------------------------------------------
+Private Sub pWFTypeForm_CreateNew()
+    Dim RstWFType As Recordset
+    Dim RstMaxWFType As Recordset
+    
+    Set RstWFType = ModDatabase.SQLQuery("TblWorkflowType")
+    Set RstMaxWFType = ModDatabase.SQLQuery("SELECT Max(WFNo) as MaxWFNo FROM TblWorkflowType")
+    
+    With RstWFType
+        .AddNew
+        !WFNo = .Fields(0) + 1
+        !Description = pWFTypeForm.TxtDescription
+        !DisplayName = pWFTypeForm.TxtDisplayName
+        !WFName = Replace(!DisplayName, " ", "")
+        .Update
+    End With
+    
+    Set RstWFType = Nothing
+    Set RstMaxWFType = Nothing
+End Sub
+
+' ===============================================================
 Public Sub Initialize(obj As ClsProject)
     Set Me.Parent = obj
 End Sub
@@ -225,16 +311,16 @@ End Sub
 
 Private Sub Class_Initialize()
     Set pWorkflows = New Collection
-
+    Set pWFTypeForm = New FrmAdnWFTypes
 End Sub
 ' ===============================================================
 Public Sub Terminate()
 
     Set Me.Parent = Nothing
-
+    Set pWFTypeForm = Nothing
 End Sub
 '---------------------------------------------------------------
 Private Sub Class_Terminate()
     Set pWorkflows = Nothing
-End Sub
-' ===============================================================
+    Set pWFTypeForm = Nothing
+End Sub ' ===============================================================

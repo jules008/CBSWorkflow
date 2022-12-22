@@ -33,7 +33,7 @@ Private pUserName As String
 Private pPosition As String
 Private pPhoneNo As String
 Private pUserLvl As String
-Private WithEvents pCBSUserForm As FrmCBSUser
+Private WithEvents pCBSUserForm As FrmAdnCBSUser
 Attribute pCBSUserForm.VB_VarHelpID = -1
 
 '---------------------------------------------------------------
@@ -207,6 +207,7 @@ End Sub
 ' ---------------------------------------------------------------
 Private Sub pCBSUserForm_CreateNew()
     With pCBSUserForm
+        .ClearForm
         .Hide
     End With
     DBNew
@@ -222,7 +223,7 @@ End Sub
 
 ' ===============================================================
 Private Sub Class_Initialize()
-    Set pCBSUserForm = New FrmCBSUser
+    Set pCBSUserForm = New FrmAdnCBSUser
     
 End Sub
 

@@ -356,6 +356,15 @@ Public Sub BtnCRMOpenItem(ByVal ScreenPage As enScreenPage, Optional ByVal Index
 End Sub
 
 ' ===============================================================
+' BtnAdminOpenItem
+' ---------------------------------------------------------------
+Public Sub BtnAdminOpenItem(ByVal ScreenPage As enScreenPage, Optional ByVal Index As String)
+    If Not ModUIAdmin.OpenItem(ScreenPage, Index) Then Err.Raise HANDLED_ERROR
+    If Not ResetScreen Then Err.Raise HANDLED_ERROR
+    If Not ModUIAdmin.BuildScreen(ScreenPage) Then Err.Raise HANDLED_ERROR
+End Sub
+
+' ===============================================================
 ' BtnCRMContCalImport
 ' ---------------------------------------------------------------
 Public Sub BtnCRMContCalImport(ByVal ScreenPage As enScreenPage, Optional ByVal Index As String)
@@ -389,10 +398,35 @@ Public Sub BtnReportsClick()
 End Sub
 
 ' ===============================================================
-' BtnAdminUsersClick
+' BtnAdminClick
 ' ---------------------------------------------------------------
-Public Sub BtnAdminUsersClick(Optional ByVal ScreenPage As enScreenPage, Optional ByVal Index As String)
-    CurrentUser.DisplayForm
+Public Sub BtnAdminClick(ByVal ScreenPage As enScreenPage)
+    Dim Picker As ClsFrmPicker
+    Dim StrFilter As String
+    
+    If ScreenPage = enScrAdminWorkflows Then
+        Set Picker = New ClsFrmPicker
+        With Picker
+            .Title = "Select workflow script"
+            .Instructions = "Select the workflow script you would like to view."
+            .Data = ModDatabase.SQLQuery("SELECT DisplayName from TblWorkflowType")
+            .ClearForm
+            .Show = True
+        End With
+        
+        If Picker.SelectedItem = "" Then
+            MsgBox "No selection made, please try again", vbExclamation + vbOKOnly, APP_NAME
+            GoTo GracefullExit
+        End If
+        StrFilter = "WorkflowNo:" & DLookup("WFNo", "TblWorkflowType", "DisplayName = '" & Picker.SelectedItem & "'")
+    End If
+    
+    
+    If Not ResetScreen Then Err.Raise HANDLED_ERROR
+    If Not ModUIAdmin.BuildScreen(ScreenPage, StrFilter) Then Err.Raise HANDLED_ERROR
+GracefullExit:
+
+    Set Picker = Nothing
 End Sub
 
 ' ===============================================================

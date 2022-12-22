@@ -74,7 +74,7 @@ End Sub
 ' ---------------------------------------------------------------
 Private Sub xBtnHelp_Click()
     With ActiveProject.ProjectWorkflow.ActiveStep
-        .DisplayForm
+        .DisplayHelpForm
     End With
 End Sub
 

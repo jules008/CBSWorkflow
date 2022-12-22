@@ -54,7 +54,8 @@ Private pStepHelp As FrmStepHelp
 Private pStepHelpTitle As String
 Private pStepHelpBody As String
 Private pParent As ClsWorkflow
-
+Private WithEvents pStepForm As FrmAdnWFStep
+Attribute pStepForm.VB_VarHelpID = -1
 '---------------------------------------------------------------
 Public Property Get Deleted() As Date
     Deleted = pDeleted
@@ -365,6 +366,33 @@ Public Property Set Parent(obj As ClsWorkflow)
     Set pParent = obj
 End Property
 '---------------------------------------------------------------
+
+' ===============================================================
+' Method DisplayForm
+' displays client form
+' ---------------------------------------------------------------
+Public Sub DisplayForm()
+    With pStepForm
+        .TxtAltStep = pAltStep
+        .TxtAmberThresh = pAmberThresh
+        .TxtDataDest = pDataDest
+        .TxtNextStep = pNextStep
+        .TxtRedThresh = pRedThresh
+        .xTxtStepAction = pStepAction
+        .TxtStepName = pStepName
+        .TxtStepNo = pStepNo
+        .TxtWFName = pWFName
+        
+        .ChkWait = pWait
+        If pAltEmail.EmailNo > 0 Then .CmoAltEmail = pAltEmail.EmailNo
+        .CmoDataFormat = pDataFormat
+        If pEmail.EmailNo > 0 Then .CmoEmail = pEmail.EmailNo
+        .CmoStepType.ListIndex = pStepType
+
+        .Show
+    End With
+End Sub
+
 ' ===============================================================
 ' Method DBGet
 ' Gets class from Database
@@ -560,8 +588,8 @@ Public Sub DBSaveTemplate(StepNo As String)
         !DataFormat = pDataFormat
         !DataDest = pDataDest
         !UniqueID = pUniqueID
-'        !Email = pEmail.EmailNo
-'        !AltEmail = pAltEmail.EmailNo
+        !Email = pEmail.EmailNo
+        !AltEmail = pAltEmail.EmailNo
         !Wait = pWait
         .Update
 
@@ -605,10 +633,10 @@ Public Sub Reset()
 End Sub
 
 ' ===============================================================
-' Method DisplayForm
+' Method DisplayHelpForm
 ' displays client form
 ' ---------------------------------------------------------------
-Public Sub DisplayForm()
+Public Sub DisplayHelpForm()
     With pStepHelp
         .TxtTitle = pStepHelpTitle
         .xTxtHelpText = pStepHelpBody
@@ -617,14 +645,49 @@ Public Sub DisplayForm()
 End Sub
 
 ' ===============================================================
+' Event pStepForm_Update
+' Event from Step form to update step
+' ---------------------------------------------------------------
+Private Sub pStepForm_Update()
+    With pStepForm
+        pAltStep = .TxtAltStep
+        pAmberThresh = .TxtAmberThresh
+        pDataDest = .TxtDataDest
+        pNextStep = .TxtNextStep
+        pRedThresh = .TxtRedThresh
+        pStepAction = .xTxtStepAction
+        pStepName = .TxtStepName
+        pStepNo = .TxtStepNo
+        pStepType = .CmoStepType.ListIndex
+        pWait = .ChkWait
+
+        If .CmoEmail.ListIndex <> -1 Then
+            pEmail.DBGet .CmoEmail.List(.CmoEmail.ListIndex, 0)
+        End If
+        
+        If .CmoAltEmail.ListIndex <> -1 Then
+            pAltEmail.DBGet .CmoAltEmail.List(.CmoAltEmail.ListIndex, 0)
+        End If
+        
+        If .CmoDataFormat.ListIndex <> -1 Then
+            pDataFormat = .CmoDataFormat.List(.CmoDataFormat.ListIndex, 0)
+        End If
+        
+        DBSaveTemplate pStepNo
+
+    End With
+End Sub
+
+' ===============================================================
 Public Sub Initialize(obj As ClsWorkflow)
     Set Me.Parent = obj
 End Sub
-    
+'---------------------------------------------------------------
 Private Sub Class_Initialize()
     Set pStepHelp = New FrmStepHelp
     Set pEmail = New ClsEmail
     Set pAltEmail = New ClsEmail
+    Set pStepForm = New FrmAdnWFStep
     
     pEmail.Initialize Me
     pAltEmail.Initialize Me
@@ -638,12 +701,14 @@ Public Sub Terminate()
     Set pStepHelp = Nothing
     Set pEmail = Nothing
     Set pAltEmail = Nothing
+    Set pStepForm = Nothing
 End Sub
 '---------------------------------------------------------------
 Private Sub Class_Terminate()
     Set pStepHelp = Nothing
     Set pEmail = Nothing
     Set pAltEmail = Nothing
+    Set pStepForm = Nothing
 End Sub
 
 '---------------------------------------------------------------

@@ -87,9 +87,8 @@ Public Const MENUBAR_LEFT As Integer = 0
 Public Const MENU_TOP As Integer = 150
 Public Const MENU_LEFT As Integer = 5
 Public Const BUTTON_WIDTH As Integer = 150
-Public Const BUTTON_COUNT As Integer = 21
-Public Const BUTTON_TEXT = "For Action:Projects:Active:Closed:CRM:Clients:SPVs:Contacts:Projects:Lenders:Dashboard:Reports:Admin:Users:Email Templates:Documents:Workflows:Workflow Types:Lists:Roles:Exit"
-Public Const BUTTON_INDEX = "1:2:2.1:2.2:3:3.1:3.2:3.3:3.4:3.5:4:5:6:6.1:6.2:6.3:6.4:6.5:6.6:6.7:7"
+Public Const BUTTON_TEXT = "For Action:Projects:Active:Closed:CRM:Clients:SPVs:Contacts:Projects:Lenders:Dashboard:Reports:Admin:Users:Email Templates:Workflows:Workflow Types:Exit"
+Public Const BUTTON_INDEX = "1:2:2.1:2.2:3:3.1:3.2:3.3:3.4:3.5:4:5:6:6.1:6.2:6.3:6.4:7"
 Public Const LOGO_FILE As String = "Logo.jpg"
 Public Const LOGO_TOP As Integer = 13
 Public Const LOGO_LEFT As Integer = 5
@@ -275,6 +274,42 @@ Public Const BTN_EXP_8_HEIGHT As Integer = 70
 Public Const BTN_EXP_8_LEFT As Integer = 740
 Public Const BTN_EXP_8_TOP As Integer = 450
 Public Const BTN_EXP_8_WIDTH As Integer = 150
+
+'===============================================================
+' Admin Screen
+'===============================================================
+' Admin Users Screen
+' ---------------------------------------------------------------
+Public Const ADM_USERS_TABLE_COL_WIDTHS As String = "100:250:250:200:200"
+Public Const ADM_USERS_TABLE_TITLES As String = "User No:User Name:Position:Phone No:User Level:"
+Public Const ADM_USERS_MAX_LINES As Integer = 150
+
+' ---------------------------------------------------------------
+' Admin Emails Screen
+' ---------------------------------------------------------------
+Public Const ADM_EMAILS_TABLE_COL_WIDTHS As String = "100:250:200:300:150"
+Public Const ADM_EMAILS_TABLE_TITLES As String = "Email No:Template Name:To:Subject:"
+Public Const ADM_EMAILS_MAX_LINES As Integer = 150
+
+' ---------------------------------------------------------------
+' Admin Workflows Screen
+' ---------------------------------------------------------------
+Public Const ADM_WFLOWS_TABLE_COL_WIDTHS As String = "100:250:150:300:200"
+Public Const ADM_WFLOWS_TABLE_TITLES As String = "Workflow No:Name:Step No:Step Name:"
+Public Const ADM_WFLOWS_MAX_LINES As Integer = 150
+
+' ---------------------------------------------------------------
+' Admin WorkflowTypes Screen
+' ---------------------------------------------------------------
+Public Const ADM_WFTYPES_TABLE_COL_WIDTHS As String = "100:250:300:350"
+Public Const ADM_WFTYPES_TABLE_TITLES As String = "No:Workflow Name:Description:"
+Public Const ADM_WFTYPES_MAX_LINES As Integer = 150
+
+' ---------------------------------------------------------------
+' ADM Screen Btn 1 Settings
+' ---------------------------------------------------------------
+Public Const ADM_BTN_MAIN_1_LEFT As Integer = 900
+Public Const ADM_BTN_MAIN_1_TOP As Integer = 20
 
 ' ===============================================================
 ' Style Declarations

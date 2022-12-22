@@ -30,8 +30,9 @@ Private pDateSent As Date
 Private pMailTo As String
 Private pCC As String
 Private pProgressBar As FrmProgressBar
-'Private pAttachment As ClsDocument
 Private pParent As ClsStep
+Private WithEvents pEmailForm As FrmAdnEmails
+Attribute pEmailForm.VB_VarHelpID = -1
 
 '---------------------------------------------------------------
 Public Property Get Deleted() As Date
@@ -109,16 +110,6 @@ Public Property Let CC(ByVal vNewValue As String)
     pCC = vNewValue
 End Property
 
-''---------------------------------------------------------------
-'Public Property Get Attachment() As ClsDocument
-'     Set Attachment = pAttachment
-'End Property
-'
-'Public Property Let Attachment(ByVal vNewValue As ClsDocument)
-'
-'     Set pAttachment = vNewValue
-'End Property
-
 '---------------------------------------------------------------
 Public Property Get ProgressBar() As FrmProgressBar
      Set ProgressBar = pProgressBar
@@ -139,6 +130,41 @@ Public Property Set Parent(obj As ClsStep)
 End Property
 
 ' ===============================================================
+' Method DBNew
+' displays new User form
+' ---------------------------------------------------------------
+Public Sub DBNew()
+    pCC = ""
+    pEmailNo = 0
+    pMailTo = ""
+    pTemplateName = ""
+    pBody = ""
+    pSubject = ""
+    
+    With pEmailForm
+        .Tag = "New"
+        .Show
+    End With
+End Sub
+
+' ===============================================================
+' Method DisplayForm
+' displays client form
+' ---------------------------------------------------------------
+Public Sub DisplayForm()
+    With pEmailForm
+        .Tag = "Update"
+        .TxtCC = Trim(pCC)
+        .TxtEmailNo = Trim(pEmailNo)
+        .TxtMailTo = Trim(pMailTo)
+        .TxtTemplateName = Trim(pTemplateName)
+        .xTxtBody = Trim(pBody)
+        .xTxtSubject = Trim(pSubject)
+        .Show
+    End With
+End Sub
+
+' ===============================================================
 ' Method DBGet
 ' Gets class from Database
 '---------------------------------------------------------------
@@ -155,13 +181,6 @@ Public Sub DBGet(EmailNo As Integer)
             If Not IsNull(!CC) Then pCC = !CC
             If Not IsNull(!Body) Then pBody = !Body
         
-'            If Not IsNull(!Attachment) Then
-'                Set pAttachment = New ClsDocument
-'                pAttachment.SetParent ObjPtr(Me)
-'                pAttachment.DBGet !Attachment
-'            Else
-'                Set pAttachment = Nothing
-'            End If
             
         End If
     End With
@@ -201,8 +220,6 @@ Public Sub DBSave()
         !Body = CleanSQLText(pBody, True)
         .Update
 
-'        If Not pAttachment Is Nothing Then pAttachment.DBSave
-        
     End With
     Set RstEmail = Nothing
     Set RstMaxNo = Nothing
@@ -240,17 +257,9 @@ End Sub
 Public Sub Display()
     If MailSystem Is Nothing Then MailSystem = New ClsMailSystem
     
-'    FormsLoaded
-    
     MailSystem.CreateNewEmail
     
     Me.ProgressBar.Show
-    
-'    If pAttachment Is Nothing Then
-'        Me.ProgressBar.Progress "Generating Email....", 4 / 7 * 100
-'    Else
-'        Me.ProgressBar.Progress "Generating Email....", 1 / 7 * 100
-'    End If
     
     Me.ProgressBar.Progress "Generating Email....", 4 / 7 * 100
     
@@ -261,18 +270,6 @@ Public Sub Display()
         .Body = ModWorkflow.ReplaceKeyWords(pBody, Parent.Parent)
         .Subject = ModWorkflow.ReplaceKeyWords(Subject, Parent.Parent)
 
-'        If Not pAttachment Is Nothing Then
-'
-'            Me.ProgressBar.Progress "Creating Attachment....", 2 / 7 * 100
-'            If pAttachment.DocumentNo > 0 Then
-'                pAttachment.PrepareDocument
-'
-'                Me.ProgressBar.Progress "Attaching Document to Email....", 7 / 7 * 100
-'
-'                .Attachments.Add GetDocLocalPath(ThisWorkbook.Path) & TMP_FILES & pAttachment.Name
-'            End If
-'        End If
-        
         pProgressBar.Hide
         
         .Display
@@ -292,9 +289,45 @@ Public Sub Send()
         .CC = ModWorkflow.ReplaceKeyWords(pCC, Parent.Parent)
         .Body = ModWorkflow.ReplaceKeyWords(pBody, Parent.Parent)
         .Subject = ModWorkflow.ReplaceKeyWords(Subject, Parent.Parent)
-'        .Attachments.Add GetDocLocalPath(ThisWorkbook.Path) & TMP_FILES & pAttachment.Name
         .Send
     End With
+End Sub
+
+
+' ===============================================================
+' Event pEmailForm_Update
+' Event from client form to update CBS User
+' ---------------------------------------------------------------
+Private Sub pEmailForm_Update()
+
+    With pEmailForm
+        pCC = CleanSQLText(.TxtCC)
+        pMailTo = CleanSQLText(.TxtMailTo)
+        pTemplateName = CleanSQLText(.TxtTemplateName)
+        pBody = CleanSQLText(.xTxtBody)
+        pSubject = CleanSQLText(.xTxtSubject)
+    End With
+    DBSave
+End Sub
+
+' ===============================================================
+' Event pEmailForm_CreateNew
+' Event from user form to create new email
+' ---------------------------------------------------------------
+Private Sub pEmailForm_CreateNew()
+    With pEmailForm
+        .ClearForm
+        .Hide
+    End With
+    DBNew
+End Sub
+
+' ===============================================================
+' Event pEmailForm_Delete
+' Deletes Contact
+' ---------------------------------------------------------------
+Private Sub pEmailForm_Delete()
+    DBDelete
 End Sub
 
 ' ===============================================================
@@ -305,20 +338,19 @@ End Sub
 
 Private Sub Class_Initialize()
     Set pProgressBar = New FrmProgressBar
+    Set pEmailForm = New FrmAdnEmails
 End Sub
 ' ===============================================================
 Public Sub Terminate()
     Set pParent = Nothing
     Set pProgressBar = Nothing
+    Set pEmailForm = Nothing
 End Sub
 '---------------------------------------------------------------
 Private Sub Class_Terminate()
     Set pProgressBar = Nothing
+    Set pEmailForm = Nothing
     
-'    If Not pAttachment Is Nothing Then
-'        pAttachment.SetParent 0
-'        Set pAttachment = Nothing
-'    End If
 End Sub
 
 '---------------------------------------------------------------

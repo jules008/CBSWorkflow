@@ -252,7 +252,7 @@ Public Property Let Selected(ByVal vNewValue As Boolean)
         .Characters.Font.Color = Style.FontColour
         .Characters.Font.Size = Style.FontSize
         If Style.FontXJust <> 0 Then .HorizontalAlignment = Style.FontXJust
-        If Style.FontVJust <> 0 Then .VerticalAlignment = Style.FontVJust
+'        If Style.FontVJust <> 0 Then .VerticalAlignment = Style.FontVJust
     End With
     
     With pShpButton.Shadow

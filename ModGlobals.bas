@@ -36,10 +36,10 @@ Public Const SEND_ERR_MSG As Boolean = True
 Public Const TEST_PREFIX As String = "TEST - "
 Public Const BACKUP_INT As Integer = 5
 Public Const FILE_ERROR_LOG As String = "Error.log"
-Public Const OLD_DB_VER = "V0.01.11"
-Public Const DB_VER = "V0.01.12"
-Public Const VERSION = "V0.01.17"
-Public Const VER_DATE = "15 Dec 22"
+Public Const OLD_DB_VER = "V0.01.12"
+Public Const DB_VER = "V0.01.13"
+Public Const VERSION = "V0.01.18"
+Public Const VER_DATE = "22 Dec 22"
 ' ===============================================================
 ' Error Constants
 ' ---------------------------------------------------------------
@@ -121,6 +121,8 @@ Public BtnReport5 As ClsUIButton
 Public BtnReport6 As ClsUIButton
 Public BtnReport7 As ClsUIButton
 Public BtnReport8 As ClsUIButton
+Public BtnAdminNewItem As ClsUIButton
+
 Public Logo As ClsUIDashObj
 
 ' ===============================================================
@@ -196,11 +198,8 @@ Enum EnMenuBtnNo
     enBtnReports = 5
     enBtnAdminUsers = 61
     enBtnAdminEmails = 62
-    enBtnAdminDocuments = 63
-    enBtnAdminWorkflows = 64
-    enBtnAdminWFTypes = 65
-    enBtnAdminLists = 66
-    enBtnAdminRoles = 67
+    enBtnAdminWorkflows = 63
+    enBtnAdminWFTypes = 64
     enBtnExit = 7
 End Enum
 
@@ -216,6 +215,8 @@ Enum EnumBtnNo
     enBtnCRMContCalImport
     enBtnCRMContShwLeads
     enBtnCommsToDo
+    enBtnAdminOpenItem
+    enBtnAdminNewItem
 End Enum
 
 Enum enFormValidation
@@ -258,6 +259,11 @@ Enum enScreenPage
     enScrCRMContact
     enScrCRMProject
     enScrCRMLender
+    enScrAdminUsers
+    enScrAdminEmails
+    enScrAdminWorkflows
+    enScrAdminWFTypes
+    
 End Enum
             
 Enum EnChartType

@@ -148,7 +148,7 @@ Private Function BuildMenuBar() As Boolean
 '    ButtonIcon() = Split(Button_ICONS, ":")
 '    ButtonBadge() = Split(Button_BADGES, ":")
 
-    For i = 0 To BUTTON_COUNT - 1
+    For i = 0 To UBound(ButtonIndex)
 
         Set Button = New ClsUIButton
     
@@ -351,45 +351,25 @@ Restart:
         
             ShtMain.Unprotect PROTECT_KEY
 
-            BtnAdminUsersClick
+            BtnAdminClick enScrAdminUsers
 
         Case enBtnAdminEmails
         
             ShtMain.Unprotect PROTECT_KEY
 
-            If Not ResetScreen Then Err.Raise HANDLED_ERROR
-
-        Case enBtnAdminDocuments
-        
-            ShtMain.Unprotect PROTECT_KEY
-
-            If Not ResetScreen Then Err.Raise HANDLED_ERROR
+            BtnAdminClick enScrAdminEmails
 
         Case enBtnAdminWorkflows
         
             ShtMain.Unprotect PROTECT_KEY
 
-            If Not ResetScreen Then Err.Raise HANDLED_ERROR
+            BtnAdminClick enScrAdminWorkflows
 
         Case enBtnAdminWFTypes
         
             ShtMain.Unprotect PROTECT_KEY
-            ShtMain.[Button] = enBtnProjectsClosed
 
-            If Not ResetScreen Then Err.Raise HANDLED_ERROR
-            If Not ModUIProjects.BuildScreen("Closed", False) Then Err.Raise HANDLED_ERROR
-
-        Case enBtnAdminLists
-        
-            ShtMain.Unprotect PROTECT_KEY
-
-            If Not ResetScreen Then Err.Raise HANDLED_ERROR
-
-        Case enBtnAdminRoles
-        
-            ShtMain.Unprotect PROTECT_KEY
-
-            If Not ResetScreen Then Err.Raise HANDLED_ERROR
+            BtnAdminClick enScrAdminWFTypes
             
         Case enBtnExit
             
