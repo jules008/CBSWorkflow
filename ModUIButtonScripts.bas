@@ -441,6 +441,46 @@ Public Sub BtnCommsToDoClick()
 End Sub
 
 ' ===============================================================
+' BtnReportSel
+' Selects a report from report screen
+' ---------------------------------------------------------------
+Public Function BtnReportSel(ByRef ReportNo As String) As Boolean
+    Dim RstReportData As Recordset
+    
+    Const StrPROCEDURE As String = "BtnReportSel()"
+
+    On Error GoTo ErrorHandler
+    
+    Set RstReportData = ModUIReports.GetReportData(ReportNo)
+    
+    Select Case ReportNo
+        Case "1"
+            If Not ModReport.Report1(RstReportData) Then Err.Raise HANDLED_ERROR
+    
+    End Select
+    
+    BtnReportSel = True
+    Set RstReportData = Nothing
+    
+Exit Function
+    
+ErrorExit:
+    
+    Set RstReportData = Nothing
+    BtnReportSel = False
+
+Exit Function
+
+ErrorHandler:
+    If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
+        Stop
+        Resume
+    Else
+        Resume ErrorExit
+    End If
+End Function
+
+' ===============================================================
 ' BtnExitClick
 ' ---------------------------------------------------------------
 Public Sub BtnExitClick()

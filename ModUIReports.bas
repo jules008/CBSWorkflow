@@ -195,10 +195,10 @@ Private Function BuildScreenBtn1() As Boolean
         .Left = BTN_REP_1_LEFT
         .Top = BTN_REP_1_TOP
         .Width = BTN_REP_1_WIDTH
-        .OnAction = ""
+        .OnAction = "'ModUIButtonHandler.ProcessBtnClicks(""" & 0 & ":" & enBtnReport1 & ":1" & """)'"
         .UnSelectStyle = BTN_MAIN_STYLE
         .Selected = False
-        .Text = "Report 1" & vbCr & vbCr & "Report 1 description"
+        .Text = "Total Revenue" & vbCr & vbCr & "Revenue based on the commission and exit fee income"
         .Visible = True
     End With
     
@@ -525,6 +525,43 @@ ErrorHandler:   If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
     Else
         Resume ErrorExit
     End If
+End Function
+
+' ===============================================================
+' Method GetReportData
+' Gets data for workflow list
+'---------------------------------------------------------------
+Public Function GetReportData(ReportNo As String) As Recordset
+    Dim RstReport As Recordset
+    Dim SQL As String
+    
+    Select Case ReportNo
+        Case 1
+            SQL = "Select " _
+                & "   TblProject.ProjectName As Project, " _
+                & "   TblCBSUser.UserName, " _
+                & "   TblLender.[Name] As Lender, " _
+                & "   TblWorkflow.Debt As Loan, " _
+                & "   TblWorkflow.CBSComm As [Commission (%)], " _
+                & "   TblWorkflow.ExitFee As [Exit Fee (%)], " _
+                & "   TblWorkflow.CBSComm * TblWorkflow.Debt As Commission, " _
+                & "   TblWorkflow.ExitFee * TblWorkflow.Debt As [Exit Fee] " _
+                & " From " _
+                & "   ((TblWorkflow Left Outer Join " _
+                & "   TblProject On TblProject.ProjectNo = TblWorkflow.ProjectNo) Left Outer Join " _
+                & "   TblLender On TblLender.LenderNo = TblWorkflow.LenderNo) Left Outer Join " _
+                & "   TblCBSUser On TblCBSUser.CBSUserNo = TblProject.CaseManager " _
+                & " Where " _
+                & "   TblWorkflow.ProjectNo <> 0 " _
+                & " Order By " _
+                & "   TblWorkflow.ProjectNo"
+            
+    End Select
+    
+    Set RstReport = ModDatabase.SQLQuery(SQL)
+    
+    Set GetReportData = RstReport
+    
 End Function
 
 

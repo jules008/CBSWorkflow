@@ -94,3 +94,95 @@ ErrorHandler:
     End If
 End Function
 
+' ===============================================================
+' Report1
+' Report of communications due
+' ---------------------------------------------------------------
+Public Function Report1(RstReport As Recordset) As Boolean
+    Const NO_COLS As Integer = 8
+    Dim Headings(0 To NO_COLS - 1) As String
+    Dim Cols(0 To NO_COLS - 1) As Variant
+    Dim Align(0 To NO_COLS - 1) As XlHAlign
+    Dim ColFormat(0 To NO_COLS - 1) As String
+    Dim ReportTitle As String
+    Dim AryReport() As Variant
+    Dim RstQualDates As Recordset
+    Dim i As Integer
+    
+    Const StrPROCEDURE As String = "Report1()"
+
+    On Error GoTo ErrorHandler
+    
+    With RstReport
+        If .RecordCount = 0 Then
+            MsgBox "There were no results for the report", vbInformation + vbOKOnly
+        Else
+            .MoveLast
+            .MoveFirst
+            AryReport = .GetRows(.RecordCount)
+        
+            ReportTitle = "Total Revenue"
+            Headings(0) = .Fields(0).Name
+            Headings(1) = .Fields(1).Name
+            Headings(2) = .Fields(2).Name
+            Headings(3) = .Fields(3).Name
+            Headings(4) = .Fields(4).Name
+            Headings(5) = .Fields(5).Name
+            Headings(6) = .Fields(6).Name
+            Headings(7) = .Fields(7).Name
+    
+            Align(0) = xlHAlignLeft
+            Align(1) = xlHAlignLeft
+            Align(2) = xlHAlignLeft
+            Align(3) = xlHAlignCenter
+            Align(4) = xlHAlignRight
+            Align(5) = xlHAlignRight
+            Align(6) = xlHAlignRight
+            Align(7) = xlHAlignRight
+    
+            Cols(0) = 10
+            Cols(1) = 15
+            Cols(2) = 15
+            Cols(3) = 15
+            Cols(4) = 15
+            Cols(5) = 15
+            Cols(6) = 15
+            Cols(7) = 15
+    
+            ColFormat(0) = "General"
+            ColFormat(1) = "General"
+            ColFormat(2) = "General"
+            ColFormat(3) = "General"
+            ColFormat(4) = "0.0%"
+            ColFormat(5) = "0.0%"
+            ColFormat(6) = "£#,##0.00"
+            ColFormat(7) = "£#,##0.00"
+            
+            ShtReport.PrintReport AryReport, ReportTitle, Headings, Cols, 4, Align, ColFormat
+        End If
+    End With
+        
+GracefulExit:
+
+    Report1 = True
+    Set RstQualDates = Nothing
+
+Exit Function
+
+ErrorExit:
+
+    Set RstQualDates = Nothing
+    Report1 = False
+
+Exit Function
+
+ErrorHandler:
+    If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
+        Stop
+        Resume
+    Else
+        Resume ErrorExit
+    End If
+End Function
+
+

@@ -123,33 +123,22 @@ ErrorHandler:
 End Sub
 
 ' ===============================================================
-' CmoContract_Change
+' TxtDescription_Change
 ' ---------------------------------------------------------------
-Private Sub TxtWFTypeNo_Change()
-    TxtWFTypeNo.BackColor = COL_WHITE
+Private Sub TxtDescription_Change()
+    TxtDescription.BackColor = COL_WHITE
 End Sub
 
 ' ===============================================================
-' TxtName_Change
+' TxtDisplayName_Change
 ' ---------------------------------------------------------------
-Private Sub TxtName_Change()
-    TxtName.BackColor = COL_WHITE
+Private Sub TxtDisplayName_Change()
+    TxtDisplayName.BackColor = COL_WHITE
 End Sub
 
 ' ===============================================================
-' TxtPhoneNo_Change
+' UserForm_Activate
 ' ---------------------------------------------------------------
-Private Sub TxtPhoneNo_Change()
-    TxtPhoneNo.BackColor = COL_WHITE
-End Sub
-
-' ===============================================================
-' TxtUrl_Change
-' ---------------------------------------------------------------
-Private Sub TxtUrl_Change()
-    TxtUrl.BackColor = COL_WHITE
-End Sub
-
 Private Sub UserForm_Activate()
     If Me.Tag = "New" Then
         Ttl.Caption = "Create New WF Type"

@@ -93,6 +93,11 @@ Restart:
         Case enBtnAdminNewItem
         
             BtnAdminOpenItem ScreenPage
+            
+        Case enBtnReport1
+            
+            If Not BtnReportSel(BtnIndex) Then Err.Raise HANDLED_ERROR
+            
     End Select
 
 GracefulExit:

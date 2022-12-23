@@ -217,26 +217,6 @@ Public Sub ColourConvert(R As Integer, G As Integer, B As Integer)
 End Sub
 
 ' ===============================================================
-' FormatControls
-' Formats all controls on a form
-' ---------------------------------------------------------------
-
-Public Sub FormatControls(Form As UserForm)
-    Dim Cntrl As Control
-    
-    For Each Cntrl In Form
-        With Cntrl
-            If Left(.Name, 3) = "Btn" Then
-'                .textframe.
-            End If
-        End With
-        
-    
-    Next
-    
-End Sub
-
-' ===============================================================
 ' AddCheckBoxes
 ' Adds checkboxes to selected cells
 ' ---------------------------------------------------------------
@@ -606,3 +586,14 @@ NoShapeSelected:
 
 End Sub
 
+' ===============================================================
+' SQLTransform
+' Transforms SQL for VBA
+' ---------------------------------------------------------------
+Public Function SQLTransform()
+    Dim SQL As String
+    
+    FrmSQLEditor.Show
+    
+    
+End Function

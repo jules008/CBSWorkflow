@@ -90,13 +90,45 @@ Private Sub BtnClose_Click()
     Unload Me
 End Sub
 
-' ---------------------------------------------------------------
+' ===============================================================
 ' BtnReport_Click
 ' Exports comms list to report
 ' ---------------------------------------------------------------
-Private Sub BtnReport_Click()
+Public Sub BtnReport_Click()
+    Dim ErrNo As Integer
+
+    Const StrPROCEDURE As String = "BtnReport_Click()"
+
+    On Error GoTo ErrorHandler
+
+Restart:
+
+    If MainScreen Is Nothing Then Err.Raise SYSTEM_RESTART
+
     If Not ModReport.IntExtCommsReport(LocCommsList) Then Err.Raise HANDLED_ERROR
     Unload Me
+
+GracefulExit:
+
+Exit Sub
+
+ErrorExit:
+
+Exit Sub
+
+ErrorHandler:
+    If Err.Number >= 2000 And Err.Number <= 2500 Then
+        ErrNo = Err.Number
+        CustomErrorHandler (Err.Number)
+        If ErrNo = SYSTEM_RESTART Then Resume Restart Else Resume GracefulExit
+    End If
+
+    If CentralErrorHandler(StrMODULE, StrPROCEDURE, , True) Then
+        Stop
+        Resume
+    Else
+        Resume ErrorExit
+    End If
 End Sub
 
 ' ---------------------------------------------------------------
