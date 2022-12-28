@@ -195,7 +195,7 @@ Private Function BuildScreenBtn1() As Boolean
         .Left = BTN_REP_1_LEFT
         .Top = BTN_REP_1_TOP
         .Width = BTN_REP_1_WIDTH
-        .OnAction = "'ModUIButtonHandler.ProcessBtnClicks(""" & 0 & ":" & enBtnReport1 & ":1" & """)'"
+        .OnAction = "'ModUIButtonHandler.ProcessBtnClicks(""" & 0 & ":" & enBtnReport & ":1" & """)'"
         .UnSelectStyle = BTN_MAIN_STYLE
         .Selected = False
         .Text = "Total Revenue" & vbCr & vbCr & "Revenue based on the commission and exit fee income"
@@ -239,10 +239,10 @@ Private Function BuildScreenBtn2() As Boolean
         .Left = BTN_REP_2_LEFT
         .Top = BTN_REP_2_TOP
         .Width = BTN_REP_2_WIDTH
-        .OnAction = ""
+        .OnAction = "'ModUIButtonHandler.ProcessBtnClicks(""" & 0 & ":" & enBtnReport & ":2" & """)'"
         .UnSelectStyle = BTN_MAIN_STYLE
         .Selected = False
-        .Text = "Report 2" & vbCr & vbCr & "Report 2 description"
+        .Text = "Average Commission Over Time" & vbCr & vbCr & "Monthly trend of average Commision earned per case"
     End With
     
     
@@ -282,10 +282,10 @@ Private Function BuildScreenBtn3() As Boolean
         .Left = BTN_REP_3_LEFT
         .Top = BTN_REP_3_TOP
         .Width = BTN_REP_3_WIDTH
-        .OnAction = ""
+        .OnAction = "'ModUIButtonHandler.ProcessBtnClicks(""" & 0 & ":" & enBtnReport & ":3" & """)'"
         .UnSelectStyle = BTN_MAIN_STYLE
         .Selected = False
-        .Text = "Report 3" & vbCr & vbCr & "Report 3 description"
+        .Text = "Case Duration" & vbCr & vbCr & "Average case duration for each Case Manager"
     End With
     
     
@@ -326,10 +326,10 @@ Private Function BuildScreenBtn4() As Boolean
         .Left = BTN_REP_4_LEFT
         .Top = BTN_REP_4_TOP
         .Width = BTN_REP_4_WIDTH
-        .OnAction = ""
+        .OnAction = "'ModUIButtonHandler.ProcessBtnClicks(""" & 0 & ":" & enBtnReport & ":4" & """)'"
         .UnSelectStyle = BTN_MAIN_STYLE
         .Selected = False
-        .Text = "Report 4" & vbCr & vbCr & "Report 4 description"
+        .Text = "Debt Per Client" & vbCr & vbCr & "Total debt currently being acquired for clients"
     End With
     
     
@@ -555,6 +555,44 @@ Public Function GetReportData(ReportNo As String) As Recordset
                 & "   TblWorkflow.ProjectNo <> 0 " _
                 & " Order By " _
                 & "   TblWorkflow.ProjectNo"
+            
+        Case 2
+            SQL = "Select " _
+                    & "  Year(TblProject.CompleteDate) As [Year], " _
+                    & "  Month(TblProject.CompleteDate) As [Month], " _
+                    & "  Avg(TblWorkflow.CBSComm) As [Ave Commission] " _
+                & "From " _
+                    & "  TblProject Inner Join " _
+                    & "  TblWorkflow On TblWorkflow.ProjectNo = TblProject.ProjectNo " _
+                & "Where " _
+                    & "  TblWorkflow.WorkflowType = 'enlender' " _
+                    & "Group By " _
+                    & "  Year(TblProject.CompleteDate), Month(TblProject.CompleteDate), " _
+                    & "  TblProject.CompleteDate, TblWorkflow.WorkflowType "
+                
+        Case 3
+            SQL = "Select " _
+                    & "  TblCBSUser.UserName As [Case Manager], " _
+                    & "  Avg(TblProject.CompleteDate - TblProject.StartDate) As [Average Duration] " _
+                & "From " _
+                    & "  TblProject Inner Join " _
+                    & "  TblCBSUser On TblProject.CaseManager = TblCBSUser.CBSUserNo " _
+                & "Where " _
+                    & "  TblCBSUser.[Position] = 'Case Manager' And " _
+                    & "  TblProject.CompleteDate Is Not Null " _
+                    & "Group By " _
+                    & "  TblCBSUser.UserName "
+            
+        Case 4
+            SQL = "Select " _
+                    & "  TblClient.[Name] As Client, " _
+                    & "  Sum(TblWorkflow.Debt) As [Total Debt] " _
+                & "From " _
+                    & "  (TblProject Inner Join " _
+                    & "  TblWorkflow On TblWorkflow.ProjectNo = TblProject.ProjectNo) Inner Join " _
+                    & "  TblClient On TblClient.ClientNo = TblProject.ClientNo " _
+                    & "Group By " _
+                    & "  TblClient.[Name] "
             
     End Select
     

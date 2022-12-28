@@ -36,10 +36,10 @@ Public Const SEND_ERR_MSG As Boolean = True
 Public Const TEST_PREFIX As String = "TEST - "
 Public Const BACKUP_INT As Integer = 5
 Public Const FILE_ERROR_LOG As String = "Error.log"
-Public Const OLD_DB_VER = "V0.01.12"
-Public Const DB_VER = "V0.01.13"
-Public Const VERSION = "V0.01.19"
-Public Const VER_DATE = "23 Dec 22"
+Public Const OLD_DB_VER = "V0.01.13"
+Public Const DB_VER = "V0.01.14"
+Public Const VERSION = "V0.01.20" ' Reports
+Public Const VER_DATE = "27 Dec 22"
 ' ===============================================================
 ' Error Constants
 ' ---------------------------------------------------------------
@@ -217,10 +217,7 @@ Enum EnumBtnNo
     enBtnCommsToDo
     enBtnAdminOpenItem
     enBtnAdminNewItem
-    enBtnReport1
-    enBtnReport2
-    enBtnReport3
-    enBtnReport4
+    enBtnReport
 End Enum
 
 Enum enFormValidation

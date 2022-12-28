@@ -587,13 +587,47 @@ NoShapeSelected:
 End Sub
 
 ' ===============================================================
-' SQLTransform
-' Transforms SQL for VBA
+' CharToAscii
+' returns ascii number for a character
 ' ---------------------------------------------------------------
-Public Function SQLTransform()
-    Dim SQL As String
-    
-    FrmSQLEditor.Show
-    
-    
+Public Function CharToAscii(ByVal char As String) As Integer
+    Dim ascii As Integer    'the variable that will be returned
+    If Len(char) = 0 Then   'if empty string was sent...
+        MsgBox "You sent an empty string" '...raise error
+        GoTo errFunction
+    ElseIf Len(char) > 1 Then   'if char is longer than one character...
+        If IsNumeric(char) Then '...if the string is a number, assumed to be ascii code and...
+            Select Case CInt(char)
+                Case 0 To 31, 127 '...if the number is whitespace in ascii, raise error
+                    MsgBox "You have entered a string of numbers." & Chr(10) & _
+                    "We assumed you meant to get this string as a ascii code, but this string is code for a whitespace."
+                    GoTo errFunction
+                Case Is < 0, Is > 127 '...if the number does not exist in ascii, raise error
+                    MsgBox "You have entered a string of numbers." & Chr(10) & _
+                    "We assumed you meant to get this string as a ascii code, But there is no character for this number."
+                    GoTo errFunction
+            End Select
+            ascii = CInt(char) '...if no error was raise,the number is OK, so return it
+        Else                '...if the string is characters...
+            MsgBox "you have sent more than one character. We assume you meant the first."
+            Select Case Asc(char) '...check the ascii code for whitespace and...
+                Case 0 To 31, 127 '...if whitespace, raise error
+                    MsgBox "But it was a whitespace."
+                    GoTo errFunction
+            End Select      'if no error was raised, the number is okay
+            ascii = Asc(char) 'asc() returns the ascii for the first character in a string.
+        End If
+    Else                    ' if only one character was received...
+        Select Case Asc(char)
+            Case 0 To 31, 127 '...if it is a whitespace, raise error
+                MsgBox "You have entered a whitespace."
+                GoTo errFunction
+        End Select
+        ascii = Asc(char)   '...if not return it
+    End If
+    CharToAscii = ascii
+    GoTo finish
+errFunction:
+    MsgBox "please try again" 'or anything else you want to do in case of error
+finish:
 End Function

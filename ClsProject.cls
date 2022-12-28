@@ -44,6 +44,8 @@ Private pSPV As ClsSPV
 Private pFirstClientInt As Integer
 Private pSecondClientRef As Integer
 Private pFacilitator As Integer
+Private pCompleteDate As Date
+Private pStartDate As Date
 Private WithEvents pProjectForm As FrmProjectForm
 Attribute pProjectForm.VB_VarHelpID = -1
 
@@ -176,6 +178,24 @@ Public Property Let Facilitator(ByRef Facilitator As Integer)
 End Property
     
 '---------------------------------------------------------------
+Public Property Get CompleteDate() As Date
+    CompleteDate = pCompleteDate
+End Property
+
+Public Property Let CompleteDate(ByRef CompleteDate As Date)
+    pCompleteDate = CompleteDate
+End Property
+    
+'---------------------------------------------------------------
+Public Property Get StartDate() As Date
+    StartDate = pStartDate
+End Property
+
+Public Property Let StartDate(ByRef StartDate As Date)
+    pStartDate = StartDate
+End Property
+    
+'---------------------------------------------------------------
 Public Property Get Parent() As ClsSPV
     Set Parent = pParent
 End Property
@@ -244,6 +264,8 @@ Public Sub DBGet(ByVal ProjectNameNo As Variant)
             If Not IsNull(!FirstClientInt) Then pFirstClientInt = !FirstClientInt
             If Not IsNull(!SecondClientRef) Then pSecondClientRef = !SecondClientRef
             If Not IsNull(!Facilitator) Then pFacilitator = !Facilitator
+            If Not IsNull(!CompleteDate) Then pCompleteDate = !CompleteDate
+            If Not IsNull(!StartDate) Then pStartDate = !StartDate
             
             pSPV.DBGet !SPVNo
             pClient.DBGet !ClientNo
@@ -297,6 +319,8 @@ Public Sub DBSave()
         !FirstClientInt = CleanSQLText(pFirstClientInt, True)
         !SecondClientRef = CleanSQLText(pSecondClientRef, True)
         !Facilitator = CleanSQLText(pFacilitator, True)
+        !CompleteDate = CleanSQLText(pCompleteDate, True)
+        !StartDate = CleanSQLText(pStartDate, True)
         !ProjectName = CleanSQLText(pProjectName, True)
         !ProjectWFNo = CleanSQLText(pProjectWorkflow.WorkflowNo, True)
         !CaseManager = CleanSQLText(pCaseManager.CBSUserNo, True)

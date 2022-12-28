@@ -36,6 +36,7 @@ Option Explicit
 Private pWorkflows As Collection
 Private pParent As ClsProject
 Private WithEvents pWFTypeForm As FrmAdnWFTypes
+Attribute pWFTypeForm.VB_VarHelpID = -1
 
 '---------------------------------------------------------------
 Public Property Get Parent() As ClsProject

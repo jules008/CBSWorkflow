@@ -635,6 +635,11 @@ Public Sub MoveToNextStep()
             .Complete
             .DBSave
         End With
+        
+        With pParent
+            .CompleteDate = Format(Now, "dd mmmm yy")
+            .DBSave
+        End With
     End If
     pProjWFForm.Progress Progress
 End Sub

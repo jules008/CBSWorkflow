@@ -24,15 +24,12 @@ Public Sub QueryTest()
     
 
     'undo
-    
-    DB.Execute "DROP TABLE TblDataFormats"
+    DB.Execute "ALTER TABLE TblProject DROP COLUMN CompleteDate "
     
     Stop
     'update
     
-    DB.Execute "CREATE TABLE TblDataFormats"
-    DB.Execute "ALTER TABLE TblDataFormats ADD COLUMN Format text"
-    DB.Execute "ALTER TABLE TblDataFormats ADD COLUMN FormCode text"
+    DB.Execute "ALTER TABLE TblProject ADD COLUMN CompleteDate date"
 End Sub
 
 ' ===============================================================
@@ -77,13 +74,8 @@ Public Function UpdateDBScript() As Boolean
     ' ========================================================================================
     ' Database commands
     ' ----------------------------------------------------------------------------------------
-    DB.Execute "CREATE TABLE TblDataFormats"
-    DB.Execute "ALTER TABLE TblDataFormats ADD COLUMN Format text"
-    DB.Execute "ALTER TABLE TblDataFormats ADD COLUMN FormCode text"
-    DB.Execute "INSERT INTO TblDataFormats (Format, FormCode) VALUES ('Number', '0')"
-    DB.Execute "INSERT INTO TblDataFormats (Format, FormCode) VALUES ('Date', 'Date')"
-    DB.Execute "INSERT INTO TblDataFormats (Format, FormCode) VALUES ('Time', 'Time')"
-    
+    DB.Execute "ALTER TABLE TblProject ADD COLUMN CompleteDate date"
+    DB.Execute "ALTER TABLE TblProject ADD COLUMN StartDate date"
     ' ========================================================================================
         
     'update DB Version
@@ -161,7 +153,8 @@ Public Function UpdateDBScriptUndo() As Boolean
     ' ========================================================================================
     ' Database commands
     ' ----------------------------------------------------------------------------------------
-    DB.Execute "DROP TABLE TblDataFormats"
+    DB.Execute "ALTER TABLE TblProject DROP COLUMN CompleteDate "
+    DB.Execute "ALTER TABLE TblProject DROP COLUMN StartDate "
     ' ========================================================================================
     
     DB.Close

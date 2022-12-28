@@ -15,3 +15,5 @@ FirstClientInt,  dbLong
 SecondClientRef,  dbLong
 Facilitator,  dbLong
 CBSCommission,  dbLong
+CompleteDate,  dbDate
+StartDate,  dbDate

@@ -132,6 +132,7 @@ Public Function BtnProjectNewWFClick(ScreenPage As enScreenPage) As Boolean
         .CaseManager = ActiveUser
         .ProjectName = ProjectName
         .Client = ActiveClient
+        .StartDate = Now
         .SPV = ActiveSPV
         .DBSave
     End With
@@ -456,6 +457,15 @@ Public Function BtnReportSel(ByRef ReportNo As String) As Boolean
     Select Case ReportNo
         Case "1"
             If Not ModReport.Report1(RstReportData) Then Err.Raise HANDLED_ERROR
+    
+        Case "2"
+            If Not ModReport.Report2(RstReportData) Then Err.Raise HANDLED_ERROR
+    
+        Case "3"
+            If Not ModReport.Report3(RstReportData) Then Err.Raise HANDLED_ERROR
+    
+        Case "4"
+            If Not ModReport.Report4(RstReportData) Then Err.Raise HANDLED_ERROR
     
     End Select
     

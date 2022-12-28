@@ -94,7 +94,7 @@ Restart:
         
             BtnAdminOpenItem ScreenPage
             
-        Case enBtnReport1
+        Case enBtnReport
             
             If Not BtnReportSel(BtnIndex) Then Err.Raise HANDLED_ERROR
             
