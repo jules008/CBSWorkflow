@@ -74,8 +74,6 @@ Public Function UpdateDBScript() As Boolean
     ' ========================================================================================
     ' Database commands
     ' ----------------------------------------------------------------------------------------
-    DB.Execute "ALTER TABLE TblProject ADD COLUMN CompleteDate date"
-    DB.Execute "ALTER TABLE TblProject ADD COLUMN StartDate date"
     ' ========================================================================================
         
     'update DB Version
@@ -153,8 +151,6 @@ Public Function UpdateDBScriptUndo() As Boolean
     ' ========================================================================================
     ' Database commands
     ' ----------------------------------------------------------------------------------------
-    DB.Execute "ALTER TABLE TblProject DROP COLUMN CompleteDate "
-    DB.Execute "ALTER TABLE TblProject DROP COLUMN StartDate "
     ' ========================================================================================
     
     DB.Close

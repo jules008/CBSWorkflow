@@ -31,6 +31,7 @@ Private pTxtSmallLbl As String
 Private pTitle As String
 Private pSer1Colour As Long
 Private pSer2Colour As Long
+Private pBackColour As Long
 Private pSourceData() As Variant
 Private pCht As Chart
 Private pTxtTitle As Shape
@@ -148,6 +149,15 @@ Public Property Let Ser2Colour(ByVal vNewValue As Long)
 End Property
 
 '---------------------------------------------------------------
+Public Property Get BackColour() As Long
+    BackColour = pBackColour
+End Property
+
+Public Property Let BackColour(ByVal vNewValue As Long)
+    pBackColour = vNewValue
+End Property
+
+'---------------------------------------------------------------
 Public Property Get SourceData() As Variant()
     SourceData() = pSourceData()
 End Property
@@ -205,6 +215,8 @@ Public Sub GenGraph()
             GenBarHoriz
         Case enline
             GenLine
+        Case enPie
+            GenPie
     End Select
 End Sub
 
@@ -229,7 +241,113 @@ Private Sub GenDoNut()
             .Top = Parent.Top + pTop
             .Height = pHeight
             .Width = .Height
-            .Format.Fill.ForeColor.RGB = COL_AQUA
+            .Format.Fill.ForeColor.RGB = pBackColour
+            .Border.LineStyle = xlNone
+        End With
+        
+        .ChartType = xlDoughnut
+        .ChartTitle.Text = ""
+        
+        .SetSourceData ShtMain.Range("H64:I64")
+        
+        With .SeriesCollection(1)
+            .Name = "strName"
+            .Values = pSourceData
+            .Points(1).Format.Fill.ForeColor.RGB = pSer1Colour
+            .Points(2).Format.Fill.ForeColor.RGB = pSer2Colour
+        End With
+        
+        With .ChartGroups(1)
+            .DoughnutHoleSize = 80
+        End With
+        
+        With .PlotArea
+            .Format.Fill.Transparency = 1
+            .Top = pCht.ChartArea.Height / 100 * 5
+            .Height = pCht.ChartArea.Height / 100 * 70
+            .Left = (pCht.ChartArea.Width - .Width) / 2
+        End With
+    
+    End With
+    
+    With pTxtTitle
+        .Name = "pTxtTitle"
+        .Height = pCht.ChartArea.Height / 100 * 25
+        .Width = pCht.ChartArea.Width / 100 * 120
+        .Left = pCht.ChartArea.Left + (pCht.ChartArea.Width / 2) - (.Width / 2) + 3
+        .Top = pCht.ChartArea.Top + pCht.ChartArea.Height / 100 * 75
+        .Fill.Transparency = 1
+        .Line.Visible = msoFalse
+        
+        With .TextFrame
+            .HorizontalAlignment = xlHAlignCenter
+            .VerticalAlignment = xlVAlignCenter
+            With .Characters
+                .Font.FontStyle = "Calibri"
+                .Font.Size = pTxtTitle.Height / 100 * 40
+                .Font.Color = RGB(0, 0, 0)
+                .Text = pTitle
+            End With
+        End With
+    End With
+    
+    With pTxtPC
+        .Name = "pTxtPC"
+        .Height = pCht.ChartArea.Height / 100 * 25
+        .Width = pCht.ChartArea.Width / 100 * 50
+        .Left = pCht.ChartArea.Left + (pCht.ChartArea.Width / 2) - (.Width / 2) + 3
+        .Top = pCht.ChartArea.Top + (pCht.ChartArea.Height / 2) - (.Height / 2) - (pCht.ChartArea.Height / 100 * 10)
+        .Fill.Transparency = 1
+        .Line.Visible = msoFalse
+        
+        With .TextFrame
+            .HorizontalAlignment = xlHAlignCenter
+            .VerticalAlignment = xlVAlignCenter
+            With .Characters
+                .Font.FontStyle = "Calibri"
+                .Font.Size = pTxtPC.Height / 100 * 80
+                .Font.Color = RGB(0, 0, 0)
+                .Text = Format(Subtotal / Total, "0%")
+            End With
+        End With
+    End With
+    
+    With pTxtLabel
+        .Name = "TxtLabel"
+        .Height = pCht.ChartArea.Height / 100 * 5
+        .Width = pCht.ChartArea.Width / 100 * 50
+        .Left = pCht.ChartArea.Left + (pCht.ChartArea.Width / 2) - (.Width / 2) + 3
+        .Top = pCht.ChartArea.Top + (pCht.ChartArea.Height / 2) - (.Height / 2) + (pCht.ChartArea.Height / 100 * 7)
+        .Fill.Transparency = 1
+        .Line.Visible = msoFalse
+        
+        With .TextFrame
+            .HorizontalAlignment = xlHAlignCenter
+            .VerticalAlignment = xlVAlignCenter
+            With .Characters
+                .Font.FontStyle = "Calibri"
+                .Font.Size = pTxtPC.Height / 100 * 25
+                .Font.Color = RGB(0, 0, 0)
+                .Text = Subtotal & " of " & Total
+            End With
+        End With
+    End With
+
+End Sub
+
+' Method GenPie
+' Generates doughnut Grpah
+'---------------------------------------------------------------
+Private Sub GenPie()
+    pCht.Parent.Name = pName
+    
+    With pCht
+        With .ChartArea
+            .Left = Parent.Left + pLeft
+            .Top = Parent.Top + pTop
+            .Height = pHeight
+            .Width = .Height
+            .Format.Fill.ForeColor.RGB = pBackColour
             .Border.LineStyle = xlNone
         End With
         

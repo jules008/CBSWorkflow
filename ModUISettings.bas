@@ -210,8 +210,9 @@ Public Const CRM_LENDER_MAX_LINES As Integer = 150
 Public Const GRAPH_1_TOP As Integer = 45
 Public Const GRAPH_1_LEFT As Integer = 20
 Public Const GRAPH_1_HEIGHT As Integer = 120
-Public Const GRAPH_1_COL_1 As Long = COLOUR_15
-Public Const GRAPH_1_COL_2 As Long = COLOUR_16
+Public Const GRAPH_1_COL_1 As Long = COL_GREEN
+Public Const GRAPH_1_COL_2 As Long = COL_PINK
+Public Const GRAPH_1_BACK_COL As Long = COL_WHITE
 
 '===============================================================
 ' Report Screen
