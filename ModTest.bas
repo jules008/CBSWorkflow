@@ -1,24 +1,18 @@
 Attribute VB_Name = "ModTest"
 
-Public Sub TestSteps()
-    Dim Workflow As ClsWorkflow
-    Dim RstWorkflow As Recordset
     
-    Set Workflow = New ClsWorkflow
-    Set RstWorkflow = ModDatabase.SQLQuery("SELECT * FROM TblWorkflow WHERE WorkflowNo > 23")
+Public Sub TestDealCalc()
+    Dim MailInbox As ClsMailInbox
         
-    With RstWorkflow
-        Do While Not .EOF
-            Set Workflow = New ClsWorkflow
-            Workflow.DBGet !WorkflowNo
-            Debug.Print "Workflow"; !WorkflowNo, "Progress"; Workflow.Progress
-            Workflow.DBSave
-            Set Workflow = Nothing
-            DoEvents
-            .MoveNext
-        Loop
+    Set MailSystem = New ClsMailSystem
+    Set MailInbox = New ClsMailInbox
+    With MailInbox
+        .MailFolder = "contact@cbs-capital.co.uk"
     End With
     
-    Set RstWorkflow = Nothing
-    Set Workflow = Nothing
+    MailInbox.SendDealCalc "jules.turner@hotmail.co.uk"
+    
+    Set MailSystem = Nothing
+    Set MailInbox = Nothing
+
 End Sub

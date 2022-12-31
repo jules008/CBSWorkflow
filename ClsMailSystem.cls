@@ -142,12 +142,12 @@ End Sub
 Public Sub FindEmail(StepIndex As Integer)
     Dim OLNameSpace As Namespace
     Dim RstEmail As Recordset
-    Dim FldrInbox As Outlook.Folder
+    Dim pFldrInbox As Outlook.Folder
     Dim EntryID As String
     Dim StoreID As String
 
     Set OLNameSpace = pOutlookApp.GetNamespace("MAPI")
-    Set FldrInbox = OLNameSpace.GetDefaultFolder(olFolderInbox)
+    Set pFldrInbox = OLNameSpace.GetDefaultFolder(olFolderInbox)
     Set RstEmail = ModDatabase.SQLQuery("SELECT EntryID FROM TblInbox WHERE StepIndex = " & StepIndex)
 
     With RstEmail
@@ -156,7 +156,7 @@ Public Sub FindEmail(StepIndex As Integer)
         End If
     End With
     
-    StoreID = FldrInbox.StoreID
+    StoreID = pFldrInbox.StoreID
     
     If EntryID <> "" Then
         On Error Resume Next
@@ -170,7 +170,7 @@ Public Sub FindEmail(StepIndex As Integer)
     
     Set OLNameSpace = Nothing
     Set RstEmail = Nothing
-    Set FldrInbox = Nothing
+    Set pFldrInbox = Nothing
 End Sub
 
 '===============================================================
