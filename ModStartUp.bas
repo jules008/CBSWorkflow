@@ -369,6 +369,9 @@ Private Function SetGlobalClasses() As Boolean
     Set ActiveWorkflows = New ClsWorkflows
     Set MailSystem = New ClsMailSystem
     Set MailInbox = New ClsMailInbox
+    With MailInbox
+        .MailFolder = "contact@cbs-capital.co.uk"
+    End With
     Set CodeTimer = New ClsCodeTimer
     ActiveWorkflows.UpdateRAGs
 

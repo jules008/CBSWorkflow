@@ -20,6 +20,7 @@ Option Explicit
 Public Const PROJECT_FILE_NAME As String = "CBS Workflow"
 Public Const APP_NAME As String = "CBSWorkflow"
 Public Const DB_FILE_NAME As String = "CBSWorkflowDB"
+Public Const DEAL_CALC_FILE As String = "CBS Deal Calculator"
 Public Const INI_FILE_PATH As String = "\System Files\"
 Public Const PICTURES_PATH As String = "\System Files\Icons\"
 Public Const ERROR_PATH As String = "\System Files\"
@@ -38,8 +39,8 @@ Public Const BACKUP_INT As Integer = 5
 Public Const FILE_ERROR_LOG As String = "Error.log"
 Public Const OLD_DB_VER = "V0.01.13"
 Public Const DB_VER = "V0.01.14"
-Public Const VERSION = "V0.01.20" ' Reports
-Public Const VER_DATE = "27 Dec 22"
+Public Const VERSION = "V0.01.21" ' Deal Calculator
+Public Const VER_DATE = "31 Dec 22"
 ' ===============================================================
 ' Error Constants
 ' ---------------------------------------------------------------

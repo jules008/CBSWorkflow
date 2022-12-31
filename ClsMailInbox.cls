@@ -20,7 +20,33 @@ Attribute InboxItems.VB_VarHelpID = -1
 Private WithEvents OutlookApp As Outlook.Application
 Attribute OutlookApp.VB_VarHelpID = -1
 Private ObjectNS As Outlook.Namespace
-Private FldrInbox As Outlook.Folder
+Private pFldrInbox As Outlook.Folder
+Private pActive As Boolean
+Private pMailFolder As String
+
+' ===============================================================
+Public Property Get MailFolder() As String
+    MailFolder = pMailFolder
+End Property
+' ---------------------------------------------------------------
+Public Property Let MailFolder(ByVal vNewValue As String)
+    On Error Resume Next
+    
+    pMailFolder = vNewValue
+    Set pFldrInbox = ObjectNS.Folders(pMailFolder).Folders("Inbox")
+    
+    If pFldrInbox Is Nothing Then
+        pActive = False
+    Else
+        pActive = True
+        Set InboxItems = pFldrInbox.Items
+        ParseEmails
+    End If
+End Property
+' ===============================================================
+Public Property Get Active() As Boolean
+    Active = pActive
+End Property
 
 ' ===============================================================
 ' OutlookApp_NewMailEx
@@ -32,8 +58,10 @@ Private Sub OutlookApp_NewMailEx(ByVal EntryIDCollection As String)
     
     On Error GoTo ErrorHandler
         
-    StoreID = FldrInbox.StoreID
+    StoreID = pFldrInbox.StoreID
     Set Msg = ObjectNS.GetItemFromID(EntryIDCollection, StoreID)
+    
+    Debug.Print "Event triggered"
     
     CheckMail Msg
     
@@ -60,8 +88,8 @@ End Sub
 Private Sub OutlookApp_Startup()
     Set OutlookApp = Outlook.Application
     Set ObjectNS = OutlookApp.GetNamespace("MAPI")
-    Set FldrInbox = ObjectNS.Folders("contact@cbs-capital.co.uk").Folders("Inbox")
-    Set InboxItems = FldrInbox.Items
+    Set pFldrInbox = ObjectNS.Folders("contact@cbs-capital.co.uk").Folders("Inbox")
+    Set InboxItems = pFldrInbox.Items
     ParseEmails
 End Sub
 
@@ -112,17 +140,22 @@ Public Sub CheckMail(Msg As Outlook.MailItem)
                     End If
                 Next
                 
+                Debug.Print "Parsed email"
+                
                 If DB Is Nothing Then DBConnect
                 
                 Set RstContact = ModDatabase.SQLQuery("SELECT * FROM TblContact WHERE EmailAddress = '" & Email & "'")
                 Set RstContMaxNo = ModDatabase.SQLQuery("SELECT MAX(ContactNo) As MaxNo FROM TblContact")
                 
                 If RstContact.RecordCount = 0 Then
+                    Debug.Print "Not in database"
                     Dim NextNo As Integer
                     NextNo = RstContMaxNo!MaxNo + 1
                     
-                    DB.Execute "INSERT INTO TblContact (ContactNo, ContactType, ContactName, EmailAddress) " _
-                    & "VALUES (" & NextNo & ", 'Lead'" & ", '" & FirstName & " " & LastName & "', '" & Email & " ') "
+                    DB.Execute "INSERT INTO TblContact (ContactNo, ContactType, ContactName, EmailAddress, ComFrq, LastComm) " _
+                    & "VALUES (" & NextNo & ", 'Lead'" & ", '" & FirstName & " " & LastName & "', '" & Email & " ', " & 30 & " , '" & Format(Now, "dd mm yy") & " ') "
+                    
+                    SendDealCalc Email
                 End If
             End If
         End If
@@ -132,18 +165,33 @@ Public Sub CheckMail(Msg As Outlook.MailItem)
 End Sub
 
 ' ===============================================================
+' SendDealCalc
+' sends email with deal calc attached
+' ---------------------------------------------------------------
+Public Sub SendDealCalc(EmailAdd As String)
+    Dim DealEmail As ClsMailItem
+    
+    With MailSystem.MailItem
+        .To = EmailAdd
+        .Subject = "Deal Calculator"
+        .Attachments.Add GetDocLocalPath(ThisWorkbook.Path) & TEMPLATE_STORE & DEAL_CALC_FILE & ".xlsx"
+    End With
+    With MailSystem
+        .SendEmail
+    End With
+    
+End Sub
+
+' ===============================================================
 Private Sub Class_Initialize()
     Set OutlookApp = Outlook.Application
     Set ObjectNS = OutlookApp.GetNamespace("MAPI")
-    Set FldrInbox = ObjectNS.Folders("contact@cbs-capital.co.uk").Folders("Inbox")
-    Set InboxItems = FldrInbox.Items
-    ParseEmails
 End Sub
 ' ---------------------------------------------------------------
 Private Sub Class_Terminate()
     Set OutlookApp = Nothing
     Set ObjectNS = Nothing
-    Set FldrInbox = Nothing
+    Set pFldrInbox = Nothing
     Set InboxItems = Nothing
 
 End Sub
