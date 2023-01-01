@@ -152,8 +152,8 @@ Public Sub CheckMail(Msg As Outlook.MailItem)
                     Dim NextNo As Integer
                     NextNo = RstContMaxNo!MaxNo + 1
                     
-                    DB.Execute "INSERT INTO TblContact (ContactNo, ContactType, ContactName, EmailAddress) " _
-                    & "VALUES (" & NextNo & ", 'Lead'" & ", '" & FirstName & " " & LastName & "', '" & Email & " ') "
+                    DB.Execute "INSERT INTO TblContact (ContactNo, ContactType, ContactName, EmailAddress, ComFrq, LastComm) " _
+                    & "VALUES (" & NextNo & ", 'Lead'" & ", '" & FirstName & " " & LastName & "', '" & Email & " ', " & 30 & " , '" & Format(Now, "dd mm yy") & " ') "
                     
                     SendDealCalc Email
                 End If
