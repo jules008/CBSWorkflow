@@ -155,7 +155,7 @@ Public Sub CheckMail(Msg As Outlook.MailItem)
                     DB.Execute "INSERT INTO TblContact (ContactNo, ContactType, ContactName, EmailAddress, ComFrq, LastComm) " _
                     & "VALUES (" & NextNo & ", 'Lead'" & ", '" & FirstName & " " & LastName & "', '" & Email & " ', " & 30 & " , '" & Format(Now, "dd mm yy") & " ') "
                     
-                    SendDealCalc Email
+                    SendDealCalc Email, FirstName
                 End If
             End If
         End If
@@ -168,13 +168,28 @@ End Sub
 ' SendDealCalc
 ' sends email with deal calc attached
 ' ---------------------------------------------------------------
-Public Sub SendDealCalc(EmailAdd As String)
+Public Sub SendDealCalc(EmailAdd As String, Name As String)
     Dim DealEmail As ClsMailItem
+    Dim MailAccount As Outlook.Account
+    
+    Set MailAccount = Session.Accounts("contact@cbs-capital.co.uk")
     
     With MailSystem.MailItem
         .To = EmailAdd
         .Subject = "Deal Calculator"
         .Attachments.Add GetDocLocalPath(ThisWorkbook.Path) & TEMPLATE_STORE & DEAL_CALC_FILE & ".xlsx"
+        .Body = Name & vbCr _
+            & "Thanks for taking the time to download your very own CBS Deal Calculator. " & vbCr & vbCr _
+            & "This calculator will enable you to quickly assess projects to ensure they are hitting the right profit levels. " & vbCr & vbCr _
+            & "Your project should ideally be hitting 28%+ profit on GDV (pre finance costs). " & vbCr & vbCr _
+            & "If your project is scoring low, don’t worry, still book a call to see how our structured finance solutions can help you." & vbCr & vbCr _
+            & "Lets Talk" & vbCr & vbCr _
+            & "https://calendly.com/cbscapital/heather" & vbCr & vbCr _
+            & "Heather Critchlow" & vbCr _
+            & "Partner" & vbCr _
+            & "CBS Capital" & vbCr _
+            & "W| www.cbscapital.co.uk"
+            .SendUsingAccount = MailAccount
     End With
     With MailSystem
         .SendEmail
