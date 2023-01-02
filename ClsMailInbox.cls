@@ -140,7 +140,9 @@ Public Sub CheckMail(Msg As Outlook.MailItem)
                     End If
                 Next
                 
-                Debug.Print "Parsed email"
+                Debug.Print "Parsed email", FirstName, LastName, Email
+                
+                SendDealCalc Email, FirstName
                 
                 If DB Is Nothing Then DBConnect
                 
@@ -150,12 +152,16 @@ Public Sub CheckMail(Msg As Outlook.MailItem)
                 If RstContact.RecordCount = 0 Then
                     Debug.Print "Not in database"
                     Dim NextNo As Integer
+                    
+                    If Not IsNull(RstContMaxNo!MaxNo) Then
                     NextNo = RstContMaxNo!MaxNo + 1
+                    Else
+                        NextNo = 1
+                    End If
                     
                     DB.Execute "INSERT INTO TblContact (ContactNo, ContactType, ContactName, EmailAddress, ComFrq, LastComm) " _
                     & "VALUES (" & NextNo & ", 'Lead'" & ", '" & FirstName & " " & LastName & "', '" & Email & " ', " & 30 & " , '" & Format(Now, "dd mm yy") & " ') "
                     
-                    SendDealCalc Email, FirstName
                 End If
             End If
         End If
@@ -172,6 +178,8 @@ Public Sub SendDealCalc(EmailAdd As String, Name As String)
     Dim DealEmail As ClsMailItem
     Dim MailAccount As Outlook.Account
     
+    Set MailSystem = Nothing
+    Set MailSystem = New ClsMailSystem
     Set MailAccount = Session.Accounts("contact@cbs-capital.co.uk")
     
     With MailSystem.MailItem
@@ -193,6 +201,7 @@ Public Sub SendDealCalc(EmailAdd As String, Name As String)
     End With
     With MailSystem
         .SendEmail
+        Debug.Print "email Sent"
     End With
     
 End Sub
