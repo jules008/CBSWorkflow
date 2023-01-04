@@ -177,26 +177,40 @@ End Sub
 Public Sub SendDealCalc(EmailAdd As String, Name As String)
     Dim DealEmail As ClsMailItem
     Dim MailAccount As Outlook.Account
+    Dim HTML1 As String
+    Dim HTML2 As String
     
     Set MailSystem = Nothing
     Set MailSystem = New ClsMailSystem
     Set MailAccount = Session.Accounts("contact@cbs-capital.co.uk")
     
+    HTML1 = "<!DOCTYPE html> " _
+     & "<html> " _
+     & "<BODY style=""line-height: 80%;font-family: Helvetica; font-size: 13px"" > " _
+     & "    <p>" & Name & "</p> " _
+     & "    <p>Thanks for taking the time to download your very own CBS Deal Calculator.</p>     " _
+     & "    <p>This calculator will enable you to quickly assess projects to ensure they are hitting the right profit levels.</p> " _
+     & "    <p>Your project should ideally be hitting 28%+ profit on GDV (pre finance costs).</p> " _
+     & "    <p>If your project is scoring low, don&#39t worry, still book a call to see how our structured finance solutions can help you.</p>  " _
+     & "    <p>Lets Talk</p> " _
+     & "    <a href=""https://calendly.com/cbscapital/heather"">https://calendly.com/cbscapital/heather</a> " _
+     & "    <p style=""line-height: 100%;"">     " _
+     & "    Heather Critchlow<br> " _
+     & "    Partner<br> " _
+     & "    CBS Capital</p> " _
+     & "    W| <a href=""www.cbscapital.co.uk"">www.cbscapital.co.uk</a> " _
+     & "    <p><IMG src=""" & GetDocLocalPath(ThisWorkbook.Path) & PICTURES_PATH & "Logo.jpg"" width=200></p> " _
+     & "    <p style=""font-size: 11px"">Capital is a trading name of&nbsp;the CBS Capital Group of&nbsp;Companies</p> " _
+     & "    <p style=""font-size: 11px"">14 | Enterprise House |&nbsp;Cherry Orchard Lane | Salisbury&nbsp;| Wiltshire | SP2 7LD |&nbsp;Registered 11119716,&nbsp;14101720&nbsp;and 13290200</p> " _
+     & "    </BODY> " _
+     & "</html> "
+ 
     With MailSystem.MailItem
         .To = EmailAdd
         .Subject = "Deal Calculator"
         .Attachments.Add GetDocLocalPath(ThisWorkbook.Path) & TEMPLATE_STORE & DEAL_CALC_FILE & ".xlsx"
-        .Body = Name & vbCr _
-            & "Thanks for taking the time to download your very own CBS Deal Calculator. " & vbCr & vbCr _
-            & "This calculator will enable you to quickly assess projects to ensure they are hitting the right profit levels. " & vbCr & vbCr _
-            & "Your project should ideally be hitting 28%+ profit on GDV (pre finance costs). " & vbCr & vbCr _
-            & "If your project is scoring low, don’t worry, still book a call to see how our structured finance solutions can help you." & vbCr & vbCr _
-            & "Lets Talk" & vbCr & vbCr _
-            & "https://calendly.com/cbscapital/heather" & vbCr & vbCr _
-            & "Heather Critchlow" & vbCr _
-            & "Partner" & vbCr _
-            & "CBS Capital" & vbCr _
-            & "W| www.cbscapital.co.uk"
+        .BodyFormat = olFormatHTML
+        .HTMLBody = HTML1
             .SendUsingAccount = MailAccount
     End With
     With MailSystem

@@ -95,6 +95,21 @@ Public Sub PerfSettingsOff()
 End Sub
 
 ' ===============================================================
+' GetTextFromFile
+' returns all text from a file
+' ---------------------------------------------------------------
+Private Function GetTextFromFile(FilePath As String) As String
+    Dim FSO As Object
+    Dim oFS As Object, sText As String
+
+    Set FSO = CreateObject("Scripting.FileSystemObject")
+    Set oFS = FSO.OpenTextFile(FilePath)
+
+    GetTextFromFile = oFS.ReadAll()
+
+End Function
+
+' ===============================================================
 ' SpellCheck
 ' checks spelling on forms
 ' ---------------------------------------------------------------
@@ -179,29 +194,30 @@ End Sub
 ' CopyTextToClipboard
 ' Sends string to clipboard for pasting
 ' ---------------------------------------------------------------
-Sub CopyTextToClipboard(sUniText As String)
+Function CopyTextToClipboard(Optional StoreText As String) As String
+'PURPOSE: Read/Write to Clipboard
+'Source: ExcelHero.com (Daniel Ferry)
 
-    Dim iStrPtr As LongPtr
-    Dim iLen As Long
-    Dim iLock As LongPtr
-    Const GMEM_MOVEABLE As Long = &H2
-    Const GMEM_ZEROINIT As Long = &H40
-    Const CF_UNICODETEXT As Long = &HD
-    OpenClipboard 0&
-    EmptyClipboard
-    iLen = LenB(sUniText) + 2&
-    iStrPtr = GlobalAlloc(GMEM_MOVEABLE Or GMEM_ZEROINIT, iLen)
-    iLock = GlobalLock(iStrPtr)
-    lstrcpy iLock, StrPtr(sUniText)
-    GlobalUnlock iStrPtr
-    SetClipboardData CF_UNICODETEXT, iStrPtr
-    CloseClipboard
-    Application.StatusBar = "'" & Left(sUniText, 25) & "' copied to clipboard"
+Dim x As Variant
+
+'Store as variant for 64-bit VBA support
+  x = StoreText
+
+'Create HTMLFile Object
+  With CreateObject("htmlfile")
+    With .parentWindow.clipboardData
+      Select Case True
+        Case Len(StoreText)
+          'Write to the clipboard
+            .setData "text", x
+        Case Else
+          'Read from the clipboard (no variable passed through)
+            CopyTextToClipboard = .GetData("text")
+      End Select
+    End With
+  End With
     
-    If Application.Wait(Now + TimeValue("0:00:02")) Then
-       Application.StatusBar = ""
-    End If
-End Sub
+End Function
 
 ' ===============================================================
 ' ColourConvert
@@ -222,27 +238,27 @@ End Sub
 ' ---------------------------------------------------------------
 Sub AddCheckBoxes()
     On Error Resume Next
-    Dim c As Range, myRange As Range
+    Dim C As Range, myRange As Range
     Set myRange = Selection
-    For Each c In myRange.Cells
-        ActiveSheet.CheckBoxes.Add(c.Left, c.Top, c.Width, c.Height).Select
+    For Each C In myRange.Cells
+        ActiveSheet.CheckBoxes.Add(C.Left, C.Top, C.Width, C.Height).Select
             With Selection
-                .LinkedCell = c.Address
+                .LinkedCell = C.Address
                 .Characters.Text = ""
-                .Name = c.Address
+                .Name = C.Address
             End With
-            c.Select
+            C.Select
             With Selection
                 .FormatConditions.Delete
                 .FormatConditions.Add Type:=xlExpression, _
-                    Formula1:="=" & c.Address & "=TRUE"
+                    Formula1:="=" & C.Address & "=TRUE"
                 '.FormatConditions(1).Font.ColorIndex = 6 'change for other color when ticked
                 '.FormatConditions(1).Interior.ColorIndex = 6 'change for other color when ticked
                 '.Font.ColorIndex = 2 'cell background color = White
             End With
         Next
         myRange.Select
-        Set c = Nothing
+        Set C = Nothing
         Set myRange = Nothing
     
 End Sub
@@ -480,7 +496,7 @@ Function IsValidEmail(sEmailAddress As String) As Boolean
     bReturn = False
     
     'Check if Email match regex pattern
-    If oRegEx.Test(sEmailAddress) Then
+    If oRegEx.test(sEmailAddress) Then
         'Debug.Print "Valid Email ('" & sEmailAddress & "')"
         bReturn = True
     Else
