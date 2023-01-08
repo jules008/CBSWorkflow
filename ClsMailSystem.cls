@@ -15,27 +15,27 @@ Attribute VB_Exposed = False
 ' Date - 06 Jul 20
 '===============================================================
 Option Explicit
-Private WithEvents pOutlookApp As Outlook.Application
+Private WithEvents pOutlookApp As outlook.Application
 Attribute pOutlookApp.VB_VarHelpID = -1
 Private pReturnMail As ClsMailItem
-Private WithEvents pMailItem As Outlook.MailItem
+Private WithEvents pMailItem As outlook.MailItem
 Attribute pMailItem.VB_VarHelpID = -1
 
 '----------------------------------------------------------
-Public Property Get OutlookApp() As Outlook.Application
+Public Property Get OutlookApp() As outlook.Application
     Set OutlookApp = pOutlookApp
 End Property
 
-Public Property Let OutlookApp(ByVal vNewValue As Outlook.Application)
+Public Property Let OutlookApp(ByVal vNewValue As outlook.Application)
     Set pOutlookApp = vNewValue
 End Property
 
 '----------------------------------------------------------
-Public Property Get MailItem() As Outlook.MailItem
+Public Property Get MailItem() As outlook.MailItem
     Set MailItem = pMailItem
 End Property
 
-Public Property Let MailItem(ByVal vNewValue As Outlook.MailItem)
+Public Property Let MailItem(ByVal vNewValue As outlook.MailItem)
     Set pMailItem = vNewValue
 End Property
 
@@ -56,7 +56,7 @@ Public Sub DisplayEmail()
    On Error Resume Next
     With pMailItem
         .Display
-    End With
+        End With
     On Error GoTo 0
 End Sub
 
@@ -104,45 +104,13 @@ Private Function ReturnMailItem()
 End Function
 
 '===============================================================
-'===============================================================
-'SaveEmail
-' saves email in database when it arrives
-'---------------------------------------------------------------
-Public Sub SaveEmail(MailItem As MailItem, Step As ClsStep)
-    Dim RstEmail As Recordset
-    Dim LastNo As Integer
-    
-    Set RstEmail = ModDatabase.SQLQuery("SELECT * FROM TblInbox WHERE StepIndex = " & Step.StepIndex)
-
-    With RstEmail
-        If .RecordCount = 0 Then
-            .AddNew
-        Else
-            .Edit
-        End If
-        
-        !StepIndex = Step.StepIndex
-        !Subject = MailItem.Subject
-'        !Body = MailItem.Body
-'        !To = MailItem.To
-'        !CC = MailItem.CC
-'        !Attachment = MailItem.Attachments.Item(1).PathName
-        !EntryID = MailItem.EntryID
-        .Update
-
-    End With
-    Set RstEmail = Nothing
-
-End Sub
-
-'===============================================================
 ' FindEmail
 ' Finds and returns email from EntryID
 '---------------------------------------------------------------
 Public Sub FindEmail(StepIndex As Integer)
     Dim OLNameSpace As Namespace
     Dim RstEmail As Recordset
-    Dim pFldrInbox As Outlook.Folder
+    Dim pFldrInbox As outlook.Folder
     Dim EntryID As String
     Dim StoreID As String
 
@@ -207,14 +175,6 @@ Private Sub GetOutlook()
     
     Set pMailItem = pOutlookApp.CreateItem(0)
     Set pReturnMail = New ClsMailItem
-End Sub
-
-'===============================================================
-'Event pMailItem_Send
-'saves email details when it has been sent
-'---------------------------------------------------------------
-Private Sub pMailItem_Send(Cancel As Boolean)
-    FrmProjectWF.BringToFront
 End Sub
 
 '===============================================================

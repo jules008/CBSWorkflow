@@ -15,14 +15,16 @@ Attribute VB_Exposed = False
 ' Date - 19 Nov 22
 '===============================================================
 Option Explicit
-Private WithEvents InboxItems As Outlook.Items
+Private WithEvents InboxItems As outlook.Items
 Attribute InboxItems.VB_VarHelpID = -1
-Private WithEvents OutlookApp As Outlook.Application
-Attribute OutlookApp.VB_VarHelpID = -1
-Private ObjectNS As Outlook.Namespace
-Private pFldrInbox As Outlook.Folder
+Private WithEvents pOutlookApp As outlook.Application
+Attribute pOutlookApp.VB_VarHelpID = -1
+Private pObjectNS As outlook.Namespace
+Private pFldrInbox As outlook.Folder
 Private pActive As Boolean
 Private pMailFolder As String
+Private WithEvents pMailItem As outlook.MailItem
+Attribute pMailItem.VB_VarHelpID = -1
 
 ' ===============================================================
 Public Property Get MailFolder() As String
@@ -33,13 +35,16 @@ Public Property Let MailFolder(ByVal vNewValue As String)
     On Error Resume Next
     
     pMailFolder = vNewValue
-    Set pFldrInbox = ObjectNS.Folders(pMailFolder).Folders("Inbox")
+    Set pFldrInbox = pObjectNS.Folders(pMailFolder).Folders("Inbox")
     
     If pFldrInbox Is Nothing Then
         pActive = False
     Else
         pActive = True
         Set InboxItems = pFldrInbox.Items
+        
+        If Not LogEvent("Parsing emails", False) Then Err.Raise HANDLED_ERROR
+
         ParseEmails
     End If
 End Property
@@ -52,17 +57,17 @@ End Property
 ' OutlookApp_NewMailEx
 ' Event on new email
 ' ---------------------------------------------------------------
-Private Sub OutlookApp_NewMailEx(ByVal EntryIDCollection As String)
-    Dim Msg As Outlook.MailItem
+Private Sub pOutlookApp_NewMailEx(ByVal EntryIDCollection As String)
+    Dim Msg As outlook.MailItem
     Dim StoreID As String
     
-    On Error GoTo ErrorHandler
+    On Error GoTo ExitNewItem
         
     StoreID = pFldrInbox.StoreID
-    Set Msg = ObjectNS.GetItemFromID(EntryIDCollection, StoreID)
     
-    Debug.Print "Event triggered"
+    Set Msg = pObjectNS.GetItemFromID(EntryIDCollection, StoreID)
     
+    If Not LogEvent("New email arrived", False) Then Err.Raise HANDLED_ERROR
     CheckMail Msg
     
 ExitNewItem:
@@ -75,21 +80,24 @@ ErrorHandler:
 End Sub
 
 ' ===============================================================
-' OutlookApp_Quit
+' pOutlookApp_Quit
 ' Necessary for microsoft bug that prevents startup running next time
 ' ---------------------------------------------------------------
-Private Sub OutlookApp_Quit()
+Private Sub pOutlookApp_Quit()
+    If Not LogEvent("Outlook Closing", False) Then Err.Raise HANDLED_ERROR
+    MsgBox "OUTLOOK IS CLOSING DOWN" & vbCr _
+                        & " Emails from potential Clients will no longer be monitored and replied to!!", vbCritical + vbOKOnly, APP_NAME
 End Sub
 
 ' ===============================================================
-' OutlookApp_Startup
+' pOutlookApp_Startup
 ' Loads necessary Objects
 ' ---------------------------------------------------------------
-Private Sub OutlookApp_Startup()
-    Set OutlookApp = Outlook.Application
-    Set ObjectNS = OutlookApp.GetNamespace("MAPI")
-    Set pFldrInbox = ObjectNS.Folders("contact@cbs-capital.co.uk").Folders("Inbox")
-    Set InboxItems = pFldrInbox.Items
+Private Sub pOutlookApp_Startup()
+'    Set pObjectNS = pOutlookApp.GetNamespace("MAPI")
+'    Set pFldrInbox = pObjectNS.Folders("contact@cbs-capital.co.uk").Folders("Inbox")
+'    Set InboxItems = pFldrInbox.Items
+'    If Not LogEvent("Outlook Opened", False) Then Err.Raise HANDLED_ERROR
     ParseEmails
 End Sub
 
@@ -105,7 +113,6 @@ Public Sub ParseEmails()
         If TypeName(Msg) = "MailItem" Then
             CheckMail Msg
         End If
-        Debug.Print i
         i = i + 1
     Next
 End Sub
@@ -114,19 +121,36 @@ End Sub
 ' CheckMail
 ' Checks and imports emails
 ' ---------------------------------------------------------------
-Public Sub CheckMail(Msg As Outlook.MailItem)
+Public Sub CheckMail(Msg As outlook.MailItem)
     Dim FirstName As String
     Dim EmailBody() As String
     Dim LastName As String
     Dim Email As String
+    Dim EnableSend As Boolean
     Dim RstContact As Recordset
     Dim RstContMaxNo As Recordset
+    Dim RstEnv As Recordset
     Dim i As Integer
     
     With Msg
         If Msg.UnRead = True Then
+            Msg.UnRead = False
+            
+            If InStr(1, .Subject, "Send Status Report", vbTextCompare) Then
+                ModInbox.SendStatusReport
+            End If
+            
+            If InStr(1, .Subject, "Stop Monitor", vbTextCompare) Then
+                Stop
+            End If
+            
+            If InStr(1, .Subject, "Start Monitor", vbTextCompare) Then
+                ThisWorkbook.Initialise
+            End If
+            
+            
             If InStr(1, .Subject, "CBS DB Import", vbTextCompare) Then
-                
+                Msg.UnRead = False
                 EmailBody = Split(.Body, vbCr)
                 For i = LBound(EmailBody) To UBound(EmailBody)
                     If InStr(1, EmailBody(i), "First Name") > 0 Then
@@ -140,17 +164,17 @@ Public Sub CheckMail(Msg As Outlook.MailItem)
                     End If
                 Next
                 
-                Debug.Print "Parsed email", FirstName, LastName, Email
-                
-                SendDealCalc Email, FirstName
+                If Not LogEvent("Parsed email " & FirstName & ", " & LastName & ", " & Email, False) Then Err.Raise HANDLED_ERROR
                 
                 If DB Is Nothing Then DBConnect
                 
                 Set RstContact = ModDatabase.SQLQuery("SELECT * FROM TblContact WHERE EmailAddress = '" & Email & "'")
                 Set RstContMaxNo = ModDatabase.SQLQuery("SELECT MAX(ContactNo) As MaxNo FROM TblContact")
+                Set RstEnv = ModDatabase.SQLQuery("SELECT Env FROM TblDBVersion")
                 
-                If RstContact.RecordCount = 0 Then
-                    Debug.Print "Not in database"
+                If RstContact.RecordCount > 0 Then
+                    If Not LogEvent("Already in database, so no action", False) Then Err.Raise HANDLED_ERROR
+                Else
                     Dim NextNo As Integer
                     
                     If Not IsNull(RstContMaxNo!MaxNo) Then
@@ -162,29 +186,42 @@ Public Sub CheckMail(Msg As Outlook.MailItem)
                     DB.Execute "INSERT INTO TblContact (ContactNo, ContactType, ContactName, EmailAddress, ComFrq, LastComm) " _
                     & "VALUES (" & NextNo & ", 'Lead'" & ", '" & FirstName & " " & LastName & "', '" & Email & " ', " & 30 & " , '" & Format(Now, "dd mm yy") & " ') "
                     
+                    If Not LogEvent("Entered into database", False) Then Err.Raise HANDLED_ERROR
+                    
+                    If RstEnv!Env = "Live" Then EnableSend = True
+                    SendDealCalc Email, FirstName, EnableSend
                 End If
             End If
         End If
     End With
     Set RstContact = Nothing
     Set RstContMaxNo = Nothing
+    Set DB = Nothing
+    Set RstEnv = Nothing
 End Sub
 
 ' ===============================================================
 ' SendDealCalc
 ' sends email with deal calc attached
 ' ---------------------------------------------------------------
-Public Sub SendDealCalc(EmailAdd As String, Name As String)
-    Dim DealEmail As ClsMailItem
-    Dim MailAccount As Outlook.Account
+Public Sub SendDealCalc(EmailAdd As String, Name As String, EnableSend As Boolean)
+    Dim MailItem As MailItem
+    Dim MailAccount As outlook.Account
+    Dim OLPA As outlook.PropertyAccessor
+    Dim AttLogo As outlook.Attachment
     Dim HTML1 As String
-    Dim HTML2 As String
+    Dim ImgPath As String
     
-    Set MailSystem = Nothing
-    Set MailSystem = New ClsMailSystem
+    ImgPath = GetDocLocalPath(ThisWorkbook.Path) & PICTURES_PATH & LOGO_FILE
+    
+    Set MailItem = pOutlookApp.CreateItem(0)
     Set MailAccount = Session.Accounts("contact@cbs-capital.co.uk")
+    Set AttLogo = MailItem.Attachments.Add(ImgPath)
+    Set OLPA = AttLogo.PropertyAccessor
     
-    HTML1 = "<!DOCTYPE html> " _
+    OLPA.SetProperty PR_ATTACH_CONTENT_ID, "Logo"
+         
+     HTML1 = "<!DOCTYPE html> " _
      & "<html> " _
      & "<BODY style=""line-height: 80%;font-family: Helvetica; font-size: 13px"" > " _
      & "    <p>" & Name & "</p> " _
@@ -199,38 +236,39 @@ Public Sub SendDealCalc(EmailAdd As String, Name As String)
      & "    Partner<br> " _
      & "    CBS Capital</p> " _
      & "    W| <a href=""www.cbscapital.co.uk"">www.cbscapital.co.uk</a> " _
-     & "    <p><IMG src=""" & GetDocLocalPath(ThisWorkbook.Path) & PICTURES_PATH & "Logo.jpg"" width=200></p> " _
+     & "    <p><IMG src=""cid:Logo"" width=200></p> " _
      & "    <p style=""font-size: 11px"">Capital is a trading name of&nbsp;the CBS Capital Group of&nbsp;Companies</p> " _
      & "    <p style=""font-size: 11px"">14 | Enterprise House |&nbsp;Cherry Orchard Lane | Salisbury&nbsp;| Wiltshire | SP2 7LD |&nbsp;Registered 11119716,&nbsp;14101720&nbsp;and 13290200</p> " _
      & "    </BODY> " _
      & "</html> "
- 
-    With MailSystem.MailItem
+    With MailItem
         .To = EmailAdd
         .Subject = "Deal Calculator"
         .Attachments.Add GetDocLocalPath(ThisWorkbook.Path) & TEMPLATE_STORE & DEAL_CALC_FILE & ".xlsx"
         .BodyFormat = olFormatHTML
         .HTMLBody = HTML1
-            .SendUsingAccount = MailAccount
-    End With
-    With MailSystem
-        .SendEmail
-        Debug.Print "email Sent"
+        .SendUsingAccount = MailAccount
+        
+        If EnableSend Then .Send Else .Display
     End With
     
+   Set MailItem = Nothing
+   Set MailAccount = Nothing
+   Set AttLogo = Nothing
+   Set OLPA = Nothing
 End Sub
 
 ' ===============================================================
 Private Sub Class_Initialize()
-    Set OutlookApp = Outlook.Application
-    Set ObjectNS = OutlookApp.GetNamespace("MAPI")
+    Set pOutlookApp = CreateObject(Class:="Outlook.Application")
+    Set pObjectNS = pOutlookApp.GetNamespace("MAPI")
 End Sub
 ' ---------------------------------------------------------------
 Private Sub Class_Terminate()
-    Set OutlookApp = Nothing
-    Set ObjectNS = Nothing
     Set pFldrInbox = Nothing
     Set InboxItems = Nothing
+    Set pObjectNS = Nothing
+    Set pOutlookApp = Nothing
 
 End Sub
 ' ===============================================================
