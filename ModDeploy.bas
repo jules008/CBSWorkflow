@@ -24,12 +24,12 @@ Public Sub QueryTest()
     
 
     'undo
-    DB.Execute "ALTER TABLE TblProject DROP COLUMN CompleteDate "
+    DB.Execute "ALTER TABLE TblDBVersion DROP COLUMN Env "
     
     Stop
     'update
     
-    DB.Execute "ALTER TABLE TblProject ADD COLUMN CompleteDate date"
+    DB.Execute "ALTER TABLE TblDBVersion ADD COLUMN Env text"
 End Sub
 
 ' ===============================================================
@@ -70,12 +70,6 @@ Public Function UpdateDBScript() As Boolean
         Exit Function
     End If
             
-    
-    ' ========================================================================================
-    ' Database commands
-    ' ----------------------------------------------------------------------------------------
-    ' ========================================================================================
-        
     'update DB Version
     With RstTable
         .Edit
@@ -83,6 +77,13 @@ Public Function UpdateDBScript() As Boolean
         !UpdateDB = False
         .Update
     End With
+    Set RstTable = Nothing
+    
+    ' ========================================================================================
+    ' Database commands
+    ' ----------------------------------------------------------------------------------------
+    ' ========================================================================================
+        
     
         MsgBox "Database successfully updated to Version " & DB_VER, vbOKOnly + vbInformation
     
