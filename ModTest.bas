@@ -10,7 +10,7 @@ Public Sub TestDealCalc()
         .MailFolder = "contact@cbs-capital.co.uk"
     End With
     
-    MailInbox.SendDealCalc "jules.turner@hotmail.co.uk", "James"
+    MailInbox.SendDealCalc "jules.turner@hotmail.co.uk", "James", True
     
     Set MailSystem = Nothing
     Set MailInbox = Nothing

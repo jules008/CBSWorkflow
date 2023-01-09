@@ -15,27 +15,27 @@ Attribute VB_Exposed = False
 ' Date - 06 Jul 20
 '===============================================================
 Option Explicit
-Private WithEvents pOutlookApp As outlook.Application
+Private WithEvents pOutlookApp As Outlook.Application
 Attribute pOutlookApp.VB_VarHelpID = -1
 Private pReturnMail As ClsMailItem
-Private WithEvents pMailItem As outlook.MailItem
+Private WithEvents pMailItem As Outlook.MailItem
 Attribute pMailItem.VB_VarHelpID = -1
 
 '----------------------------------------------------------
-Public Property Get OutlookApp() As outlook.Application
+Public Property Get OutlookApp() As Outlook.Application
     Set OutlookApp = pOutlookApp
 End Property
 
-Public Property Let OutlookApp(ByVal vNewValue As outlook.Application)
+Public Property Let OutlookApp(ByVal vNewValue As Outlook.Application)
     Set pOutlookApp = vNewValue
 End Property
 
 '----------------------------------------------------------
-Public Property Get MailItem() As outlook.MailItem
+Public Property Get MailItem() As Outlook.MailItem
     Set MailItem = pMailItem
 End Property
 
-Public Property Let MailItem(ByVal vNewValue As outlook.MailItem)
+Public Property Let MailItem(ByVal vNewValue As Outlook.MailItem)
     Set pMailItem = vNewValue
 End Property
 
@@ -110,7 +110,7 @@ End Function
 Public Sub FindEmail(StepIndex As Integer)
     Dim OLNameSpace As Namespace
     Dim RstEmail As Recordset
-    Dim pFldrInbox As outlook.Folder
+    Dim pFldrInbox As Outlook.Folder
     Dim EntryID As String
     Dim StoreID As String
 

@@ -25,6 +25,7 @@ Public Const INI_FILE_PATH As String = "\System Files\"
 Public Const PICTURES_PATH As String = "\System Files\Icons\"
 Public Const ERROR_PATH As String = "\System Files\"
 Public Const DEV_FILE_PATH As String = "C:\Users\jules\OneDrive\Documents\Development Areas\CBS Workflow\"
+Public Const PR_ATTACH_CONTENT_ID = "http://schemas.microsoft.com/mapi/proptag/0x3712001F"
 Public Const TMP_FILES As String = "\System Files\Tmp\"
 Public Const BAK_FILES As String = "\System Files\Backups\"
 Public Const DEV_LIB As String = "Library\"
@@ -39,8 +40,8 @@ Public Const BACKUP_INT As Integer = 5
 Public Const FILE_ERROR_LOG As String = "Error.log"
 Public Const OLD_DB_VER = "V0.01.13"
 Public Const DB_VER = "V0.01.14"
-Public Const VERSION = "V0.01.22" ' Deal Calculator
-Public Const VER_DATE = "03 Jan 23"
+Public Const VERSION = "V0.01.23" ' Contact Us
+Public Const VER_DATE = "09 Jan 23"
 ' ===============================================================
 ' Error Constants
 ' ---------------------------------------------------------------

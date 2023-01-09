@@ -15,15 +15,15 @@ Attribute VB_Exposed = False
 ' Date - 19 Nov 22
 '===============================================================
 Option Explicit
-Private WithEvents InboxItems As outlook.Items
+Private WithEvents InboxItems As Outlook.Items
 Attribute InboxItems.VB_VarHelpID = -1
-Private WithEvents pOutlookApp As outlook.Application
+Private WithEvents pOutlookApp As Outlook.Application
 Attribute pOutlookApp.VB_VarHelpID = -1
-Private pObjectNS As outlook.Namespace
-Private pFldrInbox As outlook.Folder
+Private pObjectNS As Outlook.Namespace
+Private pFldrInbox As Outlook.Folder
 Private pActive As Boolean
 Private pMailFolder As String
-Private WithEvents pMailItem As outlook.MailItem
+Private WithEvents pMailItem As Outlook.MailItem
 Attribute pMailItem.VB_VarHelpID = -1
 
 ' ===============================================================
@@ -43,8 +43,6 @@ Public Property Let MailFolder(ByVal vNewValue As String)
         pActive = True
         Set InboxItems = pFldrInbox.Items
         
-        If Not LogEvent("Parsing emails", False) Then Err.Raise HANDLED_ERROR
-
         ParseEmails
     End If
 End Property
@@ -58,7 +56,7 @@ End Property
 ' Event on new email
 ' ---------------------------------------------------------------
 Private Sub pOutlookApp_NewMailEx(ByVal EntryIDCollection As String)
-    Dim Msg As outlook.MailItem
+    Dim Msg As Outlook.MailItem
     Dim StoreID As String
     
     On Error GoTo ExitNewItem
@@ -67,7 +65,6 @@ Private Sub pOutlookApp_NewMailEx(ByVal EntryIDCollection As String)
     
     Set Msg = pObjectNS.GetItemFromID(EntryIDCollection, StoreID)
     
-    If Not LogEvent("New email arrived", False) Then Err.Raise HANDLED_ERROR
     CheckMail Msg
     
 ExitNewItem:
@@ -84,9 +81,6 @@ End Sub
 ' Necessary for microsoft bug that prevents startup running next time
 ' ---------------------------------------------------------------
 Private Sub pOutlookApp_Quit()
-    If Not LogEvent("Outlook Closing", False) Then Err.Raise HANDLED_ERROR
-    MsgBox "OUTLOOK IS CLOSING DOWN" & vbCr _
-                        & " Emails from potential Clients will no longer be monitored and replied to!!", vbCritical + vbOKOnly, APP_NAME
 End Sub
 
 ' ===============================================================
@@ -121,7 +115,7 @@ End Sub
 ' CheckMail
 ' Checks and imports emails
 ' ---------------------------------------------------------------
-Public Sub CheckMail(Msg As outlook.MailItem)
+Public Sub CheckMail(Msg As Outlook.MailItem)
     Dim FirstName As String
     Dim EmailBody() As String
     Dim LastName As String
@@ -135,19 +129,6 @@ Public Sub CheckMail(Msg As outlook.MailItem)
     With Msg
         If Msg.UnRead = True Then
             Msg.UnRead = False
-            
-            If InStr(1, .Subject, "Send Status Report", vbTextCompare) Then
-                ModInbox.SendStatusReport
-            End If
-            
-            If InStr(1, .Subject, "Stop Monitor", vbTextCompare) Then
-                Stop
-            End If
-            
-            If InStr(1, .Subject, "Start Monitor", vbTextCompare) Then
-                ThisWorkbook.Initialise
-            End If
-            
             
             If InStr(1, .Subject, "CBS DB Import", vbTextCompare) Then
                 Msg.UnRead = False
@@ -164,17 +145,13 @@ Public Sub CheckMail(Msg As outlook.MailItem)
                     End If
                 Next
                 
-                If Not LogEvent("Parsed email " & FirstName & ", " & LastName & ", " & Email, False) Then Err.Raise HANDLED_ERROR
-                
                 If DB Is Nothing Then DBConnect
                 
                 Set RstContact = ModDatabase.SQLQuery("SELECT * FROM TblContact WHERE EmailAddress = '" & Email & "'")
                 Set RstContMaxNo = ModDatabase.SQLQuery("SELECT MAX(ContactNo) As MaxNo FROM TblContact")
                 Set RstEnv = ModDatabase.SQLQuery("SELECT Env FROM TblDBVersion")
                 
-                If RstContact.RecordCount > 0 Then
-                    If Not LogEvent("Already in database, so no action", False) Then Err.Raise HANDLED_ERROR
-                Else
+                If RstContact.RecordCount = 0 Then
                     Dim NextNo As Integer
                     
                     If Not IsNull(RstContMaxNo!MaxNo) Then
@@ -185,8 +162,6 @@ Public Sub CheckMail(Msg As outlook.MailItem)
                     
                     DB.Execute "INSERT INTO TblContact (ContactNo, ContactType, ContactName, EmailAddress, ComFrq, LastComm) " _
                     & "VALUES (" & NextNo & ", 'Lead'" & ", '" & FirstName & " " & LastName & "', '" & Email & " ', " & 30 & " , '" & Format(Now, "dd mm yy") & " ') "
-                    
-                    If Not LogEvent("Entered into database", False) Then Err.Raise HANDLED_ERROR
                     
                     If RstEnv!Env = "Live" Then EnableSend = True
                     SendDealCalc Email, FirstName, EnableSend
@@ -206,9 +181,9 @@ End Sub
 ' ---------------------------------------------------------------
 Public Sub SendDealCalc(EmailAdd As String, Name As String, EnableSend As Boolean)
     Dim MailItem As MailItem
-    Dim MailAccount As outlook.Account
-    Dim OLPA As outlook.PropertyAccessor
-    Dim AttLogo As outlook.Attachment
+    Dim MailAccount As Outlook.Account
+    Dim OLPA As Outlook.PropertyAccessor
+    Dim AttLogo As Outlook.Attachment
     Dim HTML1 As String
     Dim ImgPath As String
     
@@ -249,7 +224,7 @@ Public Sub SendDealCalc(EmailAdd As String, Name As String, EnableSend As Boolea
         .HTMLBody = HTML1
         .SendUsingAccount = MailAccount
         
-        If EnableSend Then .Send Else .Display
+        If EnableSend Then .Send
     End With
     
    Set MailItem = Nothing
