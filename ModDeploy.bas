@@ -24,12 +24,14 @@ Public Sub QueryTest()
     
 
     'undo
-    DB.Execute "ALTER TABLE TblDBVersion DROP COLUMN Env "
+    DB.Execute "ALTER TABLE TblProject DROP COLUMN CBSCommPC "
+    DB.Execute "ALTER TABLE TblProject DROP COLUMN ExitFeePC "
     
     Stop
     'update
     
-    DB.Execute "ALTER TABLE TblDBVersion ADD COLUMN Env text"
+    DB.Execute "ALTER TABLE TblProject ADD COLUMN CBSCommPC single"
+    DB.Execute "ALTER TABLE TblProject ADD COLUMN ExitFeePC single"
 End Sub
 
 ' ===============================================================
@@ -82,6 +84,8 @@ Public Function UpdateDBScript() As Boolean
     ' ========================================================================================
     ' Database commands
     ' ----------------------------------------------------------------------------------------
+    DB.Execute "ALTER TABLE TblProject ADD COLUMN CBSCommPC single"
+    DB.Execute "ALTER TABLE TblProject ADD COLUMN ExitFeePC single"
     ' ========================================================================================
         
     
@@ -152,6 +156,8 @@ Public Function UpdateDBScriptUndo() As Boolean
     ' ========================================================================================
     ' Database commands
     ' ----------------------------------------------------------------------------------------
+    DB.Execute "ALTER TABLE TblProject DROP COLUMN CBSCommPC "
+    DB.Execute "ALTER TABLE TblProject DROP COLUMN ExitFeePC "
     ' ========================================================================================
     
     DB.Close

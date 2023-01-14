@@ -1,6 +1,6 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FrmProjectWF 
-   ClientHeight    =   9615.001
+   ClientHeight    =   9930.001
    ClientLeft      =   120
    ClientTop       =   465
    ClientWidth     =   15990
@@ -42,9 +42,9 @@ Public Event CloseForm()
 Public Event UpdateLoan()
 
 ' ===============================================================
-' BtnUpdateLoan_Click
+' xBtnUpdateLoan_Click
 ' ---------------------------------------------------------------
-Private Sub BtnUpdateLoan_Click()
+Private Sub xBtnUpdateLoan_Click()
     RaiseEvent UpdateLoan
 End Sub
 

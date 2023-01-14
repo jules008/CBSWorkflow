@@ -91,13 +91,13 @@ Private Sub BtnClose_Click()
 End Sub
 
 ' ===============================================================
-' BtnReport_Click
+' BtnExport_Click
 ' Exports comms list to report
 ' ---------------------------------------------------------------
-Public Sub BtnReport_Click()
+Public Sub BtnExport_Click()
     Dim ErrNo As Integer
 
-    Const StrPROCEDURE As String = "BtnReport_Click()"
+    Const StrPROCEDURE As String = "BtnExport_Click()"
 
     On Error GoTo ErrorHandler
 

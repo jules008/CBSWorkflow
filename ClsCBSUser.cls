@@ -198,6 +198,11 @@ Private Sub pCBSUserForm_Update()
         pPhoneNo = CleanSQLText(.TxtPhoneNo)
         pUserLvl = CleanSQLText(.CmoUserLvl)
     End With
+    
+    If pCBSUserNo = CurrentUser.CBSUserNo Then
+        CurrentUser.UserLvl = pUserLvl
+    End If
+    
     DBSave
 End Sub
 

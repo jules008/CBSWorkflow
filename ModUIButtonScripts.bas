@@ -419,7 +419,7 @@ Public Sub BtnAdminClick(ByVal ScreenPage As enScreenPage)
             MsgBox "No selection made, please try again", vbExclamation + vbOKOnly, APP_NAME
             GoTo GracefullExit
         End If
-        StrFilter = "WorkflowNo:" & DLookup("WFNo", "TblWorkflowType", "DisplayName = '" & Picker.SelectedItem & "'")
+        StrFilter = "WorkflowNo:" & DLookup("[WFNo]", "[TblWorkflowType]", "[DisplayName] = '" & Picker.SelectedItem & "'")
     End If
     
     
