@@ -38,10 +38,10 @@ Public Const SEND_ERR_MSG As Boolean = True
 Public Const TEST_PREFIX As String = "TEST - "
 Public Const BACKUP_INT As Integer = 5
 Public Const FILE_ERROR_LOG As String = "Error.log"
-Public Const OLD_DB_VER = "V0.01.13"
-Public Const DB_VER = "V0.01.14"
-Public Const VERSION = "V0.01.24" ' Finance Cxs
-Public Const VER_DATE = "09 Jan 23"
+Public Const OLD_DB_VER = "V0.01.14"
+Public Const DB_VER = "V0.01.15"
+Public Const VERSION = "V0.01.24" ' Bug Fix
+Public Const VER_DATE = "14 Jan 23"
 ' ===============================================================
 ' Error Constants
 ' ---------------------------------------------------------------

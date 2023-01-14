@@ -291,7 +291,7 @@ Private Sub CmoContactType_Change()
             xBtnSent.Enabled = True
             If CmoCommFreq = "" Or CmoCommFreq = 30 Then CmoCommFreq = 2
         ElseIf .Value = "Lead" Then
-            ChkOptOut.Enabled = False
+            ChkOptOut.Enabled = True
             TxtLastComm.Enabled = True
             CmoCommFreq.Enabled = True
             xBtnSent.Enabled = True

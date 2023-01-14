@@ -178,36 +178,13 @@ End Sub
 ' TxtCBSCommission_Change
 ' ---------------------------------------------------------------
 Private Sub TxtCBSCommission_Change()
-    If Not DisableEvents Then
-    TxtCBSCommission.BackColor = COL_WHITE
-        TxtCBSCommission = Format(TxtCBSCommission, "£#,###")
-    End If
+
 End Sub
 
 ' ===============================================================
 ' TxtDebt_Change
 ' ---------------------------------------------------------------
 Private Sub TxtDebt_Change()
-    
-    On Error GoTo ErrorHandler
-    
-    Application.EnableEvents = False
-        
-    If IsNumeric(TxtDebt) Then
-        ProcessFields "Debt"
-        TxtDebt = Format(TxtDebt, "£#,###")
-        TxtDebt.BackColor = COL_WHITE
-    Else
-        TxtDebt = ""
-    End If
-        
-    Application.EnableEvents = True
-    
-Exit Sub
-    
-ErrorHandler:
-        
-    Application.EnableEvents = True
     
 End Sub
 
@@ -216,26 +193,6 @@ End Sub
 ' ---------------------------------------------------------------
 Private Sub TxtExitFee_Change()
     
-    On Error GoTo ErrorHandler
-    
-    Application.EnableEvents = False
-        
-    If IsNumeric(TxtExitFee) Then
-        ProcessFields "ExitFeeTot"
-        TxtExitFee = Format(TxtExitFee, "£#,###")
-        TxtExitFee.BackColor = COL_WHITE
-    Else
-        TxtExitFee = ""
-    End If
-        
-    Application.EnableEvents = True
-    
-Exit Sub
-    
-ErrorHandler:
-        
-    Application.EnableEvents = True
-        
 End Sub
 
 ' ===============================================================
@@ -247,42 +204,16 @@ Private Sub TxtLoanTerm_Change()
 End Sub
 
 ' ===============================================================
-' TxtPCComm_Change
+' TxtCBSCommPC_Change
 ' ---------------------------------------------------------------
-Private Sub TxtPCComm_Change()
-    If Not DisableEvents Then
-        TxtPCComm = Replace(TxtPCComm, "%", "")
-        If IsNumeric(TxtPCComm) Then
-            TxtPCComm.BackColor = COL_WHITE
-            TxtPCComm = TxtPCComm & "%"
-        End If
-    End If
+Private Sub TxtCBSCommPC_Change()
+
 End Sub
 
 ' ===============================================================
-' TxtPCExitFee_Change
+' TxtExitFeePC_Change
 ' ---------------------------------------------------------------
-Private Sub TxtPCExitFee_Change()
-    
-    On Error GoTo ErrorHandler
-    
-    Application.EnableEvents = False
-        
-    If IsNumeric(TxtPCExitFee) Then
-        ProcessFields "ExitFeePC"
-        TxtPCExitFee = Format(TxtPCExitFee, "0.0") & "%"
-        TxtPCExitFee.BackColor = COL_WHITE
-    Else
-        TxtPCExitFee = ""
-    End If
-        
-    Application.EnableEvents = True
-    
-Exit Sub
-    
-ErrorHandler:
-        
-    Application.EnableEvents = True
+Private Sub TxtExitFeePC_Change()
         
 End Sub
 
@@ -399,12 +330,6 @@ End Sub
 ' Cleans formatted strings in text boxes
 ' ---------------------------------------------------------------
 Private Function CleanTxt(TxtBoxStr As String) As Single
-    TxtBoxStr = Replace(TxtBoxStr, "£", "")
-    TxtBoxStr = Replace(TxtBoxStr, ",", "")
-    TxtBoxStr = Replace(TxtBoxStr, "%", "")
-    If TxtBoxStr = "" Then TxtBoxStr = 0
-    CleanTxt = CSng(TxtBoxStr)
-
     
 End Function
 
@@ -414,70 +339,6 @@ End Function
 Private Sub TxtLoanTerm_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
     If KeyAscii < 48 Or KeyAscii > 57 Then
         KeyAscii = 0
-    End If
-End Sub
-
-' ===============================================================
-' ProcessFields
-' calculates all text fields
-' ---------------------------------------------------------------
-Private Sub ProcessFields(TxtField As String)
-    Dim ErrNo As Integer
-
-    Const StrPROCEDURE As String = "ProcessFields()"
-
-    On Error GoTo ErrorHandler
-
-Restart:
-
-    If MainScreen Is Nothing Then Err.Raise SYSTEM_RESTART
-   
-    Application.EnableEvents = False
-    
-    Select Case TxtField
-        Case "Debt"
-            
-            If TxtPCExitFee <> "" Then
-                TxtExitFee = CleanTxt(TxtPCExitFee) * CleanTxt(TxtDebt) / 100
-            End If
-            
-        Case "ExitFeeTotal"
-        
-            If TxtDebt <> "" Then
-                TxtPCExitFee = CleanTxt(TxtExitFee) / CleanTxt(TxtDebt) * 100
-            End If
-        
-        Case "ExitFeePC"
-        
-            If TxtDebt <> "" Then
-                TxtExitFee = CleanTxt(TxtPCExitFee) * CleanTxt(TxtDebt) / 100
-            End If
-        
-    End Select
-        
-
-GracefulExit:
-
-Exit Sub
-
-ErrorExit:
-
-    Application.EnableEvents = True
-
-Exit Sub
-
-ErrorHandler:
-    If Err.Number >= 2000 And Err.Number <= 2500 Then
-        ErrNo = Err.Number
-        CustomErrorHandler (Err.Number)
-        If ErrNo = SYSTEM_RESTART Then Resume Restart Else Resume GracefulExit
-    End If
-
-    If CentralErrorHandler(StrMODULE, StrPROCEDURE, , True) Then
-        Stop
-        Resume
-    Else
-        Resume ErrorExit
     End If
 End Sub
 

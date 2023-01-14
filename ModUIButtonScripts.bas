@@ -404,6 +404,7 @@ End Sub
 Public Sub BtnAdminClick(ByVal ScreenPage As enScreenPage)
     Dim Picker As ClsFrmPicker
     Dim StrFilter As String
+    Dim RstFilter As Recordset
     
     If ScreenPage = enScrAdminWorkflows Then
         Set Picker = New ClsFrmPicker
@@ -419,12 +420,16 @@ Public Sub BtnAdminClick(ByVal ScreenPage As enScreenPage)
             MsgBox "No selection made, please try again", vbExclamation + vbOKOnly, APP_NAME
             GoTo GracefullExit
         End If
-        StrFilter = "WorkflowNo:" & DLookup("WFNo", "TblWorkflowType", "DisplayName = '" & Picker.SelectedItem & "'")
+        
+        Set RstFilter = ModDatabase.SQLQuery("SELECT WFNo FROM TblWorkflowType WHERE DisplayName = '" & Picker.SelectedItem & "'")
+        StrFilter = "WorkflowNo:" & RstFilter!WFNo
     End If
     
     
     If Not ResetScreen Then Err.Raise HANDLED_ERROR
     If Not ModUIAdmin.BuildScreen(ScreenPage, StrFilter) Then Err.Raise HANDLED_ERROR
+    
+    Set RstFilter = Nothing
 GracefullExit:
 
     Set Picker = Nothing

@@ -34,7 +34,10 @@ Private pCaseManager As ClsCBSUser
 Private pLoanTerm As String
 Private pProjectWorkflow As ClsWorkflow
 Private pCBSCommission As Single
+Private pCBSCommPC As Single
 Private pExitFee As Single
+Private pDebt As Single
+Private pExitFeePC As Single
 Private pWorkflows As ClsWorkflows
 Private pContacts As ClsContacts
 Private pParent As ClsSPV
@@ -106,12 +109,39 @@ Public Property Let CBSCommission(ByVal vNewValue As Single)
 End Property
 
 '---------------------------------------------------------------
+Public Property Get CBSCommPC() As Single
+    CBSCommPC = pCBSCommPC
+End Property
+
+Public Property Let CBSCommPC(ByVal vNewValue As Single)
+    pCBSCommPC = vNewValue
+End Property
+
+'---------------------------------------------------------------
 Public Property Get ExitFee() As Single
     ExitFee = pExitFee
 End Property
 
 Public Property Let ExitFee(ByVal vNewValue As Single)
     pExitFee = vNewValue
+End Property
+
+'---------------------------------------------------------------
+Public Property Get Debt() As Single
+    Debt = pDebt
+End Property
+
+Public Property Let Debt(ByVal vNewValue As Single)
+    pDebt = vNewValue
+End Property
+
+'---------------------------------------------------------------
+Public Property Get ExitFeePC() As Single
+    ExitFeePC = pExitFeePC
+End Property
+
+Public Property Let ExitFeePC(ByVal vNewValue As Single)
+    pExitFeePC = vNewValue
 End Property
 
 '---------------------------------------------------------------
@@ -226,6 +256,7 @@ End Sub
 Public Sub DisplayForm()
     With pProjectForm
         .TxtCBSCommission = pCBSCommission
+        .TxtCBSCommPC = pCBSCommPC
         .TxtLoanTerm = pLoanTerm
         .TxtProjectNo = pProjectNo
         .TxtProjName = pProjectName
@@ -236,6 +267,8 @@ Public Sub DisplayForm()
         If pClient.ClientNo > 0 Then .CmoClientNo = pClient.ClientNo
         If pSPV.SPVNo > 0 Then .CmoSPVNo = pSPV.SPVNo
         .TxtExitFee = pExitFee
+        .TxtDebt = pDebt
+        .TxtExitFeePC = pExitFeePC
         .Show
     End With
 End Sub
@@ -258,7 +291,10 @@ Public Sub DBGet(ByVal ProjectNameNo As Variant)
             If Not IsNull(!ProjectNo) Then pProjectNo = !ProjectNo
             If Not IsNull(!LoanTerm) Then pLoanTerm = !LoanTerm
             If Not IsNull(!CBSCommission) Then pCBSCommission = !CBSCommission
+            If Not IsNull(!CBSCommPC) Then pCBSCommPC = !CBSCommPC
             If Not IsNull(!ExitFee) Then pExitFee = !ExitFee
+            If Not IsNull(!Debt) Then pDebt = !Debt
+            If Not IsNull(!ExitFeePC) Then pExitFeePC = !ExitFeePC
             If Not IsNull(!ProjectNo) Then pProjectNo = !ProjectNo
             If Not IsNull(!ProjectName) Then pProjectName = !ProjectName
             If Not IsNull(!FirstClientInt) Then pFirstClientInt = !FirstClientInt
@@ -314,7 +350,10 @@ Public Sub DBSave()
         !ProjectNo = CleanSQLText(pProjectNo, True)
         !LoanTerm = CleanSQLText(pLoanTerm, True)
         !CBSCommission = CleanSQLText(pCBSCommission, True)
+        !CBSCommPC = CleanSQLText(pCBSCommPC, True)
         !ExitFee = CleanSQLText(pExitFee, True)
+        !Debt = CleanSQLText(pDebt, True)
+        !ExitFeePC = CleanSQLText(pExitFeePC, True)
         !ProjectNo = CleanSQLText(pProjectNo, True)
         !FirstClientInt = CleanSQLText(pFirstClientInt, True)
         !SecondClientRef = CleanSQLText(pSecondClientRef, True)
@@ -357,14 +396,27 @@ Private Sub pProjectForm_Update()
     
     With pProjectForm
        pCBSCommission = .TxtCBSCommission
+        pCBSCommPC = .TxtCBSCommPC
        pLoanTerm = .TxtLoanTerm
        pClient.DBGet .CmoClientNo.List(.CmoClientNo.ListIndex, 0)
-       pFirstClientInt = .CmoClientNo.List(.CmoFirstClientInt.ListIndex, 0)
-       pSecondClientRef = .CmoClientNo.List(.CmoSecondClientRef.ListIndex, 0)
-       pFacilitator = .CmoClientNo.List(.CmoFacilitator.ListIndex, 0)
+        
+        With .CmoFirstClientInt
+            If .ListIndex <> -1 Then pFirstClientInt = .List(.ListIndex, 0)
+        End With
+        
+        With .CmoSecondClientRef
+            If .ListIndex <> -1 Then pSecondClientRef = .List(.ListIndex, 0)
+        End With
+        
+        With .CmoFacilitator
+            If .ListIndex <> -1 Then pFacilitator = .List(.ListIndex, 0)
+        End With
+        
        pSPV.DBGet .CmoSPVNo.List(.CmoSPVNo - 1, 0)
        pCaseManager.DBGet .CmoCaseManager.List(.CmoCaseManager - 1, 0)
        pExitFee = .TxtExitFee
+        pDebt = .TxtDebt
+        pExitFeePC = .TxtExitFeePC
        pProjectName = .TxtProjName
     End With
     DBSave
