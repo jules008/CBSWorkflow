@@ -54,7 +54,10 @@ Public Function Initialize() As Boolean
         ModDeploy.UpdateDBScript
     End If
 
-    If ShtSettings.ChkUpdateDB Then ModDeploy.UpdateTableData
+    If ShtSettings.ChkUpdateDB Then
+        ModDeploy.UpdateTable "TblEmail", "A1:H2"
+
+    End If
 
     If ModDatabase.GetDBVer <> DB_VER Then
         Err.Raise DB_WRONG_VER
