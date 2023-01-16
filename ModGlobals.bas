@@ -39,7 +39,7 @@ Public Const TEST_PREFIX As String = "TEST - "
 Public Const BACKUP_INT As Integer = 5
 Public Const FILE_ERROR_LOG As String = "Error.log"
 Public Const OLD_DB_VER = "V0.01.13"
-Public Const DB_VER = "V0.01.14"
+Public Const DB_VER = "V0.01.14" '******NEEDS WORKBOOK FOR TABLE UPDATES*******
 Public Const VERSION = "V0.01.25" ' Email Templates
 Public Const VER_DATE = "15 Jan 23"
 ' ===============================================================
