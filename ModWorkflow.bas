@@ -31,10 +31,22 @@ Private Function KeyWords(Keyword As String, ByRef Workflow As ClsWorkflow) As S
             KeyWords = Workflow.Parent.Client.Contacts.PrimaryContact.EmailAddress
             
         Case "{CurrentUserName}"
-            KeyWords = Application.UserName
+            KeyWords = CurrentUser.UserName
+        
+        Case "{CurrentUserRole}"
+            KeyWords = CurrentUser.Position
+        
+        Case "{CurrentUserPhone}"
+            KeyWords = CurrentUser.PhoneNo
         
         Case "{ClientName}"
             KeyWords = Workflow.Parent.Client.Contacts.PrimaryContact.ContactName
+
+        Case "{BusinessHead}"
+            KeyWords = "eflindell@cbscapital.co.uk"
+
+        Case "{Director}"
+            KeyWords = "sdunn@cbscapital.co.uk"
 
     End Select
 
