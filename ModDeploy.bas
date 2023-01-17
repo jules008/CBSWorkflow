@@ -89,16 +89,14 @@ Public Function UpdateDBScript() As Boolean
     ' ========================================================================================
     ' Database commands
     ' ----------------------------------------------------------------------------------------
-<<<<<<< HEAD
     DB.Execute "ALTER TABLE TblProject ADD COLUMN CBSCommPC single"
     DB.Execute "ALTER TABLE TblProject ADD COLUMN ExitFeePC single"
-=======
+    
     DB.Execute "UPDATE TblStepTemplate SET Email = 1 WHERE StepNo = '1.03'"
     DB.Execute "UPDATE TblStepTemplate SET Email = 2 WHERE StepNo = '1.06'"
     DB.Execute "UPDATE TblStepTemplate SET Email = 3 WHERE StepNo = '1.12'"
     DB.Execute "UPDATE TblStepTemplate SET Email = 4 WHERE StepNo = '1.13'"
     DB.Execute "UPDATE TblStepTemplate SET Email = 5 WHERE StepNo = '1.16'"
->>>>>>> emails
     ' ========================================================================================
         
     
