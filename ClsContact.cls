@@ -141,10 +141,10 @@ End Property
 ' Method DBNew
 ' displays new SPV form
 ' ---------------------------------------------------------------
-Public Sub DBNew()
+Public Sub DBNew(Optional ClientType As String, Optional Organistion As String)
     pContactNo = 0
     pContactName = ""
-    pContactType = 0
+    pContactType = ""
     pOrganisation = ""
     pAddress = ""
     pPhone1 = ""
@@ -159,6 +159,8 @@ Public Sub DBNew()
     With pContactForm
         .Tag = "New"
         .ClearForm
+        .CmoContactType = ClientType
+        .CmoOrganisation = Organistion
         .BtnUpdate.Caption = "Create"
         .Show
     End With

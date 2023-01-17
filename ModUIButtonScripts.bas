@@ -86,7 +86,7 @@ Public Function BtnProjectNewWFClick(ScreenPage As enScreenPage) As Boolean
         .ClearForm
         .Show = True
         If .CreateNew Then
-            ActiveClient.Contacts.PrimaryContact.DBNew
+            ActiveClient.Contacts.PrimaryContact.DBNew "Client", ActiveClient.Name
             .SelectedItem = ActiveClient.Contacts.PrimaryContact.ContactName
         End If
     End With

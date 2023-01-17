@@ -24,12 +24,15 @@ Public Sub QueryTest()
     
 
     'undo
-    DB.Execute "ALTER TABLE TblDBVersion DROP COLUMN Env "
     
     Stop
     'update
+    DB.Execute "UPDATE TblStepTemplate SET Email = 1 WHERE StepNo = '1.03'"
+    DB.Execute "UPDATE TblStepTemplate SET Email = 2 WHERE StepNo = '1.06'"
+    DB.Execute "UPDATE TblStepTemplate SET Email = 3 WHERE StepNo = '1.12'"
+    DB.Execute "UPDATE TblStepTemplate SET Email = 4 WHERE StepNo = '1.13'"
+    DB.Execute "UPDATE TblStepTemplate SET Email = 5 WHERE StepNo = '1.16'"
     
-    DB.Execute "ALTER TABLE TblDBVersion ADD COLUMN Env text"
 End Sub
 
 ' ===============================================================
@@ -82,6 +85,11 @@ Public Function UpdateDBScript() As Boolean
     ' ========================================================================================
     ' Database commands
     ' ----------------------------------------------------------------------------------------
+    DB.Execute "UPDATE TblStepTemplate SET Email = 1 WHERE StepNo = '1.03'"
+    DB.Execute "UPDATE TblStepTemplate SET Email = 2 WHERE StepNo = '1.06'"
+    DB.Execute "UPDATE TblStepTemplate SET Email = 3 WHERE StepNo = '1.12'"
+    DB.Execute "UPDATE TblStepTemplate SET Email = 4 WHERE StepNo = '1.13'"
+    DB.Execute "UPDATE TblStepTemplate SET Email = 5 WHERE StepNo = '1.16'"
     ' ========================================================================================
         
     
