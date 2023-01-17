@@ -27,14 +27,26 @@ Private Function KeyWords(Keyword As String, ByRef Workflow As ClsWorkflow) As S
     On Error GoTo ErrorHandler
 
     Select Case Keyword
-        Case "<ClientEmail>"
+        Case "{ClientEmail}"
             KeyWords = Workflow.Parent.Client.Contacts.PrimaryContact.EmailAddress
             
-        Case "<CurrentUserName>"
-            KeyWords = Application.UserName
+        Case "{CurrentUserName}"
+            KeyWords = CurrentUser.UserName
         
-        Case "<ClientName>"
+        Case "{CurrentUserRole}"
+            KeyWords = CurrentUser.Position
+        
+        Case "{CurrentUserPhone}"
+            KeyWords = CurrentUser.PhoneNo
+        
+        Case "{ClientName}"
             KeyWords = Workflow.Parent.Client.Contacts.PrimaryContact.ContactName
+
+        Case "{BusinessHead}"
+            KeyWords = "eflindell@cbscapital.co.uk"
+
+        Case "{Director}"
+            KeyWords = "sdunn@cbscapital.co.uk"
 
     End Select
 
@@ -118,9 +130,9 @@ Public Function ReplaceKeyWords(InputText As String, ByRef Workflow As ClsWorkfl
     On Error GoTo ErrorHandler
     
     OutputText = InputText
-    Do While InStr(1, OutputText, "<", vbTextCompare)
-        KeyStart = InStr(1, OutputText, "<", vbTextCompare)
-        KeyEnd = InStr(1, OutputText, ">", vbTextCompare)
+    Do While InStr(1, OutputText, "{", vbTextCompare)
+        KeyStart = InStr(1, OutputText, "{", vbTextCompare)
+        KeyEnd = InStr(1, OutputText, "}", vbTextCompare)
         Keyword = Mid(OutputText, KeyStart, KeyEnd - KeyStart + 1)
         DataItem = KeyWords(Keyword, Workflow)
         OutputText = Replace(OutputText, Keyword, DataItem)

@@ -29,6 +29,7 @@ Public Function BtnProjectNewWFClick(ScreenPage As enScreenPage) As Boolean
     On Error GoTo ErrorHandler
 
     Set ActiveClient = New ClsClient
+    Set ActiveContact = New ClsContact
     Set ActiveSPV = New ClsSPV
     Set ActiveWorkFlow = New ClsWorkflow
     Set ActiveProject = New ClsProject
@@ -74,6 +75,39 @@ Public Function BtnProjectNewWFClick(ScreenPage As enScreenPage) As Boolean
         .DBGet Picker.SelectedItem
         .DBSave
     End With
+    
+    'Get Client Primary contact
+    Set Picker = New ClsFrmPicker
+    With Picker
+        .Title = "Select Client Primary Contact"
+        .Instructions = "Start typing the name of the Client Contact and then select from the list. " _
+                        & "Select 'New' to add a new Client Contact"
+        .Data = ModDatabase.SQLQuery("SELECT ContactName from TblContact")
+        .ClearForm
+        .Show = True
+        If .CreateNew Then
+            ActiveClient.Contacts.PrimaryContact.DBNew "Client", ActiveClient.Name
+            .SelectedItem = ActiveClient.Contacts.PrimaryContact.ContactName
+        End If
+    End With
+    
+    If Picker.SelectedItem = "" Then
+        MsgBox "No selection made, please try again", vbExclamation + vbOKOnly, APP_NAME
+        GoTo GracefullExit
+    End If
+    
+    With ActiveContact
+        .DBGet Picker.SelectedItem
+        .Organisation = ActiveClient.Name
+        .DBSave
+    End With
+    
+    With ActiveClient.Contacts
+        .Add ActiveContact
+        .PrimaryContact = ActiveContact
+    End With
+    
+    ActiveClient.DBSave
     
     'Get SPV
     Set Picker = New ClsFrmPicker
@@ -158,6 +192,7 @@ GracefullExit:
     Set ActiveClient = Nothing
     Set ActiveUser = Nothing
     Set InputBox = Nothing
+    Set ActiveContact = Nothing
     
     BtnProjectNewWFClick = True
 

@@ -39,9 +39,9 @@ Public Const TEST_PREFIX As String = "TEST - "
 Public Const BACKUP_INT As Integer = 5
 Public Const FILE_ERROR_LOG As String = "Error.log"
 Public Const OLD_DB_VER = "V0.01.14"
-Public Const DB_VER = "V0.01.15"
-Public Const VERSION = "V0.01.24" ' Bug Fix
-Public Const VER_DATE = "14 Jan 23"
+Public Const DB_VER = "V0.01.15" '******NEEDS WORKBOOK FOR TABLE UPDATES*******
+Public Const VERSION = "V0.02.00" ' Email Templates
+Public Const VER_DATE = "17 Jan 23"
 ' ===============================================================
 ' Error Constants
 ' ---------------------------------------------------------------
@@ -91,6 +91,7 @@ Public ActiveLender As ClsLender
 Public ActiveWorkFlow As ClsWorkflow
 Public ActiveProject As ClsProject
 Public ActiveClient As ClsClient
+Public ActiveContact As ClsContact
 Public ActiveSPV As ClsSPV
 Public ActiveUser As ClsCBSUser
 Public CTimer As ClsCodeTimer
