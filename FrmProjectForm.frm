@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FrmProjectForm 
    Caption         =   "CRM - Project"
-   ClientHeight    =   6390
+   ClientHeight    =   6720
    ClientLeft      =   120
    ClientTop       =   465
    ClientWidth     =   11940
@@ -33,6 +33,8 @@ Private Const StrMODULE As String = "FrmProjectForm"
 Public Event CreateNew()
 Public Event Update()
 Public Event Delete()
+
+Private DisableEvents As Boolean
 
 '===============================================================
 ' BtnClose_Click
@@ -176,7 +178,21 @@ End Sub
 ' TxtCBSCommission_Change
 ' ---------------------------------------------------------------
 Private Sub TxtCBSCommission_Change()
-    TxtCBSCommission.BackColor = COL_WHITE
+
+End Sub
+
+' ===============================================================
+' TxtDebt_Change
+' ---------------------------------------------------------------
+Private Sub TxtDebt_Change()
+    
+End Sub
+
+' ===============================================================
+' TxtExitFee_Change
+' ---------------------------------------------------------------
+Private Sub TxtExitFee_Change()
+    
 End Sub
 
 ' ===============================================================
@@ -184,6 +200,21 @@ End Sub
 ' ---------------------------------------------------------------
 Private Sub TxtLoanTerm_Change()
     TxtLoanTerm.BackColor = COL_WHITE
+    TxtLoanTerm = Format(TxtLoanTerm, "0")
+End Sub
+
+' ===============================================================
+' TxtCBSCommPC_Change
+' ---------------------------------------------------------------
+Private Sub TxtCBSCommPC_Change()
+
+End Sub
+
+' ===============================================================
+' TxtExitFeePC_Change
+' ---------------------------------------------------------------
+Private Sub TxtExitFeePC_Change()
+        
 End Sub
 
 ' ===============================================================
@@ -295,6 +326,14 @@ Private Sub UserForm_Initialize()
 End Sub
 
 ' ===============================================================
+' CleanTxt
+' Cleans formatted strings in text boxes
+' ---------------------------------------------------------------
+Private Function CleanTxt(TxtBoxStr As String) As Single
+    
+End Function
+
+' ===============================================================
 ' TxtLoanTerm_KeyPress
 ' ---------------------------------------------------------------
 Private Sub TxtLoanTerm_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
@@ -374,7 +413,6 @@ If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
     End If
 End Function
 
-' ===============================================================
-
-
-
+Private Sub UserForm_Terminate()
+    Application.EnableEvents = True
+End Sub

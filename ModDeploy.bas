@@ -24,12 +24,19 @@ Public Sub QueryTest()
     
 
     'undo
-    DB.Execute "ALTER TABLE TblProject DROP COLUMN CompleteDate "
+    DB.Execute "ALTER TABLE TblProject DROP COLUMN CBSCommPC "
+    DB.Execute "ALTER TABLE TblProject DROP COLUMN ExitFeePC "
     
     Stop
     'update
+    DB.Execute "UPDATE TblStepTemplate SET Email = 1 WHERE StepNo = '1.03'"
+    DB.Execute "UPDATE TblStepTemplate SET Email = 2 WHERE StepNo = '1.06'"
+    DB.Execute "UPDATE TblStepTemplate SET Email = 3 WHERE StepNo = '1.12'"
+    DB.Execute "UPDATE TblStepTemplate SET Email = 4 WHERE StepNo = '1.13'"
+    DB.Execute "UPDATE TblStepTemplate SET Email = 5 WHERE StepNo = '1.16'"
     
-    DB.Execute "ALTER TABLE TblProject ADD COLUMN CompleteDate date"
+    DB.Execute "ALTER TABLE TblProject ADD COLUMN CBSCommPC single"
+    DB.Execute "ALTER TABLE TblProject ADD COLUMN ExitFeePC single"
 End Sub
 
 ' ===============================================================
@@ -70,12 +77,6 @@ Public Function UpdateDBScript() As Boolean
         Exit Function
     End If
             
-    
-    ' ========================================================================================
-    ' Database commands
-    ' ----------------------------------------------------------------------------------------
-    ' ========================================================================================
-        
     'update DB Version
     With RstTable
         .Edit
@@ -83,6 +84,21 @@ Public Function UpdateDBScript() As Boolean
         !UpdateDB = False
         .Update
     End With
+    Set RstTable = Nothing
+    
+    ' ========================================================================================
+    ' Database commands
+    ' ----------------------------------------------------------------------------------------
+    DB.Execute "ALTER TABLE TblProject ADD COLUMN CBSCommPC single"
+    DB.Execute "ALTER TABLE TblProject ADD COLUMN ExitFeePC single"
+    
+    DB.Execute "UPDATE TblStepTemplate SET Email = 1 WHERE StepNo = '1.03'"
+    DB.Execute "UPDATE TblStepTemplate SET Email = 2 WHERE StepNo = '1.06'"
+    DB.Execute "UPDATE TblStepTemplate SET Email = 3 WHERE StepNo = '1.12'"
+    DB.Execute "UPDATE TblStepTemplate SET Email = 4 WHERE StepNo = '1.13'"
+    DB.Execute "UPDATE TblStepTemplate SET Email = 5 WHERE StepNo = '1.16'"
+    ' ========================================================================================
+        
     
         MsgBox "Database successfully updated to Version " & DB_VER, vbOKOnly + vbInformation
     
@@ -151,6 +167,8 @@ Public Function UpdateDBScriptUndo() As Boolean
     ' ========================================================================================
     ' Database commands
     ' ----------------------------------------------------------------------------------------
+    DB.Execute "ALTER TABLE TblProject DROP COLUMN CBSCommPC "
+    DB.Execute "ALTER TABLE TblProject DROP COLUMN ExitFeePC "
     ' ========================================================================================
     
     DB.Close
@@ -184,7 +202,7 @@ End Function
 ' UpdateTable
 ' Updates entire table from table update sheet
 ' ---------------------------------------------------------------
-Public Sub UpdateTable()
+Public Sub UpdateTable(StrTable As String, RngImport As String)
     Dim RstTable As Recordset
     Dim Fld As Field
     Dim i As Integer
@@ -192,17 +210,20 @@ Public Sub UpdateTable()
     Dim Val As String
     Dim RngFields As Range
     Dim RngCol As Range
+    Dim ShtImport As Worksheet
     
     If DB Is Nothing Then DBConnect
     
-    DB.Execute "DELETE * FROM TblStepTemplate"
+    DB.Execute "DELETE * FROM " & StrTable
         
-    Set RstTable = ModDatabase.SQLQuery("TblStepTemplate")
-    Set RngFields = ShtTableImport.Range("A1:Y20")
+    Set RstTable = ModDatabase.SQLQuery(StrTable)
+    
+    Set ShtImport = Worksheets(StrTable)
+    Set RngFields = ShtImport.Range(RngImport)
     
     With RstTable
         x = 2
-        Do While ShtTableImport.Cells(x, 1) <> ""
+        Do While ShtImport.Cells(x, 1) <> ""
             i = 1
             .AddNew
             For Each Fld In RstTable.Fields
@@ -211,7 +232,7 @@ Public Sub UpdateTable()
                 If RngCol Is Nothing Then
                     Debug.Print Fld.Name & " not found"
                 Else
-                    Val = ShtTableImport.Cells(x, RngCol.Column)
+                    Val = ShtImport.Cells(x, RngCol.Column)
                     Debug.Print "Col: "; RngCol.Column, "Row: "; x, Fld.Name, Val, Fld.Type
                     
                     Select Case Fld.Type
@@ -233,7 +254,9 @@ Public Sub UpdateTable()
             .Update
         Loop
     End With
-    ShtTableImport.Visible = xlSheetHidden
+    ShtImport.Visible = xlSheetHidden
+    ShtSettings.ChkUpdateDB = False
+    Set ShtImport = Nothing
 End Sub
 
 ' ===============================================================
@@ -353,84 +376,3 @@ ErrorHandler:   If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
     End If
 End Function
 
-' ===============================================================
-' UpdateTableData
-' Updates the table data without changing version number of DB
-' ---------------------------------------------------------------
-Public Sub UpdateTableData()
-    Dim RstProject As Recordset
-    Dim RstWorkflow As Recordset
-    Dim NoComplete As Integer
-    Dim NoSteps As Integer
-    Dim AryStepNo() As String
-    Dim SumProgress As Single
-    Dim CntProgress As Integer
-    
-    Set RstProject = ModDatabase.SQLQuery("TblProject")
-    
-    If DB Is Nothing Then DBConnect
-    If Not DEV_MODE Or ShtSettings.ChkDebugOride Then
-    
-        Do While Not RstProject.EOF
-            SumProgress = 0
-            CntProgress = 0
-            Set RstWorkflow = ModDatabase.SQLQuery("SELECT * FROM TblWorkflow WHERE ProjectNo = " & RstProject!ProjectNo)
-            
-            With RstWorkflow
-                Do While Not .EOF
-                    .Edit
-                    If Not IsNull(!CurrentStep) And !CurrentStep <> "" Then
-                        AryStepNo = Split(!CurrentStep, ".")
-                        
-                        Select Case AryStepNo(0)
-                            Case 1
-                                NoSteps = 20
-                            Case 2
-                                NoSteps = 91
-                            Case 3
-                                NoSteps = 16
-                            Case 4
-                                NoSteps = 16
-                            Case 5
-                                NoSteps = 15
-                            Case 6
-                                NoSteps = 15
-                        End Select
-                        
-                        NoComplete = AryStepNo(1)
-                        
-                        If NoSteps > 0 Then
-                            !Progress = NoComplete / NoSteps * 100
-                            SumProgress = SumProgress + !Progress
-                            CntProgress = CntProgress + 1
-                        End If
-                        .Update
-                    End If
-                    .MoveNext
-                Loop
-                If SumProgress > 0 And CntProgress > 0 Then
-                DB.Execute "UPDATE TblWorkflow SET Progress = " & SumProgress / CntProgress & " WHERE ProjectNo = " & RstProject!ProjectNo & " And WorkflowType = 'enProject'"
-                End If
-            End With
-            RstProject.MoveNext
-        Loop
-            
-        DB.Execute "DELETE * FROM TblWorkflow WHERE ProjectNo = 0"
-        DB.Execute "DELETE * FROM TblStepTemplate"
-        DB.Execute "UPDATE TblWorkflow SET Progress = 0 WHERE Progress IS NULL"
-        
-        ModDeploy.UpdateTable
-        
-        If DEV_MODE Then
-            ShtSettings.ChkDebugOride = False
-        Else
-            ShtSettings.ChkUpdateDB = False
-            Application.EnableEvents = False
-            ActiveWorkbook.Save
-            Application.EnableEvents = True
-        End If
-    End If
-    
-    Set RstProject = Nothing
-    Set RstWorkflow = Nothing
-End Sub

@@ -63,8 +63,8 @@ Private Function Form_Intialise() As Boolean
                 .Clear
                 Do While Not RstSource.EOF
                     .AddItem
-                    .List(i, 0) = RstSource!EmailNo
-                    .List(i, 1) = RstSource!TemplateName
+                    If Not IsNull(RstSource!EmailNo) Then .List(i, 0) = RstSource!EmailNo
+                    If Not IsNull(RstSource!TemplateName) Then .List(i, 1) = RstSource!TemplateName
                     RstSource.MoveNext
                     i = i + 1
                 Loop
@@ -76,8 +76,8 @@ Private Function Form_Intialise() As Boolean
                 .Clear
                 Do While Not RstSource.EOF
                     .AddItem
-                    .List(i, 0) = RstSource!EmailNo
-                    .List(i, 1) = RstSource!TemplateName
+                    If Not IsNull(RstSource!EmailNo) Then .List(i, 0) = RstSource!EmailNo
+                    If Not IsNull(RstSource!TemplateName) Then .List(i, 1) = RstSource!TemplateName
                     RstSource.MoveNext
                     i = i + 1
                 Loop

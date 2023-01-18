@@ -402,12 +402,16 @@ Public Sub DisplayProjectForm()
         .TtlTop.Caption = "Project No " & Parent.ProjectNo & " Workflow"
         .xBtnChat.Visible = True
         .Progress ProgPC
+        .TxtCBSCommission = pParent.CBSCommission
+        .TxtCBSCommPC = pParent.CBSCommPC
+        .TxtDebt = pParent.Debt
+        .TxtExitFee = pParent.ExitFee
+        .TxtExitFeePC = pParent.ExitFeePC
+        .TxtLoanTerm = pParent.LoanTerm
         .TxtClientName = pParent.Client.Name
         .TxtSPVName = pParent.SPV.Name
         .TxtProjectNo = pParent.ProjectNo
         .TxtCaseManager = pParent.CaseManager.UserName
-        .TxtCommision = pParent.CBSCommission
-        .TxtExitFee = pExitFee
         .TxtStepName = ActiveStep.StepNo & " - " & pActiveStep.StepName
         .xTxtAction = pActiveStep.StepAction
         .TxtClientContactName = Parent.Client.Contacts.PrimaryContact.ContactName
@@ -799,10 +803,15 @@ End Sub
 ' ---------------------------------------------------------------
 Private Sub pProjWFForm_UpdateLoan()
     With pProjWFForm
-        pCBSComm = .TxtCommision
-        pDebt = .TxtDebt
-        pExitFee = .TxtExitFee
-        DBSave
+    
+        pParent.CBSCommission = .TxtCBSCommission
+        pParent.CBSCommPC = .TxtCBSCommPC
+        pParent.Debt = .TxtDebt
+        pParent.ExitFee = .TxtExitFee
+        pParent.ExitFeePC = .TxtExitFeePC
+        pParent.LoanTerm = .TxtLoanTerm
+
+        pParent.DBSave
         MsgBox "Loan Details Updated", vbOKOnly + vbInformation, APP_NAME
     End With
 End Sub

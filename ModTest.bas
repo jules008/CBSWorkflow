@@ -1,24 +1,37 @@
 Attribute VB_Name = "ModTest"
 
-Public Sub TestSteps()
-    Dim Workflow As ClsWorkflow
-    Dim RstWorkflow As Recordset
     
-    Set Workflow = New ClsWorkflow
-    Set RstWorkflow = ModDatabase.SQLQuery("SELECT * FROM TblWorkflow WHERE WorkflowNo > 23")
+Public Sub TestDealCalc()
+    Dim MailInbox As ClsMailInbox
         
-    With RstWorkflow
-        Do While Not .EOF
-            Set Workflow = New ClsWorkflow
-            Workflow.DBGet !WorkflowNo
-            Debug.Print "Workflow"; !WorkflowNo, "Progress"; Workflow.Progress
-            Workflow.DBSave
-            Set Workflow = Nothing
-            DoEvents
-            .MoveNext
-        Loop
+    Set MailSystem = New ClsMailSystem
+    Set MailInbox = New ClsMailInbox
+    With MailInbox
+        .MailFolder = "contact@cbs-capital.co.uk"
     End With
     
-    Set RstWorkflow = Nothing
-    Set Workflow = Nothing
+    MailInbox.SendDealCalc "jules.turner@hotmail.co.uk", "James", True
+    
+    Set MailSystem = Nothing
+    Set MailInbox = Nothing
+
+End Sub
+
+Public Sub New_Mail()
+
+Dim oAccount As Account
+Dim oMail As MailItem
+
+For Each oAccount In Session.Accounts
+    Debug.Print oAccount
+    If LCase(oAccount) = LCase("text copied from the immediate window") Then
+        Set oMail = CreateItem(olMailItem)
+        oMail.SendUsingAccount = oAccount
+        oMail.Display
+    End If
+    Next
+
+ExitRoutine:
+    Set oMail = Nothing
+
 End Sub

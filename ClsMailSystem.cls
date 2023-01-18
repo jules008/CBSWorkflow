@@ -56,7 +56,7 @@ Public Sub DisplayEmail()
    On Error Resume Next
     With pMailItem
         .Display
-    End With
+        End With
     On Error GoTo 0
 End Sub
 
@@ -104,50 +104,18 @@ Private Function ReturnMailItem()
 End Function
 
 '===============================================================
-'===============================================================
-'SaveEmail
-' saves email in database when it arrives
-'---------------------------------------------------------------
-Public Sub SaveEmail(MailItem As MailItem, Step As ClsStep)
-    Dim RstEmail As Recordset
-    Dim LastNo As Integer
-    
-    Set RstEmail = ModDatabase.SQLQuery("SELECT * FROM TblInbox WHERE StepIndex = " & Step.StepIndex)
-
-    With RstEmail
-        If .RecordCount = 0 Then
-            .AddNew
-        Else
-            .Edit
-        End If
-        
-        !StepIndex = Step.StepIndex
-        !Subject = MailItem.Subject
-'        !Body = MailItem.Body
-'        !To = MailItem.To
-'        !CC = MailItem.CC
-'        !Attachment = MailItem.Attachments.Item(1).PathName
-        !EntryID = MailItem.EntryID
-        .Update
-
-    End With
-    Set RstEmail = Nothing
-
-End Sub
-
-'===============================================================
 ' FindEmail
 ' Finds and returns email from EntryID
 '---------------------------------------------------------------
 Public Sub FindEmail(StepIndex As Integer)
     Dim OLNameSpace As Namespace
     Dim RstEmail As Recordset
-    Dim FldrInbox As Outlook.Folder
+    Dim pFldrInbox As Outlook.Folder
     Dim EntryID As String
     Dim StoreID As String
 
     Set OLNameSpace = pOutlookApp.GetNamespace("MAPI")
-    Set FldrInbox = OLNameSpace.GetDefaultFolder(olFolderInbox)
+    Set pFldrInbox = OLNameSpace.GetDefaultFolder(olFolderInbox)
     Set RstEmail = ModDatabase.SQLQuery("SELECT EntryID FROM TblInbox WHERE StepIndex = " & StepIndex)
 
     With RstEmail
@@ -156,7 +124,7 @@ Public Sub FindEmail(StepIndex As Integer)
         End If
     End With
     
-    StoreID = FldrInbox.StoreID
+    StoreID = pFldrInbox.StoreID
     
     If EntryID <> "" Then
         On Error Resume Next
@@ -170,7 +138,7 @@ Public Sub FindEmail(StepIndex As Integer)
     
     Set OLNameSpace = Nothing
     Set RstEmail = Nothing
-    Set FldrInbox = Nothing
+    Set pFldrInbox = Nothing
 End Sub
 
 '===============================================================
@@ -207,14 +175,6 @@ Private Sub GetOutlook()
     
     Set pMailItem = pOutlookApp.CreateItem(0)
     Set pReturnMail = New ClsMailItem
-End Sub
-
-'===============================================================
-'Event pMailItem_Send
-'saves email details when it has been sent
-'---------------------------------------------------------------
-Private Sub pMailItem_Send(Cancel As Boolean)
-    FrmProjectWF.BringToFront
 End Sub
 
 '===============================================================

@@ -128,14 +128,23 @@ Public Property Let EmailAddress(ByVal vNewValue As String)
     pEmailAddress = vNewValue
 End Property
 
+'---------------------------------------------------------------
+Public Property Get Organisation() As String
+    Organisation = pOrganisation
+End Property
+
+Public Property Let Organisation(ByVal vNewValue As String)
+    pOrganisation = vNewValue
+End Property
+
 ' ===============================================================
 ' Method DBNew
 ' displays new SPV form
 ' ---------------------------------------------------------------
-Public Sub DBNew()
+Public Sub DBNew(Optional ClientType As String, Optional Organistion As String)
     pContactNo = 0
     pContactName = ""
-    pContactType = 0
+    pContactType = ""
     pOrganisation = ""
     pAddress = ""
     pPhone1 = ""
@@ -150,6 +159,8 @@ Public Sub DBNew()
     With pContactForm
         .Tag = "New"
         .ClearForm
+        .CmoContactType = ClientType
+        .CmoOrganisation = Organistion
         .BtnUpdate.Caption = "Create"
         .Show
     End With
@@ -213,11 +224,16 @@ End Function
 ' Method DBGet(Key as Integer)
 ' Gets class from Database
 ' ---------------------------------------------------------------
-Public Sub DBGet(ContactNo As Integer)
+Public Sub DBGet(ContactNameNo As Variant)
     Dim RstContact As Recordset
     Dim RstNoCont As Recordset
 
-    Set RstContact = ModDatabase.SQLQuery("SELECT * FROM TblContact WHERE ContactNo = " & ContactNo)
+    If IsNumeric(ContactNameNo) Then
+        Set RstContact = ModDatabase.SQLQuery("SELECT * FROM TblContact WHERE ContactNo = " & ContactNameNo)
+    Else
+        Set RstContact = ModDatabase.SQLQuery("SELECT * FROM TblContact WHERE ContactName = '" & ContactNameNo & "'")
+    End If
+    
     Set RstNoCont = ModDatabase.SQLQuery("SELECT COUNT (ContactNo) FROM TblContact " _
                                             & "WHERE ContactType = '" & pContactType & "' and Organisation = '" & pOrganisation & "'")
     With RstContact

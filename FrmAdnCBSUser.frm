@@ -192,13 +192,6 @@ Private Function ValidateForm() As enFormValidation
         End If
     End With
            
-    With TxtPosition
-        If .Value = "" Then
-            .BackColor = COL_AMBER
-            ValidateForm = enValidationError
-        End If
-    End With
-           
     With CmoUserLvl
       If .ListIndex = -1 Then
         .BackColor = COL_AMBER

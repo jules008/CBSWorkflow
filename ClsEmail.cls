@@ -255,26 +255,37 @@ End Sub
 ' builds and displays email via mailsystem class
 '---------------------------------------------------------------
 Public Sub Display()
-    If MailSystem Is Nothing Then MailSystem = New ClsMailSystem
+    Dim MailItem As MailItem
+    Dim MailAccount As Outlook.Account
+    Dim OLPA As Outlook.PropertyAccessor
+    Dim AttLogo As Outlook.Attachment
+    Dim HTML1 As String
+    Dim ImgPath As String
     
-    MailSystem.CreateNewEmail
+    ImgPath = GetDocLocalPath(ThisWorkbook.Path) & PICTURES_PATH & LOGO_FILE
+    
+    Set MailItem = Outlook.CreateItem(0)
+    Set MailAccount = Session.Accounts("contact@cbs-capital.co.uk")
+    Set AttLogo = MailItem.Attachments.Add(ImgPath)
+    Set OLPA = AttLogo.PropertyAccessor
+    
+    OLPA.SetProperty PR_ATTACH_CONTENT_ID, "Logo"
     
     Me.ProgressBar.Show
     
     Me.ProgressBar.Progress "Generating Email....", 4 / 7 * 100
-    
-    With MailSystem.MailItem
-
+    HTML1 = ModWorkflow.ReplaceKeyWords(pBody, Parent.Parent)
+    With MailItem
         .To = ModWorkflow.ReplaceKeyWords(pMailTo, Parent.Parent)
         .CC = ModWorkflow.ReplaceKeyWords(pCC, Parent.Parent)
-        .Body = ModWorkflow.ReplaceKeyWords(pBody, Parent.Parent)
         .Subject = ModWorkflow.ReplaceKeyWords(Subject, Parent.Parent)
-
-        pProgressBar.Hide
-        
+        .BodyFormat = olFormatHTML
+        .HTMLBody = ModWorkflow.ReplaceKeyWords(pBody, Parent.Parent)
+        .SendUsingAccount = MailAccount
         .Display
         
     End With
+        pProgressBar.Hide
 End Sub
 
 ' ===============================================================

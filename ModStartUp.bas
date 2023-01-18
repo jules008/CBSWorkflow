@@ -54,7 +54,10 @@ Public Function Initialize() As Boolean
         ModDeploy.UpdateDBScript
     End If
 
-    If ShtSettings.ChkUpdateDB Then ModDeploy.UpdateTableData
+    If ShtSettings.ChkUpdateDB Then
+        ModDeploy.UpdateTable "TblEmail", "A1:H2"
+
+    End If
 
     If ModDatabase.GetDBVer <> DB_VER Then
         Err.Raise DB_WRONG_VER
@@ -369,6 +372,9 @@ Private Function SetGlobalClasses() As Boolean
     Set ActiveWorkflows = New ClsWorkflows
     Set MailSystem = New ClsMailSystem
     Set MailInbox = New ClsMailInbox
+    With MailInbox
+        .MailFolder = "contact@cbs-capital.co.uk"
+    End With
     Set CodeTimer = New ClsCodeTimer
     ActiveWorkflows.UpdateRAGs
 
