@@ -24,19 +24,10 @@ Public Sub QueryTest()
     
 
     'undo
-    DB.Execute "ALTER TABLE TblProject DROP COLUMN CBSCommPC "
-    DB.Execute "ALTER TABLE TblProject DROP COLUMN ExitFeePC "
-    
+    DB.Execute "ALTER TABLE TblCBSUser DROP COLUMN Supervisor "
     Stop
     'update
-    DB.Execute "UPDATE TblStepTemplate SET Email = 1 WHERE StepNo = '1.03'"
-    DB.Execute "UPDATE TblStepTemplate SET Email = 2 WHERE StepNo = '1.06'"
-    DB.Execute "UPDATE TblStepTemplate SET Email = 3 WHERE StepNo = '1.12'"
-    DB.Execute "UPDATE TblStepTemplate SET Email = 4 WHERE StepNo = '1.13'"
-    DB.Execute "UPDATE TblStepTemplate SET Email = 5 WHERE StepNo = '1.16'"
-    
-    DB.Execute "ALTER TABLE TblProject ADD COLUMN CBSCommPC single"
-    DB.Execute "ALTER TABLE TblProject ADD COLUMN ExitFeePC single"
+    DB.Execute "ALTER TABLE TblCBSUser ADD COLUMN Supervisor text"
 End Sub
 
 ' ===============================================================
@@ -89,14 +80,7 @@ Public Function UpdateDBScript() As Boolean
     ' ========================================================================================
     ' Database commands
     ' ----------------------------------------------------------------------------------------
-    DB.Execute "ALTER TABLE TblProject ADD COLUMN CBSCommPC single"
-    DB.Execute "ALTER TABLE TblProject ADD COLUMN ExitFeePC single"
-    
-    DB.Execute "UPDATE TblStepTemplate SET Email = 1 WHERE StepNo = '1.03'"
-    DB.Execute "UPDATE TblStepTemplate SET Email = 2 WHERE StepNo = '1.06'"
-    DB.Execute "UPDATE TblStepTemplate SET Email = 3 WHERE StepNo = '1.12'"
-    DB.Execute "UPDATE TblStepTemplate SET Email = 4 WHERE StepNo = '1.13'"
-    DB.Execute "UPDATE TblStepTemplate SET Email = 5 WHERE StepNo = '1.16'"
+    DB.Execute "ALTER TABLE TblCBSUser ADD COLUMN Supervisor integer"
     ' ========================================================================================
         
     
@@ -167,8 +151,7 @@ Public Function UpdateDBScriptUndo() As Boolean
     ' ========================================================================================
     ' Database commands
     ' ----------------------------------------------------------------------------------------
-    DB.Execute "ALTER TABLE TblProject DROP COLUMN CBSCommPC "
-    DB.Execute "ALTER TABLE TblProject DROP COLUMN ExitFeePC "
+    DB.Execute "ALTER TABLE TblCBSUser DROP COLUMN Supervisor "
     ' ========================================================================================
     
     DB.Close

@@ -281,8 +281,8 @@ Public Const BTN_EXP_8_WIDTH As Integer = 150
 '===============================================================
 ' Admin Users Screen
 ' ---------------------------------------------------------------
-Public Const ADM_USERS_TABLE_COL_WIDTHS As String = "100:250:250:200:200"
-Public Const ADM_USERS_TABLE_TITLES As String = "User No:User Name:Position:Phone No:User Level:"
+Public Const ADM_USERS_TABLE_COL_WIDTHS As String = "50:200:200:200:150:200"
+Public Const ADM_USERS_TABLE_TITLES As String = "User No:User Name:User Level:Position:Phone No:Supervisor"
 Public Const ADM_USERS_MAX_LINES As Integer = 150
 
 ' ---------------------------------------------------------------

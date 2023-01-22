@@ -3,3 +3,4 @@ UserName,  dbText
 Position,  dbText
 PhoneNo,  dbText
 UserLvl,  dbText
+Supervisor,  dbLong

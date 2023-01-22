@@ -1,6 +1,6 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FrmAdnCBSUser 
-   ClientHeight    =   4005
+   ClientHeight    =   3765
    ClientLeft      =   120
    ClientTop       =   465
    ClientWidth     =   11745
@@ -70,6 +70,7 @@ Public Sub ClearForm()
     TxtPosition = ""
     TxtUserName = ""
     CmoUserLvl = ""
+    CmoSupervisor = ""
 End Sub
 
 ' ===============================================================
@@ -172,7 +173,23 @@ Private Sub UserForm_Initialize()
         .AddItem "Senior Manager"
         .AddItem "Case Manager"
     End With
+    
+    Dim RstSupervisor As Recordset
+    Dim x As Integer
+    Set RstSupervisor = ModDatabase.SQLQuery("SELECT CBSUserNo, UserName FROM TblCBSUser WHERE Position = 'Senior Manager'")
+    
+    With CmoSupervisor
+        .Clear
+        Do While Not RstSupervisor.EOF
+            .AddItem
+            .List(x, 0) = !CBSUserNo
+            .List(x, 1) = !UsesrName
+            x = x + 1
+        Loop
+    End With
     ClearForm
+    
+    Set RstSupervisor = Nothing
 End Sub
 
 ' ===============================================================
