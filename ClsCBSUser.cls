@@ -32,7 +32,7 @@ Private pCBSUserNo As Integer
 Private pUserName As String
 Private pPosition As String
 Private pPhoneNo As String
-Private pUserLvl As String
+Private pUserLvl As EnUserLvl
 Private pSupervisor As ClsCBSUser
 
 Private WithEvents pCBSUserForm As FrmAdnCBSUser
@@ -75,11 +75,11 @@ Public Property Let PhoneNo(ByVal vNewValue As String)
 End Property
 
 '---------------------------------------------------------------
-Public Property Get UserLvl() As String
+Public Property Get UserLvl() As EnUserLvl
     UserLvl = pUserLvl
 End Property
 
-Public Property Let UserLvl(ByVal vNewValue As String)
+Public Property Let UserLvl(ByVal vNewValue As EnUserLvl)
     pUserLvl = vNewValue
 End Property
 
@@ -120,7 +120,7 @@ Public Sub DisplayForm()
         .TxtPhoneNo = pPhoneNo
         .TxtPosition = pPosition
         .TxtUserName = pUserName
-        .CmoUserLvl = pUserLvl
+        If pUserLvl > 0 Then .CmoUserLvl = pUserLvl
         If Not pSupervisor Is Nothing Then .CmoSupervisor = pSupervisor.UserName
         .Show
     End With
@@ -214,8 +214,13 @@ Private Sub pCBSUserForm_Update()
         pUserName = CleanSQLText(.TxtUserName)
         pPosition = CleanSQLText(.TxtPosition)
         pPhoneNo = CleanSQLText(.TxtPhoneNo)
-        pUserLvl = CleanSQLText(.CmoUserLvl)
-        If .CmoSupervisor.ListIndex <> -1 Then pSupervisor = CleanSQLText(.CmoSupervisor)
+        pUserLvl = .CmoUserLvl
+        
+        If .CmoSupervisor.ListIndex <> -1 Then
+            Set pSupervisor = New ClsCBSUser
+            pSupervisor.DBGet .CmoSupervisor
+        End If
+        
     End With
     
     If pCBSUserNo = CurrentUser.CBSUserNo Then

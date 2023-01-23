@@ -157,6 +157,7 @@ End Sub
 ' Initialises form controls
 ' ---------------------------------------------------------------
 Private Sub UserForm_Initialize()
+    Dim UserLvl As EnUserLvl
     
     Me.StartUpPosition = 0
     Me.Left = Application.Left + (0.5 * Application.Width) - (0.5 * Me.Width)
@@ -169,21 +170,29 @@ Private Sub UserForm_Initialize()
     
     With CmoUserLvl
         .Clear
-        .AddItem "Admin"
-        .AddItem "Senior Manager"
-        .AddItem "Case Manager"
+        .AddItem
+        .List(0, 0) = 1
+        .List(0, 1) = "Admin"
+        .AddItem
+        .List(1, 0) = 2
+        .List(1, 1) = "Senior Manager"
+        .AddItem
+        .List(2, 0) = 3
+        .List(2, 1) = "Case Manager"
     End With
     
     Dim RstSupervisor As Recordset
     Dim x As Integer
-    Set RstSupervisor = ModDatabase.SQLQuery("SELECT CBSUserNo, UserName FROM TblCBSUser WHERE Position = 'Senior Manager'")
+    UserLvl = enSenMgr
+    Set RstSupervisor = ModDatabase.SQLQuery("SELECT CBSUserNo, UserName FROM TblCBSUser WHERE UserLvl = " & UserLvl)
     
     With CmoSupervisor
         .Clear
         Do While Not RstSupervisor.EOF
             .AddItem
-            .List(x, 0) = !CBSUserNo
-            .List(x, 1) = !UsesrName
+            If Not IsNull(RstSupervisor!CBSUserNo) Then .List(x, 0) = RstSupervisor!CBSUserNo
+            If Not IsNull(RstSupervisor!UserName) Then .List(x, 1) = RstSupervisor!UserName
+            RstSupervisor.MoveNext
             x = x + 1
         Loop
     End With

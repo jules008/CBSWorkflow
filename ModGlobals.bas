@@ -243,9 +243,9 @@ Enum enStepType         'Step Type
 End Enum                '
 
 Enum EnUserLvl          'User Level
-    enAdmin             'Admin
-    enSenMgr            'Senior Manager
-    enCaseMgr           'Case Manager
+    enAdmin = 1         'Admin
+    enSenMgr = 2        'Senior Manager
+    enCaseMgr = 3       'Case Manager
 End Enum                '
  
 Enum EnumFormValidation

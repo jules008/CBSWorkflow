@@ -349,25 +349,25 @@ Restart:
 
         Case enBtnAdminUsers
         
-            ShtMain.Unprotect PROTECT_KEY
+            If CurrentUser.UserLvl = enCaseMgr Then Err.Raise ACCESS_DENIED
 
             BtnAdminClick enScrAdminUsers
 
         Case enBtnAdminEmails
         
-            ShtMain.Unprotect PROTECT_KEY
+            If CurrentUser.UserLvl = enCaseMgr Then Err.Raise ACCESS_DENIED
 
             BtnAdminClick enScrAdminEmails
 
         Case enBtnAdminWorkflows
         
-            ShtMain.Unprotect PROTECT_KEY
+            If CurrentUser.UserLvl = enCaseMgr Then Err.Raise ACCESS_DENIED
 
             BtnAdminClick enScrAdminWorkflows
 
         Case enBtnAdminWFTypes
         
-            ShtMain.Unprotect PROTECT_KEY
+            If CurrentUser.UserLvl = enCaseMgr Then Err.Raise ACCESS_DENIED
 
             BtnAdminClick enScrAdminWFTypes
             

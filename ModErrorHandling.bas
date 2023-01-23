@@ -127,7 +127,7 @@ Public Function CustomErrorHandler(ErrorCode As Long, Optional Message As String
             End If
             
         Case ACCESS_DENIED
-            MsgBox "You do not have the correct access rights to carry out this action.  Please contact an Administrator for access", vbOKOnly + vbExclamation
+            MsgBox "You do not have the correct access rights to carry out this action.  Please contact an Administrator for access", vbOKOnly + vbInformation
             Application.StatusBar = "Access Denied"
             Sleep 2000
             Application.StatusBar = ""
@@ -150,10 +150,10 @@ Public Function CustomErrorHandler(ErrorCode As Long, Optional Message As String
            MsgBox "please check highlighted boxes for errors", vbExclamation, APP_NAME
        
         Case NO_USER_SELECTED
-            MsgBox "please select a Person", vbExclamation, APP_NAME
+            MsgBox "please select a Person", vbInformation, APP_NAME
         
         Case SYS_ACCESS_DENIED
-            MsgBox "To gain access to FIRES, please send a message to an administrator", vbCritical, APP_NAME
+            MsgBox "To gain access to FIRES, please send a message to an administrator", vbInformation, APP_NAME
             ModCloseDown.Terminate
             ThisWorkbook.Close False
             
