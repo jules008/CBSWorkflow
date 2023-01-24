@@ -339,6 +339,8 @@ End Sub
 ' Generates doughnut Grpah
 '---------------------------------------------------------------
 Private Sub GenPie()
+    Dim Subtotal As Single
+    Dim Total As Single
     pCht.Parent.Name = pName
     
     With pCht

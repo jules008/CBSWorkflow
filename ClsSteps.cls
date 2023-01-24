@@ -158,8 +158,9 @@ Public Sub GetStepTemplates()
     Set RstStep = ModDatabase.SQLQuery("SELECT * FROM TblStepTemplate WHERE " _
                                         & "WFName = '" & Workflow & "' ORDER BY StepNo")
     
-    If RstStep.RecordCount = 0 Then Exit Sub
-    
+    If RstStep.RecordCount = 0 Then
+        CustomErrorHandler GRACEFUL_EXIT, "No Workflow Steps"
+    Else
     With RstStep
         .MoveLast
         .MoveFirst
@@ -172,6 +173,7 @@ Public Sub GetStepTemplates()
             .MoveNext
         Next
     End With
+    End If
 End Sub
 
 ' ===============================================================

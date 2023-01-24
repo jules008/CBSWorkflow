@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FrmProjectForm 
    Caption         =   "CRM - Project"
-   ClientHeight    =   6720
+   ClientHeight    =   6885
    ClientLeft      =   120
    ClientTop       =   465
    ClientWidth     =   11940
@@ -81,6 +81,7 @@ Public Sub ClearForm()
     CmoClientNo = ""
     CmoSPVNo = ""
     TxtExitFee = ""
+    TxtConsComenceDte = ""
 End Sub
 
 ' ===============================================================
@@ -178,7 +179,14 @@ End Sub
 ' TxtCBSCommission_Change
 ' ---------------------------------------------------------------
 Private Sub TxtCBSCommission_Change()
+    TxtCBSCommission.BackColor = COL_WHITE
+End Sub
 
+' ===============================================================
+' TxtConsComenceDte_Change
+' ---------------------------------------------------------------
+Private Sub TxtConsComenceDte_Change()
+    TxtConsComenceDte.BackColor = COL_WHITE
 End Sub
 
 ' ===============================================================
@@ -354,6 +362,13 @@ Private Function ValidateForm() As enFormValidation
            
     With TxtProjName
         If CleanString(.Value) = "" Then
+            .BackColor = COL_AMBER
+            ValidateForm = enValidationError
+        End If
+    End With
+           
+    With TxtConsComenceDte
+        If Not IsDate(TxtConsComenceDte) Then
             .BackColor = COL_AMBER
             ValidateForm = enValidationError
         End If

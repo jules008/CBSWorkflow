@@ -425,23 +425,22 @@ Restart:
         OldSplitRow = SplitRow
         OldProjectNo = ProjectNo
     
-        SQLSelect = "SELECT TblWorkflow.WorkflowNo, " _
-                        & "TblWorkflowType.DisplayName, " _
-                        & "TblLender.Name, " _
-                        & "TblWorkflow.CurrentStep, " _
-                        & "TblStepTemplate.StepName, " _
-                        & "TblWorkflow.Progress & '%' AS [Progress], " _
-                        & "TblWorkflow.Status, " _
-                        & "TblWorkflow.RAG "
-       SQLFrom = "FROM (TblStepTemplate " _
-                        & "RIGHT JOIN (TblWorkflow " _
-                        & "LEFT JOIN TblLender ON TblWorkflow.LenderNo = TblLender.LenderNo) " _
-                        & "ON TblStepTemplate.StepNo = TblWorkflow.CurrentStep) " _
-                        & "LEFT JOIN TblWorkflowType ON TblWorkflow.Name = TblWorkflowType.WFName "
-        SQLWhere = "WHERE (((TblWorkflow.ProjectNo)= " & ProjectNo & ") " _
-                        & "AND ((TblWorkflow.WorkflowType)='enLender'))"
-
-        SQL = SQLSelect & SQLFrom & SQLWhere
+        SQL = "Select " _
+             & "    TblWorkflow.WorkflowNo, " _
+             & "    TblWorkflow.SecondTier, " _
+             & "    TblLender.Name, " _
+             & "    TblWorkflow.CurrentStep, " _
+             & "    TblStepTemplate.StepName, " _
+             & "    TblWorkflow.Progress & '%' As Progress, " _
+             & "    TblWorkflow.Status, " _
+             & "    TblWorkflow.RAG " _
+             & "From " _
+             & "    TblStepTemplate Right Join " _
+             & "    (TblWorkflow Left Join " _
+             & "    TblLender On TblWorkflow.LenderNo = TblLender.LenderNo) On TblStepTemplate.StepNo = TblWorkflow.CurrentStep " _
+             & "Where " _
+             & "    ((TblWorkflow.ProjectNo)= " & ProjectNo & ")  And " _
+             & "    ((TblWorkflow.WorkflowType) = 'enLender') "
 
     Set RstWorkflows = ModDatabase.SQLQuery(SQL)
     

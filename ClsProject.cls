@@ -49,6 +49,7 @@ Private pSecondClientRef As Integer
 Private pFacilitator As Integer
 Private pCompleteDate As Date
 Private pStartDate As Date
+Private pConsComenceDte As Date
 Private WithEvents pProjectForm As FrmProjectForm
 Attribute pProjectForm.VB_VarHelpID = -1
 
@@ -226,6 +227,15 @@ Public Property Let StartDate(ByRef StartDate As Date)
 End Property
     
 '---------------------------------------------------------------
+Public Property Get ConsComenceDte() As Date
+    ConsComenceDte = pConsComenceDte
+End Property
+
+Public Property Let ConsComenceDte(ByRef ConsComenceDte As Date)
+    pConsComenceDte = ConsComenceDte
+End Property
+    
+'---------------------------------------------------------------
 Public Property Get Parent() As ClsSPV
     Set Parent = pParent
 End Property
@@ -269,6 +279,7 @@ Public Sub DisplayForm()
         .TxtExitFee = pExitFee
         .TxtDebt = pDebt
         .TxtExitFeePC = pExitFeePC
+        .TxtConsComenceDte = pConsComenceDte
         .Show
     End With
 End Sub
@@ -302,6 +313,7 @@ Public Sub DBGet(ByVal ProjectNameNo As Variant)
             If Not IsNull(!Facilitator) Then pFacilitator = !Facilitator
             If Not IsNull(!CompleteDate) Then pCompleteDate = !CompleteDate
             If Not IsNull(!StartDate) Then pStartDate = !StartDate
+            If Not IsNull(!ConsComenceDte) Then pConsComenceDte = !ConsComenceDte
             
             pSPV.DBGet !SPVNo
             pClient.DBGet !ClientNo
@@ -365,6 +377,7 @@ Public Sub DBSave()
         !CaseManager = CleanSQLText(pCaseManager.CBSUserNo, True)
         !SPVNo = CleanSQLText(pSPV.SPVNo, True)
         !ClientNo = CleanSQLText(pClient.ClientNo, True)
+        !ConsComenceDte = CleanSQLText(pConsComenceDte, True)
 
         pSPV.ClientNo = pClient.ClientNo
 
@@ -415,6 +428,7 @@ Private Sub pProjectForm_Update()
        pSPV.DBGet .CmoSPVNo.List(.CmoSPVNo - 1, 0)
        pCaseManager.DBGet .CmoCaseManager.List(.CmoCaseManager - 1, 0)
        pExitFee = .TxtExitFee
+       pConsComenceDte = .TxtConsComenceDte
         pDebt = .TxtDebt
         pExitFeePC = .TxtExitFeePC
        pProjectName = .TxtProjName

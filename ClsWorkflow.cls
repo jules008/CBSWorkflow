@@ -42,6 +42,8 @@ Private pDebt As Single
 Private pCBSComm As Single
 Private pExitFee As Single
 Private pLoanTerm As Integer
+Private pLoanType As String
+Private pSecondTier As String
 Private pParent As ClsProject
 
 Private WithEvents pProjWFForm As FrmProjectWF
@@ -294,6 +296,24 @@ Public Property Let LoanTerm(ByVal vNewValue As Integer)
     pLoanTerm = vNewValue
 End Property
 
+'---------------------------------------------------------------
+Public Property Get LoanType() As String
+    LoanType = pLoanType
+End Property
+
+Public Property Let LoanType(ByVal LoanType As String)
+    pLoanType = LoanType
+End Property
+
+'---------------------------------------------------------------
+Public Property Get SecondTier() As String
+    SecondTier = pSecondTier
+End Property
+
+Public Property Let SecondTier(ByVal SecondTier As String)
+    pSecondTier = SecondTier
+End Property
+
 ' ===============================================================
 ' Method DBNew
 ' displays new workflow form
@@ -343,6 +363,8 @@ Public Sub DisplayLenderForm()
         .TxtProjectNo = pParent.ProjectNo
         .TxtCaseManager = pParent.CaseManager.UserName
         .TxtLoanTerm = pParent.LoanTerm
+        .TxtLoanType = pLoanType
+        .TxtSecondTier = pSecondTier
         .TxtStepName = ActiveStep.StepNo & " - " & pActiveStep.StepName
         .xTxtAction = pActiveStep.StepAction
         .TxtClientContactName = Parent.Client.Contacts.PrimaryContact.ContactName
@@ -418,6 +440,7 @@ Public Sub DisplayProjectForm()
         .TxtClientContactPhone = Parent.Client.Contacts.PrimaryContact.Phone1
         .TxtSPVContactName = Parent.SPV.Contacts.PrimaryContact.ContactName
         .TxtSPVContactPhone = Parent.SPV.Contacts.PrimaryContact.Phone1
+        .TxtConsComenceDte = Parent.ConsComenceDte
     
         Select Case pActiveStep.StepType
             Case enYesNo
@@ -483,6 +506,8 @@ Public Sub DBGet(WorkflowNo As String)
             If Not IsNull(!CBSComm) Then pCBSComm = !CBSComm
             If Not IsNull(!ExitFee) Then pExitFee = !ExitFee
             If Not IsNull(!LoanTerm) Then pLoanTerm = !LoanTerm
+            If Not IsNull(!LoanType) Then pLoanType = !LoanType
+            If Not IsNull(!SecondTier) Then pSecondTier = !SecondTier
             
             pLender.DBGet !LenderNo
             Set pSteps = New ClsSteps
@@ -534,6 +559,8 @@ Public Sub DBSave()
             !CBSComm = CleanSQLText(pCBSComm, True)
             !ExitFee = CleanSQLText(pExitFee, True)
             !LoanTerm = CleanSQLText(pLoanTerm, True)
+        !LoanType = CleanSQLText(pLoanType, True)
+        !SecondTier = CleanSQLText(pSecondTier, True)
         If Not Parent Is Nothing Then !ProjectNo = Parent.ProjectNo
         .Update
                     
@@ -914,8 +941,9 @@ End Sub
 ' ---------------------------------------------------------------
 Private Sub pWFNameForm_Update()
     With pWFNameForm
-        pName = .GetWFName
-    
+        pLoanType = .CmoLoanType
+        pSecondTier = .CmoSecondTier
+        pName = .CmoSecondTier
     End With
 End Sub
 

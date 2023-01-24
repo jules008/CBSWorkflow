@@ -446,7 +446,7 @@ Public Sub BtnAdminClick(ByVal ScreenPage As enScreenPage)
         With Picker
             .Title = "Select workflow script"
             .Instructions = "Select the workflow script you would like to view."
-            .Data = ModDatabase.SQLQuery("SELECT DisplayName from TblWorkflowType")
+            .Data = ModDatabase.SQLQuery("SELECT SecondTier from TblWorkflowTable")
             .ClearForm
             .Show = True
         End With
@@ -456,7 +456,7 @@ Public Sub BtnAdminClick(ByVal ScreenPage As enScreenPage)
             GoTo GracefullExit
         End If
         
-        Set RstFilter = ModDatabase.SQLQuery("SELECT WFNo FROM TblWorkflowType WHERE DisplayName = '" & Picker.SelectedItem & "'")
+        Set RstFilter = ModDatabase.SQLQuery("SELECT WFNo FROM TblWorkflowTable WHERE SecondTier = '" & Picker.SelectedItem & "'")
         StrFilter = "WorkflowNo:" & RstFilter!WFNo
     End If
     

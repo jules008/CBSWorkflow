@@ -346,7 +346,7 @@ Private Function GetAdminData(ByVal ScreenPage As enScreenPage, Optional StrSort
         Case enScrAdminWorkflows
             SQL = "SELECT WorkflowNo, WFName, StepNo, StepName, Null AS Blank FROM TblStepTemplate " & StrFilter & StrSortBy
         Case enScrAdminWFTypes
-            SQL = "SELECT WFNo, DisplayName, Description, Null AS Blank FROM TblWorkflowType " & StrSortBy
+            SQL = "SELECT WFNo, LoanType, SecondTier, Null AS Blank FROM TblWorkflowTable " & StrSortBy
     
     End Select
 

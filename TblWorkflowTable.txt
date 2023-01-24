@@ -1,0 +1,3 @@
+WFNo,  dbLong
+LoanType,  dbText
+SecondTier,  dbText

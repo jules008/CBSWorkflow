@@ -17,3 +17,4 @@ CompleteDate,  dbDate
 StartDate,  dbDate
 CBSCommPC,  dbSingle
 ExitFeePC,  dbSingle
+ConsComenceDte,  dbDate

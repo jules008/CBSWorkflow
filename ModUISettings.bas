@@ -303,7 +303,7 @@ Public Const ADM_WFLOWS_MAX_LINES As Integer = 150
 ' Admin WorkflowTypes Screen
 ' ---------------------------------------------------------------
 Public Const ADM_WFTYPES_TABLE_COL_WIDTHS As String = "100:250:300:350"
-Public Const ADM_WFTYPES_TABLE_TITLES As String = "No:Workflow Name:Description:"
+Public Const ADM_WFTYPES_TABLE_TITLES As String = "No:Loan Type:Second Tier:"
 Public Const ADM_WFTYPES_MAX_LINES As Integer = 150
 
 ' ---------------------------------------------------------------

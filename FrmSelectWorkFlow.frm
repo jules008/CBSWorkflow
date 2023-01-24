@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FrmSelectWorkFlow 
    Caption         =   "Select Workflow"
-   ClientHeight    =   3345
+   ClientHeight    =   3795
    ClientLeft      =   120
    ClientTop       =   465
-   ClientWidth     =   7065
+   ClientWidth     =   6450
    OleObjectBlob   =   "FrmSelectWorkFlow.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -62,7 +62,7 @@ Restart:
             
     If MainScreen Is Nothing Then Err.Raise SYSTEM_RESTART
         
-    If CmoWorkflow.ListIndex <> -1 Then
+    If CmoSecondTier.ListIndex <> -1 Then
 
         RaiseEvent Update
         Unload Me
@@ -94,12 +94,34 @@ ErrorHandler:
 End Sub
 
 ' ===============================================================
-' CmoWorkflow_Change
+' CmoLoanType_Change
 ' ---------------------------------------------------------------
-Private Sub CmoWorkflow_Change()
-    If CmoWorkflow.ListIndex <> -1 Then
-        If Not PopulateForm Then Err.Raise HANDLED_ERROR
+Private Sub CmoLoanType_Change()
+    Dim Workflow As String
+    
+    With CmoSecondTier
+        If CmoLoanType.ListIndex <> -1 Then
+            .Enabled = True
+    
+            Set RstWorkflow = ModDatabase.SQLQuery("SELECT SecondTier FROM TblWorkflowTable WHERE LoanType = '" & CmoLoanType & "'")
+            
+            With CmoSecondTier
+                .Value = ""
+                .Clear
+                With RstWorkflow
+                    Do While Not .EOF
+                        CmoSecondTier.AddItem !SecondTier
+                        .MoveNext
+                    Loop
+                End With
+            End With
+            
+            Set RstWorkflow = Nothing
+        Else
+            .Enabled = False
+            .Clear
     End If
+    End With
 End Sub
 
 ' ===============================================================
@@ -108,20 +130,22 @@ End Sub
 Private Sub UserForm_Initialize()
     Dim Workflow As String
     
-    Set RstWorkflow = ModDatabase.SQLQuery("TblworkflowType")
+    Set RstWorkflow = ModDatabase.SQLQuery("SELECT DISTINCT LoanType FROM TblWorkflowTable")
     
-    With CmoWorkflow
+    With CmoLoanType
         .Value = ""
         .Clear
         With RstWorkflow
             Do While Not .EOF
-                CmoWorkflow.AddItem !DisplayName
+                CmoLoanType.AddItem !LoanType
                 .MoveNext
             Loop
         End With
     End With
     
-    LblDesc = ""
+    CmoSecondTier.Enabled = False
+    
+    Set RstWorkflow = Nothing
     
     Me.StartUpPosition = 0
     Me.Left = Application.Left + (0.5 * Application.Width) - (0.5 * Me.Width)
@@ -129,80 +153,3 @@ Private Sub UserForm_Initialize()
     
 
 End Sub
-
-' ===============================================================
-' PopulateForm
-' Fills form with data
-' ---------------------------------------------------------------
-Private Function PopulateForm() As Boolean
-    Dim i As Integer
-    Dim StepNo As String
-    Dim LastStepNo As String
-    Dim CntrlName As String
-    
-    Const StrPROCEDURE As String = "PopulateForm()"
-
-    On Error GoTo ErrorHandler
-    
-    With RstWorkflow
-        Debug.Print .RecordCount
-        .MoveFirst
-        .FindFirst "DisplayName = '" & CmoWorkflow & "'"
-        LblDesc = !Description
-    
-    End With
-    
-    PopulateForm = True
-  
-Exit Function
-
-ErrorExit:
-    
-    PopulateForm = False
-
-
-Exit Function
-
-ErrorHandler:
-    If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
-        Stop
-        Resume
-    Else
-        Resume ErrorExit
-    End If
-End Function
-
-
-' ===============================================================
-' GetWFName
-' Gets workflow name that was selected on form
-' ---------------------------------------------------------------
-Public Function GetWFName() As String
-    Dim RstWFName As Recordset
-    
-    Const StrPROCEDURE As String = "GetWFName()"
-
-    On Error GoTo ErrorHandler
-    
-    Set RstWFName = ModDatabase.SQLQuery("SELECT WFName FROM TblWorkflowType  WHERE Displayname = '" & CmoWorkflow.List(CmoWorkflow.ListIndex) & "'")
-    
-    GetWFName = RstWFName!WFName
-    Set RstWFName = Nothing
-    
-Exit Function
-
-ErrorExit:
-
-    Set RstWFName = Nothing
-    GetWFName = "Error"
-
-Exit Function
-
-ErrorHandler:
-    If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
-        Stop
-        Resume
-    Else
-        Resume ErrorExit
-    End If
-End Function
