@@ -639,7 +639,7 @@ Private Sub AddProgressBars(TableType As String)
                     .Fill.ForeColor.RGB = TABLE_PROGRESS_BADGE_FILL_COLOUR
                 End With
             End If
-            Debug.Print "Row"; .Row, "Col"; .Col
+'            Debug.Print "Row"; .Row, "Col"; .Col
         End With
     Next
 

@@ -628,7 +628,7 @@ Public Function CalendlyImport() As Boolean
         ColEventType = .Range("1:1").Find("Event Type Name").Column
         
         Debug.Assert ColFirstName > 0 And ColLastName > 0 And ColEmail > 0 And ColEventType > 0
-        Debug.Print NoRows
+'        Debug.Print NoRows
         
         For i = 2 To NoRows + 1
             Set RstContMaxNo = ModDatabase.SQLQuery("SELECT MAX(ContactNo) As MaxNo FROM TblContact")
@@ -638,7 +638,7 @@ Public Function CalendlyImport() As Boolean
                 LastName = Trim(.Cells(i, ColLastName))
                 Email = Trim(.Cells(i, ColEmail))
                 Debug.Assert FirstName <> ""
-                Debug.Print i, FirstName, LastName, Email
+'                Debug.Print i, FirstName, LastName, Email
             End If
             
             With RstContacts
@@ -647,7 +647,7 @@ Public Function CalendlyImport() As Boolean
                 .FindFirst ("ContactName = '" & FirstName & " " & LastName & "'")
                 
                 If .NoMatch Then
-                    Debug.Print "no record found"
+'                    Debug.Print "no record found"
                     Import = True
                 Else
                     Dim Response As Integer

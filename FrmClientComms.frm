@@ -48,12 +48,12 @@ Public Sub AddFields(CommsList As Recordset)
     With CommsList
         If .RecordCount > 0 Then .MoveFirst
         Do While Not .EOF
-            Debug.Print !ContactName
+'            Debug.Print !ContactName
             If !ContactType = "Client" Then IntExt = "Internal" Else IntExt = "External"
             If Not IsNull(!Organisation) Then OrgStr = " at " & !Organisation Else OrgStr = ""
             
             Set Chkbox = FrmBoxes.Controls.Add("Forms.CheckBox.1")
-            Debug.Print !ContactNo
+'            Debug.Print !ContactNo
             With Chkbox
                 .Name = "ChkBox:" & CommsList!ContactNo
                 .Top = (i * 15) + 0

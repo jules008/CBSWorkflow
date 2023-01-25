@@ -496,7 +496,7 @@ Function IsValidEmail(sEmailAddress As String) As Boolean
     bReturn = False
     
     'Check if Email match regex pattern
-    If oRegEx.test(sEmailAddress) Then
+    If oRegEx.TEST(sEmailAddress) Then
         'Debug.Print "Valid Email ('" & sEmailAddress & "')"
         bReturn = True
     Else
@@ -540,7 +540,7 @@ Public Function CleanSQLText(TextInput As Variant, Optional ReturnNULL As Boolea
             Do
                 If i = 10000 Then Exit Do
                 FindNo = InStr(1, TextInput, "''")
-                Debug.Print FindNo, TextInput
+'                Debug.Print FindNo, TextInput
                 TextInput = Replace(TextInput, "''", "'")
                 i = i + 1
             Loop While FindNo <> 0

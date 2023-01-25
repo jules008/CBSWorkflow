@@ -55,7 +55,8 @@ Public Function Initialize() As Boolean
     End If
 
     If ShtSettings.ChkUpdateDB Then
-        ModDeploy.UpdateTable "TblEmail", "A1:H2"
+'        ModDeploy.UpdateTable "TblEmail", "A1:H2"
+        ModDeploy.UpdateTable "TblStepTemplate", "A1:Z2"
 
     End If
 

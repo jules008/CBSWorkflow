@@ -255,7 +255,7 @@ Public Property Get Progress() As Single
     End If
     Set RstLenders = Nothing
     
-    Debug.Print "NoSteps"; NoSteps, "NoComplete"; NoComplete, "pProgress"; pProgress
+'    Debug.Print "NoSteps"; NoSteps, "NoComplete"; NoComplete, "pProgress"; pProgress
     
     Progress = pProgress
 End Property
@@ -372,33 +372,36 @@ Public Sub DisplayLenderForm()
 
          Select Case pActiveStep.StepType
              Case enYesNo
-                 .TxtDataInput.Visible = False
+                 .LblDataIput.Visible = False
+                 .xTxtDataInput.Visible = False
                  .BtnNo.Visible = True
                  .BtnComplete.Visible = True
                  .BtnComplete.Caption = "Yes"
              
              Case enStep
-                 .TxtDataInput.Visible = False
+                 .LblDataIput.Visible = False
+                 .xTxtDataInput.Visible = False
                  .BtnNo.Visible = False
                  .BtnComplete.Visible = True
                  .BtnComplete.Caption = "Step Complete"
              
              Case enDataInput
-                 .TxtDataInput.Visible = True
-                 .TxtDataInput.Value = ""
+                 .LblDataIput.Visible = True
+                 .xTxtDataInput.Visible = True
+                 .xTxtDataInput.Value = ""
                  .BtnNo.Visible = False
                  .BtnComplete.Visible = True
                  .BtnComplete.Caption = "Step Complete"
         
-                 If pActiveStep.DataFormat = "Date" And .TxtDataInput = "" Then
+                 If pActiveStep.DataFormat = "Date" And .xTxtDataInput = "" Then
                      Set TmpWorkflow = ActiveProject.ProjectWorkflow
-                     .TxtDataInput = Format(FrmCalPicker.ShowForm, "dd mmm yy")
+                     .xTxtDataInput = Format(FrmCalPicker.ShowForm, "dd mmm yy")
                      Set ActiveProject.ProjectWorkflow = TmpWorkflow
         End If
         
              Case enAltBranch
-                 .TxtDataInput.Visible = False
-                 .BtnCopyText.Visible = False
+                 .LblDataIput.Visible = False
+                 .xTxtDataInput.Visible = False
                  .BtnNo.Visible = True
                  .BtnComplete.Visible = True
                  .BtnComplete.Caption = "Yes"
@@ -444,33 +447,36 @@ Public Sub DisplayProjectForm()
     
         Select Case pActiveStep.StepType
             Case enYesNo
-                .TxtDataInput.Visible = False
+                .LblDataIput.Visible = False
+                .xTxtDataInput.Visible = False
                 .BtnNo.Visible = True
                 .BtnComplete.Visible = True
                 .BtnComplete.Caption = "Yes"
             
             Case enStep
-                .TxtDataInput.Visible = False
+                .LblDataIput.Visible = False
+                .xTxtDataInput.Visible = False
                 .BtnNo.Visible = False
                 .BtnComplete.Visible = True
                 .BtnComplete.Caption = "Step Complete"
             
             Case enDataInput
-                .TxtDataInput.Visible = True
-                .TxtDataInput.Value = ""
+                .LblDataIput.Visible = True
+                .xTxtDataInput.Visible = True
+                .xTxtDataInput.Value = ""
                 .BtnNo.Visible = False
                 .BtnComplete.Visible = True
                 .BtnComplete.Caption = "Step Complete"
        
-                If pActiveStep.DataFormat = "Date" And .TxtDataInput = "" Then
+                If pActiveStep.DataFormat = "Date" And .xTxtDataInput = "" Then
                     Set TmpWorkflow = ActiveProject.ProjectWorkflow
-                    .TxtDataInput = Format(FrmCalPicker.ShowForm, "dd mmm yy")
+                    .xTxtDataInput = Format(FrmCalPicker.ShowForm, "dd mmm yy")
                     Set ActiveProject.ProjectWorkflow = TmpWorkflow
                 End If
             
             Case enAltBranch
-                .TxtDataInput.Visible = False
-                .BtnCopyText.Visible = False
+                .LblDataIput.Visible = False
+                .xTxtDataInput.Visible = False
                 .BtnNo.Visible = True
                 .BtnComplete.Visible = True
                 .BtnComplete.Caption = "Yes"
@@ -767,7 +773,7 @@ Private Sub pLenderWFForm_PrevStep()
     pActiveStep.Start
     DBSave
     
-    pLenderWFForm.TxtDataInput = ""
+    pLenderWFForm.xTxtDataInput = ""
     
     DisplayProjectForm
     
@@ -788,9 +794,9 @@ End Sub
 Private Sub pLenderWFForm_StepComplete()
     pLenderWFForm.Hide
     With pLenderWFForm
-        If .TxtDataInput <> "" Then
-            pActiveStep.DataItem = .TxtDataInput
-            .TxtDataInput = ""
+        If .xTxtDataInput <> "" Then
+            pActiveStep.DataItem = .xTxtDataInput
+            .xTxtDataInput = ""
         End If
         
         MoveToNextStep
@@ -883,7 +889,7 @@ Private Sub pProjWFForm_PrevStep()
     pActiveStep.Start
     DBSave
     
-    pProjWFForm.TxtDataInput = ""
+    pProjWFForm.xTxtDataInput = ""
     
     DisplayProjectForm
     
@@ -904,9 +910,9 @@ End Sub
 Private Sub pProjWFForm_StepComplete()
     pProjWFForm.Hide
     With pProjWFForm
-        If .TxtDataInput <> "" Then
-            pActiveStep.DataItem = .TxtDataInput
-            .TxtDataInput = ""
+        If .xTxtDataInput <> "" Then
+            pActiveStep.DataItem = .xTxtDataInput
+            .xTxtDataInput = ""
         End If
         
         MoveToNextStep
