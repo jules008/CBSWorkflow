@@ -72,7 +72,7 @@ Public Sub AddItem(Step As ClsStep)
     Step.Initialize Me.Parent
     pSteps.Add Step, Key:=Parent.WorkflowNo & "-" & Step.StepNo
     
-    If Step.PrevStep = "0" Then
+    If Right(Step.StepNo, 2) = "01" Then
         pStart = Step.StepNo
         
         If Parent.CurrentStep = "" Then

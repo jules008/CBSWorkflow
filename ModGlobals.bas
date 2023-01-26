@@ -39,9 +39,9 @@ Public Const TEST_PREFIX As String = "TEST - "
 Public Const BACKUP_INT As Integer = 5
 Public Const FILE_ERROR_LOG As String = "Error.log"
 Public Const OLD_DB_VER = "V0.01.16"
-Public Const DB_VER = "V0.01.17" 'Workflow changes ****UPDATE TblStepTemplate******
-Public Const VERSION = "V0.02.02"
-Public Const VER_DATE = "24 Jan 23"
+Public Const DB_VER = "V0.01.17" 'bugfix
+Public Const VERSION = "V0.02.03"
+Public Const VER_DATE = "26 Jan 23"
 ' ===============================================================
 ' Error Constants
 ' ---------------------------------------------------------------

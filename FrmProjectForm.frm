@@ -91,7 +91,7 @@ End Sub
 Private Sub BtnNew_Click()
     On Error GoTo ErrorHandler
     
-    If CurrentUser.UserLvl <> "Admin" Or CurrentUser.UserLvl <> "Case Manager" Then Err.Raise ACCESS_DENIED
+    If CurrentUser.UserLvl = "Case Manager" Then Err.Raise ACCESS_DENIED
     
     RaiseEvent CreateNew
 ErrorHandler:
