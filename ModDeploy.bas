@@ -22,20 +22,17 @@ Public Sub QueryTest()
     Set DB = OpenDatabase(GetDocLocalPath(ThisWorkbook.Path) & INI_FILE_PATH & DB_FILE_NAME & ".accdb")
     End If
     
-
-    'undo
-    DB.Execute "CREATE TABLE TblWorkflowType"
-    DB.Execute "ALTER TABLE TblProject DROP COLUMN ConsComenceDte "
-    
-    DB.Execute "DROP TABLE TblWorkflowTable"
-    DB.Execute "ALTER TABLE TblWorkflow DROP COLUMN LoanType "
-    DB.Execute "ALTER TABLE TblWorkflow DROP COLUMN SecondTier "
-    
+    UndoScript
     Stop
-    'update
+    UpdateScript
+End Sub
+
+Public Sub UpdateScript()
     DB.Execute "DROP TABLE TblWorkflowType"
     DB.Execute "ALTER TABLE TblProject ADD COLUMN ConsComenceDte date"
     
+    DB.TableDefs("TblStep").Fields("Email").Name = "EmailNo"
+
     DB.Execute "CREATE TABLE TblWorkflowTable"
     DB.Execute "ALTER TABLE TblWorkflowTable ADD COLUMN WFNo Integer"
     DB.Execute "ALTER TABLE TblWorkflowTable ADD COLUMN LoanType text"
@@ -56,6 +53,17 @@ Public Sub QueryTest()
     DB.Execute "UPDATE TblWorkflow SET LoanType = 'Development Loan', SecondTier = 'Equity Lender' WHERE Name = 'EquityLoan'"
     DB.Execute "UPDATE TblWorkflow SET LoanType = 'Development Loan', SecondTier = 'SDLT Lender' WHERE Name = 'SDLTLoan'"
     DB.Execute "UPDATE TblWorkflow SET LoanType = 'Development Loan', SecondTier = 'VAT Lender' WHERE Name = 'VATloan'"
+End Sub
+
+Public Sub UndoScript()
+    DB.Execute "CREATE TABLE TblWorkflowType"
+    DB.Execute "ALTER TABLE TblProject DROP COLUMN ConsComenceDte "
+    
+    DB.TableDefs("TblStep").Fields("EmailNo").Name = "Email"
+    
+    DB.Execute "DROP TABLE TblWorkflowTable"
+    DB.Execute "ALTER TABLE TblWorkflow DROP COLUMN LoanType "
+    DB.Execute "ALTER TABLE TblWorkflow DROP COLUMN SecondTier "
     
 End Sub
 
@@ -106,34 +114,7 @@ Public Function UpdateDBScript() As Boolean
     End With
     Set RstTable = Nothing
     
-    ' ========================================================================================
-    ' Database commands
-    ' ----------------------------------------------------------------------------------------
-    DB.Execute "DROP TABLE TblWorkflowType"
-    DB.Execute "ALTER TABLE TblProject ADD COLUMN ConsComenceDte date"
-    
-    DB.Execute "CREATE TABLE TblWorkflowTable"
-    DB.Execute "ALTER TABLE TblWorkflowTable ADD COLUMN WFNo Integer"
-    DB.Execute "ALTER TABLE TblWorkflowTable ADD COLUMN LoanType text"
-    DB.Execute "ALTER TABLE TblWorkflowTable ADD COLUMN SecondTier text"
-    DB.Execute "ALTER TABLE TblWorkflow ADD COLUMN LoanType text"
-    DB.Execute "ALTER TABLE TblWorkflow ADD COLUMN SecondTier text"
-    DB.Execute "INSERT INTO TblWorkflowTable (WFNo, LoanType,SecondTier) VALUES (1,'Development Finance', 'Senior Lender')"
-    DB.Execute "INSERT INTO TblWorkflowTable (WFNo,LoanType,SecondTier) VALUES (2,'Development Finance', 'Mezzanine Lender')"
-    DB.Execute "INSERT INTO TblWorkflowTable (WFNo,LoanType,SecondTier) VALUES (3,'Development Finance', 'Equity Lender')"
-    DB.Execute "INSERT INTO TblWorkflowTable (WFNo,LoanType,SecondTier) VALUES (4,'Development Finance', 'VAT Lender')"
-    DB.Execute "INSERT INTO TblWorkflowTable (WFNo,LoanType,SecondTier) VALUES (5,'Development Finance', 'SDLT Lender')"
-    DB.Execute "INSERT INTO TblWorkflowTable (WFNo,LoanType,SecondTier) VALUES (6,'Bridge/Exit Loan', '1st Charge Lender')"
-    DB.Execute "INSERT INTO TblWorkflowTable (WFNo,LoanType,SecondTier) VALUES (7,'Bridge/Exit Loan', '2nd Charge Lender')"
-    DB.Execute "INSERT INTO TblWorkflowTable (WFNo,LoanType,SecondTier) VALUES (8,'Commercial Mortgage', '1st Charge CM Lender')"
-
-    DB.Execute "UPDATE TblWorkflow SET LoanType = 'Development Loan', SecondTier = 'Senior Lender' WHERE Name = 'Senior'"
-    DB.Execute "UPDATE TblWorkflow SET LoanType = 'Development Loan', SecondTier = 'Mezzanine Lender' WHERE Name = '2ndChgeMezLoan'"
-    DB.Execute "UPDATE TblWorkflow SET LoanType = 'Development Loan', SecondTier = 'Equity Lender' WHERE Name = 'EquityLoan'"
-    DB.Execute "UPDATE TblWorkflow SET LoanType = 'Development Loan', SecondTier = 'SDLT Lender' WHERE Name = 'SDLTLoan'"
-    DB.Execute "UPDATE TblWorkflow SET LoanType = 'Development Loan', SecondTier = 'VAT Lender' WHERE Name = 'VATloan'"
-    ' ========================================================================================
-        
+    UpdateScript
     
         MsgBox "Database successfully updated to Version " & DB_VER, vbOKOnly + vbInformation
     
@@ -199,16 +180,7 @@ Public Function UpdateDBScriptUndo() As Boolean
     End With
     
     On Error Resume Next
-    ' ========================================================================================
-    ' Database commands
-    ' ----------------------------------------------------------------------------------------
-    DB.Execute "CREATE TABLE TblWorkflowType"
-    DB.Execute "ALTER TABLE TblProject DROP COLUMN ConsComenceDte "
-    
-    DB.Execute "DROP TABLE TblWorkflowTable"
-    DB.Execute "ALTER TABLE TblWorkflow DROP COLUMN LoanType "
-    DB.Execute "ALTER TABLE TblWorkflow DROP COLUMN SecondTier "
-    ' ========================================================================================
+    UndoScript
     
     DB.Close
     Set RstTable = Nothing

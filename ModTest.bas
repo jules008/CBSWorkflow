@@ -1,37 +1,27 @@
 Attribute VB_Name = "ModTest"
 
     
-Public Sub TestDealCalc()
-    Dim MailInbox As ClsMailInbox
-        
-    Set MailSystem = New ClsMailSystem
-    Set MailInbox = New ClsMailInbox
-    With MailInbox
-        .MailFolder = "contact@cbs-capital.co.uk"
+Public Sub NewClasses()
+    Dim Project As ClsProject
+    Set CodeTimer = New ClsCodeTimer
+    
+    CodeTimer.StartTimer
+    
+    Set Project = New ClsProject
+    
+    CodeTimer.MarkTime "Project Class Created"
+    
+    With Project
+        .DBGet 2
+'        .ProjectWorkflow.Steps("1.01").Email.Body = "Red"
+'        Debug.Print .ProjectWorkflow.Steps("1.01").Email.Body
+'        .ProjectWorkflow.Steps("1.01").DisplayForm
+'        .ProjectWorkflow.Steps("1.01").DisplayHelpForm
     End With
+    CodeTimer.MarkTime "Project data retrieved from Database"
     
-    MailInbox.SendDealCalc "jules.turner@hotmail.co.uk", "James", True
-    
-    Set MailSystem = Nothing
-    Set MailInbox = Nothing
 
-End Sub
-
-Public Sub New_Mail()
-
-Dim oAccount As Account
-Dim oMail As MailItem
-
-For Each oAccount In Session.Accounts
-    Debug.Print oAccount
-    If LCase(oAccount) = LCase("text copied from the immediate window") Then
-        Set oMail = CreateItem(olMailItem)
-        oMail.SendUsingAccount = oAccount
-        oMail.Display
-    End If
-    Next
-
-ExitRoutine:
-    Set oMail = Nothing
-
+    Stop
+    Project.Terminate
+    Set Project = Nothing
 End Sub

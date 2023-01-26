@@ -91,6 +91,9 @@ End Property
 
 '---------------------------------------------------------------
 Public Property Get ProjectWorkflow() As ClsWorkflow
+    Set pProjectWorkflow = New ClsWorkflow
+    pProjectWorkflow.Initialize Me
+    pProjectWorkflow.DBGet CStr(pProjectWFNo)
     Set ProjectWorkflow = pProjectWorkflow
 End Property
 
@@ -307,6 +310,7 @@ Public Sub DBGet(ByVal ProjectNameNo As Variant)
             If Not IsNull(!Debt) Then pDebt = !Debt
             If Not IsNull(!ExitFeePC) Then pExitFeePC = !ExitFeePC
             If Not IsNull(!ProjectNo) Then pProjectNo = !ProjectNo
+            If Not IsNull(!ProjectWFNo) Then pProjectWFNo = !ProjectWFNo
             If Not IsNull(!ProjectName) Then pProjectName = !ProjectName
             If Not IsNull(!FirstClientInt) Then pFirstClientInt = !FirstClientInt
             If Not IsNull(!SecondClientRef) Then pSecondClientRef = !SecondClientRef
@@ -470,26 +474,19 @@ Private Sub Class_Initialize()
     Set pSPV = New ClsSPV
     Set pClient = New ClsClient
     
-    With pProjectWorkflow
-        .Name = "Project"
-        .WorkflowType = enProject
-        .DBSave
-    End With
-    
+   
     Set pParent = New ClsSPV
 
     pWorkflows.Initialize Me
-    pProjectWorkflow.Initialize Me
 End Sub
 ' ===============================================================
 Public Sub Terminate()
     pWorkflows.Terminate
-    pProjectWorkflow.Terminate
+
 
     Set Me.Parent = Nothing
 
     Set pWorkflows = Nothing
-    Set pProjectWorkflow = Nothing
     Set pContacts = Nothing
     Set pCaseManager = Nothing
     Set pProjectForm = Nothing

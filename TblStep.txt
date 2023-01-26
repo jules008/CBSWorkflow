@@ -16,7 +16,7 @@ DataItem,  dbText
 DataFormat,  dbText
 DataDest,  dbText
 EmailArrived,  dbText
-Email,  dbDouble
+EmailNo,  dbDouble
 AltEmail,  dbDouble
 Status,  dbText
 Deleted,  dbText

@@ -47,8 +47,8 @@ Private pDataDest As String
 Private pWFName As String
 Private pStatus As String
 Private pWait As Boolean
+Private pEmailNo As Integer
 Private pEmail As ClsEmail
-Private pAltEmail As ClsEmail
 Private pUniqueID As Integer
 Private pStepHelp As FrmStepHelp
 Private pStepHelpTitle As String
@@ -268,6 +268,20 @@ Public Property Let Wait(ByVal vNewValue As Boolean)
 End Property
 
 '---------------------------------------------------------------
+Public Property Get EmailNo() As Integer
+    EmailNo = pEmailNo
+End Property
+
+Public Property Let EmailNo(ByVal vNewValue As Integer)
+    pEmailNo = vNewValue
+    If pEmailNo > 0 Then
+        Set pEmail = New ClsEmail
+        pEmail.Initialize Me
+        pEmail.DBGet pEmailNo
+    End If
+End Property
+
+'---------------------------------------------------------------
 Public Property Get CopyText() As String
     CopyText = pCopyText
 End Property
@@ -331,22 +345,13 @@ Public Property Let Status(ByVal vNewValue As String)
     pStatus = vNewValue
 End Property
 '---------------------------------------------------------------
-'Public Property Get Email() As ClsEmail
-'    Set Email = pEmail
-'End Property
-'
-'Public Property Let Email(ByVal vNewValue As ClsEmail)
-'    Set pEmail = vNewValue
-'End Property
-'
-''---------------------------------------------------------------
-'Public Property Get AltEmail() As ClsEmail
-'    Set AltEmail = pAltEmail
-'End Property
-'
-'Public Property Let AltEmail(ByVal vNewValue As ClsEmail)
-'    Set pEmail = vNewValue
-'End Property
+Public Property Get Email() As ClsEmail
+    Set Email = pEmail
+End Property
+
+Public Property Let Email(ByVal vNewValue As ClsEmail)
+    Set pEmail = vNewValue
+End Property
 
 '---------------------------------------------------------------
 Public Property Get UniqueID() As Integer
@@ -372,6 +377,7 @@ End Property
 ' displays client form
 ' ---------------------------------------------------------------
 Public Sub DisplayForm()
+    Set pStepForm = New FrmAdnWFStep
     With pStepForm
         .TxtAltStep = pAltStep
         .TxtAmberThresh = pAmberThresh
@@ -384,13 +390,13 @@ Public Sub DisplayForm()
         .TxtWFName = pWFName
         
         .ChkWait = pWait
-        If pAltEmail.EmailNo > 0 Then .CmoAltEmail = pAltEmail.EmailNo
         .CmoDataFormat = pDataFormat
-        If pEmail.EmailNo > 0 Then .CmoEmail = pEmail.EmailNo
+        If pEmailNo > 0 Then .CmoEmail = pEmailNo
         .CmoStepType.ListIndex = pStepType
 
         .Show
     End With
+    Set pStepForm = Nothing
 End Sub
 
 ' ===============================================================
@@ -419,6 +425,7 @@ Public Sub DBGet(WorkflowNo As Integer, StepNo As String)
             If Not IsNull(!CopyTextName) Then pCopyTextName = !CopyTextName
             If Not IsNull(!Status) Then pStatus = !Status
             If Not IsNull(!Wait) Then pWait = !Wait
+            If Not IsNull(!EmailNo) Then EmailNo = !EmailNo
             If Not IsNull(!CopyText) Then pCopyText = !CopyText
             If Not IsNull(!DataItem) Then pDataItem = !DataItem
             If Not IsNull(!DataFormat) Then pDataFormat = !DataFormat
@@ -431,8 +438,6 @@ Public Sub DBGet(WorkflowNo As Integer, StepNo As String)
                 pStepHelpBody = HelpText(1)
             End If
             
-            If Not IsNull(!Email) And !Email <> 0 Then pEmail.DBGet !Email
-            If Not IsNull(!AltEmail) And !AltEmail <> 0 Then pAltEmail.DBGet !AltEmail
         End If
     End With
 Set RstStep = Nothing
@@ -466,14 +471,13 @@ Public Sub DBGetTemplate(StepNo As String)
             If Not IsNull(!WFName) Then pWFName = !WFName
             If Not IsNull(!UniqueID) Then pUniqueID = !UniqueID
             If Not IsNull(!Wait) Then pWait = !Wait
+            If Not IsNull(!EmailNo) Then EmailNo = !EmailNo
             If Not IsNull(!HelpText) Then
                 Dim HelpText() As String
                 HelpText = Split(!HelpText, ":")
                 pStepHelpTitle = HelpText(0)
                 pStepHelpBody = HelpText(1)
             End If
-            If Not IsNull(!Email) And !Email <> 0 Then pEmail.DBGet !Email
-            If Not IsNull(!AltEmail) And !AltEmail <> 0 Then pAltEmail.DBGet !AltEmail
             
         End If
     End With
@@ -488,7 +492,7 @@ Public Sub Start()
     
     pStartTime = Now
     DBSave
-    If pEmail.EmailNo <> 0 Then pEmail.Display
+    If pEmailNo <> 0 Then pEmail.Display
     
 End Sub
 
@@ -547,8 +551,7 @@ Public Sub DBSave(Optional StepIndex As String)
         !DataDest = pDataDest
         !UniqueID = pUniqueID
         !Status = pStatus
-        !Email = pEmail.EmailNo
-        !AltEmail = pAltEmail.EmailNo
+        !EmailNo = pEmailNo
         !Wait = pWait
         !WorkflowNo = Parent.WorkflowNo
         !HelpText = pStepHelpTitle & ":" & pStepHelpBody
@@ -588,8 +591,7 @@ Public Sub DBSaveTemplate(StepNo As String)
         !DataFormat = pDataFormat
         !DataDest = pDataDest
         !UniqueID = pUniqueID
-        !Email = pEmail.EmailNo
-        !AltEmail = pAltEmail.EmailNo
+        !EmailNo = pEmailNo
         !Wait = pWait
         .Update
 
@@ -637,11 +639,13 @@ End Sub
 ' displays client form
 ' ---------------------------------------------------------------
 Public Sub DisplayHelpForm()
+    Set pStepHelp = New FrmStepHelp
     With pStepHelp
         .TxtTitle = pStepHelpTitle
         .xTxtHelpText = pStepHelpBody
         .Show
     End With
+    Set pStepHelp = Nothing
 End Sub
 
 ' ===============================================================
@@ -665,10 +669,6 @@ Private Sub pStepForm_Update()
             pEmail.DBGet .CmoEmail.List(.CmoEmail.ListIndex, 0)
         End If
         
-        If .CmoAltEmail.ListIndex <> -1 Then
-            pAltEmail.DBGet .CmoAltEmail.List(.CmoAltEmail.ListIndex, 0)
-        End If
-        
         If .CmoDataFormat.ListIndex <> -1 Then
             pDataFormat = .CmoDataFormat.List(.CmoDataFormat.ListIndex, 0)
         End If
@@ -684,30 +684,21 @@ Public Sub Initialize(obj As ClsWorkflow)
 End Sub
 '---------------------------------------------------------------
 Private Sub Class_Initialize()
-    Set pStepHelp = New FrmStepHelp
-    Set pEmail = New ClsEmail
-    Set pAltEmail = New ClsEmail
-    Set pStepForm = New FrmAdnWFStep
     
-    pEmail.Initialize Me
-    pAltEmail.Initialize Me
 End Sub
 ' ===============================================================
 Public Sub Terminate()
-    pEmail.Terminate
-    pAltEmail.Terminate
+    
+    If Not pEmail Is Nothing Then pEmail.Terminate
 
     Set pParent = Nothing
     Set pStepHelp = Nothing
-    Set pEmail = Nothing
-    Set pAltEmail = Nothing
     Set pStepForm = Nothing
 End Sub
 '---------------------------------------------------------------
 Private Sub Class_Terminate()
     Set pStepHelp = Nothing
     Set pEmail = Nothing
-    Set pAltEmail = Nothing
     Set pStepForm = Nothing
 End Sub
 
