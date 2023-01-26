@@ -91,9 +91,12 @@ End Property
 
 '---------------------------------------------------------------
 Public Property Get ProjectWorkflow() As ClsWorkflow
+    If pProjectWorkflow Is Nothing Then
     Set pProjectWorkflow = New ClsWorkflow
     pProjectWorkflow.Initialize Me
-    pProjectWorkflow.DBGet CStr(pProjectWFNo)
+    End If
+    
+    If pProjectWFNo > 0 Then pProjectWorkflow.DBGet CStr(pProjectWFNo)
     Set ProjectWorkflow = pProjectWorkflow
 End Property
 
@@ -323,7 +326,7 @@ Public Sub DBGet(ByVal ProjectNameNo As Variant)
             pClient.DBGet !ClientNo
         pCaseManager.DBGet !CaseManager
             pContacts.GetCollection "Project", CleanSQLText(pProjectName)
-        pProjectWorkflow.DBGet !ProjectWFNo
+            ProjectWorkflow.DBGet !ProjectWFNo
         End If
     End With
     Set RstProject = Nothing
@@ -467,7 +470,6 @@ End Sub
 
 Private Sub Class_Initialize()
     Set pWorkflows = New ClsWorkflows
-    Set pProjectWorkflow = New ClsWorkflow
     Set pContacts = New ClsContacts
     Set pCaseManager = New ClsCBSUser
     Set pProjectForm = New FrmProjectForm

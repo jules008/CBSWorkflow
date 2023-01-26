@@ -32,6 +32,7 @@ Public Sub UpdateScript()
     DB.Execute "ALTER TABLE TblProject ADD COLUMN ConsComenceDte date"
     
     DB.TableDefs("TblStep").Fields("Email").Name = "EmailNo"
+    DB.TableDefs("TblStepTemplate").Fields("Email").Name = "EmailNo"
 
     DB.Execute "CREATE TABLE TblWorkflowTable"
     DB.Execute "ALTER TABLE TblWorkflowTable ADD COLUMN WFNo Integer"
@@ -60,6 +61,7 @@ Public Sub UndoScript()
     DB.Execute "ALTER TABLE TblProject DROP COLUMN ConsComenceDte "
     
     DB.TableDefs("TblStep").Fields("EmailNo").Name = "Email"
+    DB.TableDefs("TblStepTemplate").Fields("EmailNo").Name = "Email"
     
     DB.Execute "DROP TABLE TblWorkflowTable"
     DB.Execute "ALTER TABLE TblWorkflow DROP COLUMN LoanType "
