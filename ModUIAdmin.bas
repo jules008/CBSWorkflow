@@ -340,7 +340,18 @@ Private Function GetAdminData(ByVal ScreenPage As enScreenPage, Optional StrSort
     
     Select Case ScreenPage
         Case enScrAdminUsers
-            SQL = "SELECT CBSUserNo, UserName, Position, PhoneNo, UserLvl FROM TblCBSUser " & StrSortBy
+            SQL = "Select " _
+                & "    TblCBSUser.CBSUserNo, " _
+                & "    TblCBSUser.UserName, " _
+                & "    TblUserLvl.UserLvl, " _
+                & "    TblCBSUser.[Position], " _
+                & "    TblCBSUser.PhoneNo, " _
+                & "    TblCBSUser1.UserName As UserName1 " _
+                & "From " _
+                & "    (TblCBSUser Left Join " _
+                & "    TblCBSUser TblCBSUser1 On TblCBSUser1.CBSUserNo = TblCBSUser.Supervisor) Left Join " _
+                & "    TblUserLvl On TblCBSUser.UserLvl = TblUserLvl.UserLvlNo " & StrSortBy
+                
         Case enScrAdminEmails
             SQL = "SELECT EmailNo, TemplateName, MailTo, Subject, Null AS Blank FROM TblEmail " & StrSortBy
         Case enScrAdminWorkflows

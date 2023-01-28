@@ -38,10 +38,10 @@ Public Const SEND_ERR_MSG As Boolean = True
 Public Const TEST_PREFIX As String = "TEST - "
 Public Const BACKUP_INT As Integer = 5
 Public Const FILE_ERROR_LOG As String = "Error.log"
-Public Const OLD_DB_VER = "V0.01.16"
-Public Const DB_VER = "V0.01.17" 'bugfix
-Public Const VERSION = "V0.02.03"
-Public Const VER_DATE = "26 Jan 23"
+Public Const OLD_DB_VER = "V0.01.17"
+Public Const DB_VER = "V0.01.18" 'Security changes
+Public Const VERSION = "V0.02.04"
+Public Const VER_DATE = "28 Jan 23"
 ' ===============================================================
 ' Error Constants
 ' ---------------------------------------------------------------
@@ -243,9 +243,9 @@ Enum enStepType         'Step Type
 End Enum                '
 
 Enum EnUserLvl          'User Level
-    enAdmin             'Admin
-    enSenMgr            'Senior Manager
-    enCaseMgr           'Case Manager
+    enAdmin = 1         'Admin
+    enSenMgr = 2        'Senior Manager
+    enCaseMgr = 3       'Case Manager
 End Enum                '
  
 Enum EnumFormValidation
