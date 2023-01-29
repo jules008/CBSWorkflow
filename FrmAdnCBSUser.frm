@@ -29,6 +29,50 @@ Private Const StrMODULE As String = "FrmCBSUser"
 Public Event CreateNew()
 Public Event Update()
 Public Event Delete()
+Public Event ShowAccessFrm()
+
+' ===============================================================
+' BtnAccessLvl_Click
+' Mnages access levels for user
+' ---------------------------------------------------------------
+Private Sub BtnAccessLvl_Click()
+    Dim ErrNo As Integer
+
+    Const StrPROCEDURE As String = "BtnAccessLvl_Click()"
+
+    On Error GoTo ErrorHandler
+
+Restart:
+
+    If MainScreen Is Nothing Then Err.Raise SYSTEM_RESTART
+    
+    RaiseEvent ShowAccessFrm
+    
+GracefulExit:
+
+
+Exit Sub
+
+ErrorExit:
+
+    '***CleanUpCode***
+
+Exit Sub
+
+ErrorHandler:
+    If Err.Number >= 2000 And Err.Number <= 2500 Then
+        ErrNo = Err.Number
+        CustomErrorHandler (Err.Number)
+        If ErrNo = SYSTEM_RESTART Then Resume Restart Else Resume GracefulExit
+    End If
+
+    If CentralErrorHandler(StrMODULE, StrPROCEDURE, , True) Then
+        Stop
+        Resume
+    Else
+        Resume ErrorExit
+    End If
+End Sub
 
 '===============================================================
 ' BtnClose_Click
@@ -149,6 +193,7 @@ End Sub
 ' CmoUserLvl_Change
 ' ---------------------------------------------------------------
 Private Sub CmoUserLvl_Change()
+    If CmoUserLvl = 3 Then BtnAccessLvl.Visible = True Else BtnAccessLvl.Visible = False
     CmoUserLvl.BackColor = COL_WHITE
 End Sub
 

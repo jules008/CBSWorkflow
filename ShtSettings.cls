@@ -12,8 +12,8 @@ Private Sub CmoChangeUser_Change()
     If CurrentUser Is Nothing Then Initialize
         
     If CmoChangeUser.ListIndex <> -1 Then
-        CurrentUser.UserLvl = CmoChangeUser
-        MsgBox "You now have the following user level - " & CurrentUser.UserLvl, vbOKOnly + vbInformation
+        CurrentUser.UserLvl = CmoChangeUser.ListIndex + 1
+        MsgBox "You now have the user level of " & CmoChangeUser, vbOKOnly + vbInformation
     End If
 End Sub
 
@@ -26,6 +26,3 @@ Private Sub Worksheet_Activate()
     End With
 End Sub
 
-Private Sub Worksheet_SelectionChange(ByVal Target As Range)
-
-End Sub

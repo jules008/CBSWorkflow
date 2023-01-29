@@ -25,3 +25,15 @@ Public Sub NewClasses()
     Project.Terminate
     Set Project = Nothing
 End Sub
+
+Public Sub TestAccessForm()
+    Dim CBSUser As ClsCBSUser
+    
+    Set CBSUser = New ClsCBSUser
+    
+    CBSUser.DBGet 7
+    
+    FrmAccessCntrl.ShowForm CBSUser
+    
+    Set CBSUser = Nothing
+End Sub

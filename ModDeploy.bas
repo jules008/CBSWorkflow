@@ -40,8 +40,8 @@ Public Sub UpdateScript()
     
     DB.Execute "CREATE TABLE TblAccessControl"
     DB.Execute "ALTER TABLE TblAccessControl ADD COLUMN UserNo Integer"
-    DB.Execute "ALTER TABLE TblAccessControl ADD COLUMN Entity Integer"
-    DB.Execute "ALTER TABLE TblAccessControl ADD COLUMN Access YesNo"
+    DB.Execute "ALTER TABLE TblAccessControl ADD COLUMN Entity String"
+    DB.Execute "ALTER TABLE TblAccessControl ADD COLUMN EntityNo Integer"
 End Sub
 
 Public Sub UndoScript()

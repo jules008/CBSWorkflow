@@ -34,6 +34,7 @@ Private pPosition As String
 Private pPhoneNo As String
 Private pUserLvl As EnUserLvl
 Private pSupervisor As ClsCBSUser
+Private pAccessCntrl As FrmAccessCntrl
 
 Private WithEvents pCBSUserForm As FrmAdnCBSUser
 Attribute pCBSUserForm.VB_VarHelpID = -1
@@ -121,6 +122,7 @@ Public Sub DisplayForm()
         .TxtPosition = pPosition
         .TxtUserName = pUserName
         If pUserLvl > 0 Then .CmoUserLvl = pUserLvl
+        If pUserLvl = enCaseMgr Then .BtnAccessLvl.Visible = True Else .BtnAccessLvl.Visible = False
         If Not pSupervisor Is Nothing Then .CmoSupervisor = pSupervisor.UserName
         .Show
     End With
@@ -248,6 +250,14 @@ End Sub
 ' ---------------------------------------------------------------
 Private Sub pCBSUserForm_Delete()
     DBDelete
+End Sub
+
+' ===============================================================
+' Event pCBSUserForm_ShowAccessFrm
+' Shows access form for case managers
+' ---------------------------------------------------------------
+Private Sub pCBSUserForm_ShowAccessFrm()
+    FrmAccessCntrl.ShowForm Me
 End Sub
 
 ' ===============================================================

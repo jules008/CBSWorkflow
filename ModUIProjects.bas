@@ -562,7 +562,11 @@ Public Function GetActiveList(ScreenPage As enScreenPage, SortBy As String) As R
                     & StrSortBy
     End Select
                 
+    If CurrentUser.UserLvl = enCaseMgr Then
+        Set RstWorkflow = ModDatabase.SQLQuery("SELECT * FROM (" & SQL & ") WHERE TblCBSUser.UserName = '" & CurrentUser.UserName & "'")
+    Else
     Set RstWorkflow = ModDatabase.SQLQuery(SQL)
+    End If
     
     Set GetActiveList = RstWorkflow
     
