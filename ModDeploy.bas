@@ -28,26 +28,17 @@ Public Sub QueryTest()
 End Sub
 
 Public Sub UpdateScript()
-    DB.Execute "ALTER TABLE TblCBSUser ADD COLUMN Supervisor Integer"
-    DB.Execute "ALTER TABLE TblCBSUser ALTER COLUMN UserLvl Integer"
-    
-    DB.Execute "CREATE TABLE TblUserLvl"
-    DB.Execute "ALTER TABLE TblUserLvl ADD COLUMN UserLvlNo Integer"
-    DB.Execute "ALTER TABLE TblUserLvl ADD COLUMN UserLvl text"
-    DB.Execute "INSERT INTO TblUserLvl (UserLvlNo,UserLvl) VALUES (1, 'Admin')"
-    DB.Execute "INSERT INTO TblUserLvl (UserLvlNo,UserLvl) VALUES (2, 'Senior Manager')"
-    DB.Execute "INSERT INTO TblUserLvl (UserLvlNo,UserLvl) VALUES (3, 'Case Manager')"
-    
-    DB.Execute "CREATE TABLE TblAccessControl"
-    DB.Execute "ALTER TABLE TblAccessControl ADD COLUMN UserNo Integer"
-    DB.Execute "ALTER TABLE TblAccessControl ADD COLUMN Entity String"
-    DB.Execute "ALTER TABLE TblAccessControl ADD COLUMN EntityNo Integer"
+    DB.Execute "ALTER TABLE TblProject ADD COLUMN MS integer"
+    DB.Execute "ALTER TABLE TblProject ADD COLUMN Valuer integer"
+    DB.Execute "ALTER TABLE TblProject DROP COLUMN Facilitator"
+    DB.Execute "ALTER TABLE TblProject ADD COLUMN Distribution text"
 End Sub
 
 Public Sub UndoScript()
-    DB.Execute "ALTER TABLE TblCBSUser DROP COLUMN Supervisor "
-    DB.Execute "DROP TABLE TblUserLvl"
-    DB.Execute "DROP TABLE TblAccessControl"    
+    DB.Execute "ALTER TABLE TblProject DROP COLUMN MS "
+    DB.Execute "ALTER TABLE TblProject DROP COLUMN Valuer "
+    DB.Execute "ALTER TABLE TblProject DROP COLUMN Distribution"
+    DB.Execute "ALTER TABLE TblProject ADD COLUMN Facilitator integer"
 End Sub
 
 ' ===============================================================

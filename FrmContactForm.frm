@@ -47,7 +47,7 @@ Private Sub BtnDelete_Click()
     
     On Error GoTo ErrorHandler
     
-    If CurrentUser.UserLvl <> "Admin" Then Err.Raise ACCESS_DENIED
+    If CurrentUser.UserLvl <> enAdmin Then Err.Raise ACCESS_DENIED
     
     Response = MsgBox("Are you sure you want to delete the Contact from the database?", vbYesNo + vbExclamation, APP_NAME)
     
@@ -91,7 +91,7 @@ End Sub
 Private Sub BtnNew_Click()
     On Error GoTo ErrorHandler
 
-    If CurrentUser.UserLvl <> "Admin" Or CurrentUser.UserLvl <> "Case Manager" Then Err.Raise ACCESS_DENIED
+    If CurrentUser.UserLvl <> enAdmin Or CurrentUser.UserLvl <> enCaseMgr Then Err.Raise ACCESS_DENIED
 
     RaiseEvent CreateNew
 ErrorHandler:
@@ -116,7 +116,7 @@ Private Sub BtnUpdate_Click()
 Restart:
 
     If MainScreen Is Nothing Then Err.Raise SYSTEM_RESTART
-    If CurrentUser.UserLvl <> "Admin" Then Err.Raise ACCESS_DENIED
+    If CurrentUser.UserLvl <> enAdmin Then Err.Raise ACCESS_DENIED
     
     Select Case ValidateForm
 
@@ -396,6 +396,12 @@ Private Sub UserForm_Initialize()
         .AddItem
         .List(4, 0) = 4
         .List(4, 1) = "Lead"
+        .AddItem
+        .List(4, 0) = 5
+        .List(4, 1) = "MS"
+        .AddItem
+        .List(4, 0) = 6
+        .List(4, 1) = "Valuer"
     End With
     
     Dim i As Integer

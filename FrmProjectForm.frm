@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FrmProjectForm 
    Caption         =   "CRM - Project"
-   ClientHeight    =   6885
+   ClientHeight    =   9540.001
    ClientLeft      =   120
    ClientTop       =   465
-   ClientWidth     =   11940
+   ClientWidth     =   12600
    OleObjectBlob   =   "FrmProjectForm.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -52,7 +52,7 @@ Private Sub BtnDelete_Click()
     
     On Error GoTo ErrorHandler
     
-    If CurrentUser.UserLvl <> "Admin" Then Err.Raise ACCESS_DENIED
+    If CurrentUser.UserLvl <> enAdmin Then Err.Raise ACCESS_DENIED
     
     Response = MsgBox("Are you sure you want to delete the Project from the database?", vbYesNo + vbExclamation, APP_NAME)
     
@@ -91,7 +91,7 @@ End Sub
 Private Sub BtnNew_Click()
     On Error GoTo ErrorHandler
     
-    If CurrentUser.UserLvl = "Case Manager" Then Err.Raise ACCESS_DENIED
+    If CurrentUser.UserLvl = enCaseMgr Then Err.Raise ACCESS_DENIED
     
     RaiseEvent CreateNew
 ErrorHandler:
@@ -116,7 +116,7 @@ Private Sub BtnUpdate_Click()
 Restart:
 
     If MainScreen Is Nothing Then Err.Raise SYSTEM_RESTART
-    If CurrentUser.UserLvl <> "Admin" Then Err.Raise ACCESS_DENIED
+    If CurrentUser.UserLvl <> enAdmin Then Err.Raise ACCESS_DENIED
     
     Select Case ValidateForm
 
@@ -292,16 +292,10 @@ Private Sub UserForm_Initialize()
     End With
     
     i = 0
-    With CmoFacilitator
+    With CmoDistribution
         .Clear
-        RstSource.MoveFirst
-        Do While Not RstSource.EOF
-            .AddItem
-            If Not IsNull(RstSource!CBSUserNo) Then .List(i, 0) = RstSource!CBSUserNo
-            If Not IsNull(RstSource!UserName) Then .List(i, 1) = RstSource!UserName
-            RstSource.MoveNext
-            i = i + 1
-        Loop
+        .AddItem "CBS"
+        .AddItem "CBS Real Estates Group"
     End With
     
     Set RstSource = ModDatabase.SQLQuery("SELECT SPVNo, Name FROM TblSPV")

@@ -46,10 +46,12 @@ Private pClient As ClsClient
 Private pSPV As ClsSPV
 Private pFirstClientInt As Integer
 Private pSecondClientRef As Integer
-Private pFacilitator As Integer
+Private pDistribution As String
 Private pCompleteDate As Date
 Private pStartDate As Date
 Private pConsComenceDte As Date
+Private pMS As ClsContact
+Private pValuer As ClsContact
 Private WithEvents pProjectForm As FrmProjectForm
 Attribute pProjectForm.VB_VarHelpID = -1
 
@@ -206,12 +208,12 @@ Public Property Let SecondClientRef(ByRef SecondClientRef As Integer)
 End Property
     
 '---------------------------------------------------------------
-Public Property Get Facilitator() As Integer
-    Facilitator = pFacilitator
+Public Property Get Distribution() As String
+    Distribution = pDistribution
 End Property
 
-Public Property Let Facilitator(ByRef Facilitator As Integer)
-    pFacilitator = Facilitator
+Public Property Let Distribution(ByRef Distribution As String)
+    pDistribution = Distribution
 End Property
     
 '---------------------------------------------------------------
@@ -239,6 +241,24 @@ End Property
 
 Public Property Let ConsComenceDte(ByRef ConsComenceDte As Date)
     pConsComenceDte = ConsComenceDte
+End Property
+    
+'---------------------------------------------------------------
+Public Property Get MS() As ClsContact
+    Set MS = pMS
+End Property
+
+Public Property Let MS(ByRef MS As ClsContact)
+    Set pMS = MS
+End Property
+    
+'---------------------------------------------------------------
+Public Property Get Valuer() As ClsContact
+    Set Valuer = pValuer
+End Property
+
+Public Property Let Valuer(ByRef Valuer As ClsContact)
+    Set pValuer = Valuer
 End Property
     
 '---------------------------------------------------------------
@@ -278,14 +298,22 @@ Public Sub DisplayForm()
         .TxtProjName = pProjectName
         If pFirstClientInt > 0 Then .CmoFirstClientInt = pFirstClientInt
         If pSecondClientRef > 0 Then .CmoSecondClientRef = pSecondClientRef
-        If pFacilitator > 0 Then .CmoFacilitator = pFacilitator
+        If pDistribution > "" Then .CmoDistribution = pDistribution
         If pCaseManager.CBSUserNo > 0 Then .CmoCaseManager = pCaseManager.CBSUserNo
         If pClient.ClientNo > 0 Then .CmoClientNo = pClient.ClientNo
         If pSPV.SPVNo > 0 Then .CmoSPVNo = pSPV.SPVNo
         .TxtExitFee = pExitFee
         .TxtDebt = pDebt
         .TxtExitFeePC = pExitFeePC
-        .TxtConsComenceDte = pConsComenceDte
+        If IsDate(pConsComenceDte) Then .TxtConsComenceDte = pConsComenceDte Else .TxtConsComenceDte = ""
+        
+        .TxtMSName = pMS.ContactName
+        .TxtMSPhone = pMS.Phone1
+        .TxtMSEmail = pMS.EmailAddress
+        
+        .TxtValName = pValuer.ContactName
+        .TxtValPhone = pValuer.Phone1
+        .TxtValEmail = pValuer.EmailAddress
         .Show
     End With
 End Sub
@@ -317,12 +345,14 @@ Public Sub DBGet(ByVal ProjectNameNo As Variant)
             If Not IsNull(!ProjectName) Then pProjectName = !ProjectName
             If Not IsNull(!FirstClientInt) Then pFirstClientInt = !FirstClientInt
             If Not IsNull(!SecondClientRef) Then pSecondClientRef = !SecondClientRef
-            If Not IsNull(!Facilitator) Then pFacilitator = !Facilitator
+            If Not IsNull(!Distribution) Then pDistribution = !Distribution
             If Not IsNull(!CompleteDate) Then pCompleteDate = !CompleteDate
             If Not IsNull(!StartDate) Then pStartDate = !StartDate
             If Not IsNull(!ConsComenceDte) Then pConsComenceDte = !ConsComenceDte
             
             pSPV.DBGet !SPVNo
+            pMS.DBGet !MS
+            pValuer.DBGet !Valuer
             pClient.DBGet !ClientNo
         pCaseManager.DBGet !CaseManager
             pContacts.GetCollection "Project", CleanSQLText(pProjectName)
@@ -361,6 +391,8 @@ Public Sub DBSave()
         pSPV.DBSave
         pClient.DBSave
         pCaseManager.DBSave
+        pMS.DBSave
+        pValuer.DBSave
         
         pWorkflows.SaveCollection
         pContacts.SaveCollection
@@ -376,12 +408,14 @@ Public Sub DBSave()
         !ProjectNo = CleanSQLText(pProjectNo, True)
         !FirstClientInt = CleanSQLText(pFirstClientInt, True)
         !SecondClientRef = CleanSQLText(pSecondClientRef, True)
-        !Facilitator = CleanSQLText(pFacilitator, True)
+        !Distribution = CleanSQLText(pDistribution, True)
         !CompleteDate = CleanSQLText(pCompleteDate, True)
         !StartDate = CleanSQLText(pStartDate, True)
         !ProjectName = CleanSQLText(pProjectName, True)
         !ProjectWFNo = CleanSQLText(pProjectWorkflow.WorkflowNo, True)
         !CaseManager = CleanSQLText(pCaseManager.CBSUserNo, True)
+        !MS = CleanSQLText(pMS.ContactNo, True)
+        !Valuer = CleanSQLText(pValuer.ContactNo, True)
         !SPVNo = CleanSQLText(pSPV.SPVNo, True)
         !ClientNo = CleanSQLText(pClient.ClientNo, True)
         !ConsComenceDte = CleanSQLText(pConsComenceDte, True)
@@ -428,10 +462,7 @@ Private Sub pProjectForm_Update()
             If .ListIndex <> -1 Then pSecondClientRef = .List(.ListIndex, 0)
         End With
         
-        With .CmoFacilitator
-            If .ListIndex <> -1 Then pFacilitator = .List(.ListIndex, 0)
-        End With
-        
+        pDistribution = .CmoDistribution
        pSPV.DBGet .CmoSPVNo.List(.CmoSPVNo - 1, 0)
        pCaseManager.DBGet .CmoCaseManager.List(.CmoCaseManager - 1, 0)
        pExitFee = .TxtExitFee
@@ -439,6 +470,20 @@ Private Sub pProjectForm_Update()
         pDebt = .TxtDebt
         pExitFeePC = .TxtExitFeePC
        pProjectName = .TxtProjName
+        
+        If .TxtMSName <> "" Then
+            pMS.ContactType = "MS"
+            pMS.ContactName = .TxtMSName
+            pMS.Phone1 = .TxtMSPhone
+            pMS.EmailAddress = .TxtMSEmail
+        End If
+        
+        If .TxtValName <> "" Then
+            pValuer.ContactType = "Valuer"
+            pValuer.ContactName = .TxtValName
+            pValuer.Phone1 = .TxtValPhone
+            pValuer.EmailAddress = .TxtValEmail
+        End If
     End With
     DBSave
 End Sub
@@ -475,7 +520,8 @@ Private Sub Class_Initialize()
     Set pProjectForm = New FrmProjectForm
     Set pSPV = New ClsSPV
     Set pClient = New ClsClient
-    
+    Set pMS = New ClsContact
+    Set pValuer = New ClsContact
    
     Set pParent = New ClsSPV
 
@@ -494,6 +540,8 @@ Public Sub Terminate()
     Set pProjectForm = Nothing
     Set pSPV = Nothing
     Set pClient = Nothing
+    Set pMS = Nothing
+    Set pValuer = Nothing
     
 End Sub
 '---------------------------------------------------------------
@@ -503,5 +551,7 @@ Private Sub Class_Terminate()
     Set pContacts = Nothing
     Set pCaseManager = Nothing
     Set pProjectForm = Nothing
+    Set pMS = Nothing
+    Set pValuer = Nothing
 End Sub
 ' ===============================================================

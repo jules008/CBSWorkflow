@@ -444,6 +444,12 @@ Public Sub DisplayProjectForm()
         .TxtSPVContactName = Parent.SPV.Contacts.PrimaryContact.ContactName
         .TxtSPVContactPhone = Parent.SPV.Contacts.PrimaryContact.Phone1
         .TxtConsComenceDte = Parent.ConsComenceDte
+        .TxtMSName = Parent.MS.ContactName
+        .TxtMSPhone = Parent.MS.Phone1
+        .TxtMSEmail = Parent.MS.EmailAddress
+        .TxtValName = Parent.Valuer.ContactName
+        .TxtValPhone = Parent.Valuer.Phone1
+        .TxtValEmail = Parent.Valuer.EmailAddress
     
         Select Case pActiveStep.StepType
             Case enYesNo

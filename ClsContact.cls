@@ -75,6 +75,15 @@ Public Property Let ContactName(ByVal vNewValue As String)
 End Property
 
 '---------------------------------------------------------------
+Public Property Get ContactType() As String
+    ContactType = pContactType
+End Property
+
+Public Property Let ContactType(ByVal vNewValue As String)
+    pContactType = vNewValue
+End Property
+
+'---------------------------------------------------------------
 Public Property Get Address() As String
     Address = pAddress
 End Property

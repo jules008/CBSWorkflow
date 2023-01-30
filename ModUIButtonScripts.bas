@@ -23,6 +23,7 @@ Public Function BtnProjectNewWFClick(ScreenPage As enScreenPage) As Boolean
     Dim Picker As ClsFrmPicker
     Dim InputBox As ClsInputBox
     Dim ProjectName As String
+    Dim RstSource As Recordset
     
     Const StrPROCEDURE As String = "BtnProjectNewWFClick()"
 
@@ -51,12 +52,26 @@ Public Function BtnProjectNewWFClick(ScreenPage As enScreenPage) As Boolean
     End If
     
     'Get Client
+    If CurrentUser.UserLvl = enCaseMgr Then
+        Set RstSource = ModDatabase.SQLQuery("Select " _
+                                        & "    TblClient.Name " _
+                                        & "From " _
+                                        & "    TblAccessControl Right Join " _
+                                        & "    TblClient On TblClient.ClientNo = TblAccessControl.EntityNo " _
+                                        & "Where " _
+                                        & "    TblAccessControl.Entity = 'Client' And " _
+                                        & "    TblAccessControl.UserNo = " _
+                                        & CurrentUser.CBSUserNo)
+    Else
+        Set RstSource = ModDatabase.SQLQuery("SELECT Name from TblClient")
+    End If
+    
     Set Picker = New ClsFrmPicker
     With Picker
         .Title = "Select Client"
         .Instructions = "Start typing the name of the Client and then select from the list. " _
                         & "Select 'New' to add a new Client"
-        .Data = ModDatabase.SQLQuery("SELECT Name from TblClient")
+        .Data = RstSource
         .ClearForm
         .Show = True
         If .CreateNew Then
@@ -193,6 +208,7 @@ GracefullExit:
     Set ActiveUser = Nothing
     Set InputBox = Nothing
     Set ActiveContact = Nothing
+    Set RstSource = Nothing
     
     BtnProjectNewWFClick = True
 
@@ -207,6 +223,7 @@ ErrorExit:
     Set ActiveClient = Nothing
     Set ActiveUser = Nothing
     Set InputBox = Nothing
+    Set RstSource = Nothing
     
     BtnProjectNewWFClick = False
 
@@ -228,6 +245,7 @@ End Function
 Public Function BtnLenderNewWFClick(ScreenPage As enScreenPage) As Boolean
     Dim Picker As ClsFrmPicker
     Dim SQL As String
+    Dim RstSource As Recordset
     
     Const StrPROCEDURE As String = "BtnLenderNewWFClick()"
 
@@ -265,11 +283,25 @@ Public Function BtnLenderNewWFClick(ScreenPage As enScreenPage) As Boolean
     End With
 
     'get lender
+    If CurrentUser.UserLvl = enCaseMgr Then
+        Set RstSource = ModDatabase.SQLQuery("Select " _
+                                        & "    TblLender.Name " _
+                                        & "From " _
+                                        & "    TblAccessControl Right Join " _
+                                        & "    TblLender On TblLender.LenderNo = TblAccessControl.EntityNo " _
+                                        & "Where " _
+                                        & "    TblAccessControl.Entity = 'Lender' And " _
+                                        & "    TblAccessControl.UserNo = " _
+                                        & CurrentUser.CBSUserNo)
+    Else
+        Set RstSource = ModDatabase.SQLQuery("SELECT Name from TblLender")
+    End If
+    
     Set Picker = New ClsFrmPicker
     With Picker
         .Title = "Select Lender"
         .Instructions = "Select the Lender from the list.  Select New if the Lender you require is not listed"
-        .Data = ModDatabase.SQLQuery("SELECT Name from TblLender")
+        .Data = RstSource
         .ClearForm
         .Show = True
         If .CreateNew Then
@@ -320,6 +352,7 @@ GracefullExit:
     Set Picker = Nothing
     Set ActiveLender = Nothing
     Set ActiveClient = Nothing
+    Set RstSource = Nothing
     
     BtnLenderNewWFClick = True
 
@@ -334,6 +367,7 @@ ErrorExit:
     Set Picker = Nothing
     Set ActiveLender = Nothing
     Set ActiveClient = Nothing
+    Set RstSource = Nothing
     
     BtnLenderNewWFClick = False
 
