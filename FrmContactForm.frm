@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FrmContactForm 
    Caption         =   "Contact"
-   ClientHeight    =   6375
+   ClientHeight    =   8550.001
    ClientLeft      =   120
    ClientTop       =   465
-   ClientWidth     =   11955
+   ClientWidth     =   12180
    OleObjectBlob   =   "FrmContactForm.frx":0000
    StartUpPosition =   1  'CenterOwner
 End

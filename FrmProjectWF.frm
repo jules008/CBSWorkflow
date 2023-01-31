@@ -1,6 +1,6 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FrmProjectWF 
-   ClientHeight    =   11340
+   ClientHeight    =   11595
    ClientLeft      =   120
    ClientTop       =   465
    ClientWidth     =   15990
@@ -40,6 +40,14 @@ Public Event PrevStep()
 Public Event ClickNo()
 Public Event CloseForm()
 Public Event UpdateLoan()
+Public Event DisplayContacts()
+
+' ===============================================================
+' xBrtnProjContacts_Click
+' ---------------------------------------------------------------
+Private Sub xBrtnProjContacts_Click()
+    RaiseEvent DisplayContacts
+End Sub
 
 ' ===============================================================
 ' xBtnUpdateLoan_Click

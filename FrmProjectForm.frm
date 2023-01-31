@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FrmProjectForm 
    Caption         =   "CRM - Project"
-   ClientHeight    =   9540.001
+   ClientHeight    =   9495.001
    ClientLeft      =   120
    ClientTop       =   465
    ClientWidth     =   12600
@@ -33,6 +33,7 @@ Private Const StrMODULE As String = "FrmProjectForm"
 Public Event CreateNew()
 Public Event Update()
 Public Event Delete()
+Public Event DisplayContactsFrm()
 
 Private DisableEvents As Boolean
 
@@ -41,6 +42,14 @@ Private DisableEvents As Boolean
 '---------------------------------------------------------------
 Private Sub BtnClose_Click()
     Unload Me
+End Sub
+
+' ===============================================================
+' BtnContacts_Click
+' Displays contacts form
+' ---------------------------------------------------------------
+Private Sub BtnContacts_Click()
+    RaiseEvent DisplayContactsFrm
 End Sub
 
 ' ===============================================================

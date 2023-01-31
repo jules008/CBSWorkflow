@@ -770,6 +770,14 @@ Private Sub pLenderWFForm_CloseForm()
 End Sub
 
 ' ===============================================================
+' Event pLenderWFForm_DisplayContacts
+' Event on clicking display project contacts
+' ---------------------------------------------------------------
+Private Sub pLenderWFForm_DisplayContacts()
+    Parent.DisplayContactFrm
+End Sub
+
+' ===============================================================
 ' Event pLenderWFForm_PrevStep
 ' Event on clicking previous step
 ' ---------------------------------------------------------------
@@ -834,6 +842,14 @@ Private Sub pLenderWFForm_UpdateLoan()
         DBSave
         MsgBox "Loan Details Updated", vbOKOnly + vbInformation, APP_NAME
     End With
+End Sub
+
+' ===============================================================
+' Event pProjWFForm_DisplayContacts
+' displays project contact form
+' ---------------------------------------------------------------
+Private Sub pProjWFForm_DisplayContacts()
+    Parent.DisplayContactFrm
 End Sub
 
 ' ===============================================================

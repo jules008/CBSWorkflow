@@ -54,6 +54,8 @@ Private pMS As ClsContact
 Private pValuer As ClsContact
 Private WithEvents pProjectForm As FrmProjectForm
 Attribute pProjectForm.VB_VarHelpID = -1
+Private WithEvents pProjContacts As FrmProjConts
+Attribute pProjContacts.VB_VarHelpID = -1
 
 '---------------------------------------------------------------
 Public Property Get ProjectNo() As Integer
@@ -286,6 +288,29 @@ Public Sub DBNew()
 End Sub
 
 ' ===============================================================
+' Method DisplayContactFrm
+' displays project contact form
+' ---------------------------------------------------------------
+Public Sub DisplayContactFrm()
+    Dim Contact As ClsContact
+    Dim i As Integer
+    
+    With pProjContacts
+        .LstContacts.Clear
+        For Each Contact In pContacts
+            With .LstContacts
+                .AddItem
+                .List(i, 0) = Contact.ContactNo
+                .List(i, 1) = Contact.ContactName
+                .List(i, 2) = Contact.Organisation
+                i = i + 1
+            End With
+        Next
+        If .Visible = False Then .Show
+    End With
+End Sub
+
+' ===============================================================
 ' Method DisplayForm
 ' displays client form
 ' ---------------------------------------------------------------
@@ -355,7 +380,7 @@ Public Sub DBGet(ByVal ProjectNameNo As Variant)
             pValuer.DBGet !Valuer
             pClient.DBGet !ClientNo
         pCaseManager.DBGet !CaseManager
-            pContacts.GetCollection "Project", CleanSQLText(pProjectName)
+            pContacts.GetCollection "Project", pProjectNo
             ProjectWorkflow.DBGet !ProjectWFNo
         End If
     End With
@@ -437,6 +462,103 @@ Public Sub DBDelete(Optional FullDelete As Boolean)
 
     DB.Execute "DELETE * FROM TblProject WHERE ProjectNo = " & pProjectNo
 
+End Sub
+
+' ===============================================================
+' Event pProjContacts_Add
+' Event from contact form to add new Contact
+' ---------------------------------------------------------------
+Private Sub pProjContacts_Add()
+    Dim Contact As ClsContact
+    
+    Set Contact = New ClsContact
+    With Contact
+        .ContactName = pProjContacts.TxtContactName
+        .ContactType = "Project"
+        .ProjIndex = pProjectNo
+        .Organisation = pProjContacts.TxtOrganisation
+        .Phone1 = pProjContacts.TxtPhone1
+        .Phone2 = pProjContacts.TxtPhone2
+        .EmailAddress = pProjContacts.TxtEmailAddress
+        .Position = pProjContacts.TxtPosition
+        .Notes = pProjContacts.xTxtNotes
+        .DBSave
+    End With
+    pContacts.Add Contact
+    
+    DisplayContactFrm
+    
+End Sub
+
+' ===============================================================
+' Event pProjContacts_Delete
+' Event from contact form to delete Contact
+' ---------------------------------------------------------------
+Private Sub pProjContacts_Delete(ContactNo As Integer)
+    
+    pContacts.Remove ContactNo
+    DB.Execute "DELETE * FROM TblContact WHERE ContactNo = " & ContactNo
+    DisplayContactFrm
+End Sub
+
+' ===============================================================
+' Event pProjContacts_Display
+' Event from contact form to display Contact
+' ---------------------------------------------------------------
+Private Sub pProjContacts_Display(ContactNo As Integer)
+    Dim Contact As ClsContact
+    
+    Set Contact = New ClsContact
+    Set Contact = pContacts(CStr(ContactNo))
+    
+    If Contact Is Nothing Then Exit Sub
+    
+    With pProjContacts
+        .TxtContactName = Contact.ContactName
+        .TxtEmailAddress = Contact.EmailAddress
+        .TxtOrganisation = Contact.Organisation
+        .TxtPhone1 = Contact.Phone1
+        .TxtPhone2 = Contact.Phone2
+        .TxtPosition = Contact.Position
+        .xTxtNotes = Contact.Notes
+    End With
+    
+    Set Contact = Nothing
+End Sub
+
+' ===============================================================
+' Event pProjContacts_Edit
+' Event from contact form to edit Contact
+' ---------------------------------------------------------------
+Private Sub pProjContacts_Edit(ContactNo As Integer)
+    Dim Contact As ClsContact
+    
+    Set Contact = New ClsContact
+    Set Contact = pContacts(CStr(ContactNo))
+    
+    With pProjContacts
+        Contact.ContactName = .TxtContactName
+        Contact.EmailAddress = .TxtEmailAddress
+        Contact.Organisation = .TxtOrganisation
+        Contact.Phone1 = .TxtPhone1
+        Contact.Phone2 = .TxtPhone2
+        Contact.Position = .TxtPosition
+    End With
+    
+    Contact.DBSave
+    
+    DisplayContactFrm
+    
+    Set Contact = Nothing
+
+End Sub
+
+' ===============================================================
+' Event pProjectForm_DisplayContactsFrm
+' Event from project form to display Contact
+' ---------------------------------------------------------------
+Private Sub pProjectForm_DisplayContactsFrm()
+    DisplayContactFrm
 End Sub
 
 ' ===============================================================
@@ -522,6 +644,7 @@ Private Sub Class_Initialize()
     Set pClient = New ClsClient
     Set pMS = New ClsContact
     Set pValuer = New ClsContact
+    Set pProjContacts = New FrmProjConts
    
     Set pParent = New ClsSPV
 
@@ -542,7 +665,7 @@ Public Sub Terminate()
     Set pClient = Nothing
     Set pMS = Nothing
     Set pValuer = Nothing
-    
+    Set pProjContacts = Nothing
 End Sub
 '---------------------------------------------------------------
 Private Sub Class_Terminate()
@@ -553,5 +676,6 @@ Private Sub Class_Terminate()
     Set pProjectForm = Nothing
     Set pMS = Nothing
     Set pValuer = Nothing
+    Set pProjContacts = Nothing
 End Sub
 ' ===============================================================

@@ -11,3 +11,5 @@ EmailAddress,  dbText
 OptOut,  dbBoolean
 ComFrq,  dbLong
 LastComm,  dbDate
+Notes,  dbMemo
+ProjIndex,  dbLong

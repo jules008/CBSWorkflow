@@ -1,6 +1,6 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FrmLenderWF 
-   ClientHeight    =   10110
+   ClientHeight    =   10410
    ClientLeft      =   120
    ClientTop       =   465
    ClientWidth     =   15990
@@ -40,12 +40,20 @@ Public Event PrevStep()
 Public Event ClickNo()
 Public Event CloseForm()
 Public Event UpdateLoan()
+Public Event DisplayContacts()
 
 ' ===============================================================
 ' BtnUpdateLoan_Click
 ' ---------------------------------------------------------------
 Private Sub BtnUpdateLoan_Click()
     RaiseEvent UpdateLoan
+End Sub
+
+' ===============================================================
+' xBtnProjContacts_Click
+' ---------------------------------------------------------------
+Private Sub xBtnProjContacts_Click()
+    RaiseEvent DisplayContacts
 End Sub
 
 ' ===============================================================

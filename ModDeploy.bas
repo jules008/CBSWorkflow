@@ -28,17 +28,14 @@ Public Sub QueryTest()
 End Sub
 
 Public Sub UpdateScript()
-    DB.Execute "ALTER TABLE TblProject ADD COLUMN MS integer"
-    DB.Execute "ALTER TABLE TblProject ADD COLUMN Valuer integer"
-    DB.Execute "ALTER TABLE TblProject DROP COLUMN Facilitator"
-    DB.Execute "ALTER TABLE TblProject ADD COLUMN Distribution text"
+    DB.Execute "ALTER TABLE TblContact ADD COLUMN Notes memo"
+    DB.Execute "ALTER TABLE TblContact ADD COLUMN ProjIndex Integer"
 End Sub
 
 Public Sub UndoScript()
-    DB.Execute "ALTER TABLE TblProject DROP COLUMN MS "
-    DB.Execute "ALTER TABLE TblProject DROP COLUMN Valuer "
-    DB.Execute "ALTER TABLE TblProject DROP COLUMN Distribution"
-    DB.Execute "ALTER TABLE TblProject ADD COLUMN Facilitator integer"
+    DB.Execute "ALTER TABLE TblContact DROP COLUMN Notes "
+    DB.Execute "ALTER TABLE TblContact DROP COLUMN ProjIndex "
+
 End Sub
 
 ' ===============================================================
