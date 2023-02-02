@@ -42,7 +42,7 @@ Private pOptOut As Boolean
 Private pLastComm As Date
 Private pComFrq As Integer
 Private pNotes As String
-Private pProjIndex As Integer
+Private pContactIndex As Integer
 
 Private WithEvents pContactForm As FrmContactForm
 Attribute pContactForm.VB_VarHelpID = -1
@@ -158,12 +158,12 @@ Public Property Let Notes(ByVal vNewValue As String)
 End Property
 
 '---------------------------------------------------------------
-Public Property Get ProjIndex() As Integer
-    ProjIndex = pProjIndex
+Public Property Get ContactIndex() As Integer
+    ContactIndex = pContactIndex
 End Property
 
-Public Property Let ProjIndex(ByVal vNewValue As Integer)
-    pProjIndex = vNewValue
+Public Property Let ContactIndex(ByVal vNewValue As Integer)
+    pContactIndex = vNewValue
 End Property
 
 ' ===============================================================
@@ -185,13 +185,12 @@ Public Sub DBNew(Optional ClientType As String, Optional Organistion As String)
     pLastComm = 0
     pComFrq = 7
     pNotes = ""
-    pProjIndex = ""
+    pContactIndex = 0
     
     With pContactForm
         .Tag = "New"
         .ClearForm
         .CmoContactType = ClientType
-        .CmoOrganisation = Organistion
         .BtnUpdate.Caption = "Create"
         .Show
     End With
@@ -208,7 +207,7 @@ Public Sub DisplayForm()
         .TxtContactName = pContactName
         .TxtContactNo = pContactNo
         .CmoContactType = pContactType
-        .CmoOrganisation = pOrganisation
+        .TxtOrganisation = pOrganisation
         .TxtPhone1 = pPhone1
         .TxtPhone2 = pPhone2
         .TxtPosition = pPosition
@@ -284,7 +283,7 @@ Public Sub DBGet(ContactNameNo As Variant)
             If Not IsNull(!ComFrq) Then pComFrq = !ComFrq
             If Not IsNull(!LastComm) Then pLastComm = !LastComm
             If Not IsNull(!Notes) Then pNotes = !Notes
-            If Not IsNull(!ProjIndex) Then pProjIndex = !ProjIndex
+            If Not IsNull(!ContactIndex) Then pContactIndex = !ContactIndex
             If RstNoCont.Fields(0) = 0 Then
                 pPrimaryContact = True
                 DB.Execute "UPDATE TblContact SET PrimaryContact = TRUE WHERE ContactType = '" & pContactType & "' and Organisation = '" & pOrganisation & "'"
@@ -346,7 +345,7 @@ Public Sub DBSave()
         !ComFrq = CleanSQLText(pComFrq, True)
         !EmailAddress = CleanSQLText(pEmailAddress, True)
         !Notes = CleanSQLText(pNotes, True)
-        !ProjIndex = CleanSQLText(pProjIndex, True)
+        !ContactIndex = CleanSQLText(pContactIndex, True)
 
         .Update
     End With
@@ -396,7 +395,7 @@ Private Sub pContactForm_Update()
         pPhone2 = Trim(.TxtPhone2)
         pPosition = Trim(.TxtPosition)
         pContactType = Trim(.CmoContactType)
-        pOrganisation = Trim(.CmoOrganisation)
+        pOrganisation = Trim(.TxtOrganisation)
         pEmailAddress = Trim(.TxtEmailAdd)
         pNotes = Trim(.xTxtNotes)
         pPrimaryContact = Trim(.ChkPrimaryContact)

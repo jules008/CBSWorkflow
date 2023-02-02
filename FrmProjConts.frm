@@ -38,7 +38,7 @@ Public Event Delete(ContactNo As Integer)
 ' BtnClose_Click
 '---------------------------------------------------------------
 Private Sub BtnClose_Click()
-    Unload Me
+    Hide
 End Sub
 
 '===============================================================
@@ -85,6 +85,8 @@ Restart:
     If MainScreen Is Nothing Then Err.Raise SYSTEM_RESTART
     
         ClearForm
+        EnableForm True
+        
         BtnUpdate.Caption = "Save"
 GracefulExit:
 
@@ -159,6 +161,44 @@ Public Sub ClearForm()
 End Sub
 
 ' ===============================================================
+' EnableForm
+' enables form
+' ---------------------------------------------------------------
+Public Sub EnableForm(Status As Boolean)
+    If Status = True Then
+        TxtContactName.Enabled = True
+        TxtContactName.BackColor = COL_WHITE
+        TxtEmailAddress.Enabled = True
+        TxtEmailAddress.BackColor = COL_WHITE
+        TxtOrganisation.Enabled = True
+        TxtOrganisation.BackColor = COL_WHITE
+        TxtPhone1.Enabled = True
+        TxtPhone1.BackColor = COL_WHITE
+        TxtPhone2.Enabled = True
+        TxtPhone2.BackColor = COL_WHITE
+        TxtPosition.Enabled = True
+        TxtPosition.BackColor = COL_WHITE
+        xTxtNotes.Enabled = True
+        xTxtNotes.BackColor = COL_WHITE
+    Else
+        TxtContactName.Enabled = False
+        TxtContactName.BackColor = COL_OFF_WHITE
+        TxtEmailAddress.Enabled = False
+        TxtEmailAddress.BackColor = COL_OFF_WHITE
+        TxtOrganisation.Enabled = False
+        TxtOrganisation.BackColor = COL_OFF_WHITE
+        TxtPhone1.Enabled = False
+        TxtPhone1.BackColor = COL_OFF_WHITE
+        TxtPhone2.Enabled = False
+        TxtPhone2.BackColor = COL_OFF_WHITE
+        TxtPosition.Enabled = False
+        TxtPosition.BackColor = COL_OFF_WHITE
+        xTxtNotes.Enabled = False
+        xTxtNotes.BackColor = COL_OFF_WHITE
+    End If
+End Sub
+
+' ===============================================================
 ' UserForm_Initialize
 ' Initialises form controls
 ' ---------------------------------------------------------------
@@ -169,6 +209,7 @@ Private Sub UserForm_Initialize()
     Me.Top = Application.Top + (0.5 * Application.Height) - (0.5 * Me.Height)
     
     ClearForm
+    EnableForm False
     
     With HdgContacts
         .Clear

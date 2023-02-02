@@ -475,7 +475,7 @@ Private Sub pProjContacts_Add()
     With Contact
         .ContactName = pProjContacts.TxtContactName
         .ContactType = "Project"
-        .ProjIndex = pProjectNo
+        .ContactIndex = pProjectNo
         .Organisation = pProjContacts.TxtOrganisation
         .Phone1 = pProjContacts.TxtPhone1
         .Phone2 = pProjContacts.TxtPhone2
@@ -514,6 +514,7 @@ Private Sub pProjContacts_Display(ContactNo As Integer)
     If Contact Is Nothing Then Exit Sub
     
     With pProjContacts
+        .EnableForm True
         .TxtContactName = Contact.ContactName
         .TxtEmailAddress = Contact.EmailAddress
         .TxtOrganisation = Contact.Organisation

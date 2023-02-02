@@ -96,7 +96,7 @@ End Function
 ' Method GetCollection
 ' Gets all items in collection
 ' ---------------------------------------------------------------
-Public Sub GetCollection(ContactType As String, Optional ProjectNo As Integer)
+Public Sub GetCollection(ContactType As String, Optional ContactIndex As Integer)
     Dim RstContact As Recordset
     Dim Contact As ClsContact
     Dim i As Integer
@@ -104,9 +104,9 @@ Public Sub GetCollection(ContactType As String, Optional ProjectNo As Integer)
 
     RemoveCollection
     
-    If ProjectNo = 0 Then
+    If ContactIndex > 0 Then
     SQL = "SELECT ContactNo FROM TblContact WHERE ContactType = '" & ContactType & "'" _
-                                            & "AND ProjIndex = " & ProjectNo
+                                            & "AND ContactIndex = " & ContactIndex
     Else
         SQL = "SELECT ContactNo FROM TblContact WHERE ContactType = '" & ContactType & "'"
     End If

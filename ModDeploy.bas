@@ -29,12 +29,15 @@ End Sub
 
 Public Sub UpdateScript()
     DB.Execute "ALTER TABLE TblContact ADD COLUMN Notes memo"
-    DB.Execute "ALTER TABLE TblContact ADD COLUMN ProjIndex Integer"
+    DB.Execute "ALTER TABLE TblContact ADD COLUMN ContactIndex Integer"
+
+'        ModDeploy.UpdateTable "TblEmail", "A1:H2"
+'        ModDeploy.UpdateTable "TblStepTemplate", "A1:Z2"
 End Sub
 
 Public Sub UndoScript()
     DB.Execute "ALTER TABLE TblContact DROP COLUMN Notes "
-    DB.Execute "ALTER TABLE TblContact DROP COLUMN ProjIndex "
+    DB.Execute "ALTER TABLE TblContact DROP COLUMN ContactIndex "
 
 End Sub
 
@@ -237,7 +240,6 @@ Public Sub UpdateTable(StrTable As String, RngImport As String)
         Loop
     End With
     ShtImport.Visible = xlSheetHidden
-    ShtSettings.ChkUpdateDB = False
     Set ShtImport = Nothing
 End Sub
 
