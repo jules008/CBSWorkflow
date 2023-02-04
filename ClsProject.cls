@@ -563,6 +563,22 @@ Private Sub pProjectForm_DisplayContactsFrm()
 End Sub
 
 ' ===============================================================
+' Event pProjectForm_OpenClientForm
+' Event from project form to open client form
+' ---------------------------------------------------------------
+Private Sub pProjectForm_OpenClientForm()
+    pClient.DisplayForm
+End Sub
+
+' ===============================================================
+' Event pProjectForm_OpenSPVForm
+' Event from project form to open SPV form
+' ---------------------------------------------------------------
+Private Sub pProjectForm_OpenSPVForm()
+    pSPV.DisplayForm
+End Sub
+
+' ===============================================================
 ' Event pContactForm_Update
 ' Event from client form to update Contact
 ' ---------------------------------------------------------------

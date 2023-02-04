@@ -27,17 +27,15 @@ Public Sub QueryTest()
     UpdateScript
 End Sub
 
+'ModDeploy.UpdateTable "TblEmail", "A1:H2"
+'ModDeploy.UpdateTable "TblStepTemplate", "A1:Z2"
 Public Sub UpdateScript()
-    DB.Execute "ALTER TABLE TblContact ADD COLUMN Notes memo"
-    DB.Execute "ALTER TABLE TblContact ADD COLUMN ContactIndex Integer"
+    DB.Execute "ALTER TABLE TblClient ADD COLUMN ClientNeeds integer"
 
-'        ModDeploy.UpdateTable "TblEmail", "A1:H2"
-'        ModDeploy.UpdateTable "TblStepTemplate", "A1:Z2"
 End Sub
 
 Public Sub UndoScript()
-    DB.Execute "ALTER TABLE TblContact DROP COLUMN Notes "
-    DB.Execute "ALTER TABLE TblContact DROP COLUMN ContactIndex "
+    DB.Execute "ALTER TABLE TblClient DROP COLUMN ClientNeeds "
 
 End Sub
 

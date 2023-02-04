@@ -41,12 +41,29 @@ Public Event ClickNo()
 Public Event CloseForm()
 Public Event UpdateLoan()
 Public Event DisplayContacts()
+Public Event OpenClientForm()
+Public Event OpenSPVForm()
+
 
 ' ===============================================================
 ' xBrtnProjContacts_Click
 ' ---------------------------------------------------------------
 Private Sub xBrtnProjContacts_Click()
     RaiseEvent DisplayContacts
+End Sub
+
+' ===============================================================
+' xBtnOpenClient_Click
+' ---------------------------------------------------------------
+Private Sub xBtnOpenClient_Click()
+    RaiseEvent OpenClientForm
+End Sub
+
+' ===============================================================
+' xBtnOpenSPV_Click
+' ---------------------------------------------------------------
+Private Sub xBtnOpenSPV_Click()
+    RaiseEvent OpenSPVForm
 End Sub
 
 ' ===============================================================

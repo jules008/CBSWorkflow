@@ -41,12 +41,20 @@ Public Event ClickNo()
 Public Event CloseForm()
 Public Event UpdateLoan()
 Public Event DisplayContacts()
+Public Event OpenClientForm()
 
 ' ===============================================================
 ' BtnUpdateLoan_Click
 ' ---------------------------------------------------------------
 Private Sub BtnUpdateLoan_Click()
     RaiseEvent UpdateLoan
+End Sub
+
+' ===============================================================
+' xBtnOpenClient_Click
+' ---------------------------------------------------------------
+Private Sub xBtnOpenClient_Click()
+    RaiseEvent OpenClientForm
 End Sub
 
 ' ===============================================================

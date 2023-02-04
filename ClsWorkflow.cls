@@ -778,6 +778,14 @@ Private Sub pLenderWFForm_DisplayContacts()
 End Sub
 
 ' ===============================================================
+' Event pLenderWFForm_OpenClientForm
+' Event to open client form
+' ---------------------------------------------------------------
+Private Sub pLenderWFForm_OpenClientForm()
+    Parent.Client.DisplayForm
+End Sub
+
+' ===============================================================
 ' Event pLenderWFForm_PrevStep
 ' Event on clicking previous step
 ' ---------------------------------------------------------------
@@ -850,6 +858,22 @@ End Sub
 ' ---------------------------------------------------------------
 Private Sub pProjWFForm_DisplayContacts()
     Parent.DisplayContactFrm
+End Sub
+
+' ===============================================================
+' Event pProjWFForm_OpenClientForm
+' displays Client Form
+' ---------------------------------------------------------------
+Private Sub pProjWFForm_OpenClientForm()
+    pParent.Client.DisplayForm
+End Sub
+
+' ===============================================================
+' Event pProjWFForm_OpenSPVForm
+' displays SPV Form
+' ---------------------------------------------------------------
+Private Sub pProjWFForm_OpenSPVForm()
+    pParent.SPV.DisplayForm
 End Sub
 
 ' ===============================================================

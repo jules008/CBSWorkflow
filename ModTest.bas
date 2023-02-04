@@ -37,3 +37,16 @@ Public Sub TestAccessForm()
     
     Set CBSUser = Nothing
 End Sub
+
+Public Sub ClientNeedTest()
+    Dim ClientNeeds As Byte
+    
+    ClientNeeds = 255
+    
+    With FrmClientForm
+        .SetClientNeed ClientNeeds
+        .Show
+        ClientNeeds = Format(.GetClientNeed, "0")
+    End With
+    Debug.Print ClientNeeds
+End Sub

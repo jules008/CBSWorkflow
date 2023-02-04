@@ -36,6 +36,8 @@ Private pPhoneNo As String
 Private pClientNo As Integer
 Private pSPVs As ClsSPVs
 Private pContacts As ClsContacts
+Private pClientNeeds As Byte
+
 Private WithEvents pClientForm As FrmClientForm
 Attribute pClientForm.VB_VarHelpID = -1
 
@@ -111,6 +113,15 @@ Public Property Let Contacts(ByRef vNewValue As ClsContacts)
     Set pContacts = vNewValue
 End Property
 
+'---------------------------------------------------------------
+Public Property Get ClientNeeds() As Byte
+    ClientNeeds = pClientNeeds
+End Property
+
+Public Property Let ClientNeeds(ByRef vNewValue As Byte)
+    pClientNeeds = vNewValue
+End Property
+
 ' ===============================================================
 ' Method DBNew
 ' displays new client form
@@ -144,6 +155,7 @@ Public Sub DisplayForm()
         .TxtName = pName
         .TxtPhoneNo = pPhoneNo
         .TxtUrl = pUrl
+        .SetClientNeed pClientNeeds
         .Show
     End With
 End Sub
@@ -169,6 +181,7 @@ Public Sub DBGet(ClientNameNo As Variant)
             If Not IsNull(!Url) Then pUrl = !Url
             If Not IsNull(!PhoneNo) Then pPhoneNo = !PhoneNo
             If Not IsNull(!ClientNo) Then pClientNo = !ClientNo
+            If Not IsNull(!ClientNeeds) Then pClientNeeds = !ClientNeeds
         pContacts.GetCollection "Client", pClientNo
         End If
     End With
@@ -207,6 +220,7 @@ Public Sub DBSave()
         !Url = CleanSQLText(pUrl, True)
         !PhoneNo = CleanSQLText(pPhoneNo, True)
         !ClientNo = CleanSQLText(pClientNo, True)
+        !ClientNeeds = CleanSQLText(pClientNeeds, True)
 
         pSPVs.SaveCollection
         pContacts.SaveCollection
@@ -238,6 +252,7 @@ Private Sub pClientForm_Update()
         pCBS = .CmoCBS
         pPhoneNo = .TxtPhoneNo
         pUrl = .TxtUrl
+        pClientNeeds = .GetClientNeed
     End With
     DBSave
 End Sub

@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FrmProjectForm 
    Caption         =   "CRM - Project"
-   ClientHeight    =   9495.001
+   ClientHeight    =   9645.001
    ClientLeft      =   120
    ClientTop       =   465
-   ClientWidth     =   12600
+   ClientWidth     =   12855
    OleObjectBlob   =   "FrmProjectForm.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -13,6 +13,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
 
 '===============================================================
 ' Module FrmProjectForm
@@ -34,6 +35,8 @@ Public Event CreateNew()
 Public Event Update()
 Public Event Delete()
 Public Event DisplayContactsFrm()
+Public Event OpenClientForm()
+Public Event OpenSPVForm()
 
 Private DisableEvents As Boolean
 
@@ -433,4 +436,20 @@ End Function
 
 Private Sub UserForm_Terminate()
     Application.EnableEvents = True
+End Sub
+
+' ===============================================================
+' xBtnOpenClient_Click
+' Opens Client form
+' ---------------------------------------------------------------
+Private Sub xBtnOpenClient_Click()
+    RaiseEvent OpenClientForm
+End Sub
+
+' ===============================================================
+' xBtnOpenSPV_Click
+' Opens SPV form
+' ---------------------------------------------------------------
+Private Sub xBtnOpenSPV_Click()
+    RaiseEvent OpenSPVForm
 End Sub
