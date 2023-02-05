@@ -50,3 +50,20 @@ Public Sub ClientNeedTest()
     End With
     Debug.Print ClientNeeds
 End Sub
+
+Public Sub TestPicker()
+    Dim Picker As ClsFrmPicker
+    
+    Set Picker = New ClsFrmPicker
+    With Picker
+        .Title = "Select workflow script"
+        .Instructions = "Select the workflow script you would like to view."
+        .Data = ModDatabase.SQLQuery("SELECT SecondTier from TblWorkflowTable")
+        .ClearForm
+        .Show = True
+    End With
+    
+    
+    Set Picker = Nothing
+    
+End Sub

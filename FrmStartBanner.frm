@@ -45,7 +45,7 @@ Private Sub FormActivate()
 Restart:
 
     If Not ModStartUp.Initialize Then Err.Raise HANDLED_ERROR
-    Unload Me
+    Hide
 
 GracefulExit:
 
@@ -103,7 +103,7 @@ End Sub
 ' ---------------------------------------------------------------
 Sub Progress(MessTxt As String, pctCompl As Single)
     LblMessage = MessTxt
-    Lbltext = Format(pctCompl, "0") & "%"
+    LblText = Format(pctCompl, "0") & "%"
     LblProgress.Width = FrmProgBar.Width / 100 * pctCompl
     Repaint
     Sleep 500

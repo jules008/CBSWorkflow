@@ -48,7 +48,7 @@ Private Sub BtnDelete_Click()
     If Response = 6 Then
         RaiseEvent Delete
     End If
-    Unload Me
+    Hide
 End Sub
 
 ' ===============================================================

@@ -9,7 +9,6 @@ Contacts,  dbText
 ProjectWFNo,  dbLong
 ProjectName,  dbText
 FirstClientInt,  dbLong
-SecondClientRef,  dbLong
 CBSCommission,  dbLong
 Debt,  dbSingle
 CompleteDate,  dbDate
@@ -20,3 +19,4 @@ ConsComenceDte,  dbDate
 MS,  dbLong
 Valuer,  dbLong
 Distribution,  dbText
+SecondClientRef,  dbText

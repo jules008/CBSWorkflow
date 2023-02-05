@@ -1,6 +1,6 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FrmLenderWF 
-   ClientHeight    =   10410
+   ClientHeight    =   10035
    ClientLeft      =   120
    ClientTop       =   465
    ClientWidth     =   15990
@@ -42,12 +42,20 @@ Public Event CloseForm()
 Public Event UpdateLoan()
 Public Event DisplayContacts()
 Public Event OpenClientForm()
+Public Event OpenProjCRM()
 
 ' ===============================================================
 ' BtnUpdateLoan_Click
 ' ---------------------------------------------------------------
 Private Sub BtnUpdateLoan_Click()
     RaiseEvent UpdateLoan
+End Sub
+
+' ===============================================================
+' BtnOpenProject_Click
+' ---------------------------------------------------------------
+Private Sub BtnOpenProject_Click()
+    RaiseEvent OpenProjCRM
 End Sub
 
 ' ===============================================================
@@ -114,7 +122,7 @@ End Sub
 ' ---------------------------------------------------------------
 Sub Progress(pctCompl As Single)
 
-    Lbltext.Caption = Format(pctCompl, "0") & "%"
+    LblText.Caption = Format(pctCompl, "0") & "%"
     xLblBar.Width = Frame7.Width / 100 * pctCompl
     
 End Sub
@@ -131,6 +139,7 @@ Private Sub UserForm_Initialize()
     Me.StartUpPosition = 0
     Me.Left = Application.Left + (0.5 * Application.Width) - (0.5 * Me.Width)
     Me.Top = Application.Top + (0.5 * Application.Height) - (0.5 * Me.Height)
+    If Me.Top < 0 Then Me.Top = 0
     xLblBar.ZOrder (1)
     
 End Sub

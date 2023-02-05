@@ -33,12 +33,12 @@ Public Event ItemSelected()
 Public Event CreateNew()
 
 Private Sub BtnClose_Click()
-    Unload Me
+    Hide
 End Sub
 
 Private Sub BtnNew_Click()
     RaiseEvent CreateNew
-    Unload Me
+    Hide
 End Sub
 
 Private Sub BtnSelect_Click()

@@ -33,7 +33,7 @@ Public Event Delete()
 ' BtnClose_Click
 '---------------------------------------------------------------
 Private Sub BtnClose_Click()
-    Unload Me
+    Hide
 End Sub
 
 ' ===============================================================
@@ -47,7 +47,7 @@ Private Sub BtnDelete_Click()
     
     If Response = 6 Then
         RaiseEvent Delete
-        Unload Me
+        Hide
     End If
 End Sub
 
@@ -93,7 +93,7 @@ Restart:
         Case Is = enFormOK
             
             RaiseEvent Update
-            Unload Me
+            Hide
     End Select
     
 GracefulExit:

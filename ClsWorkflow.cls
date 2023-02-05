@@ -354,10 +354,10 @@ Public Sub DisplayLenderForm()
             .TxtLenderName = pLender.Name
             .TxtLenderContactName = pLender.Contacts.PrimaryContact.ContactName
             .TxtLenderContactPhone = pLender.Contacts.PrimaryContact.Phone1
-        .TxtDebt = pDebt
-        .TxtCBSComm = pCBSComm
-        .TxtExitFee = pExitFee
-        .TxtLoanTerm = pLoanTerm
+        .TxtDebt = pParent.Debt
+        .TxtCBSComm = Parent.CBSCommission
+        .TxtExitFee = Parent.ExitFee
+        .TxtLoanTerm = Parent.LoanTerm
         .Progress ProgPC
         .TxtClientName = pParent.Client.Name
         .TxtProjectNo = pParent.ProjectNo
@@ -766,7 +766,7 @@ End Sub
 ' ---------------------------------------------------------------
 Private Sub pLenderWFForm_CloseForm()
     DBSave
-    Unload pLenderWFForm
+    pLenderWFForm.Hide
 End Sub
 
 ' ===============================================================
@@ -783,6 +783,15 @@ End Sub
 ' ---------------------------------------------------------------
 Private Sub pLenderWFForm_OpenClientForm()
     Parent.Client.DisplayForm
+End Sub
+
+' ===============================================================
+' Event pLenderWFForm_OpenProjCRM
+' Event to open project form
+' ---------------------------------------------------------------
+Private Sub pLenderWFForm_OpenProjCRM()
+    Parent.DisplayForm
+    DisplayLenderForm
 End Sub
 
 ' ===============================================================
@@ -866,6 +875,15 @@ End Sub
 ' ---------------------------------------------------------------
 Private Sub pProjWFForm_OpenClientForm()
     pParent.Client.DisplayForm
+End Sub
+
+' ===============================================================
+' Event pProjWFForm_OpenProjCRM
+' displays project Form
+' ---------------------------------------------------------------
+Private Sub pProjWFForm_OpenProjCRM()
+    Parent.DisplayForm
+    DisplayProjectForm
 End Sub
 
 ' ===============================================================

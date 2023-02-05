@@ -38,7 +38,7 @@ Public Event CloseFrm()
 '---------------------------------------------------------------
 Private Sub BtnClose_Click()
     RaiseEvent CloseFrm
-    Unload Me
+    Hide
 End Sub
 
 ' ===============================================================
@@ -65,7 +65,7 @@ Restart:
     If CmoSecondTier.ListIndex <> -1 Then
 
         RaiseEvent Update
-        Unload Me
+        Hide
     End If
     
 GracefulExit:

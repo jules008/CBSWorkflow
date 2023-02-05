@@ -35,7 +35,7 @@ Public Event Delete(WFNo As String)
 ' BtnClose_Click
 '---------------------------------------------------------------
 Private Sub BtnClose_Click()
-    Unload Me
+    Hide
 End Sub
 
 ' ===============================================================
@@ -50,7 +50,7 @@ Private Sub BtnDelete_Click()
     If Response = 6 Then
         RaiseEvent Delete(TxtWFNo)
     End If
-    Unload Me
+    Hide
 End Sub
 
 ' ===============================================================
@@ -96,7 +96,7 @@ Restart:
         Case Is = enFormOK
             
             RaiseEvent Update(TxtWFNo)
-            Unload Me
+            Hide
     End Select
     
 GracefulExit:

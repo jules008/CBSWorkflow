@@ -31,7 +31,8 @@ End Sub
 'ModDeploy.UpdateTable "TblStepTemplate", "A1:Z2"
 Public Sub UpdateScript()
     DB.Execute "ALTER TABLE TblClient ADD COLUMN ClientNeeds integer"
-
+    DB.Execute "ALTER TABLE TblProject DROP COLUMN SecondClientRef"
+    DB.Execute "ALTER TABLE TblProject ADD COLUMN SecondClientRef text"
 End Sub
 
 Public Sub UndoScript()

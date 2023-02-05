@@ -35,7 +35,7 @@ Public Event Delete()
 ' BtnClose_Click
 '---------------------------------------------------------------
 Private Sub BtnClose_Click()
-    Unload Me
+    Hide
 End Sub
 
 ' ===============================================================
@@ -47,13 +47,13 @@ Private Sub BtnDelete_Click()
     
     On Error GoTo ErrorHandler
     
-    If CurrentUser.UserLvl <> enAdmin Then Err.Raise ACCESS_DENIED
+    If CurrentUser.UserLvl = enCaseMgr Then Err.Raise ACCESS_DENIED
     
     Response = MsgBox("Are you sure you want to delete the Contact from the database?", vbYesNo + vbExclamation, APP_NAME)
     
     If Response = 6 Then
         RaiseEvent Delete
-        Unload Me
+        Hide
     End If
     
 ErrorHandler:
@@ -91,7 +91,7 @@ End Sub
 Private Sub BtnNew_Click()
     On Error GoTo ErrorHandler
 
-    If CurrentUser.UserLvl <> enAdmin Or CurrentUser.UserLvl <> enCaseMgr Then Err.Raise ACCESS_DENIED
+    If CurrentUser.UserLvl = enCaseMgr Then Err.Raise ACCESS_DENIED
 
     RaiseEvent CreateNew
 ErrorHandler:
@@ -116,7 +116,7 @@ Private Sub BtnUpdate_Click()
 Restart:
 
     If MainScreen Is Nothing Then Err.Raise SYSTEM_RESTART
-    If CurrentUser.UserLvl <> enAdmin Then Err.Raise ACCESS_DENIED
+    If CurrentUser.UserLvl = enCaseMgr Then Err.Raise ACCESS_DENIED
     
     Select Case ValidateForm
 
@@ -128,7 +128,7 @@ Restart:
         Case Is = enFormOK
             
             RaiseEvent Update
-            Unload Me
+            Hide
     End Select
     
 GracefulExit:
@@ -152,6 +152,10 @@ ErrorHandler:
     Else
         Resume ErrorExit
     End If
+End Sub
+
+Private Sub CmoContactType_Change()
+
 End Sub
 
 ' ===============================================================
@@ -301,7 +305,7 @@ Private Function ValidateForm() As enFormValidation
     End With
            
     With CmoContactType
-        If .ListIndex = -1 Then
+        If .Value = "" Then
             .BackColor = COL_AMBER
             ValidateForm = enValidationError
         End If

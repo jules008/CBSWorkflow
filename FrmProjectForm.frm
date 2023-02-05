@@ -44,7 +44,7 @@ Private DisableEvents As Boolean
 ' BtnClose_Click
 '---------------------------------------------------------------
 Private Sub BtnClose_Click()
-    Unload Me
+    Hide
 End Sub
 
 ' ===============================================================
@@ -64,13 +64,13 @@ Private Sub BtnDelete_Click()
     
     On Error GoTo ErrorHandler
     
-    If CurrentUser.UserLvl <> enAdmin Then Err.Raise ACCESS_DENIED
+    If CurrentUser.UserLvl = enCaseMgr Then Err.Raise ACCESS_DENIED
     
     Response = MsgBox("Are you sure you want to delete the Project from the database?", vbYesNo + vbExclamation, APP_NAME)
     
     If Response = 6 Then
         RaiseEvent Delete
-        Unload Me
+        Hide
     End If
     
 ErrorHandler:
@@ -128,7 +128,7 @@ Private Sub BtnUpdate_Click()
 Restart:
 
     If MainScreen Is Nothing Then Err.Raise SYSTEM_RESTART
-    If CurrentUser.UserLvl <> enAdmin Then Err.Raise ACCESS_DENIED
+    If CurrentUser.UserLvl = enCaseMgr Then Err.Raise ACCESS_DENIED
     
     Select Case ValidateForm
 
@@ -140,7 +140,7 @@ Restart:
         Case Is = enFormOK
             
             RaiseEvent Update
-            Unload Me
+            Hide
     End Select
     
 GracefulExit:
@@ -279,19 +279,6 @@ Private Sub UserForm_Initialize()
     
     i = 0
     With CmoFirstClientInt
-        .Clear
-        RstSource.MoveFirst
-        Do While Not RstSource.EOF
-            .AddItem
-            If Not IsNull(RstSource!CBSUserNo) Then .List(i, 0) = RstSource!CBSUserNo
-            If Not IsNull(RstSource!UserName) Then .List(i, 1) = RstSource!UserName
-            RstSource.MoveNext
-            i = i + 1
-        Loop
-    End With
-    
-    i = 0
-    With CmoSecondClientRef
         .Clear
         RstSource.MoveFirst
         Do While Not RstSource.EOF

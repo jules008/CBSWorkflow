@@ -30,7 +30,7 @@ Private EventHandlers As Collection
 ' BtnClose_Click
 '---------------------------------------------------------------
 Private Sub BtnClose_Click()
-    Unload Me
+    Hide
 End Sub
 
 ' ===============================================================

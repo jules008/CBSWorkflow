@@ -7,22 +7,6 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
-Private Sub CmoChangeUser_Change()
 
-    If CurrentUser Is Nothing Then Initialize
         
-    If CmoChangeUser.ListIndex <> -1 Then
-        CurrentUser.UserLvl = CmoChangeUser.ListIndex + 1
-        MsgBox "You now have the user level of " & CmoChangeUser, vbOKOnly + vbInformation
-    End If
-End Sub
-
-Private Sub Worksheet_Activate()
-    With CmoChangeUser
-        .Clear
-        .AddItem "Admin"
-        .AddItem "Senior Manager"
-        .AddItem "Case Manager"
-    End With
-End Sub
 

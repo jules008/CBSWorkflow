@@ -67,7 +67,7 @@ Public Function ShowForm(Optional LocDefDte As Date, Optional Message As String)
 End Function
 
 Private Sub BtnClose_Click()
-    Unload Me
+    Hide
 End Sub
 
 Sub AddDate()

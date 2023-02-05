@@ -45,7 +45,7 @@ Private pProjectWFNo As Integer
 Private pClient As ClsClient
 Private pSPV As ClsSPV
 Private pFirstClientInt As Integer
-Private pSecondClientRef As Integer
+Private pSecondClientRef As String
 Private pDistribution As String
 Private pCompleteDate As Date
 Private pStartDate As Date
@@ -201,11 +201,11 @@ Public Property Let FirstClientInt(ByRef FirstClientInt As Integer)
 End Property
     
 '---------------------------------------------------------------
-Public Property Get SecondClientRef() As Integer
+Public Property Get SecondClientRef() As String
     SecondClientRef = pSecondClientRef
 End Property
 
-Public Property Let SecondClientRef(ByRef SecondClientRef As Integer)
+Public Property Let SecondClientRef(ByRef SecondClientRef As String)
     pSecondClientRef = SecondClientRef
 End Property
     
@@ -322,7 +322,7 @@ Public Sub DisplayForm()
         .TxtProjectNo = pProjectNo
         .TxtProjName = pProjectName
         If pFirstClientInt > 0 Then .CmoFirstClientInt = pFirstClientInt
-        If pSecondClientRef > 0 Then .CmoSecondClientRef = pSecondClientRef
+        If pSecondClientRef > "" Then .TxtSecondClientRef = pSecondClientRef
         If pDistribution > "" Then .CmoDistribution = pDistribution
         If pCaseManager.CBSUserNo > 0 Then .CmoCaseManager = pCaseManager.CBSUserNo
         If pClient.ClientNo > 0 Then .CmoClientNo = pClient.ClientNo
@@ -597,10 +597,7 @@ Private Sub pProjectForm_Update()
             If .ListIndex <> -1 Then pFirstClientInt = .List(.ListIndex, 0)
         End With
         
-        With .CmoSecondClientRef
-            If .ListIndex <> -1 Then pSecondClientRef = .List(.ListIndex, 0)
-        End With
-        
+       pSecondClientRef = .TxtSecondClientRef
         pDistribution = .CmoDistribution
        pSPV.DBGet .CmoSPVNo.List(.CmoSPVNo - 1, 0)
        pCaseManager.DBGet .CmoCaseManager.List(.CmoCaseManager - 1, 0)

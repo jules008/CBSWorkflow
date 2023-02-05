@@ -30,7 +30,7 @@ Private Const StrMODULE As String = "FrmStepHelp"
  
 
 Private Sub BtnClose_Click()
-    Unload Me
+    Hide
 End Sub
 
 
