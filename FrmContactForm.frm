@@ -154,10 +154,6 @@ ErrorHandler:
     End If
 End Sub
 
-Private Sub CmoContactType_Change()
-
-End Sub
-
 ' ===============================================================
 ' xBtnSent_Click
 ' ---------------------------------------------------------------
