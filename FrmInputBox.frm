@@ -38,7 +38,7 @@ Public Event EnterValue()
 
 Private Sub BtnEnter_Click()
     RaiseEvent EnterValue
-    Hide
+    Unload Me
 End Sub
 
 Private Sub UserForm_Initialize()

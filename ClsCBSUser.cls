@@ -101,7 +101,7 @@ Public Sub DBNew()
     pUserName = ""
     pPosition = ""
     pPhoneNo = ""
-    pUserLvl = ""
+    pUserLvl = 0
     Set pSupervisor = Nothing
     
     With pCBSUserForm

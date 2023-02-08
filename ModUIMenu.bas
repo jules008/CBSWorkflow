@@ -349,7 +349,7 @@ Restart:
 
         Case enBtnAdminUsers
         
-            If CurrentUser.UserLvl = enCaseMgr Then Err.Raise ACCESS_DENIED
+'            If CurrentUser.UserLvl = enCaseMgr Then Err.Raise ACCESS_DENIED
 
             BtnAdminClick enScrAdminUsers
 
