@@ -39,9 +39,9 @@ Public Const TEST_PREFIX As String = "TEST - "
 Public Const BACKUP_INT As Integer = 5
 Public Const FILE_ERROR_LOG As String = "Error.log"
 Public Const OLD_DB_VER = "V0.01.20"
-Public Const DB_VER = "V0.01.21" 'Client Needs
-Public Const VERSION = "V0.02.07"
-Public Const VER_DATE = "3 Feb 23"
+Public Const DB_VER = "V0.01.21" 'Lender Icons
+Public Const VERSION = "V0.02.08"
+Public Const VER_DATE = "9 Feb 23"
 ' ===============================================================
 ' Error Constants
 ' ---------------------------------------------------------------

@@ -31,7 +31,7 @@ Private pStyle As ClsUIStyle
 Private pName As String
 Private pMenu As ClsUIMenu
 Private pOnAction As String
-Private pBadge As Shape
+Private pUIBadges As ClsUIBadges
 Private pShpCell As Shape
 Private pVisible As Boolean
 Private pParent As ClsUITable
@@ -124,20 +124,12 @@ Public Property Let Menu(ByVal vNewValue As ClsUIMenu)
 End Property
 
 '---------------------------------------------------------------
-Public Property Get Badge() As Shape
-    Set Badge = pBadge
+Public Property Get Badges() As ClsUIBadges
+    Set Badges = pUIBadges
 End Property
 
-Public Property Let Badge(ByVal vNewValue As Shape)
-    Set pBadge = vNewValue
-End Property
-
-Public Property Let BadgeLeft(ByVal vNewValue As Integer)
-    pBadge.Left = pLeft + vNewValue
-End Property
-
-Public Property Let BadgeTop(ByVal vNewValue As Integer)
-    pBadge.Top = pTop + vNewValue
+Public Property Let Badges(ByVal vNewValue As ClsUIBadges)
+    Set pUIBadges = vNewValue
 End Property
 
 '---------------------------------------------------------------
@@ -226,19 +218,12 @@ End Property
 ' re-orders the shapes so that the Cells sit on top of the screen
 '---------------------------------------------------------------
 Public Sub ReOrder()
+    Dim Badge As Shape
     
     pShpCell.ZOrder msoBringToFront
-    If Not pBadge Is Nothing Then pBadge.ZOrder msoBringToFront
     
+    pUIBadges.ReOrder
     If Not pMenu Is Nothing Then pMenu.ReOrder
-End Sub
-
-' ===============================================================
-' Method AddBadge
-' Adds badge to the cell
-'---------------------------------------------------------------
-Public Sub AddBadge()
-    Set pBadge = ShtMain.Shapes.AddTextbox(msoTextOrientationHorizontal, 0, 0, 10, 10)
 End Sub
 
 ' ===============================================================
@@ -249,27 +234,26 @@ End Sub
 Private Sub Class_Initialize()
     Set pShpCell = ShtMain.Shapes.AddTextbox(msoTextOrientationHorizontal, 0, 0, 10, 10)
     Set pStyle = New ClsUIStyle
+    Set pUIBadges = New ClsUIBadges
 End Sub
 
 ' ===============================================================
 Public Sub Terminate()
+    Dim Badge As Shape
+    
     Set pParent = Nothing
     Set pStyle = Nothing
     pShpCell.Delete
     
-    If Not pBadge Is Nothing Then
-        pBadge.Delete
-        Set pBadge = Nothing
-    End If
+    Set pUIBadges = Nothing
 End Sub
 '---------------------------------------------------------------
 Private Sub Class_Terminate()
+    Dim Badge As Shape
+    
     Set pShpCell = Nothing
     Set pStyle = Nothing
-
-    If Not pBadge Is Nothing Then
-        Set pBadge = Nothing
-    End If
+    Set pUIBadges = Nothing
 End Sub
 
 '---------------------------------------------------------------

@@ -313,12 +313,12 @@ End Sub
 '---------------------------------------------------------------
 Public Sub ReOrder()
     Dim Cell As ClsUICell
+    Dim Badge As Shape
     
     Sin 0
     For Each Cell In pCells
         With Cell
-            .ShpCell.ZOrder msoBringToFront
-            If Not .Badge Is Nothing Then .Badge.ZOrder msoBringToFront
+            .ReOrder
         End With
     Next
 End Sub
@@ -401,23 +401,25 @@ Public Sub BuildTable(Optional SplitRow As Integer, Optional SplitSize As Intege
                     .Width = pColWidths(x)
                     
                     If x = 0 And ExpandIcon <> "" Then
-                        .Badge = pShpExpand.Duplicate
-                        With .Badge
-                            If y = SplitRow Then
-                                .Rotation = 90
-                                .Top = Cell.Top + 3
-                                .Left = Cell.Left + 30
-                                .Height = 13
-                                .Width = 11
-                                .OnAction = pOnAction(x, y)
-                            Else
-                                .Top = Cell.Top + 3
-                                .Left = Cell.Left + 20
-                                .Height = 13
-                                .Width = 11
-                                .OnAction = pOnAction(x, y)
-                            End If
-                        End With
+'                        .AddBadge "Expand " & Cell.Name
+'                        .Badges (1)
+'                        .Badges("Expand " & Cell.Name). = pShpExpand.Duplicate
+'                        With .Badges
+'                            If y = SplitRow Then
+'                                .Rotation = 90
+'                                .Top = Cell.Top + 3
+'                                .Left = Cell.Left + 30
+'                                .Height = 13
+'                                .Width = 11
+'                                .OnAction = pOnAction(x, y)
+'                            Else
+'                                .Top = Cell.Top + 3
+'                                .Left = Cell.Left + 20
+'                                .Height = 13
+'                                .Width = 11
+'                                .OnAction = pOnAction(x, y)
+'                            End If
+'                        End With
                     End If
                     
                     If y = 0 Then
@@ -605,6 +607,7 @@ Private Sub AddProgressBars(TableType As String)
     Dim TableCells As ClsUICells
     Dim UICell As ClsUICell
     Dim ProgressCol As Integer
+    Dim ShpProgress As Shape
     
     If TableType = "Table" Then
         Set TableCells = pCells
@@ -618,26 +621,27 @@ Private Sub AddProgressBars(TableType As String)
     For Each UICell In TableCells
         With UICell
             If .Row > 0 And .Col = ProgressCol Then
-                .AddBadge
-                .BadgeLeft = TABLE_PROGRESS_BADGE_LEFT
-                .BadgeTop = TABLE_PROGRESS_BADGE_TOP
-                With .Badge
-                    With .TextFrame
-                        .MarginTop = TABLE_PROGRESS_BADGE_MARGIN_TOP
-                        .HorizontalAlignment = xlHAlignCenter
-                        .VerticalAlignment = xlVAlignCenter
-                        With .Characters
-                            '.Text = UICell.Text
-                            .Font.Size = TABLE_PROGRESS_FONT_SIZE
-                            .Font.Color = TABLE_PROGRESS_FONT_COLOUR
-                        End With
-                    End With
-                    .Name = "Progress"
-                    .Line.Weight = TABLE_PROGRESS_BORDER_WEIGHT
-                    .Height = TABLE_PROGRESS_BADGE_HEIGHT
-                    .Width = (UICell.Width - 35) / 100 * Replace(UICell.Text, "%", "")
-                    .Fill.ForeColor.RGB = TABLE_PROGRESS_BADGE_FILL_COLOUR
-                End With
+'                .AddBadge "Progress " & .Name
+'                Set ShpProgress = .Badges("Progress " & .Name)
+'
+'                .BadgeLeft(ShpProgress.Name) = TABLE_PROGRESS_BADGE_LEFT
+'                .BadgeTop(ShpProgress.Name) = TABLE_PROGRESS_BADGE_TOP
+'                With ShpProgress
+'                    With .TextFrame
+'                        .MarginTop = TABLE_PROGRESS_BADGE_MARGIN_TOP
+'                        .HorizontalAlignment = xlHAlignCenter
+'                        .VerticalAlignment = xlVAlignCenter
+'                        With .Characters
+'                            '.Text = UICell.Text
+'                            .Font.Size = TABLE_PROGRESS_FONT_SIZE
+'                            .Font.Color = TABLE_PROGRESS_FONT_COLOUR
+'                        End With
+'                    End With
+'                    .Line.Weight = TABLE_PROGRESS_BORDER_WEIGHT
+'                    .Height = TABLE_PROGRESS_BADGE_HEIGHT
+'                    .Width = (UICell.Width - 35) / 100 * Replace(UICell.Text, "%", "")
+'                    .Fill.ForeColor.RGB = TABLE_PROGRESS_BADGE_FILL_COLOUR
+'                End With
             End If
 '            Debug.Print "Row"; .Row, "Col"; .Col
         End With
