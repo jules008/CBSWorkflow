@@ -183,6 +183,12 @@ Public Function BtnProjectNewWFClick(ScreenPage As enScreenPage) As Boolean
         .Client = ActiveClient
         .StartDate = Now
         .SPV = ActiveSPV
+        .ConsComenceDte = Format(Now, "dd mmm yy")
+        .CBSCommission = 0
+        .CBSCommPC = 0
+        .Debt = 0
+        .ExitFee = 0
+        .ExitFeePC = 0
         .DBSave
     End With
     

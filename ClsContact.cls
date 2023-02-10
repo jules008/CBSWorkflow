@@ -207,7 +207,9 @@ Public Sub DisplayForm()
         .TxtContactName = pContactName
         .TxtContactNo = pContactNo
         .CmoContactType = pContactType
-        .TxtOrganisation = pOrganisation
+        If .CmoContactType.ListIndex < 5 Then
+            If pContactIndex > 0 Then .CmoOrganisation = pContactIndex
+        End If
         .TxtPhone1 = pPhone1
         .TxtPhone2 = pPhone2
         .TxtPosition = pPosition
@@ -395,7 +397,14 @@ Private Sub pContactForm_Update()
         pPhone2 = Trim(.TxtPhone2)
         pPosition = Trim(.TxtPosition)
         pContactType = Trim(.CmoContactType)
-        pOrganisation = Trim(.TxtOrganisation)
+        If .CmoContactType.ListIndex < 5 Then
+            If .CmoOrganisation.ListIndex <> -1 Then
+                pContactIndex = .CmoOrganisation
+            Else
+                pContactIndex = 0
+            End If
+        End If
+        If .CmoOrganisation.Text <> "" Then pOrganisation = .CmoOrganisation.Text
         pEmailAddress = Trim(.TxtEmailAdd)
         pNotes = Trim(.xTxtNotes)
         pPrimaryContact = Trim(.ChkPrimaryContact)
@@ -409,28 +418,28 @@ Private Sub pContactForm_Update()
         Case "Client"
             Set ActiveClient = New ClsClient
             With ActiveClient
-                .DBGet pOrganisation
+                .DBGet pContactIndex
                 .Contacts.Add Me
                 .DBSave
             End With
         Case "Lender"
             Set ActiveLender = New ClsLender
             With ActiveLender
-                .DBGet pOrganisation
+                .DBGet pContactIndex
                 .Contacts.Add Me
                 .DBSave
             End With
         Case "Project"
             Set ActiveProject = New ClsProject
             With ActiveProject
-                .DBGet pOrganisation
+                .DBGet pContactIndex
                 .Contacts.Add Me
                 .DBSave
             End With
         Case "SPV"
             Set ActiveSPV = New ClsSPV
             With ActiveSPV
-                .DBGet pOrganisation
+                .DBGet pContactIndex
                 .Contacts.Add Me
                 .DBSave
             End With

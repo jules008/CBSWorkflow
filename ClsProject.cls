@@ -279,10 +279,29 @@ End Property
 ' ---------------------------------------------------------------
 Public Sub DBNew()
     
+    ProjectWorkflow.Name = "Project"
+    pStartDate = Now
+    
     With pProjectForm
         .Tag = "New"
         .ClearForm
         .BtnUpdate.Caption = "Create"
+        .TxtConsComenceDte = Format(Now, " dd mmm yy")
+        .TxtCBSCommission = 0
+        .TxtCBSCommPC = 0
+        .TxtDebt = 0
+        .TxtExitFee = 0
+        .TxtExitFeePC = 0
+        DBSave
+        
+        With pProjectWorkflow
+            .Name = "Project"
+            .DBSave
+            .WorkflowType = enProject
+            .ActiveStep.Start
+            .DBSave
+        End With
+        
         .Show
     End With
 End Sub
@@ -330,7 +349,7 @@ Public Sub DisplayForm()
         .TxtExitFee = pExitFee
         .TxtDebt = pDebt
         .TxtExitFeePC = pExitFeePC
-        If IsDate(pConsComenceDte) Then .TxtConsComenceDte = pConsComenceDte Else .TxtConsComenceDte = ""
+        If pConsComenceDte > 0 Then .TxtConsComenceDte = pConsComenceDte Else .TxtConsComenceDte = ""
         
         .TxtMSName = pMS.ContactName
         .TxtMSPhone = pMS.Phone1
@@ -476,7 +495,7 @@ Private Sub pProjContacts_Add()
         .ContactName = pProjContacts.TxtContactName
         .ContactType = "Project"
         .ContactIndex = pProjectNo
-        .Organisation = pProjContacts.TxtOrganisation
+        .Organisation = pProjContacts.CmoOrganisation
         .Phone1 = pProjContacts.TxtPhone1
         .Phone2 = pProjContacts.TxtPhone2
         .EmailAddress = pProjContacts.TxtEmailAddress
@@ -517,7 +536,7 @@ Private Sub pProjContacts_Display(ContactNo As Integer)
         .EnableForm True
         .TxtContactName = Contact.ContactName
         .TxtEmailAddress = Contact.EmailAddress
-        .TxtOrganisation = Contact.Organisation
+        .CmoOrganisation = Contact.Organisation
         .TxtPhone1 = Contact.Phone1
         .TxtPhone2 = Contact.Phone2
         .TxtPosition = Contact.Position
@@ -540,7 +559,7 @@ Private Sub pProjContacts_Edit(ContactNo As Integer)
     With pProjContacts
         Contact.ContactName = .TxtContactName
         Contact.EmailAddress = .TxtEmailAddress
-        Contact.Organisation = .TxtOrganisation
+        Contact.Organisation = .CmoOrganisation
         Contact.Phone1 = .TxtPhone1
         Contact.Phone2 = .TxtPhone2
         Contact.Position = .TxtPosition
@@ -589,7 +608,7 @@ Private Sub pProjectForm_Update()
     
     With pProjectForm
        pCBSCommission = .TxtCBSCommission
-        pCBSCommPC = .TxtCBSCommPC
+        If .TxtCBSCommPC <> "" Then pCBSCommPC = .TxtCBSCommPC
        pLoanTerm = .TxtLoanTerm
        pClient.DBGet .CmoClientNo.List(.CmoClientNo.ListIndex, 0)
         
@@ -601,10 +620,10 @@ Private Sub pProjectForm_Update()
         pDistribution = .CmoDistribution
        pSPV.DBGet .CmoSPVNo.List(.CmoSPVNo - 1, 0)
        pCaseManager.DBGet .CmoCaseManager.List(.CmoCaseManager - 1, 0)
-       pExitFee = .TxtExitFee
+        If .TxtExitFee <> "" Then pExitFee = .TxtExitFee
        pConsComenceDte = .TxtConsComenceDte
-        pDebt = .TxtDebt
-        pExitFeePC = .TxtExitFeePC
+        If .TxtDebt <> "" Then pDebt = .TxtDebt
+        If .TxtExitFeePC <> "" Then pExitFeePC = .TxtExitFeePC
        pProjectName = .TxtProjName
         
         If .TxtMSName <> "" Then

@@ -191,7 +191,9 @@ End Sub
 ' TxtCBSCommission_Change
 ' ---------------------------------------------------------------
 Private Sub TxtCBSCommission_Change()
-    TxtCBSCommission.BackColor = COL_WHITE
+    With TxtCBSCommission
+        .BackColor = COL_WHITE
+    End With
 End Sub
 
 ' ===============================================================
@@ -205,36 +207,45 @@ End Sub
 ' TxtDebt_Change
 ' ---------------------------------------------------------------
 Private Sub TxtDebt_Change()
-    
+    With TxtDebt
+        .BackColor = COL_WHITE
+    End With
 End Sub
 
 ' ===============================================================
 ' TxtExitFee_Change
 ' ---------------------------------------------------------------
 Private Sub TxtExitFee_Change()
-    
+    With TxtExitFee
+        .BackColor = COL_WHITE
+    End With
 End Sub
 
 ' ===============================================================
 ' TxtLoanTerm_Change
 ' ---------------------------------------------------------------
 Private Sub TxtLoanTerm_Change()
-    TxtLoanTerm.BackColor = COL_WHITE
-    TxtLoanTerm = Format(TxtLoanTerm, "0")
+    With TxtLoanTerm
+        .BackColor = COL_WHITE
+    End With
 End Sub
 
 ' ===============================================================
 ' TxtCBSCommPC_Change
 ' ---------------------------------------------------------------
 Private Sub TxtCBSCommPC_Change()
-
+    With TxtCBSCommPC
+        .BackColor = COL_WHITE
+    End With
 End Sub
 
 ' ===============================================================
 ' TxtExitFeePC_Change
 ' ---------------------------------------------------------------
 Private Sub TxtExitFeePC_Change()
-        
+    With TxtExitFeePC
+        .BackColor = COL_WHITE
+    End With
 End Sub
 
 ' ===============================================================
@@ -361,7 +372,44 @@ Private Function ValidateForm() As enFormValidation
     End With
            
     With TxtConsComenceDte
-        If Not IsDate(TxtConsComenceDte) Then
+        If Not IsDate(.Value) Then
+            .BackColor = COL_AMBER
+            ValidateForm = enValidationError
+        End If
+    End With
+    
+    With TxtDebt
+        If .Value <> "" Then
+            If Not IsNumeric(.Value) Then
+                .BackColor = COL_AMBER
+                ValidateForm = enValidationError
+            End If
+        End If
+    End With
+    
+    With TxtExitFeePC
+        If Not IsNumeric(.Value) Then
+            .BackColor = COL_AMBER
+            ValidateForm = enValidationError
+        End If
+    End With
+    
+    With TxtCBSCommission
+        If Not IsNumeric(.Value) Then
+            .BackColor = COL_AMBER
+            ValidateForm = enValidationError
+        End If
+    End With
+    
+    With TxtCBSCommPC
+        If Not IsNumeric(.Value) Then
+            .BackColor = COL_AMBER
+            ValidateForm = enValidationError
+        End If
+    End With
+    
+    With TxtExitFee
+        If Not IsNumeric(.Value) Then
             .BackColor = COL_AMBER
             ValidateForm = enValidationError
         End If

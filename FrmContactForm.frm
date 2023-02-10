@@ -65,6 +65,138 @@ ErrorHandler:
 End Sub
 
 ' ===============================================================
+' CmoContactType_Change
+' ---------------------------------------------------------------
+Private Sub CmoContactType_Change()
+    CmoOrganisation = ""
+    With CmoContactType
+        If .ListIndex = -1 Then
+            CmoOrganisation.Enabled = False
+            CmoOrganisation.Value = "Please select a Contact Type"
+        Else
+            CmoOrganisation.Enabled = True
+            If Not PopulateOrgs(.Value) Then Err.Raise HANDLED_ERROR
+        End If
+        
+        If .Value = "Client" Then
+            ChkOptOut.Enabled = True
+            TxtLastComm.Enabled = True
+            CmoCommFreq.Enabled = True
+            xBtnSent.Enabled = True
+            If CmoCommFreq = "" Or CmoCommFreq = 30 Then CmoCommFreq = 2
+        ElseIf .Value = "Lead" Then
+            ChkOptOut.Enabled = True
+            TxtLastComm.Enabled = True
+            CmoCommFreq.Enabled = True
+            xBtnSent.Enabled = True
+            If CmoCommFreq = "" Or CmoCommFreq = 2 Then CmoCommFreq = 30
+        Else
+            ChkOptOut.Enabled = False
+            TxtLastComm.Enabled = False
+            CmoCommFreq.Enabled = False
+            xBtnSent.Enabled = False
+        End If
+        
+        .BackColor = COL_WHITE
+    End With
+End Sub
+
+' ===============================================================
+' PopulateOrgs
+' popullates organisations after contact type is selected
+' ---------------------------------------------------------------
+Private Function PopulateOrgs(ContactType As String) As Boolean
+    Dim RstSource As Recordset
+    Dim Index As String
+    Dim Table As String
+    Dim Name As String
+    Dim i As Integer
+    
+    Const StrPROCEDURE As String = "populateOrgs()"
+
+    On Error GoTo ErrorHandler
+
+    Select Case ContactType
+        Case "Client"
+            Index = "ClientNo"
+            Table = "TblClient"
+            Name = "Name"
+            LblOrganisation = "Client"
+        Case "Lender"
+            Index = "LenderNo"
+            Table = "TblLender"
+            Name = "Name"
+            LblOrganisation = "Lender"
+        Case "SPV"
+            Index = "SPVNo"
+            Table = "TblSPV"
+             Name = "Name"
+            LblOrganisation = "SPV"
+       Case "Project"
+            Index = "ProjectNo"
+            Table = "TblProject"
+            Name = "ProjectName"
+            LblOrganisation = "Project"
+       Case "Lead"
+            Index = "ProjectNo"
+            Table = "TblProject"
+            Name = "ProjectName"
+            LblOrganisation = "Lead"
+        Case "Valuer"
+            Index = ""
+            Table = ""
+            Name = ""
+            LblOrganisation = "Enter Organisation"
+        Case "Other"
+            Index = ""
+            Table = ""
+            Name = ""
+            LblOrganisation = "Enter Organisation"
+            
+    End Select
+        
+    If CmoContactType.List(CmoContactType.ListIndex, 0) < 4 Then
+        Set RstSource = ModDatabase.SQLQuery("SElECT " & Index & ", " & Name & " FROM " & Table)
+        
+        With RstSource
+            CmoOrganisation.Clear
+            Do While Not .EOF
+                With CmoOrganisation
+                    .AddItem
+                    If Not IsNull(RstSource.Fields(0)) Then .List(i, 0) = RstSource.Fields(0)
+                    If Not IsNull(RstSource.Fields(1)) Then .List(i, 1) = RstSource.Fields(1)
+                    i = i + 1
+                End With
+                .MoveNext
+            Loop
+        End With
+        ChkOptOut.Enabled = False
+    Else
+        CmoOrganisation.Clear
+        ChkOptOut.Enabled = True
+    End If
+    
+    PopulateOrgs = True
+
+Exit Function
+
+ErrorExit:
+
+    '***CleanUpCode***
+    PopulateOrgs = False
+
+Exit Function
+
+ErrorHandler:
+    If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
+        Stop
+        Resume
+    Else
+        Resume ErrorExit
+    End If
+End Function
+
+' ===============================================================
 ' ClearForm
 ' Clears form
 ' ---------------------------------------------------------------
@@ -80,7 +212,7 @@ Public Sub ClearForm()
     TxtLastComm = ""
     CmoCommFreq = ""
     CmoContactType = ""
-    TxtOrganisation = ""
+    CmoOrganisation = ""
     ChkOptOut = False
 End Sub
 
@@ -264,11 +396,14 @@ Private Sub UserForm_Initialize()
         .List(4, 0) = 4
         .List(4, 1) = "Lead"
         .AddItem
-        .List(4, 0) = 5
-        .List(4, 1) = "MS"
+        .List(5, 0) = 5
+        .List(5, 1) = "MS"
         .AddItem
-        .List(4, 0) = 6
-        .List(4, 1) = "Valuer"
+        .List(6, 0) = 6
+        .List(6, 1) = "Valuer"
+        .AddItem
+        .List(7, 0) = 7
+        .List(7, 1) = "Other"
     End With
     
     Dim i As Integer
