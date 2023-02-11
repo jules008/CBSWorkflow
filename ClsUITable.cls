@@ -401,25 +401,36 @@ Public Sub BuildTable(Optional SplitRow As Integer, Optional SplitSize As Intege
                     .Width = pColWidths(x)
                     
                     If x = 0 And ExpandIcon <> "" Then
-'                        .AddBadge "Expand " & Cell.Name
-'                        .Badges (1)
-'                        .Badges("Expand " & Cell.Name). = pShpExpand.Duplicate
-'                        With .Badges
-'                            If y = SplitRow Then
-'                                .Rotation = 90
-'                                .Top = Cell.Top + 3
-'                                .Left = Cell.Left + 30
-'                                .Height = 13
-'                                .Width = 11
-'                                .OnAction = pOnAction(x, y)
-'                            Else
-'                                .Top = Cell.Top + 3
-'                                .Left = Cell.Left + 20
-'                                .Height = 13
-'                                .Width = 11
-'                                .OnAction = pOnAction(x, y)
-'                            End If
-'                        End With
+                        Dim Shp As Shape
+                        Set Shp = ShtMain.Shapes.AddPicture(GetDocLocalPath(ThisWorkbook.Path) & PICTURES_PATH & GENERIC_TABLE_EXPAND_ICON, msoTrue, msoFalse, 0, 0, 0, 0)
+                        Shp.Name = "Expand " & Cell.Name
+                        
+                        If y = SplitRow Then
+                            With .Badges
+                                .Add Shp
+                                .SetLeft(Shp.Name) = 30
+                                .SetTop(Shp.Name) = 3
+                            End With
+                        
+                            With .Badges(Shp.Name)
+                                .Rotation = 90
+                                .Height = 13
+                                .Width = 11
+                                .OnAction = pOnAction(x, y)
+                            End With
+                        Else
+                             With .Badges
+                                .Add Shp
+                                .SetLeft(Shp.Name) = 20
+                                .SetTop(Shp.Name) = 3
+                            End With
+                               
+                            With .Badges(Shp.Name)
+                                .Height = 13
+                                .Width = 11
+                                .OnAction = pOnAction(x, y)
+                            End With
+                        End If
                     End If
                     
                     If y = 0 Then
@@ -621,29 +632,42 @@ Private Sub AddProgressBars(TableType As String)
     For Each UICell In TableCells
         With UICell
             If .Row > 0 And .Col = ProgressCol Then
-'                .AddBadge "Progress " & .Name
-'                Set ShpProgress = .Badges("Progress " & .Name)
-'
-'                .BadgeLeft(ShpProgress.Name) = TABLE_PROGRESS_BADGE_LEFT
-'                .BadgeTop(ShpProgress.Name) = TABLE_PROGRESS_BADGE_TOP
-'                With ShpProgress
-'                    With .TextFrame
-'                        .MarginTop = TABLE_PROGRESS_BADGE_MARGIN_TOP
-'                        .HorizontalAlignment = xlHAlignCenter
-'                        .VerticalAlignment = xlVAlignCenter
-'                        With .Characters
-'                            '.Text = UICell.Text
-'                            .Font.Size = TABLE_PROGRESS_FONT_SIZE
-'                            .Font.Color = TABLE_PROGRESS_FONT_COLOUR
-'                        End With
-'                    End With
-'                    .Line.Weight = TABLE_PROGRESS_BORDER_WEIGHT
-'                    .Height = TABLE_PROGRESS_BADGE_HEIGHT
-'                    .Width = (UICell.Width - 35) / 100 * Replace(UICell.Text, "%", "")
-'                    .Fill.ForeColor.RGB = TABLE_PROGRESS_BADGE_FILL_COLOUR
-'                End With
+            
+                Dim Shp As Shape
+                
+                Set Shp = ShtMain.Shapes.AddShape(msoShapeRectangle, 0, 0, 0, 0)
+
+                Shp.Name = "Progress " & UICell.Name
+                
+                .Badges.Add Shp
+                
+                With .Badges
+                    .SetLeft(Shp.Name) = TABLE_PROGRESS_BADGE_LEFT
+                    .SetTop(Shp.Name) = TABLE_PROGRESS_BADGE_TOP
+                End With
+                
+                With .Badges(Shp.Name)
+                    .Height = TABLE_PROGRESS_BADGE_HEIGHT
+                    .Width = (UICell.Width - 35) / 100 * Replace(UICell.Text, "%", "")
+                    .Line.Weight = TABLE_PROGRESS_BORDER_WEIGHT
+                    .Height = TABLE_PROGRESS_BADGE_HEIGHT
+                    .Width = (UICell.Width - 35) / 100 * Replace(UICell.Text, "%", "")
+                    .Fill.ForeColor.RGB = TABLE_PROGRESS_BADGE_FILL_COLOUR
+                    
+                    With .TextFrame
+                        .MarginTop = TABLE_PROGRESS_BADGE_MARGIN_TOP
+                        .HorizontalAlignment = xlHAlignCenter
+                        .VerticalAlignment = xlVAlignCenter
+                        
+                        With .Characters
+                            .Font.Size = TABLE_PROGRESS_FONT_SIZE
+                            .Font.Color = TABLE_PROGRESS_FONT_COLOUR
+                        End With
+                        
+                    End With
+                    
+                End With
             End If
-'            Debug.Print "Row"; .Row, "Col"; .Col
         End With
     Next
 

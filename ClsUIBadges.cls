@@ -44,8 +44,28 @@ End Property
 Public Property Set Parent(obj As ClsUICell)
     Set pParent = obj
 End Property
-'---------------------------------------------------------------
 
+'---------------------------------------------------------------
+Public Property Let SetLeft(BadgeName As String, ByVal Left As Integer)
+    pUIBadges(BadgeName).Left = Parent.Left + Left
+End Property
+
+'---------------------------------------------------------------
+Public Property Let SetTop(BadgeName As String, ByVal Top As Integer)
+    pUIBadges(BadgeName).Top = Parent.Top + Top
+End Property
+
+'---------------------------------------------------------------
+Public Property Let SetWidth(BadgeName As String, ByVal Width As Integer)
+    pUIBadges(BadgeName).Width = Width
+End Property
+
+'---------------------------------------------------------------
+Public Property Let SetHeight(BadgeName As String, ByVal Height As Integer)
+    pUIBadges(BadgeName).Height = Height
+End Property
+
+' ---------------------------------------------------------------
 Public Function NewEnum() As IUnknown
 Attribute NewEnum.VB_UserMemId = -4
     Set NewEnum = pUIBadges.[_NewEnum]
@@ -66,7 +86,6 @@ End Function
 ' Add item to Collection
 ' ---------------------------------------------------------------
 Public Sub Add(UIBadge As Shape)
-    UIBadge.Initialize Me.Parent
     pUIBadges.Add UIBadge, Key:=CStr(UIBadge.Name)
 End Sub
 
@@ -100,11 +119,6 @@ Public Sub RemoveCollection()
 End Sub
 
 ' ===============================================================
-Public Sub Initialize(obj As ClsUICell)
-    Set Me.Parent = obj
-End Sub
-
-' ===============================================================
 ' Method ReOrder
 ' re-orders the shapes so that the Cells sit on top of the screen
 '---------------------------------------------------------------
@@ -118,13 +132,27 @@ Public Sub ReOrder()
 End Sub
 
 ' ===============================================================
+Public Sub Initialize(obj As ClsUICell)
+    Set Me.Parent = obj
+End Sub
 
+'---------------------------------------------------------------
 Private Sub Class_Initialize()
     Set pUIBadges = New Collection
 
 End Sub
 
 ' ===============================================================
+Public Sub Terminate()
+    Dim Badge As Shape
+    
+    For Each Badge In pUIBadges
+        Badge.Delete
+        Set Badge = Nothing
+    Next
+End Sub
+
+'---------------------------------------------------------------
 Private Sub Class_Terminate()
     Set pUIBadges = Nothing
 End Sub

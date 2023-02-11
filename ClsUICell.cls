@@ -235,16 +235,17 @@ Private Sub Class_Initialize()
     Set pShpCell = ShtMain.Shapes.AddTextbox(msoTextOrientationHorizontal, 0, 0, 10, 10)
     Set pStyle = New ClsUIStyle
     Set pUIBadges = New ClsUIBadges
+    
+    pUIBadges.Initialize Me
 End Sub
 
 ' ===============================================================
 Public Sub Terminate()
-    Dim Badge As Shape
+    pShpCell.Delete
+    pUIBadges.Terminate
     
     Set pParent = Nothing
     Set pStyle = Nothing
-    pShpCell.Delete
-    
     Set pUIBadges = Nothing
 End Sub
 '---------------------------------------------------------------
