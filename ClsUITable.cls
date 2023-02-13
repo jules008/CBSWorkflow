@@ -49,6 +49,7 @@ Private pHeadingHeight As Integer
 Private pTableVisible As Boolean
 Private pShpExpand As Shape
 Private pExpandIcon As String
+Private pLenderIcons As Boolean
 Private pParent As ClsUIFrame
 
 '---------------------------------------------------------------
@@ -289,6 +290,15 @@ Public Property Let Styles(ByRef vNewValue() As String)
 End Property
 
 '---------------------------------------------------------------
+Public Property Get LenderIcons() As Boolean
+    LenderIcons = pLenderIcons
+End Property
+
+Public Property Let LenderIcons(ByRef vNewValue As Boolean)
+    pLenderIcons = vNewValue
+End Property
+
+'---------------------------------------------------------------
 Public Property Get Parent() As ClsUIFrame
     Set Parent = pParent
 End Property
@@ -434,7 +444,7 @@ Public Sub BuildTable(Optional SplitRow As Integer, Optional SplitSize As Intege
                     End If
                     
                     If x = TABLE_ICON_COL Then
-                        AddLenderIcons pRstText.Fields(1), Cell
+                        If pLenderIcons Then AddLenderIcons pRstText.Fields(1), Cell
                     End If
                     
                     If y = 0 Then
@@ -698,7 +708,7 @@ Public Sub AddLenderIcons(ProjectNo As Integer, ByRef ActiveCell As ClsUICell)
     
     i = 0
     With RstLenders
-        Do While Not .EOF And i < 7
+        Do While Not .EOF And i < TABLE_ICON_NO_ICONS
             Select Case !RAG
                 Case "en3Green"
                     Set Shp = ShtMain.Shapes.AddPicture(GetDocLocalPath(ThisWorkbook.Path) & PICTURES_PATH & TABLE_ICON_TICK, msoTrue, msoFalse, 0, 0, 0, 0)

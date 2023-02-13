@@ -21,10 +21,10 @@ Private Const StrMODULE As String = "ModUISettings"
 ' Main Frame
 ' ---------------------------------------------------------------
 Public Const SCREEN_HEIGHT As Integer = 2000
-Public Const SCREEN_WIDTH As Integer = 1825
+Public Const SCREEN_WIDTH As Integer = 1805
 Public Const MAIN_FRAME_TOP As Integer = 90
 Public Const MAIN_FRAME_LEFT As Integer = 170
-Public Const MAIN_FRAME_WIDTH As Integer = 1100
+Public Const MAIN_FRAME_WIDTH As Integer = 1080
 Public Const MAIN_FRAME_HEIGHT As Integer = 360
 
 ' ---------------------------------------------------------------
@@ -39,7 +39,7 @@ Public Const MAIN_FRAME_2_HEIGHT As Integer = 360
 ' Button Frame
 ' ---------------------------------------------------------------
 Public Const BUTTON_FRAME_TOP As Integer = 5
-Public Const BUTTON_FRAME_LEFT As Integer = 180
+Public Const BUTTON_FRAME_LEFT As Integer = 240
 Public Const BUTTON_FRAME_WIDTH As Integer = 1100
 Public Const BUTTON_FRAME_HEIGHT As Integer = 60
 
@@ -89,6 +89,7 @@ Public Const TABLE_ICON_SIZE As Integer = 13
 Public Const TABLE_ICON_TOP As Integer = 3
 Public Const TABLE_ICON_LEFT As Integer = 10
 Public Const TABLE_ICON_COL As Integer = 2
+Public Const TABLE_ICON_NO_ICONS As Integer = 4
 
 ' ---------------------------------------------------------------
 ' Menu Bar
@@ -115,7 +116,7 @@ Public Const HEADER_ICON_RIGHT As Integer = 10
 ' ---------------------------------------------------------------
 ' Generic Project Screen Settings
 ' ---------------------------------------------------------------
-Public Const PROJECT_TABLE_COL_WIDTHS As String = "50:50:100:100:100:100:100:50:220:130:100"
+Public Const PROJECT_TABLE_COL_WIDTHS As String = "50:50:80:100:100:100:100:50:220:130:100"
 Public Const PROJECT_CELL_ROW_HEIGHTS As String = "50:50"
 Public Const PROJECT_TABLE_STYLES As String = "GENERIC_TABLE"
 Public Const PROJECT_TABLE_TITLES As String = "Expand:Project No:Lender Status:Project Name:Client Name:SPV Name:Case Manager:Step No:Step Name:Progress:Status"
@@ -186,36 +187,36 @@ Public Const CRM_BTN_MAIN_3_TOP As Integer = 20
 ' ---------------------------------------------------------------
 ' CRM Clients Screen
 ' ---------------------------------------------------------------
-Public Const CRM_CLIENT_TABLE_COL_WIDTHS As String = "100:150:150:300:150:150"
+Public Const CRM_CLIENT_TABLE_COL_WIDTHS As String = "100:150:150:300:150:150:80"
 Public Const CRM_CLIENT_TABLE_TITLES As String = "Client No:Client Name:CBS/HP:Address:Phone No:Url:"
 Public Const CRM_CLIENT_MAX_LINES As Integer = 150
 
 ' ---------------------------------------------------------------
 ' CRM SPV Screen
 ' ---------------------------------------------------------------
-Public Const CRM_SPV_TABLE_COL_WIDTHS As String = "100:300:300:300"
-Public Const CRM_SPV_TABLE_TITLES As String = "SPV No:SPV Name: : "
+Public Const CRM_SPV_TABLE_COL_WIDTHS As String = "100:300:300:300:80"
+Public Const CRM_SPV_TABLE_TITLES As String = "SPV No:SPV Name: : :"
 Public Const CRM_SPV_MAX_LINES As Integer = 150
 
 ' ---------------------------------------------------------------
 ' CRM Contact Screen
 ' ---------------------------------------------------------------
-Public Const CRM_CONTACT_TABLE_COL_WIDTHS As String = "50:150:100:200:200:100:200"
-Public Const CRM_CONTACT_TABLE_TITLES As String = "Contact No:Contact Name:Contact Type:Organisation:Position:Phone No:Email Address"
+Public Const CRM_CONTACT_TABLE_COL_WIDTHS As String = "50:150:100:200:200:100:200:80"
+Public Const CRM_CONTACT_TABLE_TITLES As String = "Contact No:Contact Name:Contact Type:Organisation:Position:Phone No:Email Address:"
 Public Const CRM_CONTACT_MAX_LINES As Integer = 150
 
 ' ---------------------------------------------------------------
 ' CRM Projects Screen
 ' ---------------------------------------------------------------
-Public Const CRM_PROJECT_TABLE_COL_WIDTHS As String = "100:150:150:150:100:100:250"
-Public Const CRM_PROJECT_TABLE_TITLES As String = "Project No:Project Name:Client Name:SPV:Case Manager::"
+Public Const CRM_PROJECT_TABLE_COL_WIDTHS As String = "100:150:150:150:100:100:250:80"
+Public Const CRM_PROJECT_TABLE_TITLES As String = "Project No:Project Name:Client Name:SPV:Case Manager:::"
 Public Const CRM_PROJECT_MAX_LINES As Integer = 150
 
 ' ---------------------------------------------------------------
 ' CRM Lenders Screen
 ' ---------------------------------------------------------------
-Public Const CRM_LENDER_TABLE_COL_WIDTHS As String = "100:200:150:150:250:150"
-Public Const CRM_LENDER_TABLE_TITLES As String = "Lender No:Name:Phone No:Lender Type:Address:"
+Public Const CRM_LENDER_TABLE_COL_WIDTHS As String = "100:200:150:150:250:150:80"
+Public Const CRM_LENDER_TABLE_TITLES As String = "Lender No:Name:Phone No:Lender Type:Address::"
 Public Const CRM_LENDER_MAX_LINES As Integer = 150
 
 '===============================================================
@@ -295,33 +296,33 @@ Public Const BTN_EXP_8_WIDTH As Integer = 150
 '===============================================================
 ' Admin Users Screen
 ' ---------------------------------------------------------------
-Public Const ADM_USERS_TABLE_COL_WIDTHS As String = "50:200:200:200:150:200"
+Public Const ADM_USERS_TABLE_COL_WIDTHS As String = "50:200:200:200:200:230"
 Public Const ADM_USERS_TABLE_TITLES As String = "User No:User Name:User Level:Position:Phone No:Supervisor"
 Public Const ADM_USERS_MAX_LINES As Integer = 150
 
 ' ---------------------------------------------------------------
 ' Admin Emails Screen
 ' ---------------------------------------------------------------
-Public Const ADM_EMAILS_TABLE_COL_WIDTHS As String = "100:250:200:300:150"
+Public Const ADM_EMAILS_TABLE_COL_WIDTHS As String = "100:250:250:300:180"
 Public Const ADM_EMAILS_TABLE_TITLES As String = "Email No:Template Name:To:Subject:"
 Public Const ADM_EMAILS_MAX_LINES As Integer = 150
 
 ' ---------------------------------------------------------------
 ' Admin Workflows Screen
 ' ---------------------------------------------------------------
-Public Const ADM_WFLOWS_TABLE_COL_WIDTHS As String = "100:250:150:300:200"
+Public Const ADM_WFLOWS_TABLE_COL_WIDTHS As String = "100:250:200:300:230"
 Public Const ADM_WFLOWS_TABLE_TITLES As String = "Workflow No:Name:Step No:Step Name:"
 Public Const ADM_WFLOWS_MAX_LINES As Integer = 150
 
 ' ---------------------------------------------------------------
 ' Admin WorkflowTypes Screen
 ' ---------------------------------------------------------------
-Public Const ADM_WFTYPES_TABLE_COL_WIDTHS As String = "100:250:300:350"
+Public Const ADM_WFTYPES_TABLE_COL_WIDTHS As String = "100:250:300:430"
 Public Const ADM_WFTYPES_TABLE_TITLES As String = "No:Loan Type:Second Tier:"
 Public Const ADM_WFTYPES_MAX_LINES As Integer = 150
 
 ' ---------------------------------------------------------------
-' ADM Screen Btn 1 Settings
+' Admin Screen Btn 1 Settings
 ' ---------------------------------------------------------------
 Public Const ADM_BTN_MAIN_1_LEFT As Integer = 900
 Public Const ADM_BTN_MAIN_1_TOP As Integer = 20
