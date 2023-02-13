@@ -24,7 +24,7 @@ Public Const SCREEN_HEIGHT As Integer = 2000
 Public Const SCREEN_WIDTH As Integer = 1825
 Public Const MAIN_FRAME_TOP As Integer = 90
 Public Const MAIN_FRAME_LEFT As Integer = 170
-Public Const MAIN_FRAME_WIDTH As Integer = 1000
+Public Const MAIN_FRAME_WIDTH As Integer = 1100
 Public Const MAIN_FRAME_HEIGHT As Integer = 360
 
 ' ---------------------------------------------------------------
@@ -39,8 +39,8 @@ Public Const MAIN_FRAME_2_HEIGHT As Integer = 360
 ' Button Frame
 ' ---------------------------------------------------------------
 Public Const BUTTON_FRAME_TOP As Integer = 5
-Public Const BUTTON_FRAME_LEFT As Integer = 170
-Public Const BUTTON_FRAME_WIDTH As Integer = 1000
+Public Const BUTTON_FRAME_LEFT As Integer = 180
+Public Const BUTTON_FRAME_WIDTH As Integer = 1100
 Public Const BUTTON_FRAME_HEIGHT As Integer = 60
 
 ' ---------------------------------------------------------------
@@ -76,6 +76,20 @@ Public Const GENERIC_TABLE_ROWOFFSET As Integer = 0
 Public Const GENERIC_TABLE_COLOFFSET As Integer = 0
 Public Const GENERIC_TABLE_HEADING_HEIGHT As Integer = 20
 Public Const GENERIC_TABLE_EXPAND_ICON As String = "Expand.png"
+
+
+' ---------------------------------------------------------------
+' Table Lender Icon Settings
+' ---------------------------------------------------------------
+Public Const TABLE_ICON_TICK As String = "Tick.png"
+Public Const TABLE_ICON_EXCLAM As String = "Exclamation.png"
+Public Const TABLE_ICON_CROSS As String = "Cross.png"
+Public Const TABLE_ICON_OFFSET As Integer = 15
+Public Const TABLE_ICON_SIZE As Integer = 13
+Public Const TABLE_ICON_TOP As Integer = 3
+Public Const TABLE_ICON_LEFT As Integer = 10
+Public Const TABLE_ICON_COL As Integer = 2
+
 ' ---------------------------------------------------------------
 ' Menu Bar
 ' ---------------------------------------------------------------
@@ -101,10 +115,10 @@ Public Const HEADER_ICON_RIGHT As Integer = 10
 ' ---------------------------------------------------------------
 ' Generic Project Screen Settings
 ' ---------------------------------------------------------------
-Public Const PROJECT_TABLE_COL_WIDTHS As String = "50:50:100:100:100:100:50:220:130:100"
+Public Const PROJECT_TABLE_COL_WIDTHS As String = "50:50:100:100:100:100:100:50:220:130:100"
 Public Const PROJECT_CELL_ROW_HEIGHTS As String = "50:50"
 Public Const PROJECT_TABLE_STYLES As String = "GENERIC_TABLE"
-Public Const PROJECT_TABLE_TITLES As String = "Expand:Project No:Project Name:Client Name:SPV Name:Case Manager:Step No:Step Name:Progress:Status"
+Public Const PROJECT_TABLE_TITLES As String = "Expand:Project No:Lender Status:Project Name:Client Name:SPV Name:Case Manager:Step No:Step Name:Progress:Status"
 Public Const PROJECT_MAX_LINES As Integer = 150
 Public Const PROJECT_BTN_MAIN_1_LEFT As Integer = 790
 Public Const PROJECT_BTN_MAIN_1_TOP As Integer = 20
@@ -470,7 +484,7 @@ Public Const AMBER_CELL_FONT_Y_JUST As Integer = xlVAlignCenter
 ' ---------------------------------------------------------------
 Public Const RED_CELL_BORDER_WIDTH As Single = 0
 Public Const RED_CELL_FILL_1 As Long = COL_RED
-Public Const RED_CELL_FILL_2 As Long = COL_RED
+Public Const RED_CELL_FILL_2 As Long = COL_LT_RED
 Public Const RED_CELL_SHADOW As Long = 0
 Public Const RED_CELL_FONT_STYLE As String = "Eras Medium ITC"
 Public Const RED_CELL_FONT_SIZE As Integer = 11

@@ -433,6 +433,10 @@ Public Sub BuildTable(Optional SplitRow As Integer, Optional SplitSize As Intege
                         End If
                     End If
                     
+                    If x = TABLE_ICON_COL Then
+                        AddLenderIcons pRstText.Fields(1), Cell
+                    End If
+                    
                     If y = 0 Then
                         .Text = pHeadingText(x)
                     Else
@@ -622,7 +626,7 @@ Private Sub AddProgressBars(TableType As String)
     
     If TableType = "Table" Then
         Set TableCells = pCells
-        ProgressCol = 8
+        ProgressCol = 9
     Else
         Set TableCells = pSubTable.Cells
         ProgressCol = 5
@@ -672,6 +676,56 @@ Private Sub AddProgressBars(TableType As String)
     Next
 
     Set UICell = Nothing
+End Sub
+
+' ===============================================================
+' Method AddLenderIcons
+' Adds s icon for each lender
+'---------------------------------------------------------------
+Public Sub AddLenderIcons(ProjectNo As Integer, ByRef ActiveCell As ClsUICell)
+    Dim Shp As Shape
+    Dim i As Integer
+    Dim RstLenders As Recordset
+    
+    Set RstLenders = ModDatabase.SQLQuery("Select " _
+                                        & "    TblWorkflow.ProjectNo, " _
+                                        & "    TblWorkflow.RAG " _
+                                        & "From " _
+                                        & "    TblWorkflow " _
+                                        & "Where " _
+                                        & "    TblWorkflow.ProjectNo = " & ProjectNo & " And " _
+                                        & "    TblWorkflow.WorkflowType = 'enLender' ")
+    
+    i = 0
+    With RstLenders
+        Do While Not .EOF And i < 7
+            Select Case !RAG
+                Case "en3Green"
+                    Set Shp = ShtMain.Shapes.AddPicture(GetDocLocalPath(ThisWorkbook.Path) & PICTURES_PATH & TABLE_ICON_TICK, msoTrue, msoFalse, 0, 0, 0, 0)
+                Case "en2Amber"
+                    Set Shp = ShtMain.Shapes.AddPicture(GetDocLocalPath(ThisWorkbook.Path) & PICTURES_PATH & TABLE_ICON_EXCLAM, msoTrue, msoFalse, 0, 0, 0, 0)
+                Case "en1Red"
+                    Set Shp = ShtMain.Shapes.AddPicture(GetDocLocalPath(ThisWorkbook.Path) & PICTURES_PATH & TABLE_ICON_CROSS, msoTrue, msoFalse, 0, 0, 0, 0)
+            End Select
+
+            Shp.Name = "Icon " & ActiveCell.Name & " - " & i
+
+            With ActiveCell.Badges
+                .Add Shp
+                .SetLeft(Shp.Name) = TABLE_ICON_LEFT + (i * TABLE_ICON_OFFSET)
+                .SetTop(Shp.Name) = TABLE_ICON_TOP
+            End With
+
+            With ActiveCell.Badges(Shp.Name)
+                .Height = TABLE_ICON_SIZE
+                .Width = TABLE_ICON_SIZE
+            End With
+            .MoveNext
+            i = i + 1
+        Loop
+    End With
+    
+    Set RstLenders = Nothing
 End Sub
 
 ' ===============================================================
