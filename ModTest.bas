@@ -67,3 +67,37 @@ Public Sub TestPicker()
     Set Picker = Nothing
     
 End Sub
+
+Public Sub TestCellCls()
+    Dim Cell As ClsUICell
+    Dim Shp As Shape
+    
+    Set Shp = ShtMain.Shapes.AddPicture(GetDocLocalPath(ThisWorkbook.Path) & PICTURES_PATH & TODO_ICON_FILE, msoTrue, msoFalse, 0, 0, 0, 0)
+    Shp.Name = "temp"
+    Set Cell = New ClsUICell
+    
+    With Cell
+        .Left = 100
+        .Top = 100
+        .Height = 500
+        .Width = 1000
+    End With
+    
+    Cell.Badges.Add Shp
+    
+    With Cell.Badges
+        .SetLeft(Shp.Name) = 100
+        .SetTop(Shp.Name) = 200
+        .SetHeight(Shp.Name) = 100
+        .SetWidth(Shp.Name) = 100
+    End With
+    
+    Cell.ReOrder
+    Stop
+    Set Shp = Nothing
+    Set Shp = Cell.Badges("temp")
+    Shp.Delete
+    Set Shp = Nothing
+    Cell.Terminate
+    Set Cell = Nothing
+End Sub

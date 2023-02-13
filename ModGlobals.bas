@@ -39,9 +39,9 @@ Public Const TEST_PREFIX As String = "TEST - "
 Public Const BACKUP_INT As Integer = 5
 Public Const FILE_ERROR_LOG As String = "Error.log"
 Public Const OLD_DB_VER = "V0.01.20"
-Public Const DB_VER = "V0.01.21" 'bugfix
+Public Const DB_VER = "V0.01.21" 'Lender Icons and bugfix
 Public Const VERSION = "V0.02.08"
-Public Const VER_DATE = "3 Feb 23"
+Public Const VER_DATE = "13 Feb 23"
 ' ===============================================================
 ' Error Constants
 ' ---------------------------------------------------------------
@@ -131,16 +131,17 @@ Public Logo As ClsUIDashObj
 ' ===============================================================
 ' Colours
 ' ---------------------------------------------------------------
-Public Const COL_AQUA As Long = 9613098     'Aqua
-Public Const COL_PINK As Long = 7025624     'Pink
-Public Const COL_BLUE As Long = 6901523    'Blue
-Public Const COL_DRK_GREY As Long = 4408131    'Dark Grey
+Public Const COL_AQUA As Long = &H92AF2A     'Aqua
+Public Const COL_PINK As Long = &H6B33D8     'Pink
+Public Const COL_BLUE As Long = &H694F13    'Blue
+Public Const COL_DRK_GREY As Long = &H434343    'Dark Grey
 Public Const COL_WHITE As Long = &HFFFFFF    'White
 Public Const COL_BLACK As Long = &H0         'Black
 Public Const COL_OFF_WHITE As Long = &HFFF9FB    'off White
-Public Const COL_AMBER As Long = 1033457     'Amber
-Public Const COL_GREEN As Long = 2752442    'Green
-Public Const COL_RED As Long = 4007639    'Red
+Public Const COL_AMBER As Long = &HFC4F1     'Amber
+Public Const COL_GREEN As Long = &H29FFBA    'Green
+Public Const COL_RED As Long = &H3D26D7   '215, 38, 61
+Public Const COL_LT_RED As Long = &H3D26D7    'Light Red
 Public Const COLOUR_11 As Long = &HFFFFFF    'White
 Public Const COLOUR_12 As Long = &HFFFFFF    'White
 Public Const COLOUR_13 As Long = &HFFFFFF    'White
