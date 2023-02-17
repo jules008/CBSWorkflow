@@ -50,7 +50,7 @@ End Sub
 Sub Progress(MessTxt As String, pctCompl As Single)
     If Not Me.Visible Then Me.Show
     LblMessage = MessTxt
-    LblText = Format(pctCompl, "0") & "%"
+    Lbltext = Format(pctCompl, "0") & "%"
     LblProgress.Width = FrmProgBar.Width / 100 * pctCompl
     Repaint
     Application.Wait (Now + TimeValue("00:00:01"))

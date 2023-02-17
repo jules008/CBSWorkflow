@@ -134,7 +134,7 @@ End Sub
 ' ---------------------------------------------------------------
 Sub Progress(pctCompl As Single)
 
-    LblText.Caption = Format(pctCompl, "0") & "%"
+    Lbltext.Caption = Format(pctCompl, "0") & "%"
     xLblBar.Width = Frame7.Width / 100 * pctCompl
     
 End Sub

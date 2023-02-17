@@ -770,6 +770,19 @@ Private Sub pLenderWFForm_CloseForm()
 End Sub
 
 ' ===============================================================
+' Event pLenderWFForm_DeleteWF
+' Event on deleting lender workflow
+' ---------------------------------------------------------------
+Private Sub pLenderWFForm_DeleteWF()
+    pSteps.DestroyCollection
+    With Parent
+        .Workflows.Remove pWorkflowNo
+        .DBSave
+    End With
+    DBDelete True
+End Sub
+
+' ===============================================================
 ' Event pLenderWFForm_DisplayContacts
 ' Event on clicking display project contacts
 ' ---------------------------------------------------------------
@@ -940,7 +953,7 @@ End Sub
 ' ---------------------------------------------------------------
 Private Sub pProjWFForm_CloseForm()
     DBSave
-    Unload pProjWFForm
+    pProjWFForm.Hide
 End Sub
 
 ' ===============================================================

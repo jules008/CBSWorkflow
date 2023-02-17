@@ -30,6 +30,17 @@ End Sub
 'ModDeploy.UpdateTable "TblEmail", "A1:H2"
 'ModDeploy.UpdateTable "TblStepTemplate", "A1:Z2"
 Public Sub UpdateScript()
+    DB.Execute "UPDATE TblStepTemplate SET EmailNo = 1 WHERE StepNo = '1.03'"
+    DB.Execute "UPDATE TblStepTemplate SET EmailNo = 2 WHERE StepNo = '1.06'"
+    DB.Execute "UPDATE TblStepTemplate SET EmailNo = 3 WHERE StepNo = '1.12'"
+    DB.Execute "UPDATE TblStepTemplate SET EmailNo = 4 WHERE StepNo = '1.13'"
+    DB.Execute "UPDATE TblStepTemplate SET EmailNo = 5 WHERE StepNo = '1.16'"
+    
+    DB.Execute "UPDATE TblStep SET EmailNo = 1 WHERE StepNo = '1.03'"
+    DB.Execute "UPDATE TblStep SET EmailNo = 2 WHERE StepNo = '1.06'"
+    DB.Execute "UPDATE TblStep SET EmailNo = 3 WHERE StepNo = '1.12'"
+    DB.Execute "UPDATE TblStep SET EmailNo = 4 WHERE StepNo = '1.13'"
+    DB.Execute "UPDATE TblStep SET EmailNo = 5 WHERE StepNo = '1.16'"
 
 End Sub
 

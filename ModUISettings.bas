@@ -59,11 +59,10 @@ Public Const TODO_ICON_FILE As String = "ToDo.png"
 Public Const TODO_ICON_WIDTH As String = 18
 Public Const TODO_ICON_TOP As String = 11
 Public Const TODO_ICON_LEFT As String = 5
-Public Const TODO_BADGE_FILE As String = "ToDo.png"
-Public Const TODO_BADGE_WIDTH As String = 25
+Public Const TODO_BADGE_WIDTH As String = 35
 Public Const TODO_BADGE_HEIGHT As String = 18
-Public Const TODO_BADGE_TOP As String = 11
-Public Const TODO_BADGE_LEFT As String = 107
+Public Const TODO_BADGE_TOP As String = 20
+Public Const TODO_BADGE_LEFT As String = 60
 
 ' ---------------------------------------------------------------
 ' Generic Table Settings
@@ -390,13 +389,13 @@ Public Const TODO_BUTTON_FONT_Y_JUST As Integer = xlVAlignCenter
 ' ---------------------------------------------------------------
 ' Todo Badge
 ' ---------------------------------------------------------------
-Public Const TODO_BADGE_BORDER_WIDTH As Single = 1
+Public Const TODO_BADGE_BORDER_WIDTH As Single = 0
 Public Const TODO_BADGE_BORDER_COLOUR As Long = COL_WHITE
 Public Const TODO_BADGE_FILL_1 As Long = COL_AQUA
 Public Const TODO_BADGE_FILL_2 As Long = COL_AQUA
 Public Const TODO_BADGE_SHADOW As Long = 0
 Public Const TODO_BADGE_FONT_STYLE As String = "Eras Medium ITC"
-Public Const TODO_BADGE_FONT_SIZE As Integer = 12
+Public Const TODO_BADGE_FONT_SIZE As Integer = 14
 Public Const TODO_BADGE_FONT_COLOUR As Long = COL_WHITE
 Public Const TODO_BADGE_FONT_BOLD As Boolean = False
 Public Const TODO_BADGE_FONT_x_JUST As Integer = xlHAlignRight
