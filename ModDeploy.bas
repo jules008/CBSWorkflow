@@ -30,6 +30,9 @@ End Sub
 'ModDeploy.UpdateTable "TblEmail", "A1:H2"
 'ModDeploy.UpdateTable "TblStepTemplate", "A1:Z2"
 Public Sub UpdateScript()
+    Dim RstUpdate As Recordset
+    Dim i As Integer
+    
     DB.Execute "UPDATE TblStepTemplate SET EmailNo = 1 WHERE StepNo = '1.03'"
     DB.Execute "UPDATE TblStepTemplate SET EmailNo = 2 WHERE StepNo = '1.06'"
     DB.Execute "UPDATE TblStepTemplate SET EmailNo = 3 WHERE StepNo = '1.12'"
@@ -42,6 +45,22 @@ Public Sub UpdateScript()
     DB.Execute "UPDATE TblStep SET EmailNo = 4 WHERE StepNo = '1.13'"
     DB.Execute "UPDATE TblStep SET EmailNo = 5 WHERE StepNo = '1.16'"
 
+    Set RstUpdate = ModDatabase.SQLQuery("SELECT UniqueID FROM TblStepTemplate ORDER BY StepNo")
+    
+    i = 1
+    With RstUpdate
+        Do While Not .EOF
+            .Edit
+            !UniqueID = i
+             .Update
+             .MoveNext
+             i = i + 1
+        Loop
+    End With
+    Set RstUpdate = Nothing
+
+    DB.Execute "Update TblStep inner join TblStepTemplate on TblStep.StepNo = TblStepTemplate.StepNo Set TblStep.UniqueID = TblStepTemplate.UniqueID"
+    
 End Sub
 
 Public Sub UndoScript()
