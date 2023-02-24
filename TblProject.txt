@@ -20,3 +20,4 @@ MS,  dbLong
 Valuer,  dbLong
 Distribution,  dbText
 SecondClientRef,  dbText
+Status,  dbText

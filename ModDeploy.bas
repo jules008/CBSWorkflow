@@ -30,10 +30,54 @@ End Sub
 'ModDeploy.UpdateTable "TblEmail", "A1:H2"
 'ModDeploy.UpdateTable "TblStepTemplate", "A1:Z2"
 Public Sub UpdateScript()
+    Dim SQL1 As String
+    Dim SQL2 As String
+    Dim Query1 As QueryDef
+    Dim Query2 As QueryDef
 
+    SQL1 = "Select " _
+        & "    Count(Active.[Count_ProjectNo]) as TtlActive " _
+        & "From " _
+        & "    (Select Distinct " _
+        & "         TblWorkflow.ProjectNo As [Count_ProjectNo] " _
+        & "     From " _
+        & "         TblWorkflow " _
+        & "     Where " _
+        & "         TblWorkflow.Status <> 'enComplete' And " _
+        & "         TblWorkflow.ProjectNo <> 0) As QryActive "
+        
+    SQL2 = "Select " _
+        & "    Count(ClosedWeek.UProjectNo) as TtlClosed " _
+        & "From " _
+        & "    (Select Distinct " _
+        & "         TblProject.ProjectNo As UProjectNo, " _
+        & "         TblProject.CompleteDate " _
+        & "     From " _
+        & "         TblWorkflow Right Join " _
+        & "         TblProject On TblWorkflow.ProjectNo = TblProject.ProjectNo " _
+        & "     Where " _
+        & "         DatePart('ww', TblProject.CompleteDate) = DatePart('ww', Now())) As ClosedWeek "
+    
+    Set Query1 = New QueryDef
+    Set Query2 = New QueryDef
+    
+    With Query1
+        .SQL = SQL1
+        .Name = "Active"
+    End With
+    
+    With Query2
+        .SQL = SQL2
+        .Name = "Closed"
+    End With
+    
+    DB.QueryDefs.Append Query1
+    DB.QueryDefs.Append Query2
 End Sub
 
 Public Sub UndoScript()
+    DB.QueryDefs.Delete "Active"
+    DB.QueryDefs.Delete "Closed"
 
 End Sub
 

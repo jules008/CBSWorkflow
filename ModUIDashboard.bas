@@ -192,16 +192,21 @@ End Function
 ' Gets data for workflow list
 '---------------------------------------------------------------
 Public Function GetGraphData(GraphNo As String) As Recordset
-    Dim RstGraph As Recordset
-    Dim SQL As String
+    Dim RstData1 As Recordset
+    Dim RstData2 As Recordset
+    Dim SQL1 As String
+    Dim SQL2 As String
+    Dim Query1 As QueryDef
+    Dim Query2 As QueryDef
+    Dim ResultData As String
     
     Select Case GraphNo
         Case 1
-            SQL = "Select  " _
-                & "  count(iif (TblWorkflow.Status = 'Complete',0)) as Complete, " _
-                & "  count(iif (TblWorkflow.Status <> 'Complete',0))as NotComplete " _
-                & "From " _
-                & "    TblWorkflow "
+            Set RstData1 = ModDatabase.SQLQuery("SELECT  " _
+                                             & "  Active.TtlActive, " _
+                                             & "  Closed.TtlClosed  " _
+                                             & "from  " _
+                                             & "  Active, Closed ")
             
         Case 2
                 
@@ -211,9 +216,12 @@ Public Function GetGraphData(GraphNo As String) As Recordset
             
     End Select
     
-    Set RstGraph = ModDatabase.SQLQuery(SQL)
+    Set RstData1 = Nothing
+    Set RstData2 = Nothing
+    Set Query1 = Nothing
+    Set Query2 = Nothing
     
-    Set GetGraphData = RstGraph
+Set GetGraphData = RstData1
     
 End Function
 
