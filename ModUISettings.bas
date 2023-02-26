@@ -143,6 +143,8 @@ Public Const TABLE_PROGRESS_FONT_COLOUR As Long = COL_WHITE
 Public Const TABLE_PROGRESS_BORDER_WEIGHT As Integer = 0
 Public Const TABLE_PROGRESS_BADGE_HEIGHT As Integer = 10
 Public Const TABLE_PROGRESS_BADGE_FILL_COLOUR As Long = COL_AQUA
+Public Const TABLE_PROGRESS_BADGE_X_JUST As Integer = xlHAlignCenter
+Public Const TABLE_PROGRESS_BADGE_Y_JUST As Long = xlHAlignCenter
 Public Const TABLE_PROGRESS_CELL_X_JUST As Integer = xlHAlignRight
 Public Const TABLE_PROGRESS_CELL_Y_JUST As Integer = xlVAlignCenter
 
@@ -349,7 +351,8 @@ Public AMBER_CELL As ClsUIStyle
 Public RED_CELL As ClsUIStyle
 Public GENERIC_TABLE_HEADER As ClsUIStyle
 Public SUB_TABLE_HEADER As ClsUIStyle
-Public TABLE_PROGRESS_STYLE As ClsUIStyle
+Public TABLE_PROGRESS_BAR As ClsUIStyle
+
 ' ---------------------------------------------------------------
 ' New Order Workflow
 ' ---------------------------------------------------------------

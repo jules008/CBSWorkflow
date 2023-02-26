@@ -134,7 +134,7 @@ Private Function BuildMainFrame(ByVal ScreenPage As enScreenPage, Optional Split
             .HeadingText = PROJECT_TABLE_TITLES
             .HeadingStyle = GENERIC_TABLE_HEADER
             .HeadingHeight = GENERIC_TABLE_HEADING_HEIGHT
-            .ExpandIcon = GENERIC_TABLE_EXPAND_ICON
+'            .ExpandIcon = GENERIC_TABLE_EXPAND_ICON
         End With
         
     End With
@@ -272,7 +272,7 @@ Public Function RefreshList(ByVal ScreenPage As enScreenPage, ByVal SplitScreenO
         .StylesColl.Add RED_CELL
         .StylesColl.Add AMBER_CELL
         .StylesColl.Add GREEN_CELL
-        .StylesColl.Add TABLE_PROGRESS_STYLE
+        .StylesColl.Add TABLE_PROGRESS_BAR
         .RowHeight = GENERIC_TABLE_ROW_HEIGHT
     End With
     
@@ -288,7 +288,7 @@ Public Function RefreshList(ByVal ScreenPage As enScreenPage, ByVal SplitScreenO
         .StylesColl.Add RED_CELL
         .StylesColl.Add AMBER_CELL
         .StylesColl.Add GREEN_CELL
-        .StylesColl.Add TABLE_PROGRESS_STYLE
+        .StylesColl.Add TABLE_PROGRESS_BAR
         .RowHeight = GENERIC_TABLE_ROW_HEIGHT
     End With
     

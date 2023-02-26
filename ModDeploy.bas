@@ -34,6 +34,8 @@ Public Sub UpdateScript()
 End Sub
 
 Public Sub UndoScript()
+    DB.QueryDefs.Delete "Active"
+    DB.QueryDefs.Delete "Closed"
 
 End Sub
 

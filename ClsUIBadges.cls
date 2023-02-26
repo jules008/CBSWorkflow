@@ -75,7 +75,7 @@ End Function
 ' Method Find
 ' Finds Item from index
 ' ---------------------------------------------------------------
-Public Function Find(Name As Variant) As Shape
+Public Function Find(Name As Variant) As ClsUIBadge
 Attribute Find.VB_UserMemId = 0
     On Error Resume Next
     Set Find = pUIBadges.Item(Name)
@@ -85,15 +85,16 @@ End Function
 ' Method Add
 ' Add item to Collection
 ' ---------------------------------------------------------------
-Public Sub Add(UIBadge As Shape)
+Public Sub Add(UIBadge As ClsUIBadge)
     pUIBadges.Add UIBadge, Key:=CStr(UIBadge.Name)
+    UIBadge.Initialize Me.Parent
 End Sub
 
 ' ===============================================================
 ' Method Remove
 ' Removes item from collection
 ' ---------------------------------------------------------------
-Public Sub Remove(Name As Shape)
+Public Sub Remove(Name As ClsUIBadge)
     pUIBadges(Name).Parent = Nothing
     pUIBadges.Remove Name.Name
 End Sub
@@ -112,7 +113,7 @@ End Function
 ' Deletes all items in collection
 ' ---------------------------------------------------------------
 Public Sub RemoveCollection()
-    Dim UIBadge As Shape
+    Dim UIBadge As ClsUIBadge
     For Each UIBadge In pUIBadges
         pUIBadges.Remove CStr(UIBadge.Name)
     Next
@@ -123,10 +124,10 @@ End Sub
 ' re-orders the shapes so that the Cells sit on top of the screen
 '---------------------------------------------------------------
 Public Sub ReOrder()
-    Dim Badge As Shape
+    Dim Badge As ClsUIBadge
     
     For Each Badge In pUIBadges
-        Badge.ZOrder msoBringToFront
+        Badge.ZOrder = msoBringToFront
     Next
     
 End Sub
@@ -144,10 +145,10 @@ End Sub
 
 ' ===============================================================
 Public Sub Terminate()
-    Dim Badge As Shape
+    Dim Badge As ClsUIBadge
     
     For Each Badge In pUIBadges
-        Badge.Delete
+        Badge.Terminate
         Set Badge = Nothing
     Next
 End Sub
