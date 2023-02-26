@@ -32,11 +32,13 @@ End Sub
 Public Sub UpdateScript()
     Dim SQL1 As String
     Dim SQL2 As String
+    Dim SQL3 As String
     Dim Query1 As QueryDef
     Dim Query2 As QueryDef
+    Dim Query3 As QueryDef
 
     SQL1 = "Select " _
-        & "    Count(Active.[Count_ProjectNo]) as TtlActive " _
+        & "    Count (Count_ProjectNo)  As Active " _
         & "From " _
         & "    (Select Distinct " _
         & "         TblWorkflow.ProjectNo As [Count_ProjectNo] " _
@@ -44,10 +46,11 @@ Public Sub UpdateScript()
         & "         TblWorkflow " _
         & "     Where " _
         & "         TblWorkflow.Status <> 'enComplete' And " _
-        & "         TblWorkflow.ProjectNo <> 0) As QryActive "
+        & "         TblWorkflow.ProjectNo <> 0) "
+
         
     SQL2 = "Select " _
-        & "    Count(ClosedWeek.UProjectNo) as TtlClosed " _
+        & "    Count(ClosedWeek.UProjectNo) as Closed " _
         & "From " _
         & "    (Select Distinct " _
         & "         TblProject.ProjectNo As UProjectNo, " _
@@ -58,8 +61,22 @@ Public Sub UpdateScript()
         & "     Where " _
         & "         DatePart('ww', TblProject.CompleteDate) = DatePart('ww', Now())) As ClosedWeek "
     
+    SQL3 = "Select " _
+        & "    TblWorkflow.LoanType As [Avg_LoanType], " _
+        & "    Avg(DateDiff('d', TblProject.StartDate, TblProject.CompleteDate)) As NoDays " _
+        & "From " _
+        & "    TblProject Right Join " _
+        & "    TblWorkflow On TblWorkflow.ProjectNo = TblProject.ProjectNo " _
+        & "Where " _
+        & "    TblProject.ProjectNo > 0 And " _
+        & "    TblWorkflow.LoanType Is Not Null And " _
+        & "    TblProject.CompleteDate <> 0 " _
+        & "Group By " _
+        & "    TblWorkflow.LoanType "
+
     Set Query1 = New QueryDef
     Set Query2 = New QueryDef
+    Set Query3 = New QueryDef
     
     With Query1
         .SQL = SQL1
@@ -71,14 +88,29 @@ Public Sub UpdateScript()
         .Name = "Closed"
     End With
     
+    With Query3
+        .SQL = SQL3
+        .Name = "ProjTimeAve"
+    End With
+    
     DB.QueryDefs.Append Query1
     DB.QueryDefs.Append Query2
+    DB.QueryDefs.Append Query3
+    
+    DB.Execute "CREATE TABLE TblTrendData"
+    DB.Execute "ALTER TABLE TblTrendData ADD COLUMN DataDate Date"
+    DB.Execute "ALTER TABLE TblTrendData ADD COLUMN Open Integer"
+    DB.Execute "ALTER TABLE TblTrendData ADD COLUMN Closed Integer"
+    DB.Execute "ALTER TABLE TblTrendData ADD COLUMN AveDev Integer"
+    DB.Execute "ALTER TABLE TblTrendData ADD COLUMN AveBridge Integer"
+    DB.Execute "ALTER TABLE TblTrendData ADD COLUMN AveComm Integer"
+    
 End Sub
 
 Public Sub UndoScript()
     DB.QueryDefs.Delete "Active"
     DB.QueryDefs.Delete "Closed"
-
+    DB.Execute "DROP TABLE TblTrendData"
 End Sub
 
 ' ===============================================================

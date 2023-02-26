@@ -228,7 +228,7 @@ Public Const GRAPH_1_HEIGHT As Integer = 120
 Public Const GRAPH_1_COL_1 As Long = COL_GREEN
 Public Const GRAPH_1_COL_2 As Long = COL_PINK
 Public Const GRAPH_1_BACK_COL As Long = COL_WHITE
-
+Public Const GRAPH_TREND_DAYS As Integer = 100
 '===============================================================
 ' Report Screen
 '===============================================================

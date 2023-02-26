@@ -67,9 +67,13 @@ Public Function Initialize() As Boolean
         DB.Execute "UPDATE TblDBVersion SET lastbackup = now"
     End If
     
+    FrmStartBanner.Progress "Update Report Trend Data.....", 4 / 7 * 100
+    
+    If Not ModUIDashboard.UpdateTrendData Then Err.Raise HANDLED_ERROR
+    
     If Not SetGlobalClasses Then Err.Raise HANDLED_ERROR
     
-    FrmStartBanner.Progress "Logging User On.....", 4 / 7 * 100
+    FrmStartBanner.Progress "Logging User On.....", 4.5 / 7 * 100
 
     UserName = GetUserName
     

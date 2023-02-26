@@ -145,8 +145,8 @@ Private Function BuildGraphs() As Boolean
     Set RstRepData = GetGraphData(1)
     
     With RstRepData
-        ArySource(1) = !Complete
-        ArySource(2) = !NotComplete
+        ArySource(1) = !Active
+        ArySource(2) = !Closed
     End With
     
     With Graph1
@@ -202,11 +202,6 @@ Public Function GetGraphData(GraphNo As String) As Recordset
     
     Select Case GraphNo
         Case 1
-            Set RstData1 = ModDatabase.SQLQuery("SELECT  " _
-                                             & "  Active.TtlActive, " _
-                                             & "  Closed.TtlClosed  " _
-                                             & "from  " _
-                                             & "  Active, Closed ")
             
         Case 2
                 
@@ -216,13 +211,119 @@ Public Function GetGraphData(GraphNo As String) As Recordset
             
     End Select
     
+    Set GetGraphData = RstData1
+    
     Set RstData1 = Nothing
     Set RstData2 = Nothing
     Set Query1 = Nothing
     Set Query2 = Nothing
     
-Set GetGraphData = RstData1
     
 End Function
 
+' ===============================================================
+' UpdateTrendData
+' Updates the trend data for the reports
+' ---------------------------------------------------------------
+Public Function UpdateTrendData() As Boolean
+    Dim RstData1 As Recordset
+    Dim RstData2 As Recordset
+    Dim RstTrendTable As Recordset
+    Dim RstAveTimes As Recordset
+    Dim RstMaxDate As Recordset
+    Dim MaxDate As Date
+    Dim AddDate As Date
+    Dim CullDate As Date
+    
+    Const StrPROCEDURE As String = "UpdateTrendData()"
+
+    On Error GoTo ErrorHandler
+
+    Set RstTrendTable = ModDatabase.SQLQuery("TblTrendData")
+    Set RstAveTimes = ModDatabase.SQLQuery("ProjTimeAve")
+    Set RstMaxDate = ModDatabase.SQLQuery("Select Max(DataDate) as MaxDate FROM TblTrendData")
+    Set RstData1 = ModDatabase.SQLQuery("SELECT  " _
+                                     & "  Active.Active, " _
+                                     & "  Closed.Closed  " _
+                                     & "from  " _
+                                     & "  Active, Closed ")
+            
+    With RstMaxDate
+        If Not IsNull(!MaxDate) Then
+            MaxDate = !MaxDate
+        Else
+            MaxDate = DateAdd("d", -1, Now())
+        End If
+    End With
+    
+    With RstTrendTable
+        If DatePart("d", MaxDate) = DatePart("d", Now()) Then
+            .FindFirst "datadate = #" & MaxDate & "#"
+            .Edit
+            !Open = RstData1!Active
+            !Closed = RstData1!Closed
+            .Update
+        Else
+            AddDate = DateAdd("d", 1, MaxDate)
+            Do While DatePart("d", AddDate) <= DatePart("d", Now())
+                .AddNew
+                !DataDate = Format(AddDate, "dd mmm yy")
+                !Open = RstData1!Active
+                !Closed = RstData1!Closed
+                
+                With RstAveTimes
+                    .MoveFirst
+                    .FindFirst "Avg_LoanType = 'Commercial Mortgage'"
+                    If Not .NoMatch Then RstTrendTable!AveComm = !NoDays
+                    
+                    .MoveFirst
+                    .FindFirst ("Avg_LoanType = 'Development Loan'")
+                    If Not .NoMatch Then RstTrendTable!AveDev = !NoDays
+                    
+                    .MoveFirst
+                    .FindFirst ("Avg_LoanType = 'Bridge/ Exit Loan'")
+                    If Not .NoMatch Then RstTrendTable!AveBridge = !NoDays
+                   
+                End With
+                .Update
+                AddDate = DateAdd("d", 1, AddDate)
+            Loop
+        End If
+    End With
+    
+    CullDate = DateAdd("d", 0 - GRAPH_TREND_DAYS, Now())
+    
+    DB.Execute "DELETE FROM TblTrendData WHERE DataDate < #" & CullDate & "#"
+    
+    Set RstData1 = Nothing
+    Set RstData2 = Nothing
+    Set RstTrendTable = Nothing
+    Set RstAveTimes = Nothing
+    Set RstMaxDate = Nothing
+
+    UpdateTrendData = True
+
+
+Exit Function
+
+ErrorExit:
+
+    Set RstData1 = Nothing
+    Set RstData2 = Nothing
+    Set RstTrendTable = Nothing
+    Set RstAveTimes = Nothing
+    Set RstMaxDate = Nothing
+    
+    UpdateTrendData = False
+
+Exit Function
+
+ErrorHandler:
+    If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
+        Stop
+        Resume
+    Else
+        Resume ErrorExit
+    End If
+End Function
 

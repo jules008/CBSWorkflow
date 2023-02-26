@@ -105,5 +105,7 @@ End Sub
 Public Sub TestGraph()
     If DB Is Nothing Then DBConnect
     
+    ModUIDashboard.UpdateTrendData
+    
     ModUIDashboard.GetGraphData 1
 End Sub
