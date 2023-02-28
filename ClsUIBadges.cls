@@ -46,16 +46,6 @@ Public Property Set Parent(obj As ClsUICell)
 End Property
 
 '---------------------------------------------------------------
-Public Property Let SetLeft(BadgeName As String, ByVal Left As Integer)
-    pUIBadges(BadgeName).Left = Parent.Left + Left
-End Property
-
-'---------------------------------------------------------------
-Public Property Let SetTop(BadgeName As String, ByVal Top As Integer)
-    pUIBadges(BadgeName).Top = Parent.Top + Top
-End Property
-
-'---------------------------------------------------------------
 Public Property Let SetWidth(BadgeName As String, ByVal Width As Integer)
     pUIBadges(BadgeName).Width = Width
 End Property

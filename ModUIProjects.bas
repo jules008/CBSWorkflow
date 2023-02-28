@@ -273,6 +273,7 @@ Public Function RefreshList(ByVal ScreenPage As enScreenPage, ByVal SplitScreenO
         .StylesColl.Add AMBER_CELL
         .StylesColl.Add GREEN_CELL
         .StylesColl.Add TABLE_PROGRESS_BAR
+        .StylesColl.Add TABLE_PROGRESS_CELL
         .RowHeight = GENERIC_TABLE_ROW_HEIGHT
     End With
     
@@ -289,6 +290,7 @@ Public Function RefreshList(ByVal ScreenPage As enScreenPage, ByVal SplitScreenO
         .StylesColl.Add AMBER_CELL
         .StylesColl.Add GREEN_CELL
         .StylesColl.Add TABLE_PROGRESS_BAR
+        .StylesColl.Add TABLE_PROGRESS_CELL
         .RowHeight = GENERIC_TABLE_ROW_HEIGHT
     End With
     
@@ -322,7 +324,7 @@ Public Function RefreshList(ByVal ScreenPage As enScreenPage, ByVal SplitScreenO
                     If !RAG = "en2Amber" Then AryStyles(x, y) = "AMBER_CELL"
                     If !RAG = "en3Green" Then AryStyles(x, y) = "GREEN_CELL"
                 ElseIf x = 9 Then
-                    AryStyles(x, y) = "TABLE_PROGRESS_STYLE"
+                    AryStyles(x, y) = "TABLE_PROGRESS_CELL"
                 Else
                     AryStyles(x, y) = "GENERIC_TABLE"
                 End If
@@ -334,6 +336,7 @@ Public Function RefreshList(ByVal ScreenPage As enScreenPage, ByVal SplitScreenO
     
     With MainFrame.Table
         .Styles = AryStyles
+        .ShowExpIcons = True
         .OnAction = AryOnAction
         .BuildTable
         .AddTableProgressBars
@@ -472,7 +475,7 @@ Restart:
                     If !RAG = "en2Amber" Then AryStyles(x, y) = "AMBER_CELL"
                     If !RAG = "en3Green" Then AryStyles(x, y) = "GREEN_CELL"
                         ElseIf x = 5 Then
-                            AryStyles(x, y) = "TABLE_PROGRESS_STYLE"
+                            AryStyles(x, y) = "TABLE_PROGRESS_CELL"
                 Else
                     AryStyles(x, y) = "GENERIC_TABLE"
                 End If

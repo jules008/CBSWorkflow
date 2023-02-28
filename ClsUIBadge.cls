@@ -162,7 +162,7 @@ Public Property Get Style() As ClsUIStyle
 End Property
 
 Public Property Let Style(vNewValue As ClsUIStyle)
-    pStyle = vNewValue
+    Set pStyle = vNewValue
     
     With pShpBadge.Fill
         .TwoColorGradient msoGradientHorizontal, 1
@@ -212,7 +212,7 @@ End Sub
 
 ' ===============================================================
 Public Sub Terminate()
-
+    pShpBadge.Delete
     Set Me.Parent = Nothing
 
 End Sub

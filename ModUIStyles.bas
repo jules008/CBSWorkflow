@@ -40,6 +40,7 @@ Public Function BuildScreenStyles() As Boolean
     Set GENERIC_TABLE_HEADER = New ClsUIStyle
     Set SUB_TABLE_HEADER = New ClsUIStyle
     Set TABLE_PROGRESS_BAR = New ClsUIStyle
+    Set TABLE_PROGRESS_CELL = New ClsUIStyle
 
     With SCREEN_STYLE
         .Name = "SCREEN_STYLE"
@@ -283,6 +284,19 @@ Public Function BuildScreenStyles() As Boolean
         .MarginTop = TABLE_PROGRESS_BADGE_MARGIN_TOP
     End With
 
+    With TABLE_PROGRESS_CELL
+        .Name = "TABLE_PROGRESS_CELL"
+        .BorderWidth = GENERIC_TABLE_BORDER_WIDTH
+        .Fill1 = GENERIC_TABLE_FILL_1
+        .Fill2 = GENERIC_TABLE_FILL_2
+        .Shadow = GENERIC_TABLE_SHADOW
+        .FontStyle = GENERIC_TABLE_FONT_STYLE
+        .FontSize = TABLE_PROGRESS_FONT_SIZE
+        .FontBold = GENERIC_TABLE_FONT_BOLD
+        .FontColour = GENERIC_TABLE_FONT_COLOUR
+        .FontXJust = TABLE_PROGRESS_CELL_X_JUST
+        .FontVJust = TABLE_PROGRESS_CELL_Y_JUST
+    End With
     BuildScreenStyles = True
 
 Exit Function

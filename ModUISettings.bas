@@ -352,11 +352,7 @@ Public RED_CELL As ClsUIStyle
 Public GENERIC_TABLE_HEADER As ClsUIStyle
 Public SUB_TABLE_HEADER As ClsUIStyle
 Public TABLE_PROGRESS_BAR As ClsUIStyle
-
-' ---------------------------------------------------------------
-' New Order Workflow
-' ---------------------------------------------------------------
-'Public WF_MAINSCREEN_STYLE As ClsUIStyle
+Public TABLE_PROGRESS_CELL As ClsUIStyle
 
 ' ===============================================================
 ' Style Definitions
@@ -467,7 +463,7 @@ Public Const GREEN_CELL_FONT_SIZE As Integer = 11
 Public Const GREEN_CELL_FONT_COLOUR As Long = COL_DRK_GREY
 Public Const GREEN_CELL_FONT_BOLD As Boolean = False
 Public Const GREEN_CELL_FONT_x_JUST As Integer = xlHAlignCenter
-Public Const GREEN_CELL_FONT_Y_JUST As Integer = xlVAlignCenter
+Public Const GREEN_CELL_FONT_Y_JUST As Integer = xlVAlignTop
 
 ' ---------------------------------------------------------------
 ' Cell Amber
@@ -481,7 +477,7 @@ Public Const AMBER_CELL_FONT_SIZE As Integer = 11
 Public Const AMBER_CELL_FONT_COLOUR As Long = COL_DRK_GREY
 Public Const AMBER_CELL_FONT_BOLD As Boolean = False
 Public Const AMBER_CELL_FONT_x_JUST As Integer = xlHAlignCenter
-Public Const AMBER_CELL_FONT_Y_JUST As Integer = xlVAlignCenter
+Public Const AMBER_CELL_FONT_Y_JUST As Integer = xlVAlignTop
 
 ' ---------------------------------------------------------------
 ' Cell Red
@@ -494,8 +490,8 @@ Public Const RED_CELL_FONT_STYLE As String = "Eras Medium ITC"
 Public Const RED_CELL_FONT_SIZE As Integer = 11
 Public Const RED_CELL_FONT_COLOUR As Long = COL_WHITE
 Public Const RED_CELL_FONT_BOLD As Boolean = False
-Public Const RED_CELL_FONT_x_JUST As Integer = xlHAlignCenter
-Public Const RED_CELL_FONT_Y_JUST As Integer = xlVAlignCenter
+Public Const RED_CELL_FONT_x_JUST As Single = xlHAlignCenter
+Public Const RED_CELL_FONT_Y_JUST As Single = xlVAlignTop
 
 ' ---------------------------------------------------------------
 ' Tool Buttons
