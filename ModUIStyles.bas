@@ -39,7 +39,8 @@ Public Function BuildScreenStyles() As Boolean
     Set RED_CELL = New ClsUIStyle
     Set GENERIC_TABLE_HEADER = New ClsUIStyle
     Set SUB_TABLE_HEADER = New ClsUIStyle
-    Set TABLE_PROGRESS_STYLE = New ClsUIStyle
+    Set TABLE_PROGRESS_BAR = New ClsUIStyle
+    Set TABLE_PROGRESS_CELL = New ClsUIStyle
 
     With SCREEN_STYLE
         .Name = "SCREEN_STYLE"
@@ -199,20 +200,6 @@ Public Function BuildScreenStyles() As Boolean
         .FontVJust = GENERIC_TABLE_FONT_Y_JUST
     End With
 
-    With TABLE_PROGRESS_STYLE
-        .Name = "TABLE_PROGRESS_STYLE"
-        .BorderWidth = GENERIC_TABLE_BORDER_WIDTH
-        .Fill1 = GENERIC_TABLE_FILL_1
-        .Fill2 = GENERIC_TABLE_FILL_2
-        .Shadow = GENERIC_TABLE_SHADOW
-        .FontStyle = GENERIC_TABLE_FONT_STYLE
-        .FontSize = TABLE_PROGRESS_FONT_SIZE
-        .FontBold = GENERIC_TABLE_FONT_BOLD
-        .FontColour = GENERIC_TABLE_FONT_COLOUR
-        .FontXJust = TABLE_PROGRESS_CELL_X_JUST
-        .FontVJust = TABLE_PROGRESS_CELL_Y_JUST
-    End With
-
     With GREEN_CELL
         .Name = "GREEN_CELL"
         .BorderWidth = GREEN_CELL_BORDER_WIDTH
@@ -283,6 +270,33 @@ Public Function BuildScreenStyles() As Boolean
         .FontVJust = GENERIC_TABLE_HEADER_FONT_Y_JUST
     End With
 
+    With TABLE_PROGRESS_BAR
+        .Name = "TABLE_PROGRESS_BAR"
+        .BorderWidth = TABLE_PROGRESS_BORDER_WEIGHT
+        .Fill1 = TABLE_PROGRESS_BADGE_FILL_COLOUR
+        .Fill2 = TABLE_PROGRESS_BADGE_FILL_COLOUR
+        .FontStyle = GENERIC_TABLE_HEADER_FONT_STYLE
+        .FontSize = TABLE_PROGRESS_FONT_SIZE
+        .FontBold = GENERIC_TABLE_HEADER_FONT_BOLD
+        .FontColour = TABLE_PROGRESS_FONT_COLOUR
+        .FontXJust = TABLE_PROGRESS_CELL_X_JUST
+        .FontVJust = TABLE_PROGRESS_CELL_Y_JUST
+        .MarginTop = TABLE_PROGRESS_BADGE_MARGIN_TOP
+    End With
+
+    With TABLE_PROGRESS_CELL
+        .Name = "TABLE_PROGRESS_CELL"
+        .BorderWidth = GENERIC_TABLE_BORDER_WIDTH
+        .Fill1 = GENERIC_TABLE_FILL_1
+        .Fill2 = GENERIC_TABLE_FILL_2
+        .Shadow = GENERIC_TABLE_SHADOW
+        .FontStyle = GENERIC_TABLE_FONT_STYLE
+        .FontSize = TABLE_PROGRESS_FONT_SIZE
+        .FontBold = GENERIC_TABLE_FONT_BOLD
+        .FontColour = GENERIC_TABLE_FONT_COLOUR
+        .FontXJust = TABLE_PROGRESS_CELL_X_JUST
+        .FontVJust = TABLE_PROGRESS_CELL_Y_JUST
+    End With
     BuildScreenStyles = True
 
 Exit Function
@@ -295,12 +309,12 @@ ErrorExit:
 Exit Function
 
 ErrorHandler:
-'If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
-'        Stop
-'        Resume
-'    Else
-'        Resume ErrorExit
-'    End If
+If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
+        Stop
+        Resume
+    Else
+        Resume ErrorExit
+    End If
 End Function
 
 ' ===============================================================
@@ -317,7 +331,17 @@ Public Function DestroyScreenStyles() As Boolean
     Set BUTTON_UNSET_STYLE = Nothing
     Set BUTTON_SET_STYLE = Nothing
     Set MAIN_FRAME_STYLE = Nothing
+    Set BUTTON_FRAME_STYLE = Nothing
     Set BTN_MAIN_STYLE = Nothing
     Set GENERIC_BUTTON = Nothing
-'    Set TOOL_BUTTON = Nothing
+    Set TODO_BUTTON = Nothing
+    Set TODO_BADGE = Nothing
+    Set HEADER_STYLE = Nothing
+    Set GENERIC_TABLE = Nothing
+    Set GREEN_CELL = Nothing
+    Set AMBER_CELL = Nothing
+    Set RED_CELL = Nothing
+    Set GENERIC_TABLE_HEADER = Nothing
+    Set SUB_TABLE_HEADER = Nothing
+    Set TABLE_PROGRESS_BAR = Nothing
 End Function

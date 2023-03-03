@@ -60,10 +60,12 @@ Public Sub UpdateScript()
     Set RstUpdate = Nothing
 
     DB.Execute "Update TblStep inner join TblStepTemplate on TblStep.StepNo = TblStepTemplate.StepNo Set TblStep.UniqueID = TblStepTemplate.UniqueID"
-    
+
 End Sub
 
 Public Sub UndoScript()
+    DB.QueryDefs.Delete "Active"
+    DB.QueryDefs.Delete "Closed"
 
 End Sub
 

@@ -1,0 +1,6 @@
+DataDate,  dbDate
+Open,  dbLong
+Closed,  dbLong
+AveDev,  dbLong
+AveBridge,  dbLong
+AveComm,  dbLong

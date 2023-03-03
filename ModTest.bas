@@ -85,12 +85,6 @@ Public Sub TestCellCls()
     
     Cell.Badges.Add Shp
     
-    With Cell.Badges
-        .SetLeft(Shp.Name) = 100
-        .SetTop(Shp.Name) = 200
-        .SetHeight(Shp.Name) = 100
-        .SetWidth(Shp.Name) = 100
-    End With
     
     Cell.ReOrder
     Stop

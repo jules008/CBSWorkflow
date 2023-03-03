@@ -31,6 +31,7 @@ Private pFontStyle As String
 Private pFontBold As Boolean
 Private pFontSize As Integer
 Private pFontColour As Long
+Private pMarginTop As Integer
 Private pFontXJust As XlHAlign
 Private pFontVJust As XlVAlign
 Private pFill1 As Long
@@ -100,6 +101,15 @@ End Property
 
 Public Property Let FontColour(ByVal vNewValue As Long)
     pFontColour = vNewValue
+End Property
+
+'---------------------------------------------------------------
+Public Property Get MarginTop() As Integer
+    MarginTop = pMarginTop
+End Property
+
+Public Property Let MarginTop(ByVal vNewValue As Integer)
+    pMarginTop = vNewValue
 End Property
 
 '---------------------------------------------------------------
