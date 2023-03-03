@@ -197,6 +197,13 @@ Private Sub TxtCBSCommission_Change()
 End Sub
 
 ' ===============================================================
+' TxtConsComenceDte_AfterUpdate
+' ---------------------------------------------------------------
+Private Sub TxtConsComenceDte_AfterUpdate()
+    TxtConsComenceDte.Value = Format(TxtConsComenceDte.Value, "dd mmm yy")
+End Sub
+
+' ===============================================================
 ' TxtConsComenceDte_Change
 ' ---------------------------------------------------------------
 Private Sub TxtConsComenceDte_Change()
@@ -372,7 +379,8 @@ Private Function ValidateForm() As enFormValidation
     End With
            
     With TxtConsComenceDte
-        If Not IsDate(.Value) Then
+        .Value = Replace(.Value, ".", "/")
+        If Not IsDate(Format(.Value, "dd mmm yy")) Then
             .BackColor = COL_AMBER
             ValidateForm = enValidationError
         End If

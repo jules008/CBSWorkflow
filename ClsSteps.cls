@@ -190,6 +190,19 @@ Public Sub DeleteCollection()
 End Sub
 
 ' ===============================================================
+' Method DestroyCollection
+' Removes items from collection and destroys it
+' ---------------------------------------------------------------
+Public Sub DestroyCollection()
+    Dim Step As ClsStep
+    Sin 0
+    For Each Step In pSteps
+        Step.DBDelete True
+        Set Step = Nothing
+    Next
+End Sub
+
+' ===============================================================
 ' Method OpenNewEmails
 ' Opens any new emails in the steps
 '---------------------------------------------------------------

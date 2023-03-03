@@ -495,7 +495,7 @@ Private Sub pProjContacts_Add()
         .ContactName = pProjContacts.TxtContactName
         .ContactType = "Project"
         .ContactIndex = pProjectNo
-        .Organisation = pProjContacts.CmoOrganisation
+        .Organisation = pProjContacts.TxtOrganisation
         .Phone1 = pProjContacts.TxtPhone1
         .Phone2 = pProjContacts.TxtPhone2
         .EmailAddress = pProjContacts.TxtEmailAddress
@@ -536,7 +536,7 @@ Private Sub pProjContacts_Display(ContactNo As Integer)
         .EnableForm True
         .TxtContactName = Contact.ContactName
         .TxtEmailAddress = Contact.EmailAddress
-        .CmoOrganisation = Contact.Organisation
+        .TxtOrganisation = Contact.Organisation
         .TxtPhone1 = Contact.Phone1
         .TxtPhone2 = Contact.Phone2
         .TxtPosition = Contact.Position
@@ -559,7 +559,7 @@ Private Sub pProjContacts_Edit(ContactNo As Integer)
     With pProjContacts
         Contact.ContactName = .TxtContactName
         Contact.EmailAddress = .TxtEmailAddress
-        Contact.Organisation = .CmoOrganisation
+        Contact.Organisation = .TxtOrganisation
         Contact.Phone1 = .TxtPhone1
         Contact.Phone2 = .TxtPhone2
         Contact.Position = .TxtPosition
