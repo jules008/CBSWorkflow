@@ -1,6 +1,6 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FrmLenderWF 
-   ClientHeight    =   10035
+   ClientHeight    =   10245
    ClientLeft      =   120
    ClientTop       =   465
    ClientWidth     =   15990
@@ -43,12 +43,27 @@ Public Event UpdateLoan()
 Public Event DisplayContacts()
 Public Event OpenClientForm()
 Public Event OpenProjCRM()
+Public Event DeleteWF()
 
 ' ===============================================================
 ' BtnUpdateLoan_Click
 ' ---------------------------------------------------------------
 Private Sub BtnUpdateLoan_Click()
     RaiseEvent UpdateLoan
+End Sub
+
+' ===============================================================
+' BtnUpdateLoan_Click
+' ---------------------------------------------------------------
+Private Sub BtnDelete_Click()
+    Dim Response As Integer
+    
+    Response = MsgBox("Are you sure you want to delete the Lender Workflow from the database?", vbYesNo + vbExclamation, APP_NAME)
+    
+    If Response = 6 Then
+        RaiseEvent DeleteWF
+        Hide
+    End If
 End Sub
 
 ' ===============================================================
@@ -122,7 +137,7 @@ End Sub
 ' ---------------------------------------------------------------
 Sub Progress(pctCompl As Single)
 
-    LblText.Caption = Format(pctCompl, "0") & "%"
+    Lbltext.Caption = Format(pctCompl, "0") & "%"
     xLblBar.Width = Frame7.Width / 100 * pctCompl
     
 End Sub

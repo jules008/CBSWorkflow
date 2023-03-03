@@ -15,8 +15,10 @@ Option Explicit
 
 Private Const StrMODULE As String = "ModUIProjects"
 Private ScreenPage As String
-Private OldSplitRow As Integer
+Public OldSplitRow As Integer
 Private OldProjectNo As Integer
+Public OldSortBy As String
+
 
 ' ===============================================================
 ' BuildScreen
@@ -251,6 +253,9 @@ Public Function RefreshList(ByVal ScreenPage As enScreenPage, ByVal SplitScreenO
 
     ModLibrary.PerfSettingsOn
 
+    If SortBy = "" Then SortBy = OldSortBy
+    OldSortBy = SortBy
+        
     Set RstWorkflowList = GetActiveList(ScreenPage, SortBy)
     
     With RstWorkflowList
