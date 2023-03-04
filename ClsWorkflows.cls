@@ -77,8 +77,11 @@ End Sub
 ' Removes item from collection
 ' ---------------------------------------------------------------
 Public Sub Remove(WorkflowNo As Variant)
-    pWorkflows(WorkflowNo).Parent = Nothing
-    pWorkflows.Remove WorkflowNo
+    Dim Workflow As ClsWorkflow
+    
+    Set Workflow = pWorkflows.Item(CStr(WorkflowNo))
+    Workflow.Terminate
+    pWorkflows.Remove CStr(WorkflowNo)
 End Sub
 
 ' ===============================================================

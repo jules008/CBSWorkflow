@@ -30,89 +30,48 @@ End Sub
 'ModDeploy.UpdateTable "TblEmail", "A1:H2"
 'ModDeploy.UpdateTable "TblStepTemplate", "A1:Z2"
 Public Sub UpdateScript()
-    Dim SQL1 As String
-    Dim SQL2 As String
-    Dim SQL3 As String
-    Dim Query1 As QueryDef
-    Dim Query2 As QueryDef
-    Dim Query3 As QueryDef
+    Dim RstUpdate As Recordset
+    Dim i As Integer
+    
+    DB.Execute "UPDATE TblStepTemplate SET EmailNo = 1 WHERE StepNo = '1.03'"
+    DB.Execute "UPDATE TblStepTemplate SET EmailNo = 2 WHERE StepNo = '1.06'"
+    DB.Execute "UPDATE TblStepTemplate SET EmailNo = 3 WHERE StepNo = '1.12'"
+    DB.Execute "UPDATE TblStepTemplate SET EmailNo = 4 WHERE StepNo = '1.13'"
+    DB.Execute "UPDATE TblStepTemplate SET EmailNo = 5 WHERE StepNo = '1.16'"
+    
+    DB.Execute "UPDATE TblStep SET EmailNo = 1 WHERE StepNo = '1.03'"
+    DB.Execute "UPDATE TblStep SET EmailNo = 2 WHERE StepNo = '1.06'"
+    DB.Execute "UPDATE TblStep SET EmailNo = 3 WHERE StepNo = '1.12'"
+    DB.Execute "UPDATE TblStep SET EmailNo = 4 WHERE StepNo = '1.13'"
+    DB.Execute "UPDATE TblStep SET EmailNo = 5 WHERE StepNo = '1.16'"
 
-    SQL1 = "Select " _
-        & "    Count (Count_ProjectNo)  As Active " _
-        & "From " _
-        & "    (Select Distinct " _
-        & "         TblWorkflow.ProjectNo As [Count_ProjectNo] " _
-        & "     From " _
-        & "         TblWorkflow " _
-        & "     Where " _
-        & "         TblWorkflow.Status <> 'enComplete' And " _
-        & "         TblWorkflow.ProjectNo <> 0) "
+    Set RstUpdate = ModDatabase.SQLQuery("SELECT UniqueID FROM TblStepTemplate ORDER BY StepNo")
+    
+    i = 1
+    With RstUpdate
+        Do While Not .EOF
+            .Edit
+            !UniqueID = i
+             .Update
+             .MoveNext
+             i = i + 1
+        Loop
+    End With
+    Set RstUpdate = Nothing
+<<<<<<< HEAD
+=======
 
-        
-    SQL2 = "Select " _
-        & "    Count(ClosedWeek.UProjectNo) as Closed " _
-        & "From " _
-        & "    (Select Distinct " _
-        & "         TblProject.ProjectNo As UProjectNo, " _
-        & "         TblProject.CompleteDate " _
-        & "     From " _
-        & "         TblWorkflow Right Join " _
-        & "         TblProject On TblWorkflow.ProjectNo = TblProject.ProjectNo " _
-        & "     Where " _
-        & "         DatePart('ww', TblProject.CompleteDate) = DatePart('ww', Now())) As ClosedWeek "
-    
-    SQL3 = "Select " _
-        & "    TblWorkflow.LoanType As [Avg_LoanType], " _
-        & "    Avg(DateDiff('d', TblProject.StartDate, TblProject.CompleteDate)) As NoDays " _
-        & "From " _
-        & "    TblProject Right Join " _
-        & "    TblWorkflow On TblWorkflow.ProjectNo = TblProject.ProjectNo " _
-        & "Where " _
-        & "    TblProject.ProjectNo > 0 And " _
-        & "    TblWorkflow.LoanType Is Not Null And " _
-        & "    TblProject.CompleteDate <> 0 " _
-        & "Group By " _
-        & "    TblWorkflow.LoanType "
+    DB.Execute "Update TblStep inner join TblStepTemplate on TblStep.StepNo = TblStepTemplate.StepNo Set TblStep.UniqueID = TblStepTemplate.UniqueID"
+>>>>>>> test
 
-    Set Query1 = New QueryDef
-    Set Query2 = New QueryDef
-    Set Query3 = New QueryDef
-    
-    With Query1
-        .SQL = SQL1
-        .Name = "Active"
-    End With
-    
-    With Query2
-        .SQL = SQL2
-        .Name = "Closed"
-    End With
-    
-    With Query3
-        .SQL = SQL3
-        .Name = "ProjTimeAve"
-    End With
-    
-    DB.QueryDefs.Append Query1
-    DB.QueryDefs.Append Query2
-    DB.QueryDefs.Append Query3
-    
-    DB.Execute "CREATE TABLE TblTrendData"
-    DB.Execute "ALTER TABLE TblTrendData ADD COLUMN DataDate Date"
-    DB.Execute "ALTER TABLE TblTrendData ADD COLUMN Open Integer"
-    DB.Execute "ALTER TABLE TblTrendData ADD COLUMN Closed Integer"
-    DB.Execute "ALTER TABLE TblTrendData ADD COLUMN AveDev Integer"
-    DB.Execute "ALTER TABLE TblTrendData ADD COLUMN AveBridge Integer"
-    DB.Execute "ALTER TABLE TblTrendData ADD COLUMN AveComm Integer"
+    DB.Execute "Update TblStep inner join TblStepTemplate on TblStep.StepNo = TblStepTemplate.StepNo Set TblStep.UniqueID = TblStepTemplate.UniqueID"
     
 End Sub
 
 Public Sub UndoScript()
     DB.QueryDefs.Delete "Active"
-    DB.QueryDefs.Delete "Closed"    
-	DB.QueryDefs.Delete "ProjTimeAve"
-	
-    DB.Execute "DROP TABLE TblTrendData"
+    DB.QueryDefs.Delete "Closed"
+
 End Sub
 
 ' ===============================================================

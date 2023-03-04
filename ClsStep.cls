@@ -608,9 +608,9 @@ Public Sub DBDelete(Optional FullDelete As Boolean)
     Dim RstStep As Recordset
     Dim i As Integer
 
-    Set RstStep = ModDatabase.SQLQuery("SELECT * FROM TblStep WHERE StepNo = " & pStepNo)
+    Set RstStep = ModDatabase.SQLQuery("SELECT * FROM TblStep WHERE WorkflowNo = " & Parent.WorkflowNo & " AND StepNo = '" & pStepNo & "'")
     With RstStep
-        For i = .RecordCount To 1 Step -1
+        Do While Not .EOF
             If FullDelete Then
                 .Delete
                 .MoveNext
@@ -619,7 +619,7 @@ Public Sub DBDelete(Optional FullDelete As Boolean)
                 !Deleted = Now
                 .Update
             End If
-        Next
+        Loop
     End With
 
     Set RstStep = Nothing

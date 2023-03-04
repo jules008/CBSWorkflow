@@ -59,11 +59,10 @@ Public Const TODO_ICON_FILE As String = "ToDo.png"
 Public Const TODO_ICON_WIDTH As String = 18
 Public Const TODO_ICON_TOP As String = 11
 Public Const TODO_ICON_LEFT As String = 5
-Public Const TODO_BADGE_FILE As String = "ToDo.png"
-Public Const TODO_BADGE_WIDTH As String = 25
+Public Const TODO_BADGE_WIDTH As String = 35
 Public Const TODO_BADGE_HEIGHT As String = 18
-Public Const TODO_BADGE_TOP As String = 11
-Public Const TODO_BADGE_LEFT As String = 107
+Public Const TODO_BADGE_TOP As String = 20
+Public Const TODO_BADGE_LEFT As String = 60
 
 ' ---------------------------------------------------------------
 ' Generic Table Settings
@@ -143,6 +142,8 @@ Public Const TABLE_PROGRESS_FONT_COLOUR As Long = COL_WHITE
 Public Const TABLE_PROGRESS_BORDER_WEIGHT As Integer = 0
 Public Const TABLE_PROGRESS_BADGE_HEIGHT As Integer = 10
 Public Const TABLE_PROGRESS_BADGE_FILL_COLOUR As Long = COL_AQUA
+Public Const TABLE_PROGRESS_BADGE_X_JUST As Integer = xlHAlignCenter
+Public Const TABLE_PROGRESS_BADGE_Y_JUST As Long = xlHAlignCenter
 Public Const TABLE_PROGRESS_CELL_X_JUST As Integer = xlHAlignRight
 Public Const TABLE_PROGRESS_CELL_Y_JUST As Integer = xlVAlignCenter
 
@@ -349,11 +350,8 @@ Public AMBER_CELL As ClsUIStyle
 Public RED_CELL As ClsUIStyle
 Public GENERIC_TABLE_HEADER As ClsUIStyle
 Public SUB_TABLE_HEADER As ClsUIStyle
-Public TABLE_PROGRESS_STYLE As ClsUIStyle
-' ---------------------------------------------------------------
-' New Order Workflow
-' ---------------------------------------------------------------
-'Public WF_MAINSCREEN_STYLE As ClsUIStyle
+Public TABLE_PROGRESS_BAR As ClsUIStyle
+Public TABLE_PROGRESS_CELL As ClsUIStyle
 
 ' ===============================================================
 ' Style Definitions
@@ -390,13 +388,13 @@ Public Const TODO_BUTTON_FONT_Y_JUST As Integer = xlVAlignCenter
 ' ---------------------------------------------------------------
 ' Todo Badge
 ' ---------------------------------------------------------------
-Public Const TODO_BADGE_BORDER_WIDTH As Single = 1
+Public Const TODO_BADGE_BORDER_WIDTH As Single = 0
 Public Const TODO_BADGE_BORDER_COLOUR As Long = COL_WHITE
 Public Const TODO_BADGE_FILL_1 As Long = COL_AQUA
 Public Const TODO_BADGE_FILL_2 As Long = COL_AQUA
 Public Const TODO_BADGE_SHADOW As Long = 0
 Public Const TODO_BADGE_FONT_STYLE As String = "Eras Medium ITC"
-Public Const TODO_BADGE_FONT_SIZE As Integer = 12
+Public Const TODO_BADGE_FONT_SIZE As Integer = 14
 Public Const TODO_BADGE_FONT_COLOUR As Long = COL_WHITE
 Public Const TODO_BADGE_FONT_BOLD As Boolean = False
 Public Const TODO_BADGE_FONT_x_JUST As Integer = xlHAlignRight
@@ -464,7 +462,7 @@ Public Const GREEN_CELL_FONT_SIZE As Integer = 11
 Public Const GREEN_CELL_FONT_COLOUR As Long = COL_DRK_GREY
 Public Const GREEN_CELL_FONT_BOLD As Boolean = False
 Public Const GREEN_CELL_FONT_x_JUST As Integer = xlHAlignCenter
-Public Const GREEN_CELL_FONT_Y_JUST As Integer = xlVAlignCenter
+Public Const GREEN_CELL_FONT_Y_JUST As Integer = xlVAlignTop
 
 ' ---------------------------------------------------------------
 ' Cell Amber
@@ -478,7 +476,7 @@ Public Const AMBER_CELL_FONT_SIZE As Integer = 11
 Public Const AMBER_CELL_FONT_COLOUR As Long = COL_DRK_GREY
 Public Const AMBER_CELL_FONT_BOLD As Boolean = False
 Public Const AMBER_CELL_FONT_x_JUST As Integer = xlHAlignCenter
-Public Const AMBER_CELL_FONT_Y_JUST As Integer = xlVAlignCenter
+Public Const AMBER_CELL_FONT_Y_JUST As Integer = xlVAlignTop
 
 ' ---------------------------------------------------------------
 ' Cell Red
@@ -491,8 +489,8 @@ Public Const RED_CELL_FONT_STYLE As String = "Eras Medium ITC"
 Public Const RED_CELL_FONT_SIZE As Integer = 11
 Public Const RED_CELL_FONT_COLOUR As Long = COL_WHITE
 Public Const RED_CELL_FONT_BOLD As Boolean = False
-Public Const RED_CELL_FONT_x_JUST As Integer = xlHAlignCenter
-Public Const RED_CELL_FONT_Y_JUST As Integer = xlVAlignCenter
+Public Const RED_CELL_FONT_x_JUST As Single = xlHAlignCenter
+Public Const RED_CELL_FONT_Y_JUST As Single = xlVAlignTop
 
 ' ---------------------------------------------------------------
 ' Tool Buttons
