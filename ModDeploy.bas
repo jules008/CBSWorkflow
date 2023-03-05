@@ -18,6 +18,7 @@ Dim OldTables() As String
 Private Const StrMODULE As String = "ModDeploy"
 
 Public Sub QueryTest()
+    ModStartUp.ReadINIFile
     If DB Is Nothing Then
     Set DB = OpenDatabase(GetDocLocalPath(ThisWorkbook.Path) & INI_FILE_PATH & DB_FILE_NAME & ".accdb")
     End If
@@ -27,92 +28,67 @@ Public Sub QueryTest()
     UpdateScript
 End Sub
 
-'ModDeploy.UpdateTable "TblEmail", "A1:H2"
-'ModDeploy.UpdateTable "TblStepTemplate", "A1:Z2"
 Public Sub UpdateScript()
     Dim SQL1 As String
     Dim SQL2 As String
-    Dim SQL3 As String
     Dim Query1 As QueryDef
     Dim Query2 As QueryDef
-    Dim Query3 As QueryDef
 
     SQL1 = "Select " _
-        & "    Count (Count_ProjectNo)  As Active " _
+        & "    TblCBSUser.UserName As CaseManager, " _
+        & "    Count(TblProject.ProjectNo) As NoCases " _
         & "From " _
-        & "    (Select Distinct " _
-        & "         TblWorkflow.ProjectNo As [Count_ProjectNo] " _
-        & "     From " _
-        & "         TblWorkflow " _
-        & "     Where " _
-        & "         TblWorkflow.Status <> 'enComplete' And " _
-        & "         TblWorkflow.ProjectNo <> 0) "
-
+        & "    TblProject Inner Join " _
+        & "    TblCBSUser On TblCBSUser.CBSUserNo = TblProject.CaseManager " _
+        & "Where " _
+        & "    (TblProject.CompleteDate = 0 Or " _
+        & "        TblProject.CompleteDate Is Null) " _
+        & "Group By " _
+        & "    TblCBSUser.UserName "
         
     SQL2 = "Select " _
-        & "    Count(ClosedWeek.UProjectNo) as Closed " _
+        & "    TblCBSUser.UserName As ClientIntroducer, " _
+        & "    Count(TblProject.ProjectNo) As NoCases " _
         & "From " _
-        & "    (Select Distinct " _
-        & "         TblProject.ProjectNo As UProjectNo, " _
-        & "         TblProject.CompleteDate " _
-        & "     From " _
-        & "         TblWorkflow Right Join " _
-        & "         TblProject On TblWorkflow.ProjectNo = TblProject.ProjectNo " _
-        & "     Where " _
-        & "         DatePart('ww', TblProject.CompleteDate) = DatePart('ww', Now())) As ClosedWeek "
-    
-    SQL3 = "Select " _
-        & "    TblWorkflow.LoanType As [Avg_LoanType], " _
-        & "    Avg(DateDiff('d', TblProject.StartDate, TblProject.CompleteDate)) As NoDays " _
-        & "From " _
-        & "    TblProject Right Join " _
-        & "    TblWorkflow On TblWorkflow.ProjectNo = TblProject.ProjectNo " _
+        & "    TblProject Inner Join " _
+        & "    TblCBSUser On TblCBSUser.CBSUserNo = TblProject.FirstClientInt " _
         & "Where " _
-        & "    TblProject.ProjectNo > 0 And " _
-        & "    TblWorkflow.LoanType Is Not Null And " _
-        & "    TblProject.CompleteDate <> 0 " _
+        & "    (TblProject.CompleteDate = 0 Or " _
+        & "        TblProject.CompleteDate Is Null) " _
         & "Group By " _
-        & "    TblWorkflow.LoanType "
+        & "    TblCBSUser.UserName "
 
     Set Query1 = New QueryDef
     Set Query2 = New QueryDef
-    Set Query3 = New QueryDef
     
     With Query1
         .SQL = SQL1
-        .Name = "Active"
+        .Name = "CM Cases"
     End With
     
     With Query2
         .SQL = SQL2
-        .Name = "Closed"
-    End With
-    
-    With Query3
-        .SQL = SQL3
-        .Name = "ProjTimeAve"
+        .Name = "CI Cases"
     End With
     
     DB.QueryDefs.Append Query1
     DB.QueryDefs.Append Query2
-    DB.QueryDefs.Append Query3
-    
-    DB.Execute "CREATE TABLE TblTrendData"
-    DB.Execute "ALTER TABLE TblTrendData ADD COLUMN DataDate Date"
-    DB.Execute "ALTER TABLE TblTrendData ADD COLUMN Open Integer"
-    DB.Execute "ALTER TABLE TblTrendData ADD COLUMN Closed Integer"
-    DB.Execute "ALTER TABLE TblTrendData ADD COLUMN AveDev Integer"
-    DB.Execute "ALTER TABLE TblTrendData ADD COLUMN AveBridge Integer"
-    DB.Execute "ALTER TABLE TblTrendData ADD COLUMN AveComm Integer"
-    
 End Sub
 
 Public Sub UndoScript()
-    DB.QueryDefs.Delete "Active"
-    DB.QueryDefs.Delete "Closed"    
-	DB.QueryDefs.Delete "ProjTimeAve"
 	
-    DB.Execute "DROP TABLE TblTrendData"
+    If DEV_MODE Then
+        On Error Resume Next
+    Else
+        On Error GoTo ErrorHandler
+    End If
+    
+    DB.QueryDefs.Delete "CM Cases"
+    DB.QueryDefs.Delete "CI Cases"
+Exit Sub
+
+ErrorHandler:
+    Stop
 End Sub
 
 ' ===============================================================

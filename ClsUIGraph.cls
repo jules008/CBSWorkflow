@@ -31,6 +31,8 @@ Private pTxtSmallLbl As String
 Private pTitle As String
 Private pSer1Colour As Long
 Private pSer2Colour As Long
+Private pSer1Name As String
+Private pSer2Name As String
 Private pBackColour As Long
 Private pSourceData() As Variant
 Private pCht As Chart
@@ -140,6 +142,16 @@ Public Property Let Ser1Colour(ByVal vNewValue As Long)
 End Property
 
 '---------------------------------------------------------------
+Public Property Let Ser1Name(ByVal vNewValue As String)
+    pSer1Name = vNewValue
+End Property
+
+'---------------------------------------------------------------
+Public Property Let Ser2Name(ByVal vNewValue As String)
+    pSer2Name = vNewValue
+End Property
+
+'---------------------------------------------------------------
 Public Property Get Ser2Colour() As Long
     Ser2Colour = pSer2Colour
 End Property
@@ -245,8 +257,10 @@ Private Sub GenDoNut()
             .Border.LineStyle = xlNone
         End With
         
+        .HasTitle = True
+'        .ChartTitle.IncludeInLayout = False
         .ChartType = xlDoughnut
-        .ChartTitle.Text = ""
+        .ChartTitle.Text = "wsw"
         
         .SetSourceData ShtMain.Range("H64:I64")
         
@@ -291,26 +305,26 @@ Private Sub GenDoNut()
         End With
     End With
     
-    With pTxtPC
-        .Name = "pTxtPC"
-        .Height = pCht.ChartArea.Height / 100 * 25
-        .Width = pCht.ChartArea.Width / 100 * 50
-        .Left = pCht.ChartArea.Left + (pCht.ChartArea.Width / 2) - (.Width / 2) + 3
-        .Top = pCht.ChartArea.Top + (pCht.ChartArea.Height / 2) - (.Height / 2) - (pCht.ChartArea.Height / 100 * 10)
-        .Fill.Transparency = 1
-        .Line.Visible = msoFalse
-        
-        With .TextFrame
-            .HorizontalAlignment = xlHAlignCenter
-            .VerticalAlignment = xlVAlignCenter
-            With .Characters
-                .Font.FontStyle = "Calibri"
-                .Font.Size = pTxtPC.Height / 100 * 80
-                .Font.Color = RGB(0, 0, 0)
-                .Text = Format(Subtotal / Total, "0%")
-            End With
-        End With
-    End With
+'    With pTxtPC
+'        .Name = "pTxtPC"
+'        .Height = pCht.ChartArea.Height / 100 * 25
+'        .Width = pCht.ChartArea.Width / 100 * 50
+'        .Left = pCht.ChartArea.Left + (pCht.ChartArea.Width / 2) - (.Width / 2) + 3
+'        .Top = pCht.ChartArea.Top + (pCht.ChartArea.Height / 2) - (.Height / 2) - (pCht.ChartArea.Height / 100 * 10)
+'        .Fill.Transparency = 1
+'        .Line.Visible = msoFalse
+'
+'        With .TextFrame
+'            .HorizontalAlignment = xlHAlignCenter
+'            .VerticalAlignment = xlVAlignCenter
+'            With .Characters
+'                .Font.FontStyle = "Calibri"
+'                .Font.Size = pTxtPC.Height / 100 * 80
+'                .Font.Color = RGB(0, 0, 0)
+'                .Text = Format(Subtotal / Total, "0%")
+'            End With
+'        End With
+'    End With
     
     With pTxtLabel
         .Name = "TxtLabel"
@@ -450,7 +464,7 @@ End Sub
 Private Sub GenBarStacked()
     Dim XValues() As Variant
     
-    XValues = GetArrayRow(pSourceData, 1)
+    XValues = GetArrayRow(pSourceData, 0)
     
     pCht.Parent.Name = pName
     
@@ -460,7 +474,7 @@ Private Sub GenBarStacked()
             .Top = Parent.Top + pTop
             .Height = pHeight
             .Width = .Height * 1.7
-            .Format.Fill.ForeColor.RGB = COL_BLACK
+            .Format.Fill.ForeColor.RGB = COL_WHITE
             .Border.LineStyle = xlNone
         End With
         
@@ -477,19 +491,19 @@ Private Sub GenBarStacked()
         .SetSourceData ShtMain.Range("H64:I64")
         
         With .SeriesCollection(1)
-            .Name = pSourceData(2, 1)
-            .Values = GetArrayRow(pSourceData, 2)
+            .Name = pSer1Name
+            .Values = GetArrayRow(pSourceData, 1)
             .Format.Fill.ForeColor.RGB = pSer1Colour
             
             If pDataLabels Then .ApplyDataLabels xlDataLabelsShowValue
             .XValues = XValues
         End With
                 
-        If UBound(pSourceData, 1) > 2 Then
+        If UBound(pSourceData, 1) > 1 Then
             .SeriesCollection.NewSeries
             With .SeriesCollection(2)
-                .Name = pSourceData(3, 1)
-                .Values = GetArrayRow(pSourceData, 3)
+                .Name = pSer2Name
+                .Values = GetArrayRow(pSourceData, 2)
                 .Format.Fill.ForeColor.RGB = pSer2Colour
                 If pDataLabels Then .ApplyDataLabels xlDataLabelsShowValue
             End With

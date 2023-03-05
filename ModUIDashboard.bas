@@ -140,17 +140,16 @@ Private Function BuildGraphs() As Boolean
     
     If Not ReadINIFile Then Err.Raise HANDLED_ERROR
         
-    ReDim ArySource(1 To 2)
-       
     Set RstRepData = GetGraphData(1)
     
     With RstRepData
-        ArySource(1) = !Active
-        ArySource(2) = !Closed
+        .MoveLast
+        .MoveFirst
+        ArySource = RstRepData.GetRows(.RecordCount)
     End With
     
     With Graph1
-        .ChartType = enDoNut
+        .ChartType = enBarStacked
         .Name = "Graph1"
         .DataLabels = True
         MainFrame.Graphs.AddItem Graph1
@@ -159,6 +158,8 @@ Private Function BuildGraphs() As Boolean
         .Top = GRAPH_1_TOP
         .Ser1Colour = GRAPH_1_COL_1
         .Ser2Colour = GRAPH_1_COL_2
+        .Ser1Name = "Open Cases"
+        .Ser2Name = "Closed Cases"
         .BackColour = GRAPH_1_BACK_COL
         .SourceData = ArySource
         .Title = "Cases Open/Closed"
@@ -202,15 +203,50 @@ Public Function GetGraphData(GraphNo As String) As Recordset
     
     Select Case GraphNo
         Case 1
+            SQL1 = "Select " _
+                & "    TblTrendData.DataDate, " _
+                & "    TblTrendData.[Open], " _
+                & "    TblTrendData.Closed " _
+                & "From " _
+                & "    TblTrendData "
             
         Case 2
+            SQL1 = "Select " _
+                & "    * " _
+                & "From " _
+                & "    [CM Cases] "
                 
         Case 3
+            SQL1 = "Select " _
+                & "    * " _
+                & "From " _
+                & "    [CI Cases] "
         
         Case 4
+            SQL1 = "Select " _
+                & "    TblTrendData.DataDate, " _
+                & "    TblTrendData.AveDev, " _
+                & "    TblTrendData.AveBridge, " _
+                & "    TblTrendData.AveComm " _
+                & "From " _
+                & "    TblTrendData "
+                
+        Case 5
+            SQL1 = "Select " _
+                & "    TblWorkflow.LoanType, " _
+                & "    Count(TblWorkflow.WorkflowNo) As [Count_WorkflowNo] " _
+                & "From " _
+                & "    TblWorkflow " _
+                & "Where " _
+                & "    TblWorkflow.WorkflowType = 'enLender' And " _
+                & "    TblWorkflow.LoanType Is Not Null And " _
+                & "    TblWorkflow.Status <> 'Complete' " _
+                & "Group By " _
+                & "    TblWorkflow.LoanType "
             
     End Select
     
+    Set RstData1 = ModDatabase.SQLQuery(SQL1)
     Set GetGraphData = RstData1
     
     Set RstData1 = Nothing
@@ -234,6 +270,7 @@ Public Function UpdateTrendData() As Boolean
     Dim MaxDate As Date
     Dim AddDate As Date
     Dim CullDate As Date
+    Dim EditFlag As Boolean
     
     Const StrPROCEDURE As String = "UpdateTrendData()"
 
@@ -258,16 +295,23 @@ Public Function UpdateTrendData() As Boolean
     
     With RstTrendTable
         If DatePart("d", MaxDate) = DatePart("d", Now()) Then
+            EditFlag = True
+        Else
+            EditFlag = False
+            AddDate = DateAdd("d", 1, MaxDate)
+        End If
+        
+        Do While DatePart("d", AddDate) <= DatePart("d", Now()) Or EditFlag
+        
+            If EditFlag Then
             .FindFirst "datadate = #" & MaxDate & "#"
             .Edit
-            !Open = RstData1!Active
-            !Closed = RstData1!Closed
-            .Update
+                EditFlag = False
         Else
-            AddDate = DateAdd("d", 1, MaxDate)
-            Do While DatePart("d", AddDate) <= DatePart("d", Now())
                 .AddNew
                 !DataDate = Format(AddDate, "dd mmm yy")
+            End If
+        
                 !Open = RstData1!Active
                 !Closed = RstData1!Closed
                 
@@ -277,7 +321,7 @@ Public Function UpdateTrendData() As Boolean
                     If Not .NoMatch Then RstTrendTable!AveComm = !NoDays
                     
                     .MoveFirst
-                    .FindFirst ("Avg_LoanType = 'Development Loan'")
+                .FindFirst ("Avg_LoanType = 'Development Finance'")
                     If Not .NoMatch Then RstTrendTable!AveDev = !NoDays
                     
                     .MoveFirst
@@ -288,7 +332,6 @@ Public Function UpdateTrendData() As Boolean
                 .Update
                 AddDate = DateAdd("d", 1, AddDate)
             Loop
-        End If
     End With
     
     CullDate = DateAdd("d", 0 - GRAPH_TREND_DAYS, Now())
