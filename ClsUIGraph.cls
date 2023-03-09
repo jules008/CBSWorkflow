@@ -31,6 +31,10 @@ Private pTxtSmallLbl As String
 Private pTitle As String
 Private pSer1Colour As Long
 Private pSer2Colour As Long
+Private pSer3Colour As Long
+Private pSer4Colour As Long
+Private pSer5Colour As Long
+Private pSer6Colour As Long
 Private pSer1Name As String
 Private pSer2Name As String
 Private pBackColour As Long
@@ -133,15 +137,6 @@ Public Property Let Title(ByVal vNewValue As String)
 End Property
 
 '---------------------------------------------------------------
-Public Property Get Ser1Colour() As Long
-    Ser1Colour = pSer1Colour
-End Property
-
-Public Property Let Ser1Colour(ByVal vNewValue As Long)
-    pSer1Colour = vNewValue
-End Property
-
-'---------------------------------------------------------------
 Public Property Let Ser1Name(ByVal vNewValue As String)
     pSer1Name = vNewValue
 End Property
@@ -152,12 +147,33 @@ Public Property Let Ser2Name(ByVal vNewValue As String)
 End Property
 
 '---------------------------------------------------------------
-Public Property Get Ser2Colour() As Long
-    Ser2Colour = pSer2Colour
+Public Property Let Ser1Colour(ByVal vNewValue As Long)
+    pSer1Colour = vNewValue
 End Property
 
+'---------------------------------------------------------------
 Public Property Let Ser2Colour(ByVal vNewValue As Long)
     pSer2Colour = vNewValue
+End Property
+
+'---------------------------------------------------------------
+Public Property Let Ser3Colour(ByVal vNewValue As Long)
+    pSer3Colour = vNewValue
+End Property
+
+'---------------------------------------------------------------
+Public Property Let Ser4Colour(ByVal vNewValue As Long)
+    pSer4Colour = vNewValue
+End Property
+
+'---------------------------------------------------------------
+Public Property Let Ser5Colour(ByVal vNewValue As Long)
+    pSer5Colour = vNewValue
+End Property
+
+'---------------------------------------------------------------
+Public Property Let Ser6Colour(ByVal vNewValue As Long)
+    pSer6Colour = vNewValue
 End Property
 
 '---------------------------------------------------------------
@@ -362,99 +378,40 @@ Private Sub GenPie()
             .Left = Parent.Left + pLeft
             .Top = Parent.Top + pTop
             .Height = pHeight
-            .Width = .Height
+            .Width = .Height * 1.5
             .Format.Fill.ForeColor.RGB = pBackColour
             .Border.LineStyle = xlNone
         End With
         
-        .ChartType = xlDoughnut
-        .ChartTitle.Text = ""
+        .ChartType = xlPie
+        .ChartTitle.Text = pTitle
+        .ChartTitle.IncludeInLayout = True
+        .HasLegend = True
         
-        .SetSourceData ShtMain.Range("H64:I64")
+        .SetSourceData ShtMain.Range("H64:I64"), xlColumns
         
         With .SeriesCollection(1)
             .Name = "strName"
-            .Values = pSourceData
+            .Values = GetArrayRow(pSourceData, 1)
             .Points(1).Format.Fill.ForeColor.RGB = pSer1Colour
             .Points(2).Format.Fill.ForeColor.RGB = pSer2Colour
+            .Points(3).Format.Fill.ForeColor.RGB = pSer3Colour
+            .Points(4).Format.Fill.ForeColor.RGB = pSer4Colour
+            .Points(5).Format.Fill.ForeColor.RGB = pSer5Colour
+            .Points(6).Format.Fill.ForeColor.RGB = pSer6Colour
+            .XValues = GetArrayRow(pSourceData, 0)
         End With
         
-        With .ChartGroups(1)
-            .DoughnutHoleSize = 80
-        End With
+        .ApplyDataLabels
         
-        With .PlotArea
-            .Format.Fill.Transparency = 1
-            .Top = pCht.ChartArea.Height / 100 * 5
-            .Height = pCht.ChartArea.Height / 100 * 70
-            .Left = (pCht.ChartArea.Width - .Width) / 2
-        End With
-    
-    End With
-    
-    With pTxtTitle
-        .Name = "pTxtTitle"
-        .Height = pCht.ChartArea.Height / 100 * 25
-        .Width = pCht.ChartArea.Width / 100 * 120
-        .Left = pCht.ChartArea.Left + (pCht.ChartArea.Width / 2) - (.Width / 2) + 3
-        .Top = pCht.ChartArea.Top + pCht.ChartArea.Height / 100 * 75
-        .Fill.Transparency = 1
-        .Line.Visible = msoFalse
-        
-        With .TextFrame
-            .HorizontalAlignment = xlHAlignCenter
-            .VerticalAlignment = xlVAlignCenter
-            With .Characters
-                .Font.FontStyle = "Calibri"
-                .Font.Size = pTxtTitle.Height / 100 * 40
-                .Font.Color = RGB(0, 0, 0)
-                .Text = pTitle
+        With .SeriesCollection(1).DataLabels
+            .ShowCategoryName = True
+            .ShowValue = False
+            .Position = xlLabelPositionBestFit
+            .Position = xlLabelPositionOutsideEnd
+            '.Position = xlLabelPositionInsideEnd
             End With
         End With
-    End With
-    
-    With pTxtPC
-        .Name = "pTxtPC"
-        .Height = pCht.ChartArea.Height / 100 * 25
-        .Width = pCht.ChartArea.Width / 100 * 50
-        .Left = pCht.ChartArea.Left + (pCht.ChartArea.Width / 2) - (.Width / 2) + 3
-        .Top = pCht.ChartArea.Top + (pCht.ChartArea.Height / 2) - (.Height / 2) - (pCht.ChartArea.Height / 100 * 10)
-        .Fill.Transparency = 1
-        .Line.Visible = msoFalse
-        
-        With .TextFrame
-            .HorizontalAlignment = xlHAlignCenter
-            .VerticalAlignment = xlVAlignCenter
-            With .Characters
-                .Font.FontStyle = "Calibri"
-                .Font.Size = pTxtPC.Height / 100 * 80
-                .Font.Color = RGB(0, 0, 0)
-                .Text = Format(Subtotal / Total, "0%")
-            End With
-        End With
-    End With
-    
-    With pTxtLabel
-        .Name = "TxtLabel"
-        .Height = pCht.ChartArea.Height / 100 * 5
-        .Width = pCht.ChartArea.Width / 100 * 50
-        .Left = pCht.ChartArea.Left + (pCht.ChartArea.Width / 2) - (.Width / 2) + 3
-        .Top = pCht.ChartArea.Top + (pCht.ChartArea.Height / 2) - (.Height / 2) + (pCht.ChartArea.Height / 100 * 7)
-        .Fill.Transparency = 1
-        .Line.Visible = msoFalse
-        
-        With .TextFrame
-            .HorizontalAlignment = xlHAlignCenter
-            .VerticalAlignment = xlVAlignCenter
-            With .Characters
-                .Font.FontStyle = "Calibri"
-                .Font.Size = pTxtPC.Height / 100 * 25
-                .Font.Color = RGB(0, 0, 0)
-                .Text = Subtotal & " of " & Total
-            End With
-        End With
-    End With
-
 End Sub
 
 ' ===============================================================
@@ -510,6 +467,8 @@ Private Sub GenBarStacked()
         End If
         
         .Axes(xlCategory).TickLabels.NumberFormat = "mmm yy"
+        .Axes(xlCategory).CategoryType = xlCategoryScale
+        .Axes(xlCategory).ReversePlotOrder = False
         
         With .ChartGroups(1)
             .GapWidth = 117
@@ -688,10 +647,10 @@ Private Function GetArrayRow(ArySource() As Variant, RowNo As Integer) As Varian
     Dim i As Integer
     Dim AryOutput As Variant
     
-    ReDim AryOutput(LBound(ArySource, 2) To UBound(ArySource, 2) - 1)
+    ReDim AryOutput(LBound(ArySource, 2) To UBound(ArySource, 2))
     
-    For i = LBound(ArySource, 2) + 1 To UBound(ArySource, 2)
-        AryOutput(i - 1) = ArySource(RowNo, i)
+    For i = LBound(ArySource, 2) To UBound(ArySource, 2)
+        AryOutput(i) = ArySource(RowNo, i)
     Next
     GetArrayRow = AryOutput
 End Function

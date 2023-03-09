@@ -226,12 +226,15 @@ End Function
 
 Public Sub ColourConvert(R As Integer, G As Integer, B As Integer)
      Dim HexColour As Long
+     Dim HexColour2 As Long
      Dim Colour1 As Long
      Colour1 = RGB(R, G, B)
      HexColour = RGB(B, G, R)
+     HexColour2 = RGB(R, G, B)
      
      
      Debug.Print "Hex Colour: "; Hex(HexColour)
+     Debug.Print "Hex Colour2: "; Hex(HexColour2)
      Debug.Print "Dec Colour: "; Colour1
 
 End Sub

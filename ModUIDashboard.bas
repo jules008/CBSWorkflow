@@ -137,6 +137,10 @@ Private Function BuildGraphs() As Boolean
     On Error GoTo ErrorHandler
     
     Set Graph1 = New ClsUIGraph
+    Set Graph2 = New ClsUIGraph
+    Set Graph3 = New ClsUIGraph
+'    Set Graph4 = New ClsUIGraph
+'    Set Graph5 = New ClsUIGraph
     
     If Not ReadINIFile Then Err.Raise HANDLED_ERROR
         
@@ -158,8 +162,8 @@ Private Function BuildGraphs() As Boolean
         .Top = GRAPH_1_TOP
         .Ser1Colour = GRAPH_1_COL_1
         .Ser2Colour = GRAPH_1_COL_2
-        .Ser1Name = "Open Cases"
-        .Ser2Name = "Closed Cases"
+        .Ser1Name = "Closed Cases"
+        .Ser2Name = "Open Cases"
         .BackColour = GRAPH_1_BACK_COL
         .SourceData = ArySource
         .Title = "Cases Open/Closed"
@@ -168,6 +172,65 @@ Private Function BuildGraphs() As Boolean
 
     End With
     
+    Set RstRepData = GetGraphData(2)
+    
+    With RstRepData
+        .MoveLast
+        .MoveFirst
+        ArySource = RstRepData.GetRows(.RecordCount)
+    End With
+    
+    With Graph2
+        .ChartType = enPie
+        .Name = "Graph2"
+        .DataLabels = True
+        MainFrame.Graphs.AddItem Graph2
+        .Height = GRAPH_2_HEIGHT
+        .Left = GRAPH_2_LEFT
+        .Top = GRAPH_2_TOP
+        .Ser1Colour = GRAPH_2_COL_1
+        .Ser2Colour = GRAPH_2_COL_2
+        .Ser3Colour = GRAPH_2_COL_3
+        .Ser4Colour = GRAPH_2_COL_4
+        .Ser5Colour = GRAPH_2_COL_5
+        .Ser6Colour = GRAPH_2_COL_6
+        .BackColour = GRAPH_2_BACK_COL
+        .SourceData = ArySource
+        .Title = "Case Manager Cases"
+        .GenGraph
+        .Visible = True
+
+    End With
+    
+    Set RstRepData = GetGraphData(3)
+    
+    With RstRepData
+        .MoveLast
+        .MoveFirst
+        ArySource = RstRepData.GetRows(.RecordCount)
+    End With
+    
+    With Graph3
+        .ChartType = enPie
+        .Name = "Graph3"
+        .DataLabels = True
+        MainFrame.Graphs.AddItem Graph3
+        .Height = GRAPH_3_HEIGHT
+        .Left = GRAPH_3_LEFT
+        .Top = GRAPH_3_TOP
+        .Ser1Colour = GRAPH_3_COL_1
+        .Ser2Colour = GRAPH_3_COL_2
+        .Ser3Colour = GRAPH_3_COL_3
+        .Ser4Colour = GRAPH_3_COL_4
+        .Ser5Colour = GRAPH_3_COL_5
+        .Ser6Colour = GRAPH_3_COL_6
+        .BackColour = GRAPH_3_BACK_COL
+        .SourceData = ArySource
+        .Title = "Client Introducer Cases"
+        .GenGraph
+        .Visible = True
+
+    End With
     Set RstRepData = Nothing
     BuildGraphs = True
         
@@ -204,23 +267,33 @@ Public Function GetGraphData(GraphNo As String) As Recordset
     Select Case GraphNo
         Case 1
             SQL1 = "Select " _
-                & "    TblTrendData.DataDate, " _
-                & "    TblTrendData.[Open], " _
-                & "    TblTrendData.Closed " _
+                & "    Format (TblTrendData.DataDate, 'dd mmm'), " _
+                & "    TblTrendData.Closed, " _
+                & "    TblTrendData.[Open] " _
                 & "From " _
-                & "    TblTrendData "
+                & "    TblTrendData " _
+                & "Where " _
+                & "    TblTrendData.DataDate > DateAdd('d', Now(), -7) " _
+                & "Order By " _
+                & "    TblTrendData.DataDate ASc "
             
         Case 2
             SQL1 = "Select " _
                 & "    * " _
                 & "From " _
-                & "    [CM Cases] "
+                & "    [CM Cases] " _
+                & "Where  " _
+                & "    CaseManager is not null and " _
+                & "    NoCases > 0 "
                 
         Case 3
             SQL1 = "Select " _
                 & "    * " _
                 & "From " _
-                & "    [CI Cases] "
+                & "    [CI Cases] " _
+                & "Where  " _
+                & "    ClientIntroducer is not null and " _
+                & "    NoCases > 0 "
         
         Case 4
             SQL1 = "Select " _

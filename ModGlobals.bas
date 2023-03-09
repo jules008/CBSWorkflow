@@ -101,6 +101,10 @@ Public CurrentUser As ClsCBSUser
 Public MailInbox As ClsMailInbox
 Public CodeTimer As ClsCodeTimer
 Public Graph1 As ClsUIGraph
+Public Graph2 As ClsUIGraph
+Public Graph3 As ClsUIGraph
+Public Graph4 As ClsUIGraph
+Public Graph5 As ClsUIGraph
 
 ' ===============================================================
 ' Global UI Class Declarations
@@ -142,9 +146,9 @@ Public Const COL_AMBER As Long = &HFC4F1     'Amber
 Public Const COL_GREEN As Long = &H29FFBA    'Green
 Public Const COL_RED As Long = &H3D26D7   '215, 38, 61
 Public Const COL_LT_RED As Long = &H3D26D7    'Light Red
-Public Const COLOUR_11 As Long = &HFFFFFF    'White
-Public Const COLOUR_12 As Long = &HFFFFFF    'White
-Public Const COLOUR_13 As Long = &HFFFFFF    'White
+Public Const COL_ORANGE As Long = &H8BAFF   'Orange
+Public Const COL_BROWN As Long = &H5C7382    'Brown
+Public Const COL_MAUVE As Long = &HC1858B   'Light Blue
 Public Const COLOUR_14 As Long = &HFFFFFF    'White
 Public Const COLOUR_15 As Long = &HFFFFFF    'White
 Public Const COLOUR_16 As Long = &HFFFFFF    'White
