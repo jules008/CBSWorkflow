@@ -3,7 +3,7 @@ SPVNo,  dbLong
 ClientNo,  dbLong
 CaseManager,  dbLong
 LoanTerm,  dbText
-ExitFee,  dbLong
+ExitFee,  dbSingle
 Workflows,  dbText
 Contacts,  dbText
 ProjectWFNo,  dbLong
@@ -13,11 +13,11 @@ CBSCommission,  dbLong
 Debt,  dbSingle
 CompleteDate,  dbDate
 StartDate,  dbDate
-CBSCommPC,  dbSingle
-ExitFeePC,  dbSingle
 ConsComenceDte,  dbDate
+CBSCommPC,  dbSingle
+ExitFeePC,  dbDouble
+Status,  dbText
 MS,  dbLong
 Valuer,  dbLong
 Distribution,  dbText
 SecondClientRef,  dbText
-Status,  dbText

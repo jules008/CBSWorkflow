@@ -33,7 +33,8 @@ Public Sub UpdateScript()
     DB.Execute "ALTER TABLE TblProject ADD COLUMN ConsComenceDte date"
     
     DB.Execute "ALTER TABLE TblProject ADD COLUMN CBSCommPC single"
-    DB.Execute "ALTER TABLE TblProject ADD COLUMN ExitFeePC single"
+    DB.Execute "ALTER TABLE TblProject ADD COLUMN ExitFeePC double"
+    DB.Execute "ALTER TABLE TblProject ADD COLUMN Status Text"
     DB.Execute "CREATE TABLE TblWorkflowTable"
     DB.Execute "ALTER TABLE TblWorkflowTable ADD COLUMN WFNo Integer"
     DB.Execute "ALTER TABLE TblWorkflowTable ADD COLUMN LoanType text"
@@ -49,6 +50,8 @@ Public Sub UpdateScript()
     DB.Execute "INSERT INTO TblWorkflowTable (WFNo,LoanType,SecondTier) VALUES (7,'Bridge/Exit Loan', '2nd Charge Lender')"
     DB.Execute "INSERT INTO TblWorkflowTable (WFNo,LoanType,SecondTier) VALUES (8,'Commercial Mortgage', '1st Charge CM Lender')"
     DB.Execute "ALTER TABLE TblClient ADD COLUMN ClientNeeds integer"
+    DB.Execute "ALTER TABLE TblStep DROP COLUMN Email"
+    DB.Execute "ALTER TABLE TblStep ADD COLUMN EmailNo single"
     DB.Execute "UPDATE TblStepTemplate SET EmailNo = 1 WHERE StepNo = '1.03'"
     DB.Execute "UPDATE TblStepTemplate SET EmailNo = 2 WHERE StepNo = '1.06'"
     DB.Execute "UPDATE TblStepTemplate SET EmailNo = 3 WHERE StepNo = '1.12'"
@@ -61,7 +64,7 @@ Public Sub UpdateScript()
     DB.Execute "UPDATE TblWorkflow SET LoanType = 'Development Loan', SecondTier = 'SDLT Lender' WHERE Name = 'SDLTLoan'"
     DB.Execute "UPDATE TblWorkflow SET LoanType = 'Development Loan', SecondTier = 'VAT Lender' WHERE Name = 'VATloan'"
     Set RstUpdate = ModDatabase.SQLQuery("SELECT UniqueID FROM TblStepTemplate ORDER BY StepNo")
-    
+    DB.Execute "ALTER TABLE TblCBSUser ADD COLUMN Supervisor Integer"
     i = 1
     With RstUpdate
         Do While Not .EOF
@@ -79,30 +82,36 @@ Public Sub UpdateScript()
     DB.Execute "ALTER TABLE TblProject DROP COLUMN Facilitator"
     DB.Execute "ALTER TABLE TblProject ADD COLUMN Distribution text"
     DB.Execute "ALTER TABLE TblContact ADD COLUMN Notes memo"
-    DB.Execute "ALTER TABLE TblContact ADD COLUMN ProjIndex Integer"
     DB.Execute "ALTER TABLE TblProject DROP COLUMN SecondClientRef"
     DB.Execute "ALTER TABLE TblProject ADD COLUMN SecondClientRef text"
     DB.Execute "Update TblStep inner join TblStepTemplate on TblStep.StepNo = TblStepTemplate.StepNo Set TblStep.UniqueID = TblStepTemplate.UniqueID"
-
+    DB.Execute "ALTER TABLE TblContact DROP COLUMN ProjIndex"
+    DB.Execute "ALTER TABLE TblContact ADD COLUMN ContactIndex single"
 End Sub
 
 Public Sub UndoScript()
     On Error Resume Next
-    DB.Execute "DROP TABLE TblWorkflowTable"
     DB.Execute "ALTER TABLE TblClient DROP COLUMN ClientNeeds "
     DB.Execute "ALTER TABLE TblProject DROP COLUMN MS "
     DB.Execute "ALTER TABLE TblProject DROP COLUMN Valuer "
     DB.Execute "ALTER TABLE TblProject DROP COLUMN Distribution"
     DB.Execute "ALTER TABLE TblProject ADD COLUMN Facilitator integer"
     DB.Execute "ALTER TABLE TblContact DROP COLUMN Notes "
-    DB.Execute "ALTER TABLE TblContact DROP COLUMN ProjIndex "
 
     DB.Execute "ALTER TABLE TblProject DROP COLUMN CBSCommPC "
     DB.Execute "ALTER TABLE TblProject DROP COLUMN ExitFeePC "
     DB.Execute "ALTER TABLE TblProject DROP COLUMN ConsComenceDte "
+    DB.Execute "ALTER TABLE TblProject DROP COLUMN Status "
     
+    DB.Execute "DROP TABLE TblWorkflowTable"
     DB.Execute "ALTER TABLE TblWorkflow DROP COLUMN LoanType "
     DB.Execute "ALTER TABLE TblWorkflow DROP COLUMN SecondTier "
+    DB.Execute "ALTER TABLE TblCBSUser DROP COLUMN Supervisor "
+    
+    DB.Execute "ALTER TABLE TblContact ADD COLUMN ProjIndex single"
+    DB.Execute "ALTER TABLE TblContact DROP COLUMN ContactIndex"
+    DB.Execute "ALTER TABLE TblStep ADD COLUMN Email single"
+    DB.Execute "ALTER TABLE TblStep DROP COLUMN EmailNo "
 
 End Sub
 
