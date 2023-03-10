@@ -65,6 +65,8 @@ Public Sub UpdateScript()
     DB.Execute "UPDATE TblWorkflow SET LoanType = 'Development Loan', SecondTier = 'VAT Lender' WHERE Name = 'VATloan'"
     Set RstUpdate = ModDatabase.SQLQuery("SELECT UniqueID FROM TblStepTemplate ORDER BY StepNo")
     DB.Execute "ALTER TABLE TblCBSUser ADD COLUMN Supervisor Integer"
+    DB.Execute "ALTER TABLE TblCBSUser DROP COLUMN UserLvl"
+    DB.Execute "ALTER TABLE TblCBSUser ADD COLUMN UserLvl Single"
     i = 1
     With RstUpdate
         Do While Not .EOF

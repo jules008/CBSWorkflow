@@ -2,5 +2,5 @@ CBSUserNo,  dbInteger
 UserName,  dbText
 Position,  dbText
 PhoneNo,  dbText
-UserLvl,  dbLong
 Supervisor,  dbLong
+UserLvl,  dbSingle
