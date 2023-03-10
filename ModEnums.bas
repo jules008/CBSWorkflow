@@ -432,7 +432,7 @@ End Function
 ' enScreenPageStr
 ' Returns enum string from Enum integer value
 ' ---------------------------------------------------------------
-Public Function enScreenPageStr(EnumValue As enScreenPage) As String
+Public Function enScreenPageStr(ByVal EnumValue As enScreenPage) As String
     Select Case EnumValue
         Case 0
             enScreenPageStr = "enScrProjForAction"

@@ -15,3 +15,5 @@ Debt,  dbSingle
 CBSComm,  dbSingle
 ExitFee,  dbSingle
 LoanTerm,  dbLong
+LoanType,  dbText
+SecondTier,  dbText

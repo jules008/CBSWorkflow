@@ -136,48 +136,45 @@ Private Function BuildGraphs() As Boolean
 
     On Error GoTo ErrorHandler
     
-'    Set Graph1 = New ClsUIGraph
-
+    Set Graph1 = New ClsUIGraph
     
     If Not ReadINIFile Then Err.Raise HANDLED_ERROR
         
     ReDim ArySource(1 To 2)
        
-'    Set RstRepData = ModDatabase.SQLQuery("SELECT COUNT(StudentID) AS [CountX] FROM TblRepData WHERE Active and QIP")
-'    ArySource(1) = RstRepData![CountX]
-'
-'    Set RstRepData = ModDatabase.SQLQuery("SELECT COUNT(StudentID) AS [CountX] FROM TblRepData WHERE Active")
-'    ArySource(2) = RstRepData![CountX]
+    Set RstRepData = GetGraphData(1)
     
-'    With Graph1
-'        .ChartType = enDoNut
-'        .Name = "DNut1"
-'        .DataLabels = False
-'        MainFrame.Graphs.AddItem Graph1
-'        .Height = GRAPH_1_HEIGHT
-'        .Left = GRAPH_1_LEFT
-'        .Top = GRAPH_1_TOP
-'        .Ser1Colour = GRAPH_1_COL_1
-'        .Ser2Colour = GRAPH_1_COL_2
-'        .SourceData = ArySource
-'        .Title = "Overall"
-'        .GenGraph
-'        .Visible = True
-'
-'    End With
-'
-'    Set RstRepData = ModDatabase.SQLQuery("SELECT COUNT(StudentID) AS [CountX] FROM TblRepData WHERE Active AND QIP AND Watch = 'Blue'")
-'    ArySource(1) = RstRepData![CountX]
-'
-'    Set RstRepData = ModDatabase.SQLQuery("SELECT COUNT(StudentID) AS [CountX] FROM TblRepData WHERE Active AND Watch = 'Blue'")
-'    ArySource(2) = RstRepData![CountX]
+    With RstRepData
+        ArySource(1) = !Complete
+        ArySource(2) = !NotComplete
+    End With
     
+    With Graph1
+        .ChartType = enDoNut
+        .Name = "Graph1"
+        .DataLabels = True
+        MainFrame.Graphs.AddItem Graph1
+        .Height = GRAPH_1_HEIGHT
+        .Left = GRAPH_1_LEFT
+        .Top = GRAPH_1_TOP
+        .Ser1Colour = GRAPH_1_COL_1
+        .Ser2Colour = GRAPH_1_COL_2
+        .BackColour = GRAPH_1_BACK_COL
+        .SourceData = ArySource
+        .Title = "Cases Open/Closed"
+        .GenGraph
+        .Visible = True
+
+    End With
+    
+    Set RstRepData = Nothing
     BuildGraphs = True
         
 Exit Function
     
 ErrorExit:
     
+    Set RstRepData = Nothing
     BuildGraphs = False
     
 Exit Function
@@ -189,4 +186,35 @@ ErrorHandler:   If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
         Resume ErrorExit
     End If
 End Function
+
+' ===============================================================
+' Method GetGraphData
+' Gets data for workflow list
+'---------------------------------------------------------------
+Public Function GetGraphData(GraphNo As String) As Recordset
+    Dim RstGraph As Recordset
+    Dim SQL As String
+    
+    Select Case GraphNo
+        Case 1
+            SQL = "Select  " _
+                & "  count(iif (TblWorkflow.Status = 'Complete',0)) as Complete, " _
+                & "  count(iif (TblWorkflow.Status <> 'Complete',0))as NotComplete " _
+                & "From " _
+                & "    TblWorkflow "
+            
+        Case 2
+                
+        Case 3
+        
+        Case 4
+            
+    End Select
+    
+    Set RstGraph = ModDatabase.SQLQuery(SQL)
+    
+    Set GetGraphData = RstGraph
+    
+End Function
+
 

@@ -1,0 +1,3 @@
+UserNo,  dbLong
+Entity,  dbText
+EntityNo,  dbLong

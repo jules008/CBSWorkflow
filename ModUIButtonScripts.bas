@@ -23,6 +23,7 @@ Public Function BtnProjectNewWFClick(ScreenPage As enScreenPage) As Boolean
     Dim Picker As ClsFrmPicker
     Dim InputBox As ClsInputBox
     Dim ProjectName As String
+    Dim RstSource As Recordset
     
     Const StrPROCEDURE As String = "BtnProjectNewWFClick()"
 
@@ -51,12 +52,26 @@ Public Function BtnProjectNewWFClick(ScreenPage As enScreenPage) As Boolean
     End If
     
     'Get Client
+    If CurrentUser.UserLvl = enCaseMgr Then
+        Set RstSource = ModDatabase.SQLQuery("Select " _
+                                        & "    TblClient.Name " _
+                                        & "From " _
+                                        & "    TblAccessControl Right Join " _
+                                        & "    TblClient On TblClient.ClientNo = TblAccessControl.EntityNo " _
+                                        & "Where " _
+                                        & "    TblAccessControl.Entity = 'Client' And " _
+                                        & "    TblAccessControl.UserNo = " _
+                                        & CurrentUser.CBSUserNo)
+    Else
+        Set RstSource = ModDatabase.SQLQuery("SELECT Name from TblClient")
+    End If
+    
     Set Picker = New ClsFrmPicker
     With Picker
         .Title = "Select Client"
         .Instructions = "Start typing the name of the Client and then select from the list. " _
                         & "Select 'New' to add a new Client"
-        .Data = ModDatabase.SQLQuery("SELECT Name from TblClient")
+        .Data = RstSource
         .ClearForm
         .Show = True
         If .CreateNew Then
@@ -168,14 +183,20 @@ Public Function BtnProjectNewWFClick(ScreenPage As enScreenPage) As Boolean
         .Client = ActiveClient
         .StartDate = Now
         .SPV = ActiveSPV
+        .ConsComenceDte = Format(Now, "dd mmm yy")
+        .CBSCommission = 0
+        .CBSCommPC = 0
+        .Debt = 0
+        .ExitFee = 0
+        .ExitFeePC = 0
         .DBSave
     End With
     
     With ActiveProject.ProjectWorkflow
         .Name = "Project"
         .WorkflowType = enProject
-        .ActiveStep.Start
         .DBSave
+        .ActiveStep.Start
         .DisplayProjectForm
     
     End With
@@ -193,6 +214,7 @@ GracefullExit:
     Set ActiveUser = Nothing
     Set InputBox = Nothing
     Set ActiveContact = Nothing
+    Set RstSource = Nothing
     
     BtnProjectNewWFClick = True
 
@@ -207,6 +229,7 @@ ErrorExit:
     Set ActiveClient = Nothing
     Set ActiveUser = Nothing
     Set InputBox = Nothing
+    Set RstSource = Nothing
     
     BtnProjectNewWFClick = False
 
@@ -228,6 +251,7 @@ End Function
 Public Function BtnLenderNewWFClick(ScreenPage As enScreenPage) As Boolean
     Dim Picker As ClsFrmPicker
     Dim SQL As String
+    Dim RstSource As Recordset
     
     Const StrPROCEDURE As String = "BtnLenderNewWFClick()"
 
@@ -265,11 +289,25 @@ Public Function BtnLenderNewWFClick(ScreenPage As enScreenPage) As Boolean
     End With
 
     'get lender
+    If CurrentUser.UserLvl = enCaseMgr Then
+        Set RstSource = ModDatabase.SQLQuery("Select " _
+                                        & "    TblLender.Name " _
+                                        & "From " _
+                                        & "    TblAccessControl Right Join " _
+                                        & "    TblLender On TblLender.LenderNo = TblAccessControl.EntityNo " _
+                                        & "Where " _
+                                        & "    TblAccessControl.Entity = 'Lender' And " _
+                                        & "    TblAccessControl.UserNo = " _
+                                        & CurrentUser.CBSUserNo)
+    Else
+        Set RstSource = ModDatabase.SQLQuery("SELECT Name from TblLender")
+    End If
+    
     Set Picker = New ClsFrmPicker
     With Picker
         .Title = "Select Lender"
         .Instructions = "Select the Lender from the list.  Select New if the Lender you require is not listed"
-        .Data = ModDatabase.SQLQuery("SELECT Name from TblLender")
+        .Data = RstSource
         .ClearForm
         .Show = True
         If .CreateNew Then
@@ -320,6 +358,7 @@ GracefullExit:
     Set Picker = Nothing
     Set ActiveLender = Nothing
     Set ActiveClient = Nothing
+    Set RstSource = Nothing
     
     BtnLenderNewWFClick = True
 
@@ -334,6 +373,7 @@ ErrorExit:
     Set Picker = Nothing
     Set ActiveLender = Nothing
     Set ActiveClient = Nothing
+    Set RstSource = Nothing
     
     BtnLenderNewWFClick = False
 
@@ -362,8 +402,7 @@ End Sub
 ' ---------------------------------------------------------------
 Public Sub BtnLenderOpenWFClick(ByVal ScreenPage As enScreenPage, ByVal Index As String)
     If Not ModUIProjects.OpenLenderWF(ScreenPage, Index) Then Err.Raise HANDLED_ERROR
-    If Not ResetScreen Then Err.Raise HANDLED_ERROR
-    If Not ModUIProjects.BuildScreen(ScreenPage, True) Then Err.Raise HANDLED_ERROR
+    If Not ModUIProjects.RefreshList(ScreenPage, True) Then Err.Raise HANDLED_ERROR
 End Sub
 
 ' ===============================================================
@@ -446,7 +485,7 @@ Public Sub BtnAdminClick(ByVal ScreenPage As enScreenPage)
         With Picker
             .Title = "Select workflow script"
             .Instructions = "Select the workflow script you would like to view."
-            .Data = ModDatabase.SQLQuery("SELECT DisplayName from TblWorkflowType")
+            .Data = ModDatabase.SQLQuery("SELECT SecondTier from TblWorkflowTable")
             .ClearForm
             .Show = True
         End With
@@ -456,7 +495,7 @@ Public Sub BtnAdminClick(ByVal ScreenPage As enScreenPage)
             GoTo GracefullExit
         End If
         
-        Set RstFilter = ModDatabase.SQLQuery("SELECT WFNo FROM TblWorkflowType WHERE DisplayName = '" & Picker.SelectedItem & "'")
+        Set RstFilter = ModDatabase.SQLQuery("SELECT WFNo FROM TblWorkflowTable WHERE SecondTier = '" & Picker.SelectedItem & "'")
         StrFilter = "WorkflowNo:" & RstFilter!WFNo
     End If
     

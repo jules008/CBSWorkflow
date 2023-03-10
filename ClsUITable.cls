@@ -48,7 +48,8 @@ Private pHeadingStyle As ClsUIStyle
 Private pHeadingHeight As Integer
 Private pTableVisible As Boolean
 Private pShpExpand As Shape
-Private pExpandIcon As String
+Private pShowExpIcons As Boolean
+Private pLenderIcons As Boolean
 Private pParent As ClsUIFrame
 
 '---------------------------------------------------------------
@@ -251,17 +252,6 @@ Public Property Let TableVisible(ByVal vNewValue As Boolean)
 End Property
 
 '---------------------------------------------------------------
-Public Property Get ExpandIcon() As String
-    ExpandIcon = pExpandIcon
-End Property
-
-Public Property Let ExpandIcon(ByVal ExpandIcon As String)
-    Set pShpExpand = ShtMain.Shapes.AddPicture(GetDocLocalPath(ThisWorkbook.Path) & PICTURES_PATH & ExpandIcon, msoTrue, msoFalse, 0, 0, 0, 0)
-    pShpExpand.Name = "ExpandIcon"
-    pExpandIcon = ExpandIcon
-End Property
-
-'---------------------------------------------------------------
 Public Property Get RstText() As Recordset
     Set RstText = pRstText
 End Property
@@ -289,6 +279,24 @@ Public Property Let Styles(ByRef vNewValue() As String)
 End Property
 
 '---------------------------------------------------------------
+Public Property Get LenderIcons() As Boolean
+    LenderIcons = pLenderIcons
+End Property
+
+Public Property Let LenderIcons(ByRef vNewValue As Boolean)
+    pLenderIcons = vNewValue
+End Property
+
+'---------------------------------------------------------------
+Public Property Get ShowExpIcons() As Boolean
+    ShowExpIcons = pShowExpIcons
+End Property
+
+Public Property Let ShowExpIcons(ByRef vNewValue As Boolean)
+    pShowExpIcons = vNewValue
+End Property
+
+'---------------------------------------------------------------
 Public Property Get Parent() As ClsUIFrame
     Set Parent = pParent
 End Property
@@ -313,12 +321,12 @@ End Sub
 '---------------------------------------------------------------
 Public Sub ReOrder()
     Dim Cell As ClsUICell
+    Dim Badge As Shape
     
     Sin 0
     For Each Cell In pCells
         With Cell
-            .ShpCell.ZOrder msoBringToFront
-            If Not .Badge Is Nothing Then .Badge.ZOrder msoBringToFront
+            .ReOrder
         End With
     Next
 End Sub
@@ -332,6 +340,7 @@ Public Sub BuildTable(Optional SplitRow As Integer, Optional SplitSize As Intege
     Dim Cell As ClsUICell
     Dim ColOffset As Integer
     Dim RowOffset As Integer
+    Dim ExpandIcon As ClsUIBadge
     Static SplitFlag As Boolean
     
     If SplitRow = 0 Then SplitFrame 0
@@ -400,24 +409,36 @@ Public Sub BuildTable(Optional SplitRow As Integer, Optional SplitSize As Intege
                     .Top = .Parent.Top + RowOffset
                     .Width = pColWidths(x)
                     
-                    If x = 0 And ExpandIcon <> "" Then
-                        .Badge = pShpExpand.Duplicate
-                        With .Badge
-                            If y = SplitRow Then
+                    If x = 0 And pShowExpIcons Then
+                        Set ExpandIcon = New ClsUIBadge
+                        
+                        ExpandIcon.ShpBadge = ShtMain.Shapes.AddPicture(GetDocLocalPath(ThisWorkbook.Path) & PICTURES_PATH & GENERIC_TABLE_EXPAND_ICON, msoTrue, msoFalse, 0, 0, 0, 0)
+                        ExpandIcon.Name = "Expand " & Cell.Name
+                        
+                        .Badges.Add ExpandIcon
+                        If y = SplitRow Then
+                        
+                            With .Badges(ExpandIcon.Name)
+                                .Left = 30
+                                .Top = 3
                                 .Rotation = 90
-                                .Top = Cell.Top + 3
-                                .Left = Cell.Left + 30
                                 .Height = 13
                                 .Width = 11
                                 .OnAction = pOnAction(x, y)
-                            Else
-                                .Top = Cell.Top + 3
-                                .Left = Cell.Left + 20
+                            End With
+                        Else
+                            With .Badges(ExpandIcon.Name)
+                                .Left = 20
+                                .Top = 3
                                 .Height = 13
                                 .Width = 11
                                 .OnAction = pOnAction(x, y)
-                            End If
-                        End With
+                            End With
+                        End If
+                    End If
+                    
+                    If x = TABLE_ICON_COL Then
+                        If pLenderIcons Then AddLenderIcons pRstText.Fields(1), Cell
                     End If
                     
                     If y = 0 Then
@@ -605,10 +626,11 @@ Private Sub AddProgressBars(TableType As String)
     Dim TableCells As ClsUICells
     Dim UICell As ClsUICell
     Dim ProgressCol As Integer
+    Dim BarProgress As Shape
     
     If TableType = "Table" Then
         Set TableCells = pCells
-        ProgressCol = 8
+        ProgressCol = 9
     Else
         Set TableCells = pSubTable.Cells
         ProgressCol = 5
@@ -618,32 +640,92 @@ Private Sub AddProgressBars(TableType As String)
     For Each UICell In TableCells
         With UICell
             If .Row > 0 And .Col = ProgressCol Then
-                .AddBadge
-                .BadgeLeft = TABLE_PROGRESS_BADGE_LEFT
-                .BadgeTop = TABLE_PROGRESS_BADGE_TOP
-                With .Badge
-                    With .TextFrame
-                        .MarginTop = TABLE_PROGRESS_BADGE_MARGIN_TOP
-                        .HorizontalAlignment = xlHAlignCenter
-                        .VerticalAlignment = xlVAlignCenter
-                        With .Characters
-                            '.Text = UICell.Text
-                            .Font.Size = TABLE_PROGRESS_FONT_SIZE
-                            .Font.Color = TABLE_PROGRESS_FONT_COLOUR
-                        End With
-                    End With
-                    .Name = "Progress"
-                    .Line.Weight = TABLE_PROGRESS_BORDER_WEIGHT
+            
+                Dim Bar As ClsUIBadge
+                Set Bar = New ClsUIBadge
+                
+                Bar.ShpBadge = ShtMain.Shapes.AddShape(msoShapeRectangle, 0, 0, 0, 0)
+                Bar.Name = "Progress " & UICell.Name
+                .Badges.Add Bar
+                
+                With .Badges(Bar.Name)
+                    .Left = TABLE_PROGRESS_BADGE_LEFT
+                    .Top = TABLE_PROGRESS_BADGE_TOP
+                    .Style = TABLE_PROGRESS_BAR
                     .Height = TABLE_PROGRESS_BADGE_HEIGHT
                     .Width = (UICell.Width - 35) / 100 * Replace(UICell.Text, "%", "")
-                    .Fill.ForeColor.RGB = TABLE_PROGRESS_BADGE_FILL_COLOUR
                 End With
             End If
-            Debug.Print "Row"; .Row, "Col"; .Col
         End With
     Next
 
     Set UICell = Nothing
+End Sub
+
+' ===============================================================
+' Method AddLenderIcons
+' Adds s icon for each lender
+'---------------------------------------------------------------
+Public Sub AddLenderIcons(ProjectNo As Integer, ByRef ActiveCell As ClsUICell)
+    Dim Icon As ClsUIBadge
+    Dim SQL1 As String
+    Dim i As Integer
+    Dim RstLenders As Recordset
+    
+    SQL1 = "Select " _
+                                        & "    TblWorkflow.ProjectNo, " _
+        & "    TblWorkflow.RAG, " _
+        & "    TblWorkflow.LoanType " _
+                                        & "From " _
+                                        & "    TblWorkflow " _
+                                        & "Where " _
+        & "    TblWorkflow.ProjectNo = TblWorkflow.ProjectNo And " _
+        & "    TblWorkflow.ProjectNo = " & ProjectNo & " And " _
+        & "    TblWorkflow.WorkflowType = 'enLender' "
+
+    
+    Set RstLenders = ModDatabase.SQLQuery(SQL1)
+    
+    i = 0
+    With RstLenders
+        Do While Not .EOF And i < TABLE_ICON_NO_ICONS
+            Set Icon = New ClsUIBadge
+
+            Icon.ShpBadge = ShtMain.Shapes.AddShape(msoShapeRectangle, 0, 0, 0, 0)
+            Icon.Name = "Icon " & ActiveCell.Name & " - " & i
+            ActiveCell.Badges.Add Icon
+        
+            With ActiveCell.Badges(Icon.Name)
+                .Left = TABLE_ICON_LEFT + (i * TABLE_ICON_OFFSET)
+                .Top = TABLE_ICON_TOP
+                .Height = TABLE_ICON_SIZE
+                .Width = TABLE_ICON_SIZE
+            
+                Select Case RstLenders!LoanType
+                    Case "Commercial Mortgage"
+                        .Text = "C"
+                    Case "Development Finance"
+                        .Text = "D"
+                    Case "Bridge/Exit Loan"
+                        .Text = "B"
+                End Select
+            
+                Select Case RstLenders!RAG
+                Case "en3Green"
+                        .Style = GREEN_CELL
+                Case "en2Amber"
+                        .Style = AMBER_CELL
+                Case "en1Red"
+                        .Style = RED_CELL
+            End Select
+            End With
+
+            .MoveNext
+            i = i + 1
+        Loop
+    End With
+    
+    Set RstLenders = Nothing
 End Sub
 
 ' ===============================================================

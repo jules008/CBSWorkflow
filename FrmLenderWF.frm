@@ -1,6 +1,6 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FrmLenderWF 
-   ClientHeight    =   9735.001
+   ClientHeight    =   10245
    ClientLeft      =   120
    ClientTop       =   465
    ClientWidth     =   15990
@@ -40,12 +40,51 @@ Public Event PrevStep()
 Public Event ClickNo()
 Public Event CloseForm()
 Public Event UpdateLoan()
+Public Event DisplayContacts()
+Public Event OpenClientForm()
+Public Event OpenProjCRM()
+Public Event DeleteWF()
 
 ' ===============================================================
 ' BtnUpdateLoan_Click
 ' ---------------------------------------------------------------
 Private Sub BtnUpdateLoan_Click()
     RaiseEvent UpdateLoan
+End Sub
+
+' ===============================================================
+' BtnUpdateLoan_Click
+' ---------------------------------------------------------------
+Private Sub BtnDelete_Click()
+    Dim Response As Integer
+    
+    Response = MsgBox("Are you sure you want to delete the Lender Workflow from the database?", vbYesNo + vbExclamation, APP_NAME)
+    
+    If Response = 6 Then
+        RaiseEvent DeleteWF
+        Hide
+    End If
+End Sub
+
+' ===============================================================
+' BtnOpenProject_Click
+' ---------------------------------------------------------------
+Private Sub BtnOpenProject_Click()
+    RaiseEvent OpenProjCRM
+End Sub
+
+' ===============================================================
+' xBtnOpenClient_Click
+' ---------------------------------------------------------------
+Private Sub xBtnOpenClient_Click()
+    RaiseEvent OpenClientForm
+End Sub
+
+' ===============================================================
+' xBtnProjContacts_Click
+' ---------------------------------------------------------------
+Private Sub xBtnProjContacts_Click()
+    RaiseEvent DisplayContacts
 End Sub
 
 ' ===============================================================
@@ -98,7 +137,7 @@ End Sub
 ' ---------------------------------------------------------------
 Sub Progress(pctCompl As Single)
 
-    LblText.Caption = Format(pctCompl, "0") & "%"
+    Lbltext.Caption = Format(pctCompl, "0") & "%"
     xLblBar.Width = Frame7.Width / 100 * pctCompl
     
 End Sub
@@ -115,6 +154,7 @@ Private Sub UserForm_Initialize()
     Me.StartUpPosition = 0
     Me.Left = Application.Left + (0.5 * Application.Width) - (0.5 * Me.Width)
     Me.Top = Application.Top + (0.5 * Application.Height) - (0.5 * Me.Height)
+    If Me.Top < 0 Then Me.Top = 0
     xLblBar.ZOrder (1)
     
 End Sub

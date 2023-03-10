@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FrmContactForm 
    Caption         =   "Contact"
-   ClientHeight    =   6375
+   ClientHeight    =   8055
    ClientLeft      =   120
    ClientTop       =   465
-   ClientWidth     =   11955
+   ClientWidth     =   12180
    OleObjectBlob   =   "FrmContactForm.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -35,7 +35,7 @@ Public Event Delete()
 ' BtnClose_Click
 '---------------------------------------------------------------
 Private Sub BtnClose_Click()
-    Unload Me
+    Hide
 End Sub
 
 ' ===============================================================
@@ -47,13 +47,13 @@ Private Sub BtnDelete_Click()
     
     On Error GoTo ErrorHandler
     
-    If CurrentUser.UserLvl <> "Admin" Then Err.Raise ACCESS_DENIED
+    If CurrentUser.UserLvl = enCaseMgr Then Err.Raise ACCESS_DENIED
     
     Response = MsgBox("Are you sure you want to delete the Contact from the database?", vbYesNo + vbExclamation, APP_NAME)
     
     If Response = 6 Then
         RaiseEvent Delete
-        Unload Me
+        Hide
     End If
     
 ErrorHandler:
@@ -63,6 +63,138 @@ ErrorHandler:
         CustomErrorHandler (Err.Number)
     End If
 End Sub
+
+' ===============================================================
+' CmoContactType_Change
+' ---------------------------------------------------------------
+Private Sub CmoContactType_Change()
+    CmoOrganisation = ""
+    With CmoContactType
+        If .ListIndex = -1 Then
+            CmoOrganisation.Enabled = False
+            CmoOrganisation.Value = "Please select a Contact Type"
+        Else
+            CmoOrganisation.Enabled = True
+            If Not PopulateOrgs(.Value) Then Err.Raise HANDLED_ERROR
+        End If
+        
+        If .Value = "Client" Then
+            ChkOptOut.Enabled = True
+            TxtLastComm.Enabled = True
+            CmoCommFreq.Enabled = True
+            xBtnSent.Enabled = True
+            If CmoCommFreq = "" Or CmoCommFreq = 30 Then CmoCommFreq = 2
+        ElseIf .Value = "Lead" Then
+            ChkOptOut.Enabled = True
+            TxtLastComm.Enabled = True
+            CmoCommFreq.Enabled = True
+            xBtnSent.Enabled = True
+            If CmoCommFreq = "" Or CmoCommFreq = 2 Then CmoCommFreq = 30
+        Else
+            ChkOptOut.Enabled = False
+            TxtLastComm.Enabled = False
+            CmoCommFreq.Enabled = False
+            xBtnSent.Enabled = False
+        End If
+        
+        .BackColor = COL_WHITE
+    End With
+End Sub
+
+' ===============================================================
+' PopulateOrgs
+' popullates organisations after contact type is selected
+' ---------------------------------------------------------------
+Private Function PopulateOrgs(ContactType As String) As Boolean
+    Dim RstSource As Recordset
+    Dim Index As String
+    Dim Table As String
+    Dim Name As String
+    Dim i As Integer
+    
+    Const StrPROCEDURE As String = "populateOrgs()"
+
+    On Error GoTo ErrorHandler
+
+    Select Case ContactType
+        Case "Client"
+            Index = "ClientNo"
+            Table = "TblClient"
+            Name = "Name"
+            LblOrganisation = "Organisation"
+        Case "Lender"
+            Index = "LenderNo"
+            Table = "TblLender"
+            Name = "Name"
+            LblOrganisation = "Organisation"
+        Case "SPV"
+            Index = "SPVNo"
+            Table = "TblSPV"
+             Name = "Name"
+            LblOrganisation = "Organisation"
+       Case "Project"
+            Index = "ProjectNo"
+            Table = "TblProject"
+            Name = "ProjectName"
+            LblOrganisation = "Project"
+       Case "Lead"
+            Index = "ProjectNo"
+            Table = "TblProject"
+            Name = "ProjectName"
+            LblOrganisation = "Enter Organisation"
+        Case "Valuer"
+            Index = ""
+            Table = ""
+            Name = ""
+            LblOrganisation = "Enter Organisation"
+        Case "Other"
+            Index = ""
+            Table = ""
+            Name = ""
+            LblOrganisation = "Enter Organisation"
+            
+    End Select
+        
+    If CmoContactType.List(CmoContactType.ListIndex, 0) < 4 Then
+        Set RstSource = ModDatabase.SQLQuery("SElECT " & Index & ", " & Name & " FROM " & Table)
+        
+        With RstSource
+            CmoOrganisation.Clear
+            Do While Not .EOF
+                With CmoOrganisation
+                    .AddItem
+                    If Not IsNull(RstSource.Fields(0)) Then .List(i, 0) = RstSource.Fields(0)
+                    If Not IsNull(RstSource.Fields(1)) Then .List(i, 1) = RstSource.Fields(1)
+                    i = i + 1
+                End With
+                .MoveNext
+            Loop
+        End With
+        ChkOptOut.Enabled = False
+    Else
+        CmoOrganisation.Clear
+        ChkOptOut.Enabled = True
+    End If
+    
+    PopulateOrgs = True
+
+Exit Function
+
+ErrorExit:
+
+    '***CleanUpCode***
+    PopulateOrgs = False
+
+Exit Function
+
+ErrorHandler:
+    If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
+        Stop
+        Resume
+    Else
+        Resume ErrorExit
+    End If
+End Function
 
 ' ===============================================================
 ' ClearForm
@@ -91,7 +223,7 @@ End Sub
 Private Sub BtnNew_Click()
     On Error GoTo ErrorHandler
 
-    If CurrentUser.UserLvl <> "Admin" Or CurrentUser.UserLvl <> "Case Manager" Then Err.Raise ACCESS_DENIED
+    If CurrentUser.UserLvl = enCaseMgr Then Err.Raise ACCESS_DENIED
 
     RaiseEvent CreateNew
 ErrorHandler:
@@ -116,7 +248,7 @@ Private Sub BtnUpdate_Click()
 Restart:
 
     If MainScreen Is Nothing Then Err.Raise SYSTEM_RESTART
-    If CurrentUser.UserLvl <> "Admin" Then Err.Raise ACCESS_DENIED
+    If CurrentUser.UserLvl = enCaseMgr Then Err.Raise ACCESS_DENIED
     
     Select Case ValidateForm
 
@@ -128,7 +260,7 @@ Restart:
         Case Is = enFormOK
             
             RaiseEvent Update
-            Unload Me
+            Hide
     End Select
     
 GracefulExit:
@@ -155,89 +287,6 @@ ErrorHandler:
 End Sub
 
 ' ===============================================================
-' PopulateOrgs
-' popullates organisations after contact type is selected
-' ---------------------------------------------------------------
-Private Function PopulateOrgs(ContactType As String) As Boolean
-    Dim RstSource As Recordset
-    Dim Index As String
-    Dim Table As String
-    Dim Name As String
-    Dim i As Integer
-    
-    Const StrPROCEDURE As String = "populateOrgs()"
-
-    On Error GoTo ErrorHandler
-
-    Select Case ContactType
-        Case "Client"
-            Index = "ClientNo"
-            Table = "TblClient"
-            Name = "Name"
-        Case "Lender"
-            Index = "LenderNo"
-            Table = "TblLender"
-            Name = "Name"
-        Case "SPV"
-            Index = "SPVNo"
-            Table = "TblSPV"
-             Name = "Name"
-       Case "Project"
-            Index = "ProjectNo"
-            Table = "TblProject"
-            Name = "ProjectName"
-       Case "Lead"
-            Index = "ProjectNo"
-            Table = "TblProject"
-            Name = "ProjectName"
-    End Select
-        
-    If ContactType <> "Lead" Then
-    Set RstSource = ModDatabase.SQLQuery("SElECT " & Index & ", " & Name & " FROM " & Table)
-    
-    With RstSource
-        CmoOrganisation.Clear
-        Do While Not .EOF
-            With CmoOrganisation
-                .AddItem
-                If Not IsNull(RstSource.Fields(0)) Then .List(i, 0) = RstSource.Fields(0)
-                If Not IsNull(RstSource.Fields(1)) Then .List(i, 1) = RstSource.Fields(1)
-                i = i + 1
-            End With
-            .MoveNext
-        Loop
-    End With
-        ChkOptOut.Enabled = False
-    Else
-        CmoOrganisation.Clear
-        With CmoOrganisation
-            .AddItem
-            .List(0, 1) = "None"
-        End With
-        ChkOptOut.Enabled = True
-    End If
-    
-    PopulateOrgs = True
-
-Exit Function
-
-ErrorExit:
-
-    '***CleanUpCode***
-    PopulateOrgs = False
-
-Exit Function
-
-ErrorHandler:
-    If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
-        Stop
-        Resume
-    Else
-        Resume ErrorExit
-    End If
-End Function
-
-' ===============================================================
 ' xBtnSent_Click
 ' ---------------------------------------------------------------
 Private Sub xBtnSent_Click()
@@ -262,56 +311,6 @@ End Sub
 ' ---------------------------------------------------------------
 Private Sub CmoCommFreq_Change()
     CmoCommFreq.BackColor = COL_WHITE
-End Sub
-
-' ===============================================================
-' CmoContactType_Change
-' ---------------------------------------------------------------
-Private Sub CmoContactType_Change()
-    CmoOrganisation = ""
-    With CmoContactType
-        If .ListIndex = -1 Then
-            CmoOrganisation.Enabled = False
-            CmoOrganisation.Value = "Please select a Contact Type"
-        Else
-            CmoOrganisation.Enabled = True
-            If Not PopulateOrgs(.Value) Then Err.Raise HANDLED_ERROR
-        End If
-        
-        If .Value = "Project" Then
-            LblOrganisation.Caption = "Select Project"
-        Else
-            LblOrganisation.Caption = "Organisation"
-        End If
-        
-        If .Value = "Client" Then
-            ChkOptOut.Enabled = True
-            TxtLastComm.Enabled = True
-            CmoCommFreq.Enabled = True
-            xBtnSent.Enabled = True
-            If CmoCommFreq = "" Or CmoCommFreq = 30 Then CmoCommFreq = 2
-        ElseIf .Value = "Lead" Then
-            ChkOptOut.Enabled = True
-            TxtLastComm.Enabled = True
-            CmoCommFreq.Enabled = True
-            xBtnSent.Enabled = True
-            If CmoCommFreq = "" Or CmoCommFreq = 2 Then CmoCommFreq = 30
-        Else
-            ChkOptOut.Enabled = False
-            TxtLastComm.Enabled = False
-            CmoCommFreq.Enabled = False
-            xBtnSent.Enabled = False
-        End If
-        
-        .BackColor = COL_WHITE
-    End With
-End Sub
-
-' ===============================================================
-' CmoOrganisation_Change
-' ---------------------------------------------------------------
-Private Sub CmoOrganisation_Change()
-    CmoOrganisation.BackColor = COL_WHITE
 End Sub
 
 ' ===============================================================
@@ -396,6 +395,15 @@ Private Sub UserForm_Initialize()
         .AddItem
         .List(4, 0) = 4
         .List(4, 1) = "Lead"
+        .AddItem
+        .List(5, 0) = 5
+        .List(5, 1) = "MS"
+        .AddItem
+        .List(6, 0) = 6
+        .List(6, 1) = "Valuer"
+        .AddItem
+        .List(7, 0) = 7
+        .List(7, 1) = "Other"
     End With
     
     Dim i As Integer
@@ -408,7 +416,6 @@ Private Sub UserForm_Initialize()
         Next
     End With
     
-    CmoOrganisation.Enabled = False
 End Sub
 
 ' ===============================================================
@@ -429,14 +436,7 @@ Private Function ValidateForm() As enFormValidation
     End With
            
     With CmoContactType
-        If .ListIndex = -1 Then
-            .BackColor = COL_AMBER
-            ValidateForm = enValidationError
-        End If
-    End With
-    
-    With CmoOrganisation
-        If .ListIndex = -1 And CmoContactType <> "Lead" Then
+        If .Value = "" Then
             .BackColor = COL_AMBER
             ValidateForm = enValidationError
         End If

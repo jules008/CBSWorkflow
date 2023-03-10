@@ -1,6 +1,6 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FrmProjectWF 
-   ClientHeight    =   9930.001
+   ClientHeight    =   11190
    ClientLeft      =   120
    ClientTop       =   465
    ClientWidth     =   15990
@@ -40,6 +40,42 @@ Public Event PrevStep()
 Public Event ClickNo()
 Public Event CloseForm()
 Public Event UpdateLoan()
+Public Event DisplayContacts()
+Public Event OpenClientForm()
+Public Event OpenSPVForm()
+Public Event OpenProjCRM()
+
+' ===============================================================
+' BtnOpenProject_Click
+' ---------------------------------------------------------------
+Private Sub BtnOpenProject_Click()
+    RaiseEvent OpenProjCRM
+End Sub
+
+Private Sub CommandButton8_Click()
+
+End Sub
+
+' ===============================================================
+' xBrtnProjContacts_Click
+' ---------------------------------------------------------------
+Private Sub xBrtnProjContacts_Click()
+    RaiseEvent DisplayContacts
+End Sub
+
+' ===============================================================
+' xBtnOpenClient_Click
+' ---------------------------------------------------------------
+Private Sub xBtnOpenClient_Click()
+    RaiseEvent OpenClientForm
+End Sub
+
+' ===============================================================
+' xBtnOpenSPV_Click
+' ---------------------------------------------------------------
+Private Sub xBtnOpenSPV_Click()
+    RaiseEvent OpenSPVForm
+End Sub
 
 ' ===============================================================
 ' xBtnUpdateLoan_Click
@@ -115,6 +151,7 @@ Private Sub UserForm_Initialize()
     Me.StartUpPosition = 0
     Me.Left = Application.Left + (0.5 * Application.Width) - (0.5 * Me.Width)
     Me.Top = Application.Top + (0.5 * Application.Height) - (0.5 * Me.Height)
+    If Me.Top < 0 Then Me.Top = 0
     xLblBar.ZOrder (1)
     
 End Sub

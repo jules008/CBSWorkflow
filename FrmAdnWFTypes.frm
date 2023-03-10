@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FrmAdnWFTypes 
    Caption         =   "Workflow Types"
-   ClientHeight    =   3240
+   ClientHeight    =   3225
    ClientLeft      =   120
    ClientTop       =   465
-   ClientWidth     =   9150.001
+   ClientWidth     =   8820.001
    OleObjectBlob   =   "FrmAdnWFTypes.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -35,7 +35,7 @@ Public Event Delete(WFNo As String)
 ' BtnClose_Click
 '---------------------------------------------------------------
 Private Sub BtnClose_Click()
-    Unload Me
+    Hide
 End Sub
 
 ' ===============================================================
@@ -50,7 +50,7 @@ Private Sub BtnDelete_Click()
     If Response = 6 Then
         RaiseEvent Delete(TxtWFNo)
     End If
-    Unload Me
+    Hide
 End Sub
 
 ' ===============================================================
@@ -58,8 +58,8 @@ End Sub
 ' Clears form
 ' ---------------------------------------------------------------
 Public Sub ClearForm()
-    TxtDescription = ""
-    TxtDisplayName = ""
+    TxtLoanType = ""
+    TxtSecondTier = ""
     TxtWFNo = ""
 End Sub
 
@@ -96,7 +96,7 @@ Restart:
         Case Is = enFormOK
             
             RaiseEvent Update(TxtWFNo)
-            Unload Me
+            Hide
     End Select
     
 GracefulExit:
@@ -120,20 +120,6 @@ ErrorHandler:
     Else
         Resume ErrorExit
     End If
-End Sub
-
-' ===============================================================
-' TxtDescription_Change
-' ---------------------------------------------------------------
-Private Sub TxtDescription_Change()
-    TxtDescription.BackColor = COL_WHITE
-End Sub
-
-' ===============================================================
-' TxtDisplayName_Change
-' ---------------------------------------------------------------
-Private Sub TxtDisplayName_Change()
-    TxtDisplayName.BackColor = COL_WHITE
 End Sub
 
 ' ===============================================================
@@ -180,14 +166,14 @@ Private Function ValidateForm() As enFormValidation
 
     On Error GoTo ErrorHandler
            
-    With TxtDescription
+    With TxtLoanType
         If .Value = "" Then
             .BackColor = COL_AMBER
             ValidateForm = enValidationError
         End If
     End With
            
-    With TxtDisplayName
+    With TxtSecondTier
         If .Value = "" Then
             .BackColor = COL_AMBER
             ValidateForm = enValidationError

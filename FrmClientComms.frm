@@ -48,12 +48,12 @@ Public Sub AddFields(CommsList As Recordset)
     With CommsList
         If .RecordCount > 0 Then .MoveFirst
         Do While Not .EOF
-            Debug.Print !ContactName
+'            Debug.Print !ContactName
             If !ContactType = "Client" Then IntExt = "Internal" Else IntExt = "External"
             If Not IsNull(!Organisation) Then OrgStr = " at " & !Organisation Else OrgStr = ""
             
             Set Chkbox = FrmBoxes.Controls.Add("Forms.CheckBox.1")
-            Debug.Print !ContactNo
+'            Debug.Print !ContactNo
             With Chkbox
                 .Name = "ChkBox:" & CommsList!ContactNo
                 .Top = (i * 15) + 0
@@ -87,7 +87,7 @@ End Sub
 ' BtnClose_Click
 ' ---------------------------------------------------------------
 Private Sub BtnClose_Click()
-    Unload Me
+    Hide
 End Sub
 
 ' ===============================================================
@@ -106,7 +106,7 @@ Restart:
     If MainScreen Is Nothing Then Err.Raise SYSTEM_RESTART
 
     If Not ModReport.IntExtCommsReport(LocCommsList) Then Err.Raise HANDLED_ERROR
-    Unload Me
+    Hide
 
 GracefulExit:
 

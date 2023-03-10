@@ -169,7 +169,7 @@ Public Sub ReOrder()
     For i = 3 To 0 Step -1
     For Each Frame In pFrames
             If i = Frame.ZOrder Then
-                Debug.Print Frame.Name, Frame.ZOrder
+'                Debug.Print Frame.Name, Frame.ZOrder
         Frame.ReOrder
             End If
         Next

@@ -391,7 +391,27 @@ Private Function GetCRMData(ByVal ScreenPage As enScreenPage, StrSortBy As Strin
     
     Select Case ScreenPage
         Case enScrCRMClient
-            SQL = "SELECT ClientNo, Name, CBS, Address, PhoneNo, Url FROM TblClient " & StrSortBy
+            SQL = "Select " _
+                & "    TblClient.ClientNo, " _
+                & "    TblClient.Name, " _
+                & "    TblClient.CBS, " _
+                & "    TblClient.Address, " _
+                & "    TblClient.PhoneNo, " _
+                & "    TblClient.Url " _
+                & "From " _
+                & "    TblClient "
+            
+            If CurrentUser.UserLvl = enCaseMgr Then
+                SQL = SQL _
+                & "Left Join " _
+                & "    TblAccessControl On TblClient.ClientNo = TblAccessControl.EntityNo " _
+                & "Where " _
+                & "    TblAccessControl.Entity = 'Client' And " _
+                & "    TblAccessControl.UserNo = " & CurrentUser.CBSUserNo
+            End If
+            
+            SQL = SQL & StrSortBy
+                
         Case enScrCRMSPV
             SQL = "SELECT SPVNo, Name FROM TblSPV " & StrSortBy
         Case enScrCRMContact
@@ -401,8 +421,25 @@ Private Function GetCRMData(ByVal ScreenPage As enScreenPage, StrSortBy As Strin
             SQL = "SELECT TblProject.ProjectNo, TblProject.ProjectName, TblClient.Name, TblSPV.Name, TblCBSUser.UserName " _
                     & "FROM ((TblProject LEFT JOIN TblClient ON TblProject.ClientNo = TblClient.ClientNo) LEFT JOIN TblSPV ON TblProject.SPVNo = TblSPV.SPVNo) LEFT JOIN TblCBSUser ON TblProject.CaseManager = TblCBSUser.CBSUserNo " & StrSortBy
         Case enScrCRMLender
-            SQL = "SELECT LenderNo, Name, PhoneNo, LenderType, Address FROM TblLender " & StrSortBy
+            SQL = "Select " _
+                & "    LenderNo, " _
+                & "    Name, " _
+                & "    PhoneNo, " _
+                & "    LenderType, " _
+                & "    Address " _
+                & "From " _
+                & "    TblLender "
     
+            If CurrentUser.UserLvl = enCaseMgr Then
+                SQL = SQL _
+                & "Left Join " _
+                & "    TblAccessControl On TblLender.LenderNo = TblAccessControl.EntityNo " _
+                & "Where " _
+                & "    TblAccessControl.Entity = 'Lender' And " _
+                & "    TblAccessControl.UserNo = " & CurrentUser.CBSUserNo
+            End If
+            
+            SQL = SQL & StrSortBy
     End Select
 
     Set RstWorkflow = ModDatabase.SQLQuery(SQL)
@@ -628,7 +665,7 @@ Public Function CalendlyImport() As Boolean
         ColEventType = .Range("1:1").Find("Event Type Name").Column
         
         Debug.Assert ColFirstName > 0 And ColLastName > 0 And ColEmail > 0 And ColEventType > 0
-        Debug.Print NoRows
+'        Debug.Print NoRows
         
         For i = 2 To NoRows + 1
             Set RstContMaxNo = ModDatabase.SQLQuery("SELECT MAX(ContactNo) As MaxNo FROM TblContact")
@@ -638,7 +675,7 @@ Public Function CalendlyImport() As Boolean
                 LastName = Trim(.Cells(i, ColLastName))
                 Email = Trim(.Cells(i, ColEmail))
                 Debug.Assert FirstName <> ""
-                Debug.Print i, FirstName, LastName, Email
+'                Debug.Print i, FirstName, LastName, Email
             End If
             
             With RstContacts
@@ -647,7 +684,7 @@ Public Function CalendlyImport() As Boolean
                 .FindFirst ("ContactName = '" & FirstName & " " & LastName & "'")
                 
                 If .NoMatch Then
-                    Debug.Print "no record found"
+'                    Debug.Print "no record found"
                     Import = True
                 Else
                     Dim Response As Integer

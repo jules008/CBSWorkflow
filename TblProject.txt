@@ -9,11 +9,15 @@ Contacts,  dbText
 ProjectWFNo,  dbLong
 ProjectName,  dbText
 FirstClientInt,  dbLong
-SecondClientRef,  dbLong
-Facilitator,  dbLong
 CBSCommission,  dbLong
 Debt,  dbSingle
 CompleteDate,  dbDate
 StartDate,  dbDate
 CBSCommPC,  dbSingle
 ExitFeePC,  dbSingle
+ConsComenceDte,  dbDate
+MS,  dbLong
+Valuer,  dbLong
+Distribution,  dbText
+SecondClientRef,  dbText
+Status,  dbText

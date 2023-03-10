@@ -41,6 +41,8 @@ Private pEmailAddress As String
 Private pOptOut As Boolean
 Private pLastComm As Date
 Private pComFrq As Integer
+Private pNotes As String
+Private pContactIndex As Integer
 
 Private WithEvents pContactForm As FrmContactForm
 Attribute pContactForm.VB_VarHelpID = -1
@@ -72,6 +74,15 @@ End Property
 
 Public Property Let ContactName(ByVal vNewValue As String)
     pContactName = vNewValue
+End Property
+
+'---------------------------------------------------------------
+Public Property Get ContactType() As String
+    ContactType = pContactType
+End Property
+
+Public Property Let ContactType(ByVal vNewValue As String)
+    pContactType = vNewValue
 End Property
 
 '---------------------------------------------------------------
@@ -137,6 +148,24 @@ Public Property Let Organisation(ByVal vNewValue As String)
     pOrganisation = vNewValue
 End Property
 
+'---------------------------------------------------------------
+Public Property Get Notes() As String
+    Notes = pNotes
+End Property
+
+Public Property Let Notes(ByVal vNewValue As String)
+    pNotes = vNewValue
+End Property
+
+'---------------------------------------------------------------
+Public Property Get ContactIndex() As Integer
+    ContactIndex = pContactIndex
+End Property
+
+Public Property Let ContactIndex(ByVal vNewValue As Integer)
+    pContactIndex = vNewValue
+End Property
+
 ' ===============================================================
 ' Method DBNew
 ' displays new SPV form
@@ -155,12 +184,13 @@ Public Sub DBNew(Optional ClientType As String, Optional Organistion As String)
     pOptOut = False
     pLastComm = 0
     pComFrq = 7
+    pNotes = ""
+    pContactIndex = 0
     
     With pContactForm
         .Tag = "New"
         .ClearForm
         .CmoContactType = ClientType
-        .CmoOrganisation = Organistion
         .BtnUpdate.Caption = "Create"
         .Show
     End With
@@ -177,7 +207,9 @@ Public Sub DisplayForm()
         .TxtContactName = pContactName
         .TxtContactNo = pContactNo
         .CmoContactType = pContactType
-        .CmoOrganisation = pOrganisation
+        If .CmoContactType.ListIndex < 5 Then
+            If pContactIndex > 0 Then .CmoOrganisation = pContactIndex
+        End If
         .TxtPhone1 = pPhone1
         .TxtPhone2 = pPhone2
         .TxtPosition = pPosition
@@ -185,6 +217,7 @@ Public Sub DisplayForm()
         .ChkPrimaryContact = pPrimaryContact
         .ChkOptOut = pOptOut
         .CmoCommFreq = pComFrq
+        .xTxtNotes = pNotes
         If pLastComm = 0 Then .TxtLastComm = "" Else .TxtLastComm = pLastComm
         .Show
     End With
@@ -251,6 +284,8 @@ Public Sub DBGet(ContactNameNo As Variant)
             If Not IsNull(!OptOut) Then pOptOut = !OptOut
             If Not IsNull(!ComFrq) Then pComFrq = !ComFrq
             If Not IsNull(!LastComm) Then pLastComm = !LastComm
+            If Not IsNull(!Notes) Then pNotes = !Notes
+            If Not IsNull(!ContactIndex) Then pContactIndex = !ContactIndex
             If RstNoCont.Fields(0) = 0 Then
                 pPrimaryContact = True
                 DB.Execute "UPDATE TblContact SET PrimaryContact = TRUE WHERE ContactType = '" & pContactType & "' and Organisation = '" & pOrganisation & "'"
@@ -311,6 +346,8 @@ Public Sub DBSave()
         !LastComm = CleanSQLText(pLastComm, True)
         !ComFrq = CleanSQLText(pComFrq, True)
         !EmailAddress = CleanSQLText(pEmailAddress, True)
+        !Notes = CleanSQLText(pNotes, True)
+        !ContactIndex = CleanSQLText(pContactIndex, True)
 
         .Update
     End With
@@ -360,8 +397,16 @@ Private Sub pContactForm_Update()
         pPhone2 = Trim(.TxtPhone2)
         pPosition = Trim(.TxtPosition)
         pContactType = Trim(.CmoContactType)
-        pOrganisation = Trim(.CmoOrganisation)
+        If .CmoContactType.ListIndex < 5 Then
+            If .CmoOrganisation.ListIndex <> -1 Then
+                pContactIndex = .CmoOrganisation
+            Else
+                pContactIndex = 0
+            End If
+        End If
+        If .CmoOrganisation.Text <> "" Then pOrganisation = .CmoOrganisation.Text
         pEmailAddress = Trim(.TxtEmailAdd)
+        pNotes = Trim(.xTxtNotes)
         pPrimaryContact = Trim(.ChkPrimaryContact)
         pOptOut = Trim(.ChkOptOut)
         If .TxtLastComm = "" Then pLastComm = 0 Else pLastComm = .TxtLastComm
@@ -373,28 +418,28 @@ Private Sub pContactForm_Update()
         Case "Client"
             Set ActiveClient = New ClsClient
             With ActiveClient
-                .DBGet pOrganisation
+                .DBGet pContactIndex
                 .Contacts.Add Me
                 .DBSave
             End With
         Case "Lender"
             Set ActiveLender = New ClsLender
             With ActiveLender
-                .DBGet pOrganisation
+                .DBGet pContactIndex
                 .Contacts.Add Me
                 .DBSave
             End With
         Case "Project"
             Set ActiveProject = New ClsProject
             With ActiveProject
-                .DBGet pOrganisation
+                .DBGet pContactIndex
                 .Contacts.Add Me
                 .DBSave
             End With
         Case "SPV"
             Set ActiveSPV = New ClsSPV
             With ActiveSPV
-                .DBGet pOrganisation
+                .DBGet pContactIndex
                 .Contacts.Add Me
                 .DBSave
             End With

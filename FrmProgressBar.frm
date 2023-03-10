@@ -63,5 +63,5 @@ End Sub
 ' ---------------------------------------------------------------
 Public Sub Start(ProcName As String)
     Application.Run ProcName
-    Unload Me
+    Hide
 End Sub

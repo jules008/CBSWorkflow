@@ -77,8 +77,11 @@ End Sub
 ' Removes item from collection
 ' ---------------------------------------------------------------
 Public Sub Remove(WorkflowNo As Variant)
-    pWorkflows(WorkflowNo).Parent = Nothing
-    pWorkflows.Remove WorkflowNo
+    Dim Workflow As ClsWorkflow
+    
+    Set Workflow = pWorkflows.Item(CStr(WorkflowNo))
+    Workflow.Terminate
+    pWorkflows.Remove CStr(WorkflowNo)
 End Sub
 
 ' ===============================================================
@@ -227,12 +230,12 @@ Public Sub DisplayWFTypeFrm(Optional WFNo As String)
     Dim RstWFType As Recordset
     
     If WFNo <> "" Then
-        Set RstWFType = ModDatabase.SQLQuery("SELECT * FROM TblWorkflowType WHERE WFNo = " & WFNo)
+        Set RstWFType = ModDatabase.SQLQuery("SELECT * FROM TblWorkflowTable WHERE WFNo = " & WFNo)
         
         With RstWFType
             If .RecordCount > 0 Then
-                pWFTypeForm.TxtDescription = !Description
-                pWFTypeForm.TxtDisplayName = !DisplayName
+                pWFTypeForm.TxtLoanType = !LoanType
+                pWFTypeForm.TxtSecondTier = !SecondTier
                 pWFTypeForm.TxtWFNo = !WFNo
                 pWFTypeForm.Show
             End If
@@ -250,7 +253,7 @@ End Sub
 ' Form event to delete workflow type
 '---------------------------------------------------------------
 Private Sub pWFTypeForm_Delete(WFNo As String)
-    DB.Execute "DELETE FROM TblWorkflowType WHERE WFNo = " & WFNo
+    DB.Execute "DELETE FROM TblWorkflowTable WHERE WFNo = " & WFNo
 End Sub
 
 ' ===============================================================
@@ -263,15 +266,15 @@ Private Sub pWFTypeForm_Update(WFNo As String)
     If WFNo = "" Then
         pWFTypeForm_CreateNew
     Else
-        Set RstWFType = ModDatabase.SQLQuery("SELECT * FROM TblWorkflowType WHERE WFNo = " & WFNo)
+        Set RstWFType = ModDatabase.SQLQuery("SELECT * FROM TblWorkflowTable WHERE WFNo = " & WFNo)
         
         With RstWFType
             If .RecordCount = 0 Then
                 pWFTypeForm_CreateNew
             Else
                 .Edit
-                !Description = pWFTypeForm.TxtDescription
-                !DisplayName = pWFTypeForm.TxtDisplayName
+                !LoanType = pWFTypeForm.TxtLoanType
+                !SecondTier = pWFTypeForm.TxtSecondTier
                 .Update
             End If
         End With
@@ -288,14 +291,14 @@ Private Sub pWFTypeForm_CreateNew()
     Dim RstWFType As Recordset
     Dim RstMaxWFType As Recordset
     
-    Set RstWFType = ModDatabase.SQLQuery("TblWorkflowType")
-    Set RstMaxWFType = ModDatabase.SQLQuery("SELECT Max(WFNo) as MaxWFNo FROM TblWorkflowType")
+    Set RstWFType = ModDatabase.SQLQuery("TblWorkflowTable")
+    Set RstMaxWFType = ModDatabase.SQLQuery("SELECT Max(WFNo) as MaxWFNo FROM TblWorkflowTable")
     
     With RstWFType
         .AddNew
         !WFNo = .Fields(0) + 1
-        !Description = pWFTypeForm.TxtDescription
-        !DisplayName = pWFTypeForm.TxtDisplayName
+        !LoanType = pWFTypeForm.TxtLoanType
+        !SecondTier = pWFTypeForm.TxtSecondTier
         !WFName = Replace(!DisplayName, " ", "")
         .Update
     End With

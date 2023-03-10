@@ -17,7 +17,7 @@ DataItem,  dbText
 DataFormat,  dbText
 DataDest,  dbText
 EmailArrived,  dbBoolean
-Email,  dbLong
+EmailNo,  dbLong
 AltEmail,  dbLong
 Status,  dbText
 CopyText,  dbMemo

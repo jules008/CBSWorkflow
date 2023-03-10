@@ -138,7 +138,7 @@ Public Sub DBGet(SPVNameOrNo As Variant)
             If Not IsNull(!Name) Then pName = !Name
             If Not IsNull(!ClientNo) Then pClientNo = !ClientNo
             
-            pContacts.GetCollection "SPV", CleanSQLText(pName)
+            pContacts.GetCollection "SPV", pSPVNo
         End If
     End With
     Set RstSPV = Nothing

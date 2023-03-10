@@ -24,6 +24,7 @@ Private Declare PtrSafe Function getTickCount Lib "kernel32" Alias "QueryPerform
 Private Const sCPURegKey = "HARDWARE\DESCRIPTION\System\CentralProcessor\0"
 Private Const HKEY_LOCAL_MACHINE As Long = &H80000002
 Private pStartingTime As Double
+Private pLapTime As Double
 
 ' ===============================================================
 ' StartTimer
@@ -49,8 +50,10 @@ Public Function MarkTime(ProcName As String) As Long
     If cyFrequency Then MicroTimer = cyTicks1 / cyFrequency ' calc seconds
     If ProcName = "Start" Then
         Debug.Print "Procedure: "; ProcName, "TimeStamp: "; Format(0, "0.000")
+        pLapTime = MicroTimer
     Else
-        Debug.Print "Procedure: "; ProcName, "TimeStamp: "; Format((MicroTimer - pStartingTime), "0.000")
+        Debug.Print "Procedure: "; ProcName, "TimeStamp: "; Format((MicroTimer - pStartingTime), "0.000"), "Laptime: "; Format((MicroTimer - pLapTime), "0.000")
+        pLapTime = MicroTimer
     End If
     MarkTime = MicroTimer
 End Function

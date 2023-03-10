@@ -81,7 +81,7 @@ End Sub
 ' Removes item from collection
 ' ---------------------------------------------------------------
 Public Sub Remove(ContactNo As Variant)
-    pContacts.Remove ContactNo
+    pContacts.Remove CStr(ContactNo)
 End Sub
 
 ' ===============================================================
@@ -96,7 +96,7 @@ End Function
 ' Method GetCollection
 ' Gets all items in collection
 ' ---------------------------------------------------------------
-Public Sub GetCollection(ContactType As String, OrgName As String)
+Public Sub GetCollection(ContactType As String, Optional ContactIndex As Integer)
     Dim RstContact As Recordset
     Dim Contact As ClsContact
     Dim i As Integer
@@ -104,8 +104,12 @@ Public Sub GetCollection(ContactType As String, OrgName As String)
 
     RemoveCollection
     
+    If ContactIndex > 0 Then
     SQL = "SELECT ContactNo FROM TblContact WHERE ContactType = '" & ContactType & "'" _
-                                        & "AND Organisation = '" & OrgName & "'"
+                                            & "AND ContactIndex = " & ContactIndex
+    Else
+        SQL = "SELECT ContactNo FROM TblContact WHERE ContactType = '" & ContactType & "'"
+    End If
     
     Set RstContact = ModDatabase.SQLQuery(SQL)
     With RstContact

@@ -100,3 +100,19 @@ ErrorHandler:
         Resume ErrorExit
     End If
 End Function
+
+' ===============================================================
+' ChangeUser
+' Temporary routine to change user level
+' ---------------------------------------------------------------
+Public Sub ChangeUser()
+    Dim UserLvl As EnUserLvl
+    
+    If CurrentUser Is Nothing Then Initialize
+    
+    UserLvl = ShtSettings.Range("$D$12")
+    
+    CurrentUser.UserLvl = UserLvl
+    MsgBox "You now have the user level of " & EnUserLvlDisp(UserLvl), vbOKOnly + vbInformation
+    
+End Sub

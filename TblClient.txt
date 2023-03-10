@@ -4,3 +4,4 @@ Url,  dbText
 PhoneNo,  dbText
 Address,  dbMemo
 CBS,  dbText
+ClientNeeds,  dbLong

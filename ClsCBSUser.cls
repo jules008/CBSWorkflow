@@ -32,7 +32,10 @@ Private pCBSUserNo As Integer
 Private pUserName As String
 Private pPosition As String
 Private pPhoneNo As String
-Private pUserLvl As String
+Private pUserLvl As EnUserLvl
+Private pSupervisor As ClsCBSUser
+Private pAccessCntrl As FrmAccessCntrl
+
 Private WithEvents pCBSUserForm As FrmAdnCBSUser
 Attribute pCBSUserForm.VB_VarHelpID = -1
 
@@ -73,12 +76,21 @@ Public Property Let PhoneNo(ByVal vNewValue As String)
 End Property
 
 '---------------------------------------------------------------
-Public Property Get UserLvl() As String
+Public Property Get UserLvl() As EnUserLvl
     UserLvl = pUserLvl
 End Property
 
-Public Property Let UserLvl(ByVal vNewValue As String)
+Public Property Let UserLvl(ByVal vNewValue As EnUserLvl)
     pUserLvl = vNewValue
+End Property
+
+'---------------------------------------------------------------
+Public Property Get Supervisor() As ClsCBSUser
+    Set Supervisor = pSupervisor
+End Property
+
+Public Property Let Supervisor(ByVal Supervisor As ClsCBSUser)
+    Set pSupervisor = Supervisor
 End Property
 
 ' ===============================================================
@@ -89,7 +101,8 @@ Public Sub DBNew()
     pUserName = ""
     pPosition = ""
     pPhoneNo = ""
-    pUserLvl = ""
+    pUserLvl = 0
+    Set pSupervisor = Nothing
     
     With pCBSUserForm
         .Tag = "New"
@@ -108,7 +121,9 @@ Public Sub DisplayForm()
         .TxtPhoneNo = pPhoneNo
         .TxtPosition = pPosition
         .TxtUserName = pUserName
-        .CmoUserLvl = pUserLvl
+        If pUserLvl > 0 Then .CmoUserLvl = pUserLvl
+        If pUserLvl = enCaseMgr Then .BtnAccessLvl.Visible = True Else .BtnAccessLvl.Visible = False
+        If Not pSupervisor Is Nothing Then .CmoSupervisor = pSupervisor.UserName
         .Show
     End With
 End Sub
@@ -133,6 +148,10 @@ Public Sub DBGet(CBSUserNameOrNo As Variant)
             If Not IsNull(!Position) Then pPosition = !Position
             If Not IsNull(!PhoneNo) Then pPhoneNo = !PhoneNo
             If Not IsNull(!UserLvl) Then pUserLvl = !UserLvl
+            If Not IsNull(!Supervisor) Then
+                Set pSupervisor = New ClsCBSUser
+                pSupervisor.DBGet !Supervisor
+            End If
         End If
     End With
     Set RstCBSUser = Nothing
@@ -169,6 +188,7 @@ Public Sub DBSave()
         !Position = CleanSQLText(pPosition, True)
         !PhoneNo = CleanSQLText(pPhoneNo, True)
         !UserLvl = CleanSQLText(pUserLvl, True)
+        If Not pSupervisor Is Nothing Then !Supervisor = CleanSQLText(pSupervisor.CBSUserNo, True)
 
         .Update
     End With
@@ -196,7 +216,13 @@ Private Sub pCBSUserForm_Update()
         pUserName = CleanSQLText(.TxtUserName)
         pPosition = CleanSQLText(.TxtPosition)
         pPhoneNo = CleanSQLText(.TxtPhoneNo)
-        pUserLvl = CleanSQLText(.CmoUserLvl)
+        pUserLvl = .CmoUserLvl
+        
+        If .CmoSupervisor.ListIndex <> -1 Then
+            Set pSupervisor = New ClsCBSUser
+            pSupervisor.DBGet .CmoSupervisor
+        End If
+        
     End With
     
     If pCBSUserNo = CurrentUser.CBSUserNo Then
@@ -227,6 +253,14 @@ Private Sub pCBSUserForm_Delete()
 End Sub
 
 ' ===============================================================
+' Event pCBSUserForm_ShowAccessFrm
+' Shows access form for case managers
+' ---------------------------------------------------------------
+Private Sub pCBSUserForm_ShowAccessFrm()
+    FrmAccessCntrl.ShowForm Me
+End Sub
+
+' ===============================================================
 Private Sub Class_Initialize()
     Set pCBSUserForm = New FrmAdnCBSUser
     
@@ -235,5 +269,6 @@ End Sub
 ' ===============================================================
 Private Sub Class_Terminate()
     Set pCBSUserForm = Nothing
+    If Not pSupervisor Is Nothing Then Set pSupervisor = Nothing
 End Sub
 ' ===============================================================

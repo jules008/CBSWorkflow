@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FrmProjectForm 
    Caption         =   "CRM - Project"
-   ClientHeight    =   6720
+   ClientHeight    =   9645.001
    ClientLeft      =   120
    ClientTop       =   465
-   ClientWidth     =   11940
+   ClientWidth     =   12855
    OleObjectBlob   =   "FrmProjectForm.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -13,6 +13,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
 
 '===============================================================
 ' Module FrmProjectForm
@@ -33,6 +34,9 @@ Private Const StrMODULE As String = "FrmProjectForm"
 Public Event CreateNew()
 Public Event Update()
 Public Event Delete()
+Public Event DisplayContactsFrm()
+Public Event OpenClientForm()
+Public Event OpenSPVForm()
 
 Private DisableEvents As Boolean
 
@@ -40,7 +44,15 @@ Private DisableEvents As Boolean
 ' BtnClose_Click
 '---------------------------------------------------------------
 Private Sub BtnClose_Click()
-    Unload Me
+    Hide
+End Sub
+
+' ===============================================================
+' BtnContacts_Click
+' Displays contacts form
+' ---------------------------------------------------------------
+Private Sub BtnContacts_Click()
+    RaiseEvent DisplayContactsFrm
 End Sub
 
 ' ===============================================================
@@ -52,13 +64,13 @@ Private Sub BtnDelete_Click()
     
     On Error GoTo ErrorHandler
     
-    If CurrentUser.UserLvl <> "Admin" Then Err.Raise ACCESS_DENIED
+    If CurrentUser.UserLvl = enCaseMgr Then Err.Raise ACCESS_DENIED
     
     Response = MsgBox("Are you sure you want to delete the Project from the database?", vbYesNo + vbExclamation, APP_NAME)
     
     If Response = 6 Then
         RaiseEvent Delete
-        Unload Me
+        Hide
     End If
     
 ErrorHandler:
@@ -81,6 +93,7 @@ Public Sub ClearForm()
     CmoClientNo = ""
     CmoSPVNo = ""
     TxtExitFee = ""
+    TxtConsComenceDte = ""
 End Sub
 
 ' ===============================================================
@@ -90,7 +103,7 @@ End Sub
 Private Sub BtnNew_Click()
     On Error GoTo ErrorHandler
     
-    If CurrentUser.UserLvl <> "Admin" Or CurrentUser.UserLvl <> "Case Manager" Then Err.Raise ACCESS_DENIED
+    If CurrentUser.UserLvl = enCaseMgr Then Err.Raise ACCESS_DENIED
     
     RaiseEvent CreateNew
 ErrorHandler:
@@ -115,7 +128,7 @@ Private Sub BtnUpdate_Click()
 Restart:
 
     If MainScreen Is Nothing Then Err.Raise SYSTEM_RESTART
-    If CurrentUser.UserLvl <> "Admin" Then Err.Raise ACCESS_DENIED
+    If CurrentUser.UserLvl = enCaseMgr Then Err.Raise ACCESS_DENIED
     
     Select Case ValidateForm
 
@@ -127,7 +140,7 @@ Restart:
         Case Is = enFormOK
             
             RaiseEvent Update
-            Unload Me
+            Hide
     End Select
     
 GracefulExit:
@@ -178,43 +191,68 @@ End Sub
 ' TxtCBSCommission_Change
 ' ---------------------------------------------------------------
 Private Sub TxtCBSCommission_Change()
+    With TxtCBSCommission
+        .BackColor = COL_WHITE
+    End With
+End Sub
 
+' ===============================================================
+' TxtConsComenceDte_AfterUpdate
+' ---------------------------------------------------------------
+Private Sub TxtConsComenceDte_AfterUpdate()
+    TxtConsComenceDte.Value = Format(TxtConsComenceDte.Value, "dd mmm yy")
+End Sub
+
+' ===============================================================
+' TxtConsComenceDte_Change
+' ---------------------------------------------------------------
+Private Sub TxtConsComenceDte_Change()
+    TxtConsComenceDte.BackColor = COL_WHITE
 End Sub
 
 ' ===============================================================
 ' TxtDebt_Change
 ' ---------------------------------------------------------------
 Private Sub TxtDebt_Change()
-    
+    With TxtDebt
+        .BackColor = COL_WHITE
+    End With
 End Sub
 
 ' ===============================================================
 ' TxtExitFee_Change
 ' ---------------------------------------------------------------
 Private Sub TxtExitFee_Change()
-    
+    With TxtExitFee
+        .BackColor = COL_WHITE
+    End With
 End Sub
 
 ' ===============================================================
 ' TxtLoanTerm_Change
 ' ---------------------------------------------------------------
 Private Sub TxtLoanTerm_Change()
-    TxtLoanTerm.BackColor = COL_WHITE
-    TxtLoanTerm = Format(TxtLoanTerm, "0")
+    With TxtLoanTerm
+        .BackColor = COL_WHITE
+    End With
 End Sub
 
 ' ===============================================================
 ' TxtCBSCommPC_Change
 ' ---------------------------------------------------------------
 Private Sub TxtCBSCommPC_Change()
-
+    With TxtCBSCommPC
+        .BackColor = COL_WHITE
+    End With
 End Sub
 
 ' ===============================================================
 ' TxtExitFeePC_Change
 ' ---------------------------------------------------------------
 Private Sub TxtExitFeePC_Change()
-        
+    With TxtExitFeePC
+        .BackColor = COL_WHITE
+    End With
 End Sub
 
 ' ===============================================================
@@ -271,29 +309,10 @@ Private Sub UserForm_Initialize()
     End With
     
     i = 0
-    With CmoSecondClientRef
+    With CmoDistribution
         .Clear
-        RstSource.MoveFirst
-        Do While Not RstSource.EOF
-            .AddItem
-            If Not IsNull(RstSource!CBSUserNo) Then .List(i, 0) = RstSource!CBSUserNo
-            If Not IsNull(RstSource!UserName) Then .List(i, 1) = RstSource!UserName
-            RstSource.MoveNext
-            i = i + 1
-        Loop
-    End With
-    
-    i = 0
-    With CmoFacilitator
-        .Clear
-        RstSource.MoveFirst
-        Do While Not RstSource.EOF
-            .AddItem
-            If Not IsNull(RstSource!CBSUserNo) Then .List(i, 0) = RstSource!CBSUserNo
-            If Not IsNull(RstSource!UserName) Then .List(i, 1) = RstSource!UserName
-            RstSource.MoveNext
-            i = i + 1
-        Loop
+        .AddItem "CBS"
+        .AddItem "CBS Real Estates Group"
     End With
     
     Set RstSource = ModDatabase.SQLQuery("SELECT SPVNo, Name FROM TblSPV")
@@ -358,6 +377,51 @@ Private Function ValidateForm() As enFormValidation
             ValidateForm = enValidationError
         End If
     End With
+           
+    With TxtConsComenceDte
+        .Value = Replace(.Value, ".", "/")
+        If Not IsDate(Format(.Value, "dd mmm yy")) Then
+            .BackColor = COL_AMBER
+            ValidateForm = enValidationError
+        End If
+    End With
+    
+    With TxtDebt
+        If .Value <> "" Then
+            If Not IsNumeric(.Value) Then
+                .BackColor = COL_AMBER
+                ValidateForm = enValidationError
+            End If
+        End If
+    End With
+    
+    With TxtExitFeePC
+        If Not IsNumeric(.Value) Then
+            .BackColor = COL_AMBER
+            ValidateForm = enValidationError
+        End If
+    End With
+    
+    With TxtCBSCommission
+        If Not IsNumeric(.Value) Then
+            .BackColor = COL_AMBER
+            ValidateForm = enValidationError
+        End If
+    End With
+    
+    With TxtCBSCommPC
+        If Not IsNumeric(.Value) Then
+            .BackColor = COL_AMBER
+            ValidateForm = enValidationError
+        End If
+    End With
+    
+    With TxtExitFee
+        If Not IsNumeric(.Value) Then
+            .BackColor = COL_AMBER
+            ValidateForm = enValidationError
+        End If
+    End With
     
     With CmoCaseManager
         If .ListIndex = -1 Then
@@ -415,4 +479,20 @@ End Function
 
 Private Sub UserForm_Terminate()
     Application.EnableEvents = True
+End Sub
+
+' ===============================================================
+' xBtnOpenClient_Click
+' Opens Client form
+' ---------------------------------------------------------------
+Private Sub xBtnOpenClient_Click()
+    RaiseEvent OpenClientForm
+End Sub
+
+' ===============================================================
+' xBtnOpenSPV_Click
+' Opens SPV form
+' ---------------------------------------------------------------
+Private Sub xBtnOpenSPV_Click()
+    RaiseEvent OpenSPVForm
 End Sub

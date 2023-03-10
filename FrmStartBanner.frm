@@ -45,7 +45,7 @@ Private Sub FormActivate()
 Restart:
 
     If Not ModStartUp.Initialize Then Err.Raise HANDLED_ERROR
-    Unload Me
+    Hide
 
 GracefulExit:
 

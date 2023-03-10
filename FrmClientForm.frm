@@ -1,6 +1,6 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FrmClientForm 
-   ClientHeight    =   3780
+   ClientHeight    =   6360
    ClientLeft      =   120
    ClientTop       =   465
    ClientWidth     =   11820
@@ -33,7 +33,7 @@ Public Event Delete()
 ' BtnClose_Click
 '---------------------------------------------------------------
 Private Sub BtnClose_Click()
-    Unload Me
+    Hide
 End Sub
 
 ' ===============================================================
@@ -48,7 +48,7 @@ Private Sub BtnDelete_Click()
     If Response = 6 Then
         RaiseEvent Delete
     End If
-    Unload Me
+    Hide
 End Sub
 
 ' ===============================================================
@@ -60,6 +60,17 @@ Public Sub ClearForm()
     TxtName = ""
     TxtPhoneNo = ""
     TxtUrl = ""
+    OptDevelopment = False
+    OptCommercial = False
+    OptBridgeExit = False
+    ChkSenior = False
+    ChkMezzanine = False
+    ChkEquity = False
+    ChkVAT = False
+    ChkSDLT = False
+    Chk1stChargeCM = False
+    Chk2ndCharge = False
+    ChkFirstCharge = False
 End Sub
 
 ' ===============================================================
@@ -95,7 +106,7 @@ Restart:
         Case Is = enFormOK
             
             RaiseEvent Update
-            Unload Me
+            Hide
     End Select
     
 GracefulExit:
@@ -119,6 +130,125 @@ ErrorHandler:
     Else
         Resume ErrorExit
     End If
+End Sub
+
+' ===============================================================
+' OptBridgeExit_Click
+' ---------------------------------------------------------------
+Private Sub OptBridgeExit_Click()
+    With ChkSenior
+        .Visible = False
+        .Value = False
+    End With
+    
+    With ChkMezzanine
+        .Visible = False
+        .Value = False
+    End With
+    
+    With ChkEquity
+        .Visible = False
+        .Value = False
+   End With
+    
+    With ChkVAT
+        .Visible = False
+        .Value = False
+    End With
+    
+    With ChkSDLT
+        .Visible = False
+        .Value = False
+    End With
+    
+    With ChkFirstCharge
+        .Visible = False
+        .Value = False
+    End With
+    
+    With Chk2ndCharge
+        .Visible = False
+        .Value = False
+    End With
+    
+    With Chk1stChargeCM
+        .Visible = True
+        .Top = 12
+        .Left = 387
+    End With
+End Sub
+
+' ===============================================================
+' OptCommercial_Click
+' ---------------------------------------------------------------
+Private Sub OptCommercial_Click()
+    With ChkSenior
+        .Visible = False
+        .Value = False
+    End With
+    
+    With ChkMezzanine
+        .Visible = False
+        .Value = False
+    End With
+    
+    With ChkEquity
+        .Visible = False
+        .Value = False
+   End With
+    
+    With ChkVAT
+        .Visible = False
+        .Value = False
+    End With
+    
+    With ChkSDLT
+        .Visible = False
+        .Value = False
+    End With
+    
+    With ChkFirstCharge
+        .Visible = True
+        .Top = 12
+        .Left = 387
+    End With
+    
+    With Chk2ndCharge
+        .Visible = True
+        .Top = 32
+        .Left = 387
+    End With
+    
+    With Chk1stChargeCM
+        .Visible = False
+        .Value = False
+    End With
+End Sub
+
+' ===============================================================
+' OptDevelopment_Click
+' ---------------------------------------------------------------
+Private Sub OptDevelopment_Click()
+    ChkSenior.Visible = True
+    ChkMezzanine.Visible = True
+    ChkEquity.Visible = True
+    ChkVAT.Visible = True
+    ChkSDLT.Visible = True
+    
+    With ChkFirstCharge
+        .Visible = False
+        .Value = False
+    End With
+    
+    With Chk2ndCharge
+        .Visible = False
+        .Value = False
+    End With
+    
+    With Chk1stChargeCM
+        .Visible = False
+        .Value = False
+    End With
 End Sub
 
 ' ===============================================================
@@ -168,6 +298,15 @@ Private Sub UserForm_Initialize()
     Me.StartUpPosition = 0
     Me.Left = Application.Left + (0.5 * Application.Width) - (0.5 * Me.Width)
     Me.Top = Application.Top + (0.5 * Application.Height) - (0.5 * Me.Height)
+    
+    ChkSenior.Visible = False
+    ChkMezzanine.Visible = False
+    ChkEquity.Visible = False
+    ChkVAT.Visible = False
+    ChkSDLT.Visible = False
+    ChkFirstCharge.Visible = False
+    Chk2ndCharge.Visible = False
+    Chk1stChargeCM.Visible = False
     
     If Me.Tag = "New" Then
         TtlTop.Caption = "Create New Client"
@@ -234,4 +373,67 @@ If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
         Resume ErrorExit
     End If
 End Function
+
+' ===============================================================
+' GetClientNeed
+' Returns the Client need in binary form
+' ---------------------------------------------------------------
+Public Function GetClientNeed() As Byte
+    Const BIN_SENIOR As Byte = 1
+    Const BIN_MEZZ  As Byte = 2
+    Const BIN_EQUITY  As Byte = 4
+    Const BIN_VAT  As Byte = 8
+    Const BIN_SDLT As Byte = 16
+    Const BIN_IST As Byte = 32
+    Const BIN_2ND  As Byte = 64
+    Const BIN1STCM  As Byte = 128
+    
+    Dim ClientNeeds As Byte
+    
+    If ChkSenior = True Then ClientNeeds = ClientNeeds + BIN_SENIOR
+    If ChkMezzanine = True Then ClientNeeds = ClientNeeds + BIN_MEZZ
+    If ChkEquity = True Then ClientNeeds = ClientNeeds + BIN_EQUITY
+    If ChkVAT = True Then ClientNeeds = ClientNeeds + BIN_VAT
+    If ChkSDLT = True Then ClientNeeds = ClientNeeds + BIN_SDLT
+    If ChkFirstCharge = True Then ClientNeeds = ClientNeeds + BIN_IST
+    If Chk2ndCharge = True Then ClientNeeds = ClientNeeds + BIN_2ND
+    If Chk1stChargeCM = True Then ClientNeeds = ClientNeeds + BIN1STCM
+
+    GetClientNeed = ClientNeeds
+End Function
+
+' ===============================================================
+' SetClientNeed
+' sets the Client need in binary form
+' ---------------------------------------------------------------
+Public Sub SetClientNeed(ClientNeeds As Byte)
+    Const BIN_SENIOR  As Byte = 1
+    Const BIN_MEZZ  As Byte = 2
+    Const BIN_EQUITY  As Byte = 4
+    Const BIN_VAT As Byte = 8
+    Const BIN_SDLT As Byte = 16
+    Const BIN_IST As Byte = 32
+    Const BIN_2ND  As Byte = 64
+    Const BIN1STCM  As Byte = 128
+    
+    If ClientNeeds > 0 Then
+        Select Case ClientNeeds
+            Case Is < 32
+                OptDevelopment.Value = True
+            Case Is < 128
+                OptCommercial.Value = True
+            Case Else
+                OptBridgeExit.Value = True
+        End Select
+        
+        If (ClientNeeds And BIN_SENIOR) <> 0 Then ChkSenior = True Else ChkSenior = False
+        If (ClientNeeds And BIN_MEZZ) <> 0 Then ChkMezzanine = True Else ChkMezzanine = False
+        If (ClientNeeds And BIN_EQUITY) <> 0 Then ChkEquity = True Else ChkEquity = False
+        If (ClientNeeds And BIN_VAT) <> 0 Then ChkVAT = True Else ChkVAT = False
+        If (ClientNeeds And BIN_SDLT) <> 0 Then ChkSDLT = True Else ChkSDLT = False
+        If (ClientNeeds And BIN_IST) <> 0 Then ChkFirstCharge = True Else ChkFirstCharge = False
+        If (ClientNeeds And BIN_2ND) <> 0 Then Chk2ndCharge = True Else Chk2ndCharge = False
+        If (ClientNeeds And BIN1STCM) <> 0 Then Chk1stChargeCM = True Else Chk1stChargeCM = False
+    End If
+End Sub
 

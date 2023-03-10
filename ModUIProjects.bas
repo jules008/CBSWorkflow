@@ -15,8 +15,10 @@ Option Explicit
 
 Private Const StrMODULE As String = "ModUIProjects"
 Private ScreenPage As String
-Private OldSplitRow As Integer
+Public OldSplitRow As Integer
 Private OldProjectNo As Integer
+Public OldSortBy As String
+
 
 ' ===============================================================
 ' BuildScreen
@@ -134,7 +136,7 @@ Private Function BuildMainFrame(ByVal ScreenPage As enScreenPage, Optional Split
             .HeadingText = PROJECT_TABLE_TITLES
             .HeadingStyle = GENERIC_TABLE_HEADER
             .HeadingHeight = GENERIC_TABLE_HEADING_HEIGHT
-            .ExpandIcon = GENERIC_TABLE_EXPAND_ICON
+'            .ExpandIcon = GENERIC_TABLE_EXPAND_ICON
         End With
         
     End With
@@ -251,6 +253,9 @@ Public Function RefreshList(ByVal ScreenPage As enScreenPage, ByVal SplitScreenO
 
     ModLibrary.PerfSettingsOn
 
+    If SortBy = "" Then SortBy = OldSortBy
+    OldSortBy = SortBy
+        
     Set RstWorkflowList = GetActiveList(ScreenPage, SortBy)
     
     With RstWorkflowList
@@ -263,6 +268,7 @@ Public Function RefreshList(ByVal ScreenPage As enScreenPage, ByVal SplitScreenO
     With MainFrame.Table
         .Name = "Table"
         .ColWidths = PROJECT_TABLE_COL_WIDTHS
+        .LenderIcons = True
         .RstText = RstWorkflowList
         .NoRows = RstWorkflowList.RecordCount
         .StylesColl.RemoveCollection
@@ -271,7 +277,8 @@ Public Function RefreshList(ByVal ScreenPage As enScreenPage, ByVal SplitScreenO
         .StylesColl.Add RED_CELL
         .StylesColl.Add AMBER_CELL
         .StylesColl.Add GREEN_CELL
-        .StylesColl.Add TABLE_PROGRESS_STYLE
+        .StylesColl.Add TABLE_PROGRESS_BAR
+        .StylesColl.Add TABLE_PROGRESS_CELL
         .RowHeight = GENERIC_TABLE_ROW_HEIGHT
     End With
     
@@ -287,7 +294,8 @@ Public Function RefreshList(ByVal ScreenPage As enScreenPage, ByVal SplitScreenO
         .StylesColl.Add RED_CELL
         .StylesColl.Add AMBER_CELL
         .StylesColl.Add GREEN_CELL
-        .StylesColl.Add TABLE_PROGRESS_STYLE
+        .StylesColl.Add TABLE_PROGRESS_BAR
+        .StylesColl.Add TABLE_PROGRESS_CELL
         .RowHeight = GENERIC_TABLE_ROW_HEIGHT
     End With
     
@@ -316,12 +324,12 @@ Public Function RefreshList(ByVal ScreenPage As enScreenPage, ByVal SplitScreenO
                         AryOnAction(x, y) = "'ModUIButtonHandler.ProcessBtnClicks(""" & ScreenPage & ":" & enBtnProjectOpen & ":" & !ProjectNo & """)'"
                     End If
                 
-                If x = 9 Then
+                If x = 10 Then
                     If !RAG = "en1Red" Then AryStyles(x, y) = "RED_CELL"
                     If !RAG = "en2Amber" Then AryStyles(x, y) = "AMBER_CELL"
                     If !RAG = "en3Green" Then AryStyles(x, y) = "GREEN_CELL"
-                ElseIf x = 8 Then
-                    AryStyles(x, y) = "TABLE_PROGRESS_STYLE"
+                ElseIf x = 9 Then
+                    AryStyles(x, y) = "TABLE_PROGRESS_CELL"
                 Else
                     AryStyles(x, y) = "GENERIC_TABLE"
                 End If
@@ -333,6 +341,7 @@ Public Function RefreshList(ByVal ScreenPage As enScreenPage, ByVal SplitScreenO
     
     With MainFrame.Table
         .Styles = AryStyles
+        .ShowExpIcons = True
         .OnAction = AryOnAction
         .BuildTable
         .AddTableProgressBars
@@ -425,23 +434,22 @@ Restart:
         OldSplitRow = SplitRow
         OldProjectNo = ProjectNo
     
-        SQLSelect = "SELECT TblWorkflow.WorkflowNo, " _
-                        & "TblWorkflowType.DisplayName, " _
-                        & "TblLender.Name, " _
-                        & "TblWorkflow.CurrentStep, " _
-                        & "TblStepTemplate.StepName, " _
-                        & "TblWorkflow.Progress & '%' AS [Progress], " _
-                        & "TblWorkflow.Status, " _
-                        & "TblWorkflow.RAG "
-       SQLFrom = "FROM (TblStepTemplate " _
-                        & "RIGHT JOIN (TblWorkflow " _
-                        & "LEFT JOIN TblLender ON TblWorkflow.LenderNo = TblLender.LenderNo) " _
-                        & "ON TblStepTemplate.StepNo = TblWorkflow.CurrentStep) " _
-                        & "LEFT JOIN TblWorkflowType ON TblWorkflow.Name = TblWorkflowType.WFName "
-        SQLWhere = "WHERE (((TblWorkflow.ProjectNo)= " & ProjectNo & ") " _
-                        & "AND ((TblWorkflow.WorkflowType)='enLender'))"
-
-        SQL = SQLSelect & SQLFrom & SQLWhere
+        SQL = "Select " _
+             & "    TblWorkflow.WorkflowNo, " _
+             & "    TblWorkflow.SecondTier, " _
+             & "    TblLender.Name, " _
+             & "    TblWorkflow.CurrentStep, " _
+             & "    TblStepTemplate.StepName, " _
+             & "    TblWorkflow.Progress & '%' As Progress, " _
+             & "    TblWorkflow.Status, " _
+             & "    TblWorkflow.RAG " _
+             & "From " _
+             & "    TblStepTemplate Right Join " _
+             & "    (TblWorkflow Left Join " _
+             & "    TblLender On TblWorkflow.LenderNo = TblLender.LenderNo) On TblStepTemplate.StepNo = TblWorkflow.CurrentStep " _
+             & "Where " _
+             & "    ((TblWorkflow.ProjectNo)= " & ProjectNo & ")  And " _
+             & "    ((TblWorkflow.WorkflowType) = 'enLender') "
 
     Set RstWorkflows = ModDatabase.SQLQuery(SQL)
     
@@ -472,7 +480,7 @@ Restart:
                     If !RAG = "en2Amber" Then AryStyles(x, y) = "AMBER_CELL"
                     If !RAG = "en3Green" Then AryStyles(x, y) = "GREEN_CELL"
                         ElseIf x = 5 Then
-                            AryStyles(x, y) = "TABLE_PROGRESS_STYLE"
+                            AryStyles(x, y) = "TABLE_PROGRESS_CELL"
                 Else
                     AryStyles(x, y) = "GENERIC_TABLE"
                 End If
@@ -547,23 +555,73 @@ Public Function GetActiveList(ScreenPage As enScreenPage, SortBy As String) As R
     
     Select Case ScreenPage
         Case enScrProjForAction
-            SQL = "SELECT Null AS Expand, TblProject.ProjectNo, TblProject.ProjectName, TblClient.Name, TblSPV.Name, TblCBSUser.UserName, TblWorkflow.CurrentStep, TblStepTemplate.StepName, TblWorkflow.Progress & '%' AS [Progress], TblWorkflow.Status, TblWorkflow.RAG " _
-                    & "FROM TblClient RIGHT JOIN ((((TblProject LEFT JOIN TblSPV ON TblProject.SPVNo = TblSPV.SPVNo) LEFT JOIN TblCBSUser ON TblProject.CaseManager = TblCBSUser.CBSUserNo) LEFT JOIN TblWorkflow ON TblProject.ProjectWFNo = TblWorkflow.WorkflowNo) LEFT JOIN TblStepTemplate ON TblWorkflow.CurrentStep = TblStepTemplate.StepNo) ON TblClient.ClientNo = TblProject.ClientNo " _
-                    & "WHERE (((TblWorkflow.RAG)='en1Red') AND ((TblWorkflow.WorkflowType)='enProject')) OR (((TblWorkflow.RAG)='en2Amber') AND ((TblWorkflow.WorkflowType)='enProject')) OR (((TblWorkflow.Status)='Action Req.') AND ((TblWorkflow.RAG)='en3Green') AND ((TblWorkflow.WorkflowType)='enProject')) " _
+            SQL1 = "Select " _
+                 & "    Null As Expand, " _
+                 & "    TblProject.ProjectNo, " _
+                 & "    Null As LenderIcons, " _
+                 & "    TblProject.ProjectName, " _
+                 & "    TblClient.Name, " _
+                 & "    TblSPV.Name, " _
+                 & "    TblCBSUser.UserName, " _
+                 & "    TblWorkflow.CurrentStep, " _
+                 & "    TblStepTemplate.StepName, " _
+                 & "    TblWorkflow.Progress & '%' As Progress, " _
+                 & "    TblWorkflow.Status, " _
+                 & "    TblWorkflow.RAG " _
+                 & "From " _
+                 & "    TblClient Right Join " _
+                 & "    ((((TblProject Left Join " _
+                 & "    TblSPV On TblProject.SPVNo = TblSPV.SPVNo) Left Join " _
+                 & "    TblCBSUser On TblProject.CaseManager = TblCBSUser.CBSUserNo) Left Join " _
+                 & "    TblWorkflow On TblProject.ProjectWFNo = TblWorkflow.WorkflowNo) Left Join " _
+                 & "    TblStepTemplate On TblWorkflow.CurrentStep = TblStepTemplate.StepNo) On TblClient.ClientNo = TblProject.ClientNo " _
+                 & "Where "
+            SQL2 = "    ((TblWorkflow.RAG) = 'en1Red' And " _
+                 & "        (TblWorkflow.WorkflowType) = 'enProject') Or " _
+                 & "    ((TblWorkflow.RAG) = 'en2Amber' And " _
+                 & "        (TblWorkflow.WorkflowType) = 'enProject') Or " _
+                 & "    ((TblWorkflow.RAG) = 'en3Green' And " _
+                 & "        (TblWorkflow.WorkflowType) = 'enProject' And " _
+                 & "        (TblWorkflow.Status) = 'Action Req.') " _
                     & StrSortBy
         Case enScrProjActive
-            SQL = "SELECT Null AS Expand, TblProject.ProjectNo, TblProject.ProjectName, TblClient.Name, TblSPV.Name, TblCBSUser.UserName, TblWorkflow.CurrentStep, TblStepTemplate.StepName, TblWorkflow.Progress & '%' AS [Progress], TblWorkflow.Status, TblWorkflow.RAG " _
-                    & "FROM TblClient RIGHT JOIN ((((TblProject LEFT JOIN TblSPV ON TblProject.SPVNo = TblSPV.SPVNo) LEFT JOIN TblWorkflow ON TblProject.ProjectWFNo = TblWorkflow.WorkflowNo) LEFT JOIN TblCBSUser ON TblProject.CaseManager = TblCBSUser.CBSUserNo) LEFT JOIN TblStepTemplate ON TblWorkflow.CurrentStep = TblStepTemplate.StepNo) ON TblClient.ClientNo = TblProject.ClientNo " _
-                    & "WHERE (((TblWorkflow.Status)<>'Complete') AND ((TblWorkflow.WorkflowType)='enProject')) " _
+            SQL1 = "Select " _
+                 & "    Null As Expand, " _
+                 & "    TblProject.ProjectNo, " _
+                 & "    Null As LenderIcons, " _
+                 & "    TblProject.ProjectName, " _
+                 & "    TblClient.Name, " _
+                 & "    TblSPV.Name, " _
+                 & "    TblCBSUser.UserName, " _
+                 & "    TblWorkflow.CurrentStep, " _
+                 & "    TblStepTemplate.StepName, " _
+                 & "    TblWorkflow.Progress As Progress, " _
+                 & "    TblWorkflow.Status, " _
+                 & "    TblWorkflow.RAG " _
+                 & "From " _
+                 & "    TblClient Right Join " _
+                 & "    ((((TblProject Left Join " _
+                 & "    TblSPV On TblProject.SPVNo = TblSPV.SPVNo) Left Join " _
+                 & "    TblWorkflow On TblProject.ProjectWFNo = TblWorkflow.WorkflowNo) Left Join " _
+                 & "    TblCBSUser On TblProject.CaseManager = TblCBSUser.CBSUserNo) Left Join " _
+                 & "    TblStepTemplate On TblWorkflow.CurrentStep = TblStepTemplate.StepNo) On TblClient.ClientNo = TblProject.ClientNo " _
+                 & "Where " _
+                 & "    ((TblWorkflow.Status) <> 'Complete') And "
+                SQL2 = "    ((TblWorkflow.WorkflowType) = 'enProject') " _
                     & StrSortBy
         Case enScrProjComplete
-            SQL = "SELECT Null AS Expand, TblProject.ProjectNo, TblProject.ProjectName, TblClient.Name, TblSPV.Name, TblCBSUser.UserName, TblWorkflow.CurrentStep, TblStepTemplate.StepName, TblWorkflow.Progress & '%' AS [Progress], TblWorkflow.Status, TblWorkflow.RAG " _
+            SQL1 = "SELECT Null AS Expand, TblProject.ProjectNo, TblProject.ProjectName, TblClient.Name, TblSPV.Name, TblCBSUser.UserName, TblWorkflow.CurrentStep, TblStepTemplate.StepName, TblWorkflow.Progress & '%' AS [Progress], TblWorkflow.Status, TblWorkflow.RAG " _
                     & "FROM TblClient RIGHT JOIN ((((TblProject LEFT JOIN TblSPV ON TblProject.SPVNo = TblSPV.SPVNo) LEFT JOIN TblWorkflow ON TblProject.ProjectWFNo = TblWorkflow.WorkflowNo) LEFT JOIN TblCBSUser ON TblProject.CaseManager = TblCBSUser.CBSUserNo) LEFT JOIN TblStepTemplate ON TblWorkflow.CurrentStep = TblStepTemplate.StepNo) ON TblClient.ClientNo = TblProject.ClientNo " _
                     & "WHERE (((TblWorkflow.Status)='Complete') AND ((TblWorkflow.WorkflowType)='enProject')) " _
                     & StrSortBy
     End Select
                 
+    SQL = SQL1 & SQL2
+    If CurrentUser.UserLvl = enCaseMgr Then
+        Set RstWorkflow = ModDatabase.SQLQuery("SELECT * FROM (" & SQL & ") WHERE TblCBSUser.UserName = '" & CurrentUser.UserName & "'")
+    Else
     Set RstWorkflow = ModDatabase.SQLQuery(SQL)
+    End If
     
     Set GetActiveList = RstWorkflow
     

@@ -42,6 +42,8 @@ Private pDebt As Single
 Private pCBSComm As Single
 Private pExitFee As Single
 Private pLoanTerm As Integer
+Private pLoanType As String
+Private pSecondTier As String
 Private pParent As ClsProject
 
 Private WithEvents pProjWFForm As FrmProjectWF
@@ -253,7 +255,7 @@ Public Property Get Progress() As Single
     End If
     Set RstLenders = Nothing
     
-    Debug.Print "NoSteps"; NoSteps, "NoComplete"; NoComplete, "pProgress"; pProgress
+'    Debug.Print "NoSteps"; NoSteps, "NoComplete"; NoComplete, "pProgress"; pProgress
     
     Progress = pProgress
 End Property
@@ -292,6 +294,24 @@ End Property
 
 Public Property Let LoanTerm(ByVal vNewValue As Integer)
     pLoanTerm = vNewValue
+End Property
+
+'---------------------------------------------------------------
+Public Property Get LoanType() As String
+    LoanType = pLoanType
+End Property
+
+Public Property Let LoanType(ByVal LoanType As String)
+    pLoanType = LoanType
+End Property
+
+'---------------------------------------------------------------
+Public Property Get SecondTier() As String
+    SecondTier = pSecondTier
+End Property
+
+Public Property Let SecondTier(ByVal SecondTier As String)
+    pSecondTier = SecondTier
 End Property
 
 ' ===============================================================
@@ -334,15 +354,17 @@ Public Sub DisplayLenderForm()
             .TxtLenderName = pLender.Name
             .TxtLenderContactName = pLender.Contacts.PrimaryContact.ContactName
             .TxtLenderContactPhone = pLender.Contacts.PrimaryContact.Phone1
-        .TxtDebt = pDebt
-        .TxtCBSComm = pCBSComm
-        .TxtExitFee = pExitFee
-        .TxtLoanTerm = pLoanTerm
+        .TxtDebt = pParent.Debt
+        .TxtCBSComm = Parent.CBSCommission
+        .TxtExitFee = Parent.ExitFee
+        .TxtLoanTerm = Parent.LoanTerm
         .Progress ProgPC
         .TxtClientName = pParent.Client.Name
         .TxtProjectNo = pParent.ProjectNo
         .TxtCaseManager = pParent.CaseManager.UserName
         .TxtLoanTerm = pParent.LoanTerm
+        .TxtLoanType = pLoanType
+        .TxtSecondTier = pSecondTier
         .TxtStepName = ActiveStep.StepNo & " - " & pActiveStep.StepName
         .xTxtAction = pActiveStep.StepAction
         .TxtClientContactName = Parent.Client.Contacts.PrimaryContact.ContactName
@@ -350,33 +372,36 @@ Public Sub DisplayLenderForm()
 
          Select Case pActiveStep.StepType
              Case enYesNo
-                 .TxtDataInput.Visible = False
+                 .LblDataIput.Visible = False
+                 .xTxtDataInput.Visible = False
                  .BtnNo.Visible = True
                  .BtnComplete.Visible = True
                  .BtnComplete.Caption = "Yes"
              
              Case enStep
-                 .TxtDataInput.Visible = False
+                 .LblDataIput.Visible = False
+                 .xTxtDataInput.Visible = False
                  .BtnNo.Visible = False
                  .BtnComplete.Visible = True
                  .BtnComplete.Caption = "Step Complete"
              
              Case enDataInput
-                 .TxtDataInput.Visible = True
-                 .TxtDataInput.Value = ""
+                 .LblDataIput.Visible = True
+                 .xTxtDataInput.Visible = True
+                 .xTxtDataInput.Value = ""
                  .BtnNo.Visible = False
                  .BtnComplete.Visible = True
                  .BtnComplete.Caption = "Step Complete"
         
-                 If pActiveStep.DataFormat = "Date" And .TxtDataInput = "" Then
+                 If pActiveStep.DataFormat = "Date" And .xTxtDataInput = "" Then
                      Set TmpWorkflow = ActiveProject.ProjectWorkflow
-                     .TxtDataInput = Format(FrmCalPicker.ShowForm, "dd mmm yy")
+                     .xTxtDataInput = Format(FrmCalPicker.ShowForm, "dd mmm yy")
                      Set ActiveProject.ProjectWorkflow = TmpWorkflow
         End If
         
              Case enAltBranch
-                 .TxtDataInput.Visible = False
-                 .BtnCopyText.Visible = False
+                 .LblDataIput.Visible = False
+                 .xTxtDataInput.Visible = False
                  .BtnNo.Visible = True
                  .BtnComplete.Visible = True
                  .BtnComplete.Caption = "Yes"
@@ -418,36 +443,46 @@ Public Sub DisplayProjectForm()
         .TxtClientContactPhone = Parent.Client.Contacts.PrimaryContact.Phone1
         .TxtSPVContactName = Parent.SPV.Contacts.PrimaryContact.ContactName
         .TxtSPVContactPhone = Parent.SPV.Contacts.PrimaryContact.Phone1
+        .TxtConsComenceDte = Parent.ConsComenceDte
+        .TxtMSName = Parent.MS.ContactName
+        .TxtMSPhone = Parent.MS.Phone1
+        .TxtMSEmail = Parent.MS.EmailAddress
+        .TxtValName = Parent.Valuer.ContactName
+        .TxtValPhone = Parent.Valuer.Phone1
+        .TxtValEmail = Parent.Valuer.EmailAddress
     
         Select Case pActiveStep.StepType
             Case enYesNo
-                .TxtDataInput.Visible = False
+                .LblDataIput.Visible = False
+                .xTxtDataInput.Visible = False
                 .BtnNo.Visible = True
                 .BtnComplete.Visible = True
                 .BtnComplete.Caption = "Yes"
             
             Case enStep
-                .TxtDataInput.Visible = False
+                .LblDataIput.Visible = False
+                .xTxtDataInput.Visible = False
                 .BtnNo.Visible = False
                 .BtnComplete.Visible = True
                 .BtnComplete.Caption = "Step Complete"
             
             Case enDataInput
-                .TxtDataInput.Visible = True
-                .TxtDataInput.Value = ""
+                .LblDataIput.Visible = True
+                .xTxtDataInput.Visible = True
+                .xTxtDataInput.Value = ""
                 .BtnNo.Visible = False
                 .BtnComplete.Visible = True
                 .BtnComplete.Caption = "Step Complete"
        
-                If pActiveStep.DataFormat = "Date" And .TxtDataInput = "" Then
+                If pActiveStep.DataFormat = "Date" And .xTxtDataInput = "" Then
                     Set TmpWorkflow = ActiveProject.ProjectWorkflow
-                    .TxtDataInput = Format(FrmCalPicker.ShowForm, "dd mmm yy")
+                    .xTxtDataInput = Format(FrmCalPicker.ShowForm, "dd mmm yy")
                     Set ActiveProject.ProjectWorkflow = TmpWorkflow
                 End If
             
             Case enAltBranch
-                .TxtDataInput.Visible = False
-                .BtnCopyText.Visible = False
+                .LblDataIput.Visible = False
+                .xTxtDataInput.Visible = False
                 .BtnNo.Visible = True
                 .BtnComplete.Visible = True
                 .BtnComplete.Caption = "Yes"
@@ -483,6 +518,8 @@ Public Sub DBGet(WorkflowNo As String)
             If Not IsNull(!CBSComm) Then pCBSComm = !CBSComm
             If Not IsNull(!ExitFee) Then pExitFee = !ExitFee
             If Not IsNull(!LoanTerm) Then pLoanTerm = !LoanTerm
+            If Not IsNull(!LoanType) Then pLoanType = !LoanType
+            If Not IsNull(!SecondTier) Then pSecondTier = !SecondTier
             
             pLender.DBGet !LenderNo
             Set pSteps = New ClsSteps
@@ -534,6 +571,8 @@ Public Sub DBSave()
             !CBSComm = CleanSQLText(pCBSComm, True)
             !ExitFee = CleanSQLText(pExitFee, True)
             !LoanTerm = CleanSQLText(pLoanTerm, True)
+        !LoanType = CleanSQLText(pLoanType, True)
+        !SecondTier = CleanSQLText(pSecondTier, True)
         If Not Parent Is Nothing Then !ProjectNo = Parent.ProjectNo
         .Update
                     
@@ -727,7 +766,45 @@ End Sub
 ' ---------------------------------------------------------------
 Private Sub pLenderWFForm_CloseForm()
     DBSave
-    Unload pLenderWFForm
+    pLenderWFForm.Hide
+End Sub
+
+' ===============================================================
+' Event pLenderWFForm_DeleteWF
+' Event on deleting lender workflow
+' ---------------------------------------------------------------
+Private Sub pLenderWFForm_DeleteWF()
+    pSteps.DestroyCollection
+    With Parent
+        .Workflows.Remove pWorkflowNo
+        .DBSave
+    End With
+    DBDelete True
+End Sub
+
+' ===============================================================
+' Event pLenderWFForm_DisplayContacts
+' Event on clicking display project contacts
+' ---------------------------------------------------------------
+Private Sub pLenderWFForm_DisplayContacts()
+    Parent.DisplayContactFrm
+End Sub
+
+' ===============================================================
+' Event pLenderWFForm_OpenClientForm
+' Event to open client form
+' ---------------------------------------------------------------
+Private Sub pLenderWFForm_OpenClientForm()
+    Parent.Client.DisplayForm
+End Sub
+
+' ===============================================================
+' Event pLenderWFForm_OpenProjCRM
+' Event to open project form
+' ---------------------------------------------------------------
+Private Sub pLenderWFForm_OpenProjCRM()
+    Parent.DisplayForm
+    DisplayLenderForm
 End Sub
 
 ' ===============================================================
@@ -740,7 +817,7 @@ Private Sub pLenderWFForm_PrevStep()
     pActiveStep.Start
     DBSave
     
-    pLenderWFForm.TxtDataInput = ""
+    pLenderWFForm.xTxtDataInput = ""
     
     DisplayProjectForm
     
@@ -761,9 +838,9 @@ End Sub
 Private Sub pLenderWFForm_StepComplete()
     pLenderWFForm.Hide
     With pLenderWFForm
-        If .TxtDataInput <> "" Then
-            pActiveStep.DataItem = .TxtDataInput
-            .TxtDataInput = ""
+        If .xTxtDataInput <> "" Then
+            pActiveStep.DataItem = .xTxtDataInput
+            .xTxtDataInput = ""
         End If
         
         MoveToNextStep
@@ -795,6 +872,39 @@ Private Sub pLenderWFForm_UpdateLoan()
         DBSave
         MsgBox "Loan Details Updated", vbOKOnly + vbInformation, APP_NAME
     End With
+End Sub
+
+' ===============================================================
+' Event pProjWFForm_DisplayContacts
+' displays project contact form
+' ---------------------------------------------------------------
+Private Sub pProjWFForm_DisplayContacts()
+    Parent.DisplayContactFrm
+End Sub
+
+' ===============================================================
+' Event pProjWFForm_OpenClientForm
+' displays Client Form
+' ---------------------------------------------------------------
+Private Sub pProjWFForm_OpenClientForm()
+    pParent.Client.DisplayForm
+End Sub
+
+' ===============================================================
+' Event pProjWFForm_OpenProjCRM
+' displays project Form
+' ---------------------------------------------------------------
+Private Sub pProjWFForm_OpenProjCRM()
+    Parent.DisplayForm
+    DisplayProjectForm
+End Sub
+
+' ===============================================================
+' Event pProjWFForm_OpenSPVForm
+' displays SPV Form
+' ---------------------------------------------------------------
+Private Sub pProjWFForm_OpenSPVForm()
+    pParent.SPV.DisplayForm
 End Sub
 
 ' ===============================================================
@@ -843,7 +953,7 @@ End Sub
 ' ---------------------------------------------------------------
 Private Sub pProjWFForm_CloseForm()
     DBSave
-    Unload pProjWFForm
+    pProjWFForm.Hide
 End Sub
 
 ' ===============================================================
@@ -856,7 +966,7 @@ Private Sub pProjWFForm_PrevStep()
     pActiveStep.Start
     DBSave
     
-    pProjWFForm.TxtDataInput = ""
+    pProjWFForm.xTxtDataInput = ""
     
     DisplayProjectForm
     
@@ -877,9 +987,9 @@ End Sub
 Private Sub pProjWFForm_StepComplete()
     pProjWFForm.Hide
     With pProjWFForm
-        If .TxtDataInput <> "" Then
-            pActiveStep.DataItem = .TxtDataInput
-            .TxtDataInput = ""
+        If .xTxtDataInput <> "" Then
+            pActiveStep.DataItem = .xTxtDataInput
+            .xTxtDataInput = ""
         End If
         
         MoveToNextStep
@@ -914,8 +1024,9 @@ End Sub
 ' ---------------------------------------------------------------
 Private Sub pWFNameForm_Update()
     With pWFNameForm
-        pName = .GetWFName
-    
+        pLoanType = .CmoLoanType
+        pSecondTier = .CmoSecondTier
+        pName = .CmoSecondTier
     End With
 End Sub
 

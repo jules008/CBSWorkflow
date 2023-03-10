@@ -1,4 +1,0 @@
-WFNo,  dbDouble
-WFName,  dbText
-DisplayName,  dbText
-Description,  dbText

@@ -1,6 +1,6 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FrmAdnCBSUser 
-   ClientHeight    =   4005
+   ClientHeight    =   3765
    ClientLeft      =   120
    ClientTop       =   465
    ClientWidth     =   11745
@@ -29,6 +29,50 @@ Private Const StrMODULE As String = "FrmCBSUser"
 Public Event CreateNew()
 Public Event Update()
 Public Event Delete()
+Public Event ShowAccessFrm()
+
+' ===============================================================
+' BtnAccessLvl_Click
+' Mnages access levels for user
+' ---------------------------------------------------------------
+Private Sub BtnAccessLvl_Click()
+    Dim ErrNo As Integer
+
+    Const StrPROCEDURE As String = "BtnAccessLvl_Click()"
+
+    On Error GoTo ErrorHandler
+
+Restart:
+
+    If MainScreen Is Nothing Then Err.Raise SYSTEM_RESTART
+    
+    RaiseEvent ShowAccessFrm
+    
+GracefulExit:
+
+
+Exit Sub
+
+ErrorExit:
+
+    '***CleanUpCode***
+
+Exit Sub
+
+ErrorHandler:
+    If Err.Number >= 2000 And Err.Number <= 2500 Then
+        ErrNo = Err.Number
+        CustomErrorHandler (Err.Number)
+        If ErrNo = SYSTEM_RESTART Then Resume Restart Else Resume GracefulExit
+    End If
+
+    If CentralErrorHandler(StrMODULE, StrPROCEDURE, , True) Then
+        Stop
+        Resume
+    Else
+        Resume ErrorExit
+    End If
+End Sub
 
 '===============================================================
 ' BtnClose_Click
@@ -70,6 +114,7 @@ Public Sub ClearForm()
     TxtPosition = ""
     TxtUserName = ""
     CmoUserLvl = ""
+    CmoSupervisor = ""
 End Sub
 
 ' ===============================================================
@@ -148,6 +193,7 @@ End Sub
 ' CmoUserLvl_Change
 ' ---------------------------------------------------------------
 Private Sub CmoUserLvl_Change()
+    If CmoUserLvl = 3 Then BtnAccessLvl.Visible = True Else BtnAccessLvl.Visible = False
     CmoUserLvl.BackColor = COL_WHITE
 End Sub
 
@@ -156,6 +202,7 @@ End Sub
 ' Initialises form controls
 ' ---------------------------------------------------------------
 Private Sub UserForm_Initialize()
+    Dim UserLvl As EnUserLvl
     
     Me.StartUpPosition = 0
     Me.Left = Application.Left + (0.5 * Application.Width) - (0.5 * Me.Width)
@@ -168,11 +215,35 @@ Private Sub UserForm_Initialize()
     
     With CmoUserLvl
         .Clear
-        .AddItem "Admin"
-        .AddItem "Senior Manager"
-        .AddItem "Case Manager"
+        .AddItem
+        .List(0, 0) = 1
+        .List(0, 1) = "Admin"
+        .AddItem
+        .List(1, 0) = 2
+        .List(1, 1) = "Senior Manager"
+        .AddItem
+        .List(2, 0) = 3
+        .List(2, 1) = "Case Manager"
+    End With
+    
+    Dim RstSupervisor As Recordset
+    Dim x As Integer
+    UserLvl = enSenMgr
+    Set RstSupervisor = ModDatabase.SQLQuery("SELECT CBSUserNo, UserName FROM TblCBSUser WHERE UserLvl = " & UserLvl)
+    
+    With CmoSupervisor
+        .Clear
+        Do While Not RstSupervisor.EOF
+            .AddItem
+            If Not IsNull(RstSupervisor!CBSUserNo) Then .List(x, 0) = RstSupervisor!CBSUserNo
+            If Not IsNull(RstSupervisor!UserName) Then .List(x, 1) = RstSupervisor!UserName
+            RstSupervisor.MoveNext
+            x = x + 1
+        Loop
     End With
     ClearForm
+    
+    Set RstSupervisor = Nothing
 End Sub
 
 ' ===============================================================

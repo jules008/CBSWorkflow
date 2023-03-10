@@ -72,7 +72,7 @@ Public Sub AddItem(Step As ClsStep)
     Step.Initialize Me.Parent
     pSteps.Add Step, Key:=Parent.WorkflowNo & "-" & Step.StepNo
     
-    If Step.PrevStep = "0" Then
+    If Right(Step.StepNo, 2) = "01" Then
         pStart = Step.StepNo
         
         If Parent.CurrentStep = "" Then
@@ -158,8 +158,9 @@ Public Sub GetStepTemplates()
     Set RstStep = ModDatabase.SQLQuery("SELECT * FROM TblStepTemplate WHERE " _
                                         & "WFName = '" & Workflow & "' ORDER BY StepNo")
     
-    If RstStep.RecordCount = 0 Then Exit Sub
-    
+    If RstStep.RecordCount = 0 Then
+        CustomErrorHandler GRACEFUL_EXIT, "No Workflow Steps"
+    Else
     With RstStep
         .MoveLast
         .MoveFirst
@@ -172,6 +173,7 @@ Public Sub GetStepTemplates()
             .MoveNext
         Next
     End With
+    End If
 End Sub
 
 ' ===============================================================
@@ -184,6 +186,19 @@ Public Sub DeleteCollection()
     Sin 0
     For Each Step In pSteps
        Set Step = Nothing
+    Next
+End Sub
+
+' ===============================================================
+' Method DestroyCollection
+' Removes items from collection and destroys it
+' ---------------------------------------------------------------
+Public Sub DestroyCollection()
+    Dim Step As ClsStep
+    Sin 0
+    For Each Step In pSteps
+        Step.DBDelete True
+        Set Step = Nothing
     Next
 End Sub
 

@@ -33,12 +33,14 @@ Attribute pFormPicker.VB_VarHelpID = -1
 Private pSelectedItem As String
 Private pCreateNew As Boolean
 Private pSelectionMade As Boolean
+Private pShowNewBtn As Boolean
 Private pTitle As String
 Private pInstructions As String
 
 '---------------------------------------------------------------
 Public Property Let Data(ByVal vNewValue As Recordset)
     Set pData = vNewValue
+        ModLibrary.RecordsetPrint pData
 End Property
 
 '---------------------------------------------------------------
@@ -48,6 +50,15 @@ End Property
 
 Public Property Let SelectedItem(ByVal vNewValue As String)
     pSelectedItem = vNewValue
+End Property
+
+'---------------------------------------------------------------
+Public Property Get ShowNewBtn() As Boolean
+    ShowNewBtn = pShowNewBtn
+End Property
+
+Public Property Let ShowNewBtn(ByVal vNewValue As Boolean)
+    pShowNewBtn = vNewValue
 End Property
 
 '---------------------------------------------------------------
@@ -65,7 +76,10 @@ End Property
 
 Public Property Let Show(ByVal vNewValue As Boolean)
     If vNewValue Then
-        pFormPicker.Show
+        With pFormPicker
+            If pShowNewBtn Then .BtnNew.Visible = True Else .BtnNew.Visible = False
+            .Show
+        End With
     End If
 End Property
 
@@ -131,6 +145,8 @@ Private Sub pFormPicker_SearchTextChanged()
     SearchTxt = pFormPicker.TxtSearch
     
     If SearchTxt = "" Then
+        pData.MoveLast
+        pData.MoveFirst
         Do While Not pData.EOF
             With pFormPicker.LstResults
                 If Not IsNull(pData.Fields(0)) Then .AddItem pData.Fields(0)
