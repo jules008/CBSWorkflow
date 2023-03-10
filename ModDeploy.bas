@@ -22,21 +22,101 @@ Public Sub QueryTest()
     Set DB = OpenDatabase(GetDocLocalPath(ThisWorkbook.Path) & INI_FILE_PATH & DB_FILE_NAME & ".accdb")
     End If
     
-
-    'undo
-    DB.Execute "ALTER TABLE TblProject DROP COLUMN CBSCommPC "
-    DB.Execute "ALTER TABLE TblProject DROP COLUMN ExitFeePC "
-    
+    UndoScript
     Stop
-    'update
+    UpdateScript
+End Sub
+
+'ModDeploy.UpdateTable "TblEmail", "A1:H2"
+'ModDeploy.UpdateTable "TblStepTemplate", "A1:Z2"
+Public Sub UpdateScript()
+    Dim RstUpdate As Recordset
+    Dim i As Integer
     DB.Execute "UPDATE TblStepTemplate SET Email = 1 WHERE StepNo = '1.03'"
     DB.Execute "UPDATE TblStepTemplate SET Email = 2 WHERE StepNo = '1.06'"
     DB.Execute "UPDATE TblStepTemplate SET Email = 3 WHERE StepNo = '1.12'"
     DB.Execute "UPDATE TblStepTemplate SET Email = 4 WHERE StepNo = '1.13'"
     DB.Execute "UPDATE TblStepTemplate SET Email = 5 WHERE StepNo = '1.16'"
+    DB.Execute "DROP TABLE TblWorkflowType"
+    DB.Execute "ALTER TABLE TblProject ADD COLUMN ConsComenceDte date"
     
     DB.Execute "ALTER TABLE TblProject ADD COLUMN CBSCommPC single"
     DB.Execute "ALTER TABLE TblProject ADD COLUMN ExitFeePC single"
+    DB.Execute "CREATE TABLE TblWorkflowTable"
+    DB.Execute "ALTER TABLE TblWorkflowTable ADD COLUMN WFNo Integer"
+    DB.Execute "ALTER TABLE TblWorkflowTable ADD COLUMN LoanType text"
+    DB.Execute "ALTER TABLE TblWorkflowTable ADD COLUMN SecondTier text"
+    DB.Execute "ALTER TABLE TblWorkflow ADD COLUMN LoanType text"
+    DB.Execute "ALTER TABLE TblWorkflow ADD COLUMN SecondTier text"
+    DB.Execute "INSERT INTO TblWorkflowTable (WFNo, LoanType,SecondTier) VALUES (1,'Development Finance', 'Senior Lender')"
+    DB.Execute "INSERT INTO TblWorkflowTable (WFNo,LoanType,SecondTier) VALUES (2,'Development Finance', 'Mezzanine Lender')"
+    DB.Execute "INSERT INTO TblWorkflowTable (WFNo,LoanType,SecondTier) VALUES (3,'Development Finance', 'Equity Lender')"
+    DB.Execute "INSERT INTO TblWorkflowTable (WFNo,LoanType,SecondTier) VALUES (4,'Development Finance', 'VAT Lender')"
+    DB.Execute "INSERT INTO TblWorkflowTable (WFNo,LoanType,SecondTier) VALUES (5,'Development Finance', 'SDLT Lender')"
+    DB.Execute "INSERT INTO TblWorkflowTable (WFNo,LoanType,SecondTier) VALUES (6,'Bridge/Exit Loan', '1st Charge Lender')"
+    DB.Execute "INSERT INTO TblWorkflowTable (WFNo,LoanType,SecondTier) VALUES (7,'Bridge/Exit Loan', '2nd Charge Lender')"
+    DB.Execute "INSERT INTO TblWorkflowTable (WFNo,LoanType,SecondTier) VALUES (8,'Commercial Mortgage', '1st Charge CM Lender')"
+    DB.Execute "ALTER TABLE TblClient ADD COLUMN ClientNeeds integer"
+    DB.Execute "UPDATE TblStepTemplate SET EmailNo = 1 WHERE StepNo = '1.03'"
+    DB.Execute "UPDATE TblStepTemplate SET EmailNo = 2 WHERE StepNo = '1.06'"
+    DB.Execute "UPDATE TblStepTemplate SET EmailNo = 3 WHERE StepNo = '1.12'"
+    DB.Execute "UPDATE TblStepTemplate SET EmailNo = 4 WHERE StepNo = '1.13'"
+    DB.Execute "UPDATE TblStepTemplate SET EmailNo = 5 WHERE StepNo = '1.16'"
+    
+    DB.Execute "UPDATE TblStep SET EmailNo = 1 WHERE StepNo = '1.03'"
+    DB.Execute "UPDATE TblStep SET EmailNo = 2 WHERE StepNo = '1.06'"
+    DB.Execute "UPDATE TblStep SET EmailNo = 3 WHERE StepNo = '1.12'"
+    DB.Execute "UPDATE TblStep SET EmailNo = 4 WHERE StepNo = '1.13'"
+    DB.Execute "UPDATE TblStep SET EmailNo = 5 WHERE StepNo = '1.16'"
+
+    DB.Execute "UPDATE TblWorkflow SET LoanType = 'Development Loan', SecondTier = 'Senior Lender' WHERE Name = 'Senior'"
+    DB.Execute "UPDATE TblWorkflow SET LoanType = 'Development Loan', SecondTier = 'Mezzanine Lender' WHERE Name = '2ndChgeMezLoan'"
+    DB.Execute "UPDATE TblWorkflow SET LoanType = 'Development Loan', SecondTier = 'Equity Lender' WHERE Name = 'EquityLoan'"
+    DB.Execute "UPDATE TblWorkflow SET LoanType = 'Development Loan', SecondTier = 'SDLT Lender' WHERE Name = 'SDLTLoan'"
+    DB.Execute "UPDATE TblWorkflow SET LoanType = 'Development Loan', SecondTier = 'VAT Lender' WHERE Name = 'VATloan'"
+    Set RstUpdate = ModDatabase.SQLQuery("SELECT UniqueID FROM TblStepTemplate ORDER BY StepNo")
+    
+    i = 1
+    With RstUpdate
+        Do While Not .EOF
+            .Edit
+            !UniqueID = i
+             .Update
+             .MoveNext
+             i = i + 1
+        Loop
+    End With
+    Set RstUpdate = Nothing
+
+    DB.Execute "ALTER TABLE TblProject ADD COLUMN MS integer"
+    DB.Execute "ALTER TABLE TblProject ADD COLUMN Valuer integer"
+    DB.Execute "ALTER TABLE TblProject DROP COLUMN Facilitator"
+    DB.Execute "ALTER TABLE TblProject ADD COLUMN Distribution text"
+    DB.Execute "ALTER TABLE TblContact ADD COLUMN Notes memo"
+    DB.Execute "ALTER TABLE TblContact ADD COLUMN ProjIndex Integer"
+    DB.Execute "ALTER TABLE TblProject DROP COLUMN SecondClientRef"
+    DB.Execute "ALTER TABLE TblProject ADD COLUMN SecondClientRef text"
+    DB.Execute "Update TblStep inner join TblStepTemplate on TblStep.StepNo = TblStepTemplate.StepNo Set TblStep.UniqueID = TblStepTemplate.UniqueID"
+
+End Sub
+
+Public Sub UndoScript()
+    DB.Execute "ALTER TABLE TblClient DROP COLUMN ClientNeeds "
+    DB.Execute "ALTER TABLE TblProject DROP COLUMN MS "
+    DB.Execute "ALTER TABLE TblProject DROP COLUMN Valuer "
+    DB.Execute "ALTER TABLE TblProject DROP COLUMN Distribution"
+    DB.Execute "ALTER TABLE TblProject ADD COLUMN Facilitator integer"
+    DB.Execute "ALTER TABLE TblContact DROP COLUMN Notes "
+    DB.Execute "ALTER TABLE TblContact DROP COLUMN ProjIndex "
+
+    DB.Execute "ALTER TABLE TblProject DROP COLUMN CBSCommPC "
+    DB.Execute "ALTER TABLE TblProject DROP COLUMN ExitFeePC "
+    DB.Execute "CREATE TABLE TblWorkflowType"
+    DB.Execute "ALTER TABLE TblProject DROP COLUMN ConsComenceDte "
+    
+    DB.Execute "DROP TABLE TblWorkflowTable"
+    DB.Execute "ALTER TABLE TblWorkflow DROP COLUMN LoanType "
+    DB.Execute "ALTER TABLE TblWorkflow DROP COLUMN SecondTier "
 End Sub
 
 ' ===============================================================
@@ -86,19 +166,7 @@ Public Function UpdateDBScript() As Boolean
     End With
     Set RstTable = Nothing
     
-    ' ========================================================================================
-    ' Database commands
-    ' ----------------------------------------------------------------------------------------
-    DB.Execute "ALTER TABLE TblProject ADD COLUMN CBSCommPC single"
-    DB.Execute "ALTER TABLE TblProject ADD COLUMN ExitFeePC single"
-    
-    DB.Execute "UPDATE TblStepTemplate SET Email = 1 WHERE StepNo = '1.03'"
-    DB.Execute "UPDATE TblStepTemplate SET Email = 2 WHERE StepNo = '1.06'"
-    DB.Execute "UPDATE TblStepTemplate SET Email = 3 WHERE StepNo = '1.12'"
-    DB.Execute "UPDATE TblStepTemplate SET Email = 4 WHERE StepNo = '1.13'"
-    DB.Execute "UPDATE TblStepTemplate SET Email = 5 WHERE StepNo = '1.16'"
-    ' ========================================================================================
-        
+    UpdateScript
     
         MsgBox "Database successfully updated to Version " & DB_VER, vbOKOnly + vbInformation
     
@@ -164,12 +232,7 @@ Public Function UpdateDBScriptUndo() As Boolean
     End With
     
     On Error Resume Next
-    ' ========================================================================================
-    ' Database commands
-    ' ----------------------------------------------------------------------------------------
-    DB.Execute "ALTER TABLE TblProject DROP COLUMN CBSCommPC "
-    DB.Execute "ALTER TABLE TblProject DROP COLUMN ExitFeePC "
-    ' ========================================================================================
+    UndoScript
     
     DB.Close
     Set RstTable = Nothing
