@@ -27,17 +27,9 @@ Public Sub QueryTest()
     UpdateScript
 End Sub
 
-'ModDeploy.UpdateTable "TblEmail", "A1:H2"
-'ModDeploy.UpdateTable "TblStepTemplate", "A1:Z2"
 Public Sub UpdateScript()
     Dim RstUpdate As Recordset
     Dim i As Integer
-    DB.Execute "UPDATE TblStepTemplate SET Email = 1 WHERE StepNo = '1.03'"
-    DB.Execute "UPDATE TblStepTemplate SET Email = 2 WHERE StepNo = '1.06'"
-    DB.Execute "UPDATE TblStepTemplate SET Email = 3 WHERE StepNo = '1.12'"
-    DB.Execute "UPDATE TblStepTemplate SET Email = 4 WHERE StepNo = '1.13'"
-    DB.Execute "UPDATE TblStepTemplate SET Email = 5 WHERE StepNo = '1.16'"
-    DB.Execute "DROP TABLE TblWorkflowType"
     DB.Execute "ALTER TABLE TblProject ADD COLUMN ConsComenceDte date"
     
     DB.Execute "ALTER TABLE TblProject ADD COLUMN CBSCommPC single"
@@ -63,12 +55,6 @@ Public Sub UpdateScript()
     DB.Execute "UPDATE TblStepTemplate SET EmailNo = 4 WHERE StepNo = '1.13'"
     DB.Execute "UPDATE TblStepTemplate SET EmailNo = 5 WHERE StepNo = '1.16'"
     
-    DB.Execute "UPDATE TblStep SET EmailNo = 1 WHERE StepNo = '1.03'"
-    DB.Execute "UPDATE TblStep SET EmailNo = 2 WHERE StepNo = '1.06'"
-    DB.Execute "UPDATE TblStep SET EmailNo = 3 WHERE StepNo = '1.12'"
-    DB.Execute "UPDATE TblStep SET EmailNo = 4 WHERE StepNo = '1.13'"
-    DB.Execute "UPDATE TblStep SET EmailNo = 5 WHERE StepNo = '1.16'"
-
     DB.Execute "UPDATE TblWorkflow SET LoanType = 'Development Loan', SecondTier = 'Senior Lender' WHERE Name = 'Senior'"
     DB.Execute "UPDATE TblWorkflow SET LoanType = 'Development Loan', SecondTier = 'Mezzanine Lender' WHERE Name = '2ndChgeMezLoan'"
     DB.Execute "UPDATE TblWorkflow SET LoanType = 'Development Loan', SecondTier = 'Equity Lender' WHERE Name = 'EquityLoan'"
@@ -101,6 +87,8 @@ Public Sub UpdateScript()
 End Sub
 
 Public Sub UndoScript()
+    On Error Resume Next
+    DB.Execute "DROP TABLE TblWorkflowTable"
     DB.Execute "ALTER TABLE TblClient DROP COLUMN ClientNeeds "
     DB.Execute "ALTER TABLE TblProject DROP COLUMN MS "
     DB.Execute "ALTER TABLE TblProject DROP COLUMN Valuer "
@@ -111,15 +99,10 @@ Public Sub UndoScript()
 
     DB.Execute "ALTER TABLE TblProject DROP COLUMN CBSCommPC "
     DB.Execute "ALTER TABLE TblProject DROP COLUMN ExitFeePC "
-    DB.Execute "CREATE TABLE TblWorkflowType"
     DB.Execute "ALTER TABLE TblProject DROP COLUMN ConsComenceDte "
     
-    DB.Execute "DROP TABLE TblWorkflowTable"
     DB.Execute "ALTER TABLE TblWorkflow DROP COLUMN LoanType "
     DB.Execute "ALTER TABLE TblWorkflow DROP COLUMN SecondTier "
-
-    DB.QueryDefs.Delete "Active"
-    DB.QueryDefs.Delete "Closed"
 
 End Sub
 
@@ -322,7 +305,6 @@ Public Sub UpdateTable(StrTable As String, RngImport As String)
         Loop
     End With
     ShtImport.Visible = xlSheetHidden
-    ShtSettings.ChkUpdateDB = False
     Set ShtImport = Nothing
 End Sub
 
