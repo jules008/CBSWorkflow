@@ -17,10 +17,10 @@ DataItem,  dbText
 DataFormat,  dbText
 DataDest,  dbText
 EmailArrived,  dbBoolean
-EmailNo,  dbLong
 AltEmail,  dbLong
 Status,  dbText
 CopyText,  dbMemo
 CopyTextName,  dbText
 UniqueID,  dbLong
 HelpText,  dbMemo
+EmailNo,  dbSingle

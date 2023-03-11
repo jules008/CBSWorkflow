@@ -52,6 +52,8 @@ Public Sub UpdateScript()
     DB.Execute "ALTER TABLE TblClient ADD COLUMN ClientNeeds integer"
     DB.Execute "ALTER TABLE TblStep DROP COLUMN Email"
     DB.Execute "ALTER TABLE TblStep ADD COLUMN EmailNo single"
+    DB.Execute "ALTER TABLE TblStepTemplate DROP COLUMN Email"
+    DB.Execute "ALTER TABLE TblStepTemplate ADD COLUMN EmailNo single"
     DB.Execute "UPDATE TblStepTemplate SET EmailNo = 1 WHERE StepNo = '1.03'"
     DB.Execute "UPDATE TblStepTemplate SET EmailNo = 2 WHERE StepNo = '1.06'"
     DB.Execute "UPDATE TblStepTemplate SET EmailNo = 3 WHERE StepNo = '1.12'"
@@ -101,7 +103,7 @@ Public Sub UpdateScript()
     DB.Execute "ALTER TABLE TblAccessControl ADD COLUMN UserNo Integer"
     DB.Execute "ALTER TABLE TblAccessControl ADD COLUMN Entity String"
     DB.Execute "ALTER TABLE TblAccessControl ADD COLUMN EntityNo Integer"
-    
+    DB.Execute "DROP TABLE TblWorkflowType"
     DB.Execute "UPDATE TblWorkFlow SET LoanType = 'Development Finance' WHERE LoanType = 'Development Loan'"
 End Sub
 
@@ -128,9 +130,11 @@ Public Sub UndoScript()
     DB.Execute "ALTER TABLE TblContact DROP COLUMN ContactIndex"
     DB.Execute "ALTER TABLE TblStep ADD COLUMN Email single"
     DB.Execute "ALTER TABLE TblStep DROP COLUMN EmailNo "
+    DB.Execute "ALTER TABLE TblStepTemplate ADD COLUMN Email single"
+    DB.Execute "ALTER TABLE TblStepTemplate DROP COLUMN EmailNo "
     DB.Execute "DROP TABLE TblAccessControl"
     DB.Execute "DROP TABLE TblUserLvl"
-
+    DB.Execute "CREATE TABLE TblWorkflowType"
 End Sub
 
 ' ===============================================================
