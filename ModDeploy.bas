@@ -101,6 +101,8 @@ Public Sub UpdateScript()
     DB.Execute "ALTER TABLE TblAccessControl ADD COLUMN UserNo Integer"
     DB.Execute "ALTER TABLE TblAccessControl ADD COLUMN Entity String"
     DB.Execute "ALTER TABLE TblAccessControl ADD COLUMN EntityNo Integer"
+    
+    DB.Execute "UPDATE TblWorkFlow SET LoanType = 'Development Finance' WHERE LoanType = 'Development Loan'"
 End Sub
 
 Public Sub UndoScript()
