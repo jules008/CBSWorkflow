@@ -89,6 +89,10 @@ Public Sub UpdateScript()
     DB.Execute "Update TblStep inner join TblStepTemplate on TblStep.StepNo = TblStepTemplate.StepNo Set TblStep.UniqueID = TblStepTemplate.UniqueID"
     DB.Execute "ALTER TABLE TblContact DROP COLUMN ProjIndex"
     DB.Execute "ALTER TABLE TblContact ADD COLUMN ContactIndex single"
+    DB.Execute "CREATE TABLE TblAccessControl"
+    DB.Execute "ALTER TABLE TblAccessControl ADD COLUMN UserNo Integer"
+    DB.Execute "ALTER TABLE TblAccessControl ADD COLUMN Entity String"
+    DB.Execute "ALTER TABLE TblAccessControl ADD COLUMN EntityNo Integer"
 End Sub
 
 Public Sub UndoScript()
@@ -114,6 +118,7 @@ Public Sub UndoScript()
     DB.Execute "ALTER TABLE TblContact DROP COLUMN ContactIndex"
     DB.Execute "ALTER TABLE TblStep ADD COLUMN Email single"
     DB.Execute "ALTER TABLE TblStep DROP COLUMN EmailNo "
+    DB.Execute "DROP TABLE TblAccessControl"
 
 End Sub
 
