@@ -67,6 +67,14 @@ Public Sub UpdateScript()
     DB.Execute "ALTER TABLE TblCBSUser ADD COLUMN Supervisor Integer"
     DB.Execute "ALTER TABLE TblCBSUser DROP COLUMN UserLvl"
     DB.Execute "ALTER TABLE TblCBSUser ADD COLUMN UserLvl Single"
+    
+    DB.Execute "CREATE TABLE TblUserLvl"
+    DB.Execute "ALTER TABLE TblUserLvl ADD COLUMN UserLvlNo Integer"
+    DB.Execute "ALTER TABLE TblUserLvl ADD COLUMN UserLvl text"
+    DB.Execute "INSERT INTO TblUserLvl (UserLvlNo,UserLvl) VALUES (1, 'Admin')"
+    DB.Execute "INSERT INTO TblUserLvl (UserLvlNo,UserLvl) VALUES (2, 'Senior Manager')"
+    DB.Execute "INSERT INTO TblUserLvl (UserLvlNo,UserLvl) VALUES (3, 'Case Manager')"
+    
     i = 1
     With RstUpdate
         Do While Not .EOF
@@ -119,6 +127,7 @@ Public Sub UndoScript()
     DB.Execute "ALTER TABLE TblStep ADD COLUMN Email single"
     DB.Execute "ALTER TABLE TblStep DROP COLUMN EmailNo "
     DB.Execute "DROP TABLE TblAccessControl"
+    DB.Execute "DROP TABLE TblUserLvl"
 
 End Sub
 
