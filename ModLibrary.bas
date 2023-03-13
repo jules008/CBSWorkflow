@@ -239,6 +239,25 @@ Public Sub ColourConvert(R As Integer, G As Integer, B As Integer)
 
 End Sub
 
+Public Sub HexToRGB(HexColor As String)
+    Dim HexColour2 As Long
+    Dim R As Integer
+    Dim G As Integer
+    Dim B As Integer
+    
+    HexColor = Replace(HexColor, "#", "")
+    HexColor = Right$("000000" & HexColor, 6)
+    
+    R = Val("&H" & Mid(HexColor, 1, 2))
+    G = Val("&H" & Mid(HexColor, 3, 2))
+    B = Val("&H" & Mid(HexColor, 5, 2))
+        
+    Debug.Print "RGB Colour: "; R & ", " & G & ", " & B
+    Debug.Print "Hex1 Colour: "; "&H" & Hex(RGB(R, G, B))
+    Debug.Print "Hex2 Colour: "; "&H" & Hex(RGB(B, G, R))
+
+End Sub
+
 ' ===============================================================
 ' AddCheckBoxes
 ' Adds checkboxes to selected cells
@@ -261,7 +280,7 @@ Sub AddCheckBoxes()
                     Formula1:="=" & C.Address & "=TRUE"
                 '.FormatConditions(1).Font.ColorIndex = 6 'change for other color when ticked
                 '.FormatConditions(1).Interior.ColorIndex = 6 'change for other color when ticked
-                '.Font.ColorIndex = 2 'cell background color = White
+                '.Font.ColorIndex = 2 'Cell background color = White
             End With
         Next
         myRange.Select

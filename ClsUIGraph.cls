@@ -37,6 +37,7 @@ Private pSer5Colour As Long
 Private pSer6Colour As Long
 Private pSer1Name As String
 Private pSer2Name As String
+Private pSer3Name As String
 Private pBackColour As Long
 Private pSourceData() As Variant
 Private pCht As Chart
@@ -147,6 +148,11 @@ Public Property Let Ser2Name(ByVal vNewValue As String)
 End Property
 
 '---------------------------------------------------------------
+Public Property Let Ser3Name(ByVal vNewValue As String)
+    pSer3Name = vNewValue
+End Property
+
+'---------------------------------------------------------------
 Public Property Let Ser1Colour(ByVal vNewValue As Long)
     pSer1Colour = vNewValue
 End Property
@@ -253,13 +259,6 @@ End Sub
 ' Generates doughnut Grpah
 '---------------------------------------------------------------
 Private Sub GenDoNut()
-    Dim Subtotal As Single
-    Dim Total As Single
-    
-    Subtotal = pSourceData(1)
-    Total = pSourceData(2)
-    
-    pSourceData(2) = Total - Subtotal
     
     pCht.Parent.Name = pName
     
@@ -268,99 +267,37 @@ Private Sub GenDoNut()
             .Left = Parent.Left + pLeft
             .Top = Parent.Top + pTop
             .Height = pHeight
-            .Width = .Height
+            .Width = .Height * 1.75
             .Format.Fill.ForeColor.RGB = pBackColour
             .Border.LineStyle = xlNone
         End With
         
-        .HasTitle = True
-'        .ChartTitle.IncludeInLayout = False
         .ChartType = xlDoughnut
-        .ChartTitle.Text = "wsw"
+        .ChartTitle.Text = pTitle
+        .ChartTitle.IncludeInLayout = True
+        .HasLegend = True
+        
+        With .ChartTitle.Format.TextFrame2.TextRange
+            .Font.Name = "Calibri"
+            .Font.Size = 16
+            .Font.Fill.ForeColor.RGB = RGB(0, 0, 0)
+        End With
         
         .SetSourceData ShtMain.Range("H64:I64")
         
         With .SeriesCollection(1)
             .Name = "strName"
-            .Values = pSourceData
+            .Values = GetArrayRow(pSourceData, 1)
             .Points(1).Format.Fill.ForeColor.RGB = pSer1Colour
             .Points(2).Format.Fill.ForeColor.RGB = pSer2Colour
+            .Points(3).Format.Fill.ForeColor.RGB = pSer3Colour
+             .XValues = GetArrayRow(pSourceData, 0)
         End With
         
         With .ChartGroups(1)
-            .DoughnutHoleSize = 80
+            .DoughnutHoleSize = 70
         End With
         
-        With .PlotArea
-            .Format.Fill.Transparency = 1
-            .Top = pCht.ChartArea.Height / 100 * 5
-            .Height = pCht.ChartArea.Height / 100 * 70
-            .Left = (pCht.ChartArea.Width - .Width) / 2
-        End With
-    
-    End With
-    
-    With pTxtTitle
-        .Name = "pTxtTitle"
-        .Height = pCht.ChartArea.Height / 100 * 25
-        .Width = pCht.ChartArea.Width / 100 * 120
-        .Left = pCht.ChartArea.Left + (pCht.ChartArea.Width / 2) - (.Width / 2) + 3
-        .Top = pCht.ChartArea.Top + pCht.ChartArea.Height / 100 * 75
-        .Fill.Transparency = 1
-        .Line.Visible = msoFalse
-        
-        With .TextFrame
-            .HorizontalAlignment = xlHAlignCenter
-            .VerticalAlignment = xlVAlignCenter
-            With .Characters
-                .Font.FontStyle = "Calibri"
-                .Font.Size = pTxtTitle.Height / 100 * 40
-                .Font.Color = RGB(0, 0, 0)
-                .Text = pTitle
-            End With
-        End With
-    End With
-    
-'    With pTxtPC
-'        .Name = "pTxtPC"
-'        .Height = pCht.ChartArea.Height / 100 * 25
-'        .Width = pCht.ChartArea.Width / 100 * 50
-'        .Left = pCht.ChartArea.Left + (pCht.ChartArea.Width / 2) - (.Width / 2) + 3
-'        .Top = pCht.ChartArea.Top + (pCht.ChartArea.Height / 2) - (.Height / 2) - (pCht.ChartArea.Height / 100 * 10)
-'        .Fill.Transparency = 1
-'        .Line.Visible = msoFalse
-'
-'        With .TextFrame
-'            .HorizontalAlignment = xlHAlignCenter
-'            .VerticalAlignment = xlVAlignCenter
-'            With .Characters
-'                .Font.FontStyle = "Calibri"
-'                .Font.Size = pTxtPC.Height / 100 * 80
-'                .Font.Color = RGB(0, 0, 0)
-'                .Text = Format(Subtotal / Total, "0%")
-'            End With
-'        End With
-'    End With
-    
-    With pTxtLabel
-        .Name = "TxtLabel"
-        .Height = pCht.ChartArea.Height / 100 * 5
-        .Width = pCht.ChartArea.Width / 100 * 50
-        .Left = pCht.ChartArea.Left + (pCht.ChartArea.Width / 2) - (.Width / 2) + 3
-        .Top = pCht.ChartArea.Top + (pCht.ChartArea.Height / 2) - (.Height / 2) + (pCht.ChartArea.Height / 100 * 7)
-        .Fill.Transparency = 1
-        .Line.Visible = msoFalse
-        
-        With .TextFrame
-            .HorizontalAlignment = xlHAlignCenter
-            .VerticalAlignment = xlVAlignCenter
-            With .Characters
-                .Font.FontStyle = "Calibri"
-                .Font.Size = pTxtPC.Height / 100 * 25
-                .Font.Color = RGB(0, 0, 0)
-                .Text = Subtotal & " of " & Total
-            End With
-        End With
     End With
 
 End Sub
@@ -378,7 +315,7 @@ Private Sub GenPie()
             .Left = Parent.Left + pLeft
             .Top = Parent.Top + pTop
             .Height = pHeight
-            .Width = .Height * 1.5
+            .Width = .Height * 1.75
             .Format.Fill.ForeColor.RGB = pBackColour
             .Border.LineStyle = xlNone
         End With
@@ -386,7 +323,13 @@ Private Sub GenPie()
         .ChartType = xlPie
         .ChartTitle.Text = pTitle
         .ChartTitle.IncludeInLayout = True
-        .HasLegend = True
+        .HasLegend = False
+        
+        With .ChartTitle.Format.TextFrame2.TextRange
+            .Font.Name = "Calibri"
+            .Font.Size = 16
+            .Font.Fill.ForeColor.RGB = RGB(0, 0, 0)
+        End With
         
         .SetSourceData ShtMain.Range("H64:I64"), xlColumns
         
@@ -441,7 +384,7 @@ Private Sub GenBarStacked()
         
         With .ChartTitle.Format.TextFrame2.TextRange
             .Font.Name = "Calibri"
-            .Font.Size = pCht.ChartArea.Width / 100 * 4
+            .Font.Size = 16
             .Font.Fill.ForeColor.RGB = RGB(0, 0, 0)
         End With
         
@@ -466,12 +409,22 @@ Private Sub GenBarStacked()
             End With
         End If
         
+        If UBound(pSourceData, 1) > 2 Then
+            .SeriesCollection.NewSeries
+            With .SeriesCollection(3)
+                .Name = pSer2Name
+                .Values = GetArrayRow(pSourceData, 3)
+                .Format.Fill.ForeColor.RGB = pSer3Colour
+                If pDataLabels Then .ApplyDataLabels xlDataLabelsShowValue
+            End With
+        End If
+        
         .Axes(xlCategory).TickLabels.NumberFormat = "mmm yy"
         .Axes(xlCategory).CategoryType = xlCategoryScale
         .Axes(xlCategory).ReversePlotOrder = False
         
         With .ChartGroups(1)
-            .GapWidth = 117
+            .GapWidth = 80
         End With
         
         With .PlotArea
@@ -517,7 +470,7 @@ Private Sub GenBarHoriz()
         
         With .ChartTitle.Format.TextFrame2.TextRange
             .Font.Name = "Calibri"
-            .Font.Size = pCht.ChartArea.Width / 100 * 4
+            .Font.Size = 16
             .Font.Fill.ForeColor.RGB = RGB(0, 0, 0)
         End With
         
@@ -569,20 +522,22 @@ Private Sub GenLine()
     Dim i As Integer
         
     pCht.Parent.Name = pName
-    XValues = GetArrayRow(pSourceData, 1)
+    XValues = GetArrayRow(pSourceData, 0)
     
     With pCht
         With .ChartArea
             .Left = Parent.Left + pLeft
             .Top = Parent.Top + pTop
             .Height = pHeight
-            .Width = .Height * 1.7
-            .Format.Fill.ForeColor.RGB = COL_BLACK
+            .Width = .Height * 2
+            .Format.Fill.ForeColor.RGB = COL_WHITE
             .Border.LineStyle = xlNone
         End With
         
         .ChartType = xlLine
         .ChartTitle.Text = pTitle
+        .HasLegend = True
+        .ChartTitle.IncludeInLayout = False
         
         With .ChartTitle.Format.TextFrame2.TextRange
             .Font.Name = "Calibri"
@@ -593,22 +548,42 @@ Private Sub GenLine()
         .SetSourceData ShtMain.Range("H64:I64")
         
         With .SeriesCollection(1)
-            .Name = pSourceData(1, 2)
-            .Values = GetArrayRow(pSourceData, 2)
+            .Name = pSer1Name
+            .Values = GetArrayRow(pSourceData, 1)
             .Format.Fill.ForeColor.RGB = pSer1Colour
+            
+            If pDataLabels Then .ApplyDataLabels xlDataLabelsShowValue
             .XValues = XValues
         End With
         
-        With .Axes(xlCategory)
-            .TickLabels.NumberFormat = "0%"
-            .ReversePlotOrder = True
-            .Crosses = xlMaximum
+        If UBound(pSourceData, 1) > 1 Then
+            .SeriesCollection.NewSeries
+            With .SeriesCollection(2)
+                .Name = pSer2Name
+                .Values = GetArrayRow(pSourceData, 2)
+                .Format.Line.ForeColor.RGB = pSer2Colour
+                If pDataLabels Then .ApplyDataLabels xlDataLabelsShowValue
         End With
+        End If
+        
+        If UBound(pSourceData, 1) > 2 Then
+            .SeriesCollection.NewSeries
+            With .SeriesCollection(3)
+                .Name = pSer3Name
+                .Values = GetArrayRow(pSourceData, 3)
+                .Format.Line.ForeColor.RGB = pSer3Colour
+                If pDataLabels Then .ApplyDataLabels xlDataLabelsShowValue
+            End With
+        End If
+        
+        .Axes(xlCategory).TickLabels.NumberFormat = "mmm yy"
+        .Axes(xlCategory).CategoryType = xlCategoryScale
+        .Axes(xlCategory).ReversePlotOrder = False
         
         With .PlotArea
-            .Format.Fill.Transparency = 1
+            .Format.Line.Transparency = 1
             .Height = pCht.ChartArea.Height / 100 * 85
-            .Width = pCht.ChartArea.Width / 100 * 100
+            .Width = pCht.ChartArea.Width / 100 * 80
             .Top = 30
             .Left = 5
         End With
@@ -650,7 +625,11 @@ Private Function GetArrayRow(ArySource() As Variant, RowNo As Integer) As Varian
     ReDim AryOutput(LBound(ArySource, 2) To UBound(ArySource, 2))
     
     For i = LBound(ArySource, 2) To UBound(ArySource, 2)
+        If IsNull(ArySource(RowNo, i)) Then
+            AryOutput(i) = 0
+        Else
         AryOutput(i) = ArySource(RowNo, i)
+        End If
     Next
     GetArrayRow = AryOutput
 End Function

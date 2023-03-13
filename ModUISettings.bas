@@ -223,16 +223,17 @@ Public Const CRM_LENDER_MAX_LINES As Integer = 150
 '===============================================================
 ' Dashboard Screen
 '===============================================================
+Public Const DASHBOARD_FRAME_HEIGHT As Integer = 1100
 Public Const GRAPH_1_TOP As Integer = 45
 Public Const GRAPH_1_LEFT As Integer = 20
-Public Const GRAPH_1_HEIGHT As Integer = 180
+Public Const GRAPH_1_HEIGHT As Integer = 210
 Public Const GRAPH_1_COL_1 As Long = COL_BLUE
 Public Const GRAPH_1_COL_2 As Long = COL_AQUA
 Public Const GRAPH_1_BACK_COL As Long = COL_WHITE
 
 Public Const GRAPH_2_TOP As Integer = 45
 Public Const GRAPH_2_LEFT As Integer = 370
-Public Const GRAPH_2_HEIGHT As Integer = 180
+Public Const GRAPH_2_HEIGHT As Integer = 210
 Public Const GRAPH_2_COL_1 As Long = COL_BLUE
 Public Const GRAPH_2_COL_2 As Long = COL_AQUA
 Public Const GRAPH_2_COL_3 As Long = COL_PINK
@@ -243,7 +244,7 @@ Public Const GRAPH_2_BACK_COL As Long = COL_WHITE
 
 Public Const GRAPH_3_TOP As Integer = 45
 Public Const GRAPH_3_LEFT As Integer = 700
-Public Const GRAPH_3_HEIGHT As Integer = 180
+Public Const GRAPH_3_HEIGHT As Integer = 210
 Public Const GRAPH_3_COL_1 As Long = COL_BLUE
 Public Const GRAPH_3_COL_2 As Long = COL_AQUA
 Public Const GRAPH_3_COL_3 As Long = COL_PINK
@@ -252,18 +253,20 @@ Public Const GRAPH_3_COL_5 As Long = COL_ORANGE
 Public Const GRAPH_3_COL_6 As Long = COL_MAUVE
 Public Const GRAPH_3_BACK_COL As Long = COL_WHITE
 
-Public Const GRAPH_4_TOP As Integer = 45
-Public Const GRAPH_4_LEFT As Integer = 20
-Public Const GRAPH_4_HEIGHT As Integer = 180
+Public Const GRAPH_4_TOP As Integer = 350
+Public Const GRAPH_4_LEFT As Integer = 100
+Public Const GRAPH_4_HEIGHT As Integer = 210
 Public Const GRAPH_4_COL_1 As Long = COL_BLUE
 Public Const GRAPH_4_COL_2 As Long = COL_AQUA
+Public Const GRAPH_4_COL_3 As Long = COL_PINK
 Public Const GRAPH_4_BACK_COL As Long = COL_WHITE
 
-Public Const GRAPH_5_TOP As Integer = 45
-Public Const GRAPH_5_LEFT As Integer = 20
-Public Const GRAPH_5_HEIGHT As Integer = 180
+Public Const GRAPH_5_TOP As Integer = 350
+Public Const GRAPH_5_LEFT As Integer = 580
+Public Const GRAPH_5_HEIGHT As Integer = 210
 Public Const GRAPH_5_COL_1 As Long = COL_BLUE
 Public Const GRAPH_5_COL_2 As Long = COL_AQUA
+Public Const GRAPH_5_COL_3 As Long = COL_PINK
 Public Const GRAPH_5_BACK_COL As Long = COL_WHITE
 
 Public Const GRAPH_TREND_DAYS As Integer = 100

@@ -84,7 +84,7 @@ Private Function BuildMainFrame() As Boolean
         .Top = MAIN_FRAME_TOP
         .Left = MAIN_FRAME_LEFT
         .Width = MAIN_FRAME_WIDTH
-        .Height = MAIN_FRAME_HEIGHT
+        .Height = DASHBOARD_FRAME_HEIGHT
         .Style = MAIN_FRAME_STYLE
         .EnableHeader = True
 '        .Lineitems.Style = GENERIC_LINEITEM
@@ -139,8 +139,8 @@ Private Function BuildGraphs() As Boolean
     Set Graph1 = New ClsUIGraph
     Set Graph2 = New ClsUIGraph
     Set Graph3 = New ClsUIGraph
-'    Set Graph4 = New ClsUIGraph
-'    Set Graph5 = New ClsUIGraph
+    Set Graph4 = New ClsUIGraph
+    Set Graph5 = New ClsUIGraph
     
     If Not ReadINIFile Then Err.Raise HANDLED_ERROR
         
@@ -162,8 +162,8 @@ Private Function BuildGraphs() As Boolean
         .Top = GRAPH_1_TOP
         .Ser1Colour = GRAPH_1_COL_1
         .Ser2Colour = GRAPH_1_COL_2
-        .Ser1Name = "Closed Cases"
-        .Ser2Name = "Open Cases"
+        .Ser1Name = "Closed"
+        .Ser2Name = "Open"
         .BackColour = GRAPH_1_BACK_COL
         .SourceData = ArySource
         .Title = "Cases Open/Closed"
@@ -231,6 +231,65 @@ Private Function BuildGraphs() As Boolean
         .Visible = True
 
     End With
+    
+    Set RstRepData = GetGraphData(4)
+    
+    With RstRepData
+        .MoveLast
+        .MoveFirst
+        ArySource = RstRepData.GetRows(.RecordCount)
+    End With
+    
+    With Graph4
+        .ChartType = enline
+        .Name = "Graph4"
+        .DataLabels = False
+        MainFrame.Graphs.AddItem Graph4
+        .Height = GRAPH_4_HEIGHT
+        .Left = GRAPH_4_LEFT
+        .Top = GRAPH_4_TOP
+        .Ser1Colour = GRAPH_4_COL_1
+        .Ser2Colour = GRAPH_4_COL_2
+        .Ser3Colour = GRAPH_4_COL_3
+        .Ser1Name = "Dev."
+        .Ser2Name = "Bridge"
+        .Ser3Name = "Comm."
+        .BackColour = GRAPH_4_BACK_COL
+        .SourceData = ArySource
+        .Title = "Average Loan Completion Time"
+        .GenGraph
+        .Visible = True
+
+    End With
+    
+    Set RstRepData = GetGraphData(5)
+    
+    With RstRepData
+        .MoveLast
+        .MoveFirst
+        ArySource = RstRepData.GetRows(.RecordCount)
+    End With
+    
+    With Graph5
+        .ChartType = enDoNut
+        .Name = "Graph5"
+        .DataLabels = True
+        MainFrame.Graphs.AddItem Graph5
+        .Height = GRAPH_5_HEIGHT
+        .Left = GRAPH_5_LEFT
+        .Top = GRAPH_5_TOP
+        .Ser1Colour = GRAPH_5_COL_1
+        .Ser2Colour = GRAPH_5_COL_2
+        .Ser3Colour = GRAPH_5_COL_3
+        .BackColour = GRAPH_5_BACK_COL
+        .SourceData = ArySource
+        .Title = "Number of Cases"
+        .GenGraph
+        .Visible = True
+
+    End With
+    
+    
     Set RstRepData = Nothing
     BuildGraphs = True
         
