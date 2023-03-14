@@ -18,6 +18,7 @@ Dim OldTables() As String
 Private Const StrMODULE As String = "ModDeploy"
 
 Public Sub QueryTest()
+    ModStartUp.ReadINIFile
     If DB Is Nothing Then
     Set DB = OpenDatabase(GetDocLocalPath(ThisWorkbook.Path) & INI_FILE_PATH & DB_FILE_NAME & ".accdb")
     End If
@@ -28,113 +29,66 @@ Public Sub QueryTest()
 End Sub
 
 Public Sub UpdateScript()
-    Dim RstUpdate As Recordset
-    Dim i As Integer
-    DB.Execute "ALTER TABLE TblProject ADD COLUMN ConsComenceDte date"
-    
-    DB.Execute "ALTER TABLE TblProject ADD COLUMN CBSCommPC single"
-    DB.Execute "ALTER TABLE TblProject ADD COLUMN ExitFeePC double"
-    DB.Execute "ALTER TABLE TblProject ADD COLUMN Status Text"
-    DB.Execute "CREATE TABLE TblWorkflowTable"
-    DB.Execute "ALTER TABLE TblWorkflowTable ADD COLUMN WFNo Integer"
-    DB.Execute "ALTER TABLE TblWorkflowTable ADD COLUMN LoanType text"
-    DB.Execute "ALTER TABLE TblWorkflowTable ADD COLUMN SecondTier text"
-    DB.Execute "ALTER TABLE TblWorkflow ADD COLUMN LoanType text"
-    DB.Execute "ALTER TABLE TblWorkflow ADD COLUMN SecondTier text"
-    DB.Execute "INSERT INTO TblWorkflowTable (WFNo, LoanType,SecondTier) VALUES (1,'Development Finance', 'Senior Lender')"
-    DB.Execute "INSERT INTO TblWorkflowTable (WFNo,LoanType,SecondTier) VALUES (2,'Development Finance', 'Mezzanine Lender')"
-    DB.Execute "INSERT INTO TblWorkflowTable (WFNo,LoanType,SecondTier) VALUES (3,'Development Finance', 'Equity Lender')"
-    DB.Execute "INSERT INTO TblWorkflowTable (WFNo,LoanType,SecondTier) VALUES (4,'Development Finance', 'VAT Lender')"
-    DB.Execute "INSERT INTO TblWorkflowTable (WFNo,LoanType,SecondTier) VALUES (5,'Development Finance', 'SDLT Lender')"
-    DB.Execute "INSERT INTO TblWorkflowTable (WFNo,LoanType,SecondTier) VALUES (6,'Bridge/Exit Loan', '1st Charge Lender')"
-    DB.Execute "INSERT INTO TblWorkflowTable (WFNo,LoanType,SecondTier) VALUES (7,'Bridge/Exit Loan', '2nd Charge Lender')"
-    DB.Execute "INSERT INTO TblWorkflowTable (WFNo,LoanType,SecondTier) VALUES (8,'Commercial Mortgage', '1st Charge CM Lender')"
-    DB.Execute "ALTER TABLE TblClient ADD COLUMN ClientNeeds integer"
-    DB.Execute "ALTER TABLE TblStep DROP COLUMN Email"
-    DB.Execute "ALTER TABLE TblStep ADD COLUMN EmailNo single"
-    DB.Execute "ALTER TABLE TblStepTemplate DROP COLUMN Email"
-    DB.Execute "ALTER TABLE TblStepTemplate ADD COLUMN EmailNo single"
-    DB.Execute "UPDATE TblStepTemplate SET EmailNo = 1 WHERE StepNo = '1.03'"
-    DB.Execute "UPDATE TblStepTemplate SET EmailNo = 2 WHERE StepNo = '1.06'"
-    DB.Execute "UPDATE TblStepTemplate SET EmailNo = 3 WHERE StepNo = '1.12'"
-    DB.Execute "UPDATE TblStepTemplate SET EmailNo = 4 WHERE StepNo = '1.13'"
-    DB.Execute "UPDATE TblStepTemplate SET EmailNo = 5 WHERE StepNo = '1.16'"
-    
-    DB.Execute "UPDATE TblWorkflow SET LoanType = 'Development Loan', SecondTier = 'Senior Lender' WHERE Name = 'Senior'"
-    DB.Execute "UPDATE TblWorkflow SET LoanType = 'Development Loan', SecondTier = 'Mezzanine Lender' WHERE Name = '2ndChgeMezLoan'"
-    DB.Execute "UPDATE TblWorkflow SET LoanType = 'Development Loan', SecondTier = 'Equity Lender' WHERE Name = 'EquityLoan'"
-    DB.Execute "UPDATE TblWorkflow SET LoanType = 'Development Loan', SecondTier = 'SDLT Lender' WHERE Name = 'SDLTLoan'"
-    DB.Execute "UPDATE TblWorkflow SET LoanType = 'Development Loan', SecondTier = 'VAT Lender' WHERE Name = 'VATloan'"
-    Set RstUpdate = ModDatabase.SQLQuery("SELECT UniqueID FROM TblStepTemplate ORDER BY StepNo")
-    DB.Execute "ALTER TABLE TblCBSUser ADD COLUMN Supervisor Integer"
-    DB.Execute "ALTER TABLE TblCBSUser DROP COLUMN UserLvl"
-    DB.Execute "ALTER TABLE TblCBSUser ADD COLUMN UserLvl Single"
-    
-    DB.Execute "CREATE TABLE TblUserLvl"
-    DB.Execute "ALTER TABLE TblUserLvl ADD COLUMN UserLvlNo Integer"
-    DB.Execute "ALTER TABLE TblUserLvl ADD COLUMN UserLvl text"
-    DB.Execute "INSERT INTO TblUserLvl (UserLvlNo,UserLvl) VALUES (1, 'Admin')"
-    DB.Execute "INSERT INTO TblUserLvl (UserLvlNo,UserLvl) VALUES (2, 'Senior Manager')"
-    DB.Execute "INSERT INTO TblUserLvl (UserLvlNo,UserLvl) VALUES (3, 'Case Manager')"
-    
-    i = 1
-    With RstUpdate
-        Do While Not .EOF
-            .Edit
-            !UniqueID = i
-             .Update
-             .MoveNext
-             i = i + 1
-        Loop
-    End With
-    Set RstUpdate = Nothing
+    Dim SQL1 As String
+    Dim SQL2 As String
+    Dim Query1 As QueryDef
+    Dim Query2 As QueryDef
 
-    DB.Execute "ALTER TABLE TblProject ADD COLUMN MS integer"
-    DB.Execute "ALTER TABLE TblProject ADD COLUMN Valuer integer"
-    DB.Execute "ALTER TABLE TblProject DROP COLUMN Facilitator"
-    DB.Execute "ALTER TABLE TblProject ADD COLUMN Distribution text"
-    DB.Execute "ALTER TABLE TblContact ADD COLUMN Notes memo"
-    DB.Execute "ALTER TABLE TblProject DROP COLUMN SecondClientRef"
-    DB.Execute "ALTER TABLE TblProject ADD COLUMN SecondClientRef text"
-    DB.Execute "Update TblStep inner join TblStepTemplate on TblStep.StepNo = TblStepTemplate.StepNo Set TblStep.UniqueID = TblStepTemplate.UniqueID"
-    DB.Execute "ALTER TABLE TblContact DROP COLUMN ProjIndex"
-    DB.Execute "ALTER TABLE TblContact ADD COLUMN ContactIndex single"
-    DB.Execute "CREATE TABLE TblAccessControl"
-    DB.Execute "ALTER TABLE TblAccessControl ADD COLUMN UserNo Integer"
-    DB.Execute "ALTER TABLE TblAccessControl ADD COLUMN Entity String"
-    DB.Execute "ALTER TABLE TblAccessControl ADD COLUMN EntityNo Integer"
-    DB.Execute "DROP TABLE TblWorkflowType"
-    DB.Execute "UPDATE TblWorkFlow SET LoanType = 'Development Finance' WHERE LoanType = 'Development Loan'"
+    SQL1 = "Select " _
+        & "    TblCBSUser.UserName As CaseManager, " _
+        & "    Count(TblProject.ProjectNo) As NoCases " _
+        & "From " _
+        & "    TblProject Inner Join " _
+        & "    TblCBSUser On TblCBSUser.CBSUserNo = TblProject.CaseManager " _
+        & "Where " _
+        & "    (TblProject.CompleteDate = 0 Or " _
+        & "        TblProject.CompleteDate Is Null) " _
+        & "Group By " _
+        & "    TblCBSUser.UserName "
+        
+    SQL2 = "Select " _
+        & "    TblCBSUser.UserName As ClientIntroducer, " _
+        & "    Count(TblProject.ProjectNo) As NoCases " _
+        & "From " _
+        & "    TblProject Inner Join " _
+        & "    TblCBSUser On TblCBSUser.CBSUserNo = TblProject.FirstClientInt " _
+        & "Where " _
+        & "    (TblProject.CompleteDate = 0 Or " _
+        & "        TblProject.CompleteDate Is Null) " _
+        & "Group By " _
+        & "    TblCBSUser.UserName "
+
+    Set Query1 = New QueryDef
+    Set Query2 = New QueryDef
+    
+    With Query1
+        .SQL = SQL1
+        .Name = "CM Cases"
+    End With
+    
+    With Query2
+        .SQL = SQL2
+        .Name = "CI Cases"
+    End With
+    
+    DB.QueryDefs.Append Query1
+    DB.QueryDefs.Append Query2
 End Sub
 
 Public Sub UndoScript()
-    On Error Resume Next
-    DB.Execute "ALTER TABLE TblClient DROP COLUMN ClientNeeds "
-    DB.Execute "ALTER TABLE TblProject DROP COLUMN MS "
-    DB.Execute "ALTER TABLE TblProject DROP COLUMN Valuer "
-    DB.Execute "ALTER TABLE TblProject DROP COLUMN Distribution"
-    DB.Execute "ALTER TABLE TblProject ADD COLUMN Facilitator integer"
-    DB.Execute "ALTER TABLE TblContact DROP COLUMN Notes "
+	
+    If DEV_MODE Then
+        On Error Resume Next
+    Else
+        On Error GoTo ErrorHandler
+    End If
+    
+    DB.QueryDefs.Delete "CM Cases"
+    DB.QueryDefs.Delete "CI Cases"
+Exit Sub
 
-    DB.Execute "ALTER TABLE TblProject DROP COLUMN CBSCommPC "
-    DB.Execute "ALTER TABLE TblProject DROP COLUMN ExitFeePC "
-    DB.Execute "ALTER TABLE TblProject DROP COLUMN ConsComenceDte "
-    DB.Execute "ALTER TABLE TblProject DROP COLUMN Status "
-    
-    DB.Execute "DROP TABLE TblWorkflowTable"
-    DB.Execute "ALTER TABLE TblWorkflow DROP COLUMN LoanType "
-    DB.Execute "ALTER TABLE TblWorkflow DROP COLUMN SecondTier "
-    DB.Execute "ALTER TABLE TblCBSUser DROP COLUMN Supervisor "
-    
-    DB.Execute "ALTER TABLE TblContact ADD COLUMN ProjIndex single"
-    DB.Execute "ALTER TABLE TblContact DROP COLUMN ContactIndex"
-    DB.Execute "ALTER TABLE TblStep ADD COLUMN Email single"
-    DB.Execute "ALTER TABLE TblStep DROP COLUMN EmailNo "
-    DB.Execute "ALTER TABLE TblStepTemplate ADD COLUMN Email single"
-    DB.Execute "ALTER TABLE TblStepTemplate DROP COLUMN EmailNo "
-    DB.Execute "DROP TABLE TblAccessControl"
-    DB.Execute "DROP TABLE TblUserLvl"
-    DB.Execute "CREATE TABLE TblWorkflowType"
+ErrorHandler:
+    Stop
 End Sub
 
 ' ===============================================================
