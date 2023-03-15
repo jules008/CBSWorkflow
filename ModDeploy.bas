@@ -117,17 +117,17 @@ Public Sub UpdateScript()
     End With
     
     With Query3
-        .SQL = SQL1
+        .SQL = SQL3
         .Name = "Active"
     End With
     
     With Query4
-        .SQL = SQL2
+        .SQL = SQL4
         .Name = "Closed"
     End With
     
     With Query5
-        .SQL = SQL3
+        .SQL = SQL5
         .Name = "ProjTimeAve"
     End With
 
