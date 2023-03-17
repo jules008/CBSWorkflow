@@ -448,6 +448,7 @@ Public Function UpdateTrendData() As Boolean
                 !Closed = RstData1!Closed
                 
                 With RstAveTimes
+                    If .RecordCount > 0 Then
                     .MoveFirst
                     .FindFirst "Avg_LoanType = 'Commercial Mortgage'"
                     If Not .NoMatch Then RstTrendTable!AveComm = !NoDays
@@ -459,7 +460,7 @@ Public Function UpdateTrendData() As Boolean
                     .MoveFirst
                     .FindFirst ("Avg_LoanType = 'Bridge/ Exit Loan'")
                     If Not .NoMatch Then RstTrendTable!AveBridge = !NoDays
-                   
+                    End If
                 End With
                 .Update
                 AddDate = DateAdd("d", 1, AddDate)

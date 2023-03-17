@@ -16,6 +16,7 @@ DataItem,  dbText
 DataFormat,  dbText
 DataDest,  dbText
 EmailArrived,  dbText
+EmailNo,  dbDouble
 AltEmail,  dbDouble
 Status,  dbText
 Deleted,  dbText
@@ -23,4 +24,3 @@ CopyText,  dbMemo
 CopyTextName,  dbText
 UniqueID,  dbLong
 HelpText,  dbMemo
-EmailNo,  dbSingle

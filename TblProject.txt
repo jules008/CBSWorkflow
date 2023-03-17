@@ -13,10 +13,9 @@ CBSCommission,  dbLong
 Debt,  dbSingle
 CompleteDate,  dbDate
 StartDate,  dbDate
-ConsComenceDte,  dbDate
 CBSCommPC,  dbSingle
-ExitFeePC,  dbDouble
-Status,  dbText
+ExitFeePC,  dbSingle
+ConsComenceDte,  dbDate
 MS,  dbLong
 Valuer,  dbLong
 Distribution,  dbText

@@ -288,9 +288,9 @@ Private Sub GenDoNut()
         With .SeriesCollection(1)
             .Name = "strName"
             .Values = GetArrayRow(pSourceData, 1)
-            .Points(1).Format.Fill.ForeColor.RGB = pSer1Colour
-            .Points(2).Format.Fill.ForeColor.RGB = pSer2Colour
-            .Points(3).Format.Fill.ForeColor.RGB = pSer3Colour
+            If .Points.Count > 0 Then .Points(1).Format.Fill.ForeColor.RGB = pSer1Colour
+            If .Points.Count > 1 Then .Points(2).Format.Fill.ForeColor.RGB = pSer2Colour
+            If .Points.Count > 2 Then .Points(3).Format.Fill.ForeColor.RGB = pSer3Colour
              .XValues = GetArrayRow(pSourceData, 0)
         End With
         
@@ -336,12 +336,12 @@ Private Sub GenPie()
         With .SeriesCollection(1)
             .Name = "strName"
             .Values = GetArrayRow(pSourceData, 1)
-            .Points(1).Format.Fill.ForeColor.RGB = pSer1Colour
-            .Points(2).Format.Fill.ForeColor.RGB = pSer2Colour
-            .Points(3).Format.Fill.ForeColor.RGB = pSer3Colour
-            .Points(4).Format.Fill.ForeColor.RGB = pSer4Colour
-            .Points(5).Format.Fill.ForeColor.RGB = pSer5Colour
-            .Points(6).Format.Fill.ForeColor.RGB = pSer6Colour
+            If .Points.Count > 0 Then .Points(1).Format.Fill.ForeColor.RGB = pSer1Colour
+            If .Points.Count > 1 Then .Points(2).Format.Fill.ForeColor.RGB = pSer2Colour
+            If .Points.Count > 2 Then .Points(3).Format.Fill.ForeColor.RGB = pSer3Colour
+            If .Points.Count > 3 Then .Points(4).Format.Fill.ForeColor.RGB = pSer4Colour
+            If .Points.Count > 4 Then .Points(5).Format.Fill.ForeColor.RGB = pSer5Colour
+            If .Points.Count > 5 Then .Points(6).Format.Fill.ForeColor.RGB = pSer6Colour
             .XValues = GetArrayRow(pSourceData, 0)
         End With
         
